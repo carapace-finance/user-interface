@@ -5,8 +5,8 @@ Create a Moralis account and server instance: https://docs.moralis.io/getting-st
 Open your terminal, set up the frontend
 
 ```bash
-  git clone https://github.com/slime-finance/credit-default-swap-frontend
-  cd credit-default-swap-frontend
+  git clone https://github.com/carapace-finance/user-interface
+  cd user-interface
   npm install
 ```
 
@@ -29,7 +29,7 @@ Run a dev server
 Open another terminal, set up contracts
 
 ```bash
-  git clone https://github.com/slime-finance/credit-default-swap-contracts
+  git clone https://github.com/carapace-finance/credit-default-swap-contracts
   cd credit-default-swap-contracts
   npm install
   npm run compile
