@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import { Shadows } from "@material-ui/core/styles/shadows";
 import { grey } from "@material-ui/core/colors";
 
@@ -16,7 +16,7 @@ customShadows[5] =
   "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)";
 customShadows[6] = "0 25px 50px -12px rgba(0, 0, 0, 0.25)";
 customShadows[3] = "0 35px 60px -15px rgba(0, 0, 0, 0.3)";
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: "#12BB4F"
