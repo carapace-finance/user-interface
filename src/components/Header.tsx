@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <>
       <HeaderWrapper>
-        <ProtocolName>Liquidation Swap Protocol</ProtocolName>
+        <ProtocolName></ProtocolName>
         <Account />
         <Balance />
         <Network />

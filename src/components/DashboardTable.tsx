@@ -1,6 +1,5 @@
 import { useState } from "react";
-import Image from "next/image";
-import { Card, Container, Typography } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialTable from "material-table";
 
@@ -53,25 +52,10 @@ const DashboardTable = () => {
   const classes = useStyles();
 
   // TODO: Make the following dynamic + into a hook after hackathon
-  const [poolAddress, setPoolAddress] = useState(
-    process.env.POOL_CONTRACT_ADDRESS_DEV
-  );
-  const { daiBalance, coverBalance, premBalance, expiry } =
-    usePoolInfo(poolAddress);
-
   return (
     <Container className={classes.root} maxWidth="md">
       <Typography gutterBottom variant="h6">
-        My Balance
-      </Typography>
-      <Card className={classes.card} elevation={2}>
-        <Image src="/dai.svg" width="35px" height="22px" unoptimized />
-        <Typography gutterBottom variant="body2">
-          {`${daiBalance} DAI`}
-        </Typography>
-      </Card>
-      <Typography gutterBottom variant="h6">
-        My Pools
+        Deposits
       </Typography>
       <MaterialTable
         title={"My Balance"}
@@ -100,9 +84,9 @@ const DashboardTable = () => {
         data={[
           {
             pool: "Sublime Finance CDS",
-            expiry: expiry,
-            coverBalance: `${coverBalance} COVER`,
-            premBalance: `${premBalance} PREM`
+            expiry: "NA",
+            coverBalance: "NA",
+            premBalance: "NA"
           }
         ]}
         options={{

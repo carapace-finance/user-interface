@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useMoralis } from "react-moralis";
 import {
   Button,
   Dialog,
@@ -68,7 +67,6 @@ const ConnectWalletPopup = (props) => {
   const classes = useStyles();
   const router = useRouter();
   const { open, onClose } = props;
-  const { authenticate } = useMoralis();
   const [error, setError] = useState("");
 
   const onConnect = async (wallet: string) => {
@@ -76,7 +74,6 @@ const ConnectWalletPopup = (props) => {
     switch (wallet) {
       case "metamask": {
         try {
-          await authenticate();
           onClose();
           router.push("/");
         } catch (e) {

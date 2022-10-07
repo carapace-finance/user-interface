@@ -75,62 +75,21 @@ const useStyles = makeStyles((theme) => ({
 // Presentational component for handling trades
 const ClaimPopup = (props) => {
   const classes = useStyles();
-  const {
-    open,
-    onClose,
-    poolContractAddress,
-    defaulted,
-    coverBalance,
-    premBalance,
-    coverTotalSupply,
-    premTotalSupply,
-    totalCoverage,
-    totalPremium,
-    approveCover,
-    approvePrem,
-    claimCoverage,
-    withdrawPremium
-  } = props;
-  const [coverInDai, setCoverInDai] = useState(0);
-  const [premInDai, setPremInDai] = useState(0);
+  const { open, onClose } = props;
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
-  const claimEnabled = defaulted ? +coverBalance > 0 : +premBalance > 0;
 
   useEffect(() => {
     // Reset
     setSuccessMessage("");
     setError("");
-    setCoverInDai(
-      coverTotalSupply === 0 ? 0 : +totalCoverage / coverTotalSupply
-    );
-    setPremInDai(premTotalSupply === 0 ? 0 : +totalPremium / premTotalSupply);
   }, [open]);
-  console.log(totalPremium, premTotalSupply, "HJIO", premInDai);
 
   // Function passed into 'onClick'
   const executeClaim = async () => {
     setError("");
     let message = "";
     try {
-      if (defaulted) {
-        // Handle claim coverage
-        const approved = await approveCover(poolContractAddress, +coverBalance);
-        if (approved) {
-          await claimCoverage(+coverBalance);
-        } else {
-          return setError("Failed to approve COVER transaction");
-        }
-      } else {
-        // Handle withdraw premium
-        const approved = await approvePrem(poolContractAddress, +premBalance);
-        if (approved) {
-          console.log("APPROVING");
-          await withdrawPremium(+premBalance);
-        } else {
-          return setError("Failed to approve PREM transaction");
-        }
-      }
     } catch (e) {
       const err = JSON.stringify(JSON.stringify(e.message));
       console.log("Error", err);
@@ -160,22 +119,12 @@ const ClaimPopup = (props) => {
       }}
     >
       <DialogTitle>
-        <Typography gutterBottom variant="h6">
-          {defaulted ? "Claim Coverage" : "Claim Premium"}
-        </Typography>
+        <Typography gutterBottom variant="h6"></Typography>
         <Typography
           gutterBottom
           variant="body2"
           className={classes.description}
-        >
-          {defaulted
-            ? `Exchange your ${coverBalance} COVER tokens for ${
-                coverBalance * coverInDai
-              } DAI in coverage`
-            : `Exchange your ${premBalance} PREM tokens for ${
-                premBalance * premInDai
-              } DAI (premiums) + ${premBalance} DAI (original stake)`}
-        </Typography>
+        ></Typography>
       </DialogTitle>
       <DialogContent>
         <IconButton
@@ -186,54 +135,37 @@ const ClaimPopup = (props) => {
         >
           <CloseIcon fontSize="small" />
         </IconButton>
-        {(defaulted && +coverBalance > 0) ||
-        (!defaulted && +premBalance > 0) ? (
-          <>
-            <DialogContent className={classes.content}>
-              <div>
-                <Typography gutterBottom variant="subtitle2">
-                  {defaulted ? "COVER Balance" : "PREM Balance"}
-                </Typography>
-                <Typography variant="body2">
-                  {defaulted ? `${coverBalance} COVER` : `${premBalance} PREM`}
-                </Typography>
-              </div>
-              <SwapHorizIcon />
-              <div>
-                <Typography gutterBottom variant="subtitle2">
-                  Amount in DAI
-                </Typography>
-                <Typography variant="body2">
-                  {defaulted
-                    ? `${coverBalance * coverInDai} DAI`
-                    : `${+(premBalance * premInDai) + +premBalance} DAI`}
-                </Typography>
-              </div>
-            </DialogContent>
-            <DialogContent className={classes.info}>
-              <Typography variant="subtitle2">
-                {defaulted
-                  ? `1 COVER = ${coverInDai} DAI`
-                  : `1 PREM = ${premInDai} DAI`}
+        <>
+          <DialogContent className={classes.content}>
+            <div>
+              <Typography gutterBottom variant="subtitle2"></Typography>
+              <Typography variant="body2"></Typography>
+            </div>
+            <SwapHorizIcon />
+            <div>
+              <Typography gutterBottom variant="subtitle2">
+                Amount in DAI
               </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                disabled={!claimEnabled}
-                className={classes.button}
-                color="primary"
-                variant="contained"
-                onClick={executeClaim}
-              >
-                {defaulted ? "Exchange COVER for DAI" : "Exchange PREM for DAI"}
-              </Button>
-            </DialogActions>
-          </>
-        ) : (
-          <Typography style={{ textAlign: "center" }} variant="body2">
-            You don&apos;t have enough tokens to submit a claim
-          </Typography>
-        )}
+              <Typography variant="body2"></Typography>
+            </div>
+          </DialogContent>
+          <DialogContent className={classes.info}>
+            <Typography variant="subtitle2"></Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              disabled={false}
+              className={classes.button}
+              color="primary"
+              variant="contained"
+              onClick={console.log()}
+            ></Button>
+          </DialogActions>
+        </>
+        <Typography
+          style={{ textAlign: "center" }}
+          variant="body2"
+        ></Typography>
       </DialogContent>
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}

@@ -92,22 +92,7 @@ const useStyles = makeStyles((theme) => ({
 // Presentational component for handling trades
 const TradePopup = (props) => {
   const classes = useStyles();
-  const {
-    open,
-    onClose,
-    poolContractAddress,
-    daiBalance,
-    coverBalance,
-    premBalance,
-    totalCoverage,
-    totalPremium,
-    expiry,
-    buyCover,
-    sellCover,
-    approveDai,
-    approveCover,
-    approvePrem
-  } = props;
+  const { open, onClose, daiBalance } = props;
   const [tab, setTab] = useState(0);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
@@ -131,20 +116,8 @@ const TradePopup = (props) => {
     let message = "";
     try {
       if (tab === 0) {
-        const approved = await approveDai(poolContractAddress, +priceInput);
-        if (approved) {
-          await buyCover(priceInput);
-        } else {
-          return setError("Failed to approve transaction");
-        }
         message = `You successfully exchanged ${priceInput} DAI for ${priceOutput} Cover tokens`;
       } else {
-        const approved = await approveDai(poolContractAddress, +priceInput);
-        if (approved) {
-          await sellCover(priceInput);
-        } else {
-          return setError("Failed to approve transaction");
-        }
         message = `You successfully staked ${priceInput} DAI in exchange for ${priceOutput} Prem tokens`;
       }
     } catch (e) {
@@ -191,20 +164,15 @@ const TradePopup = (props) => {
             <div className={classes.listItem}>
               <Typography variant="body2">Balance</Typography>
               <Typography variant="subtitle2">{daiBalance} DAI</Typography>
-              <Typography variant="subtitle2">{coverBalance} COVER</Typography>
-              <Typography variant="subtitle2">{premBalance} PREM</Typography>
             </div>
             <div className={classes.listItem}>
               <Typography variant="body2">Total Supplied Coverage</Typography>
-              <Typography variant="subtitle2">{totalCoverage} DAI</Typography>
             </div>
             <div className={classes.listItem}>
               <Typography variant="body2">Total Available Premium</Typography>
-              <Typography variant="subtitle2">{totalPremium} DAI</Typography>
             </div>
             <div className={classes.listItem}>
               <Typography variant="body2">Expiration</Typography>
-              <Typography variant="subtitle2">{expiry}</Typography>
             </div>
           </List>
         </div>

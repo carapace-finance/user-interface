@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useMoralis } from "react-moralis";
-import { useAccount } from "@contexts/AccountContext";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -64,8 +62,6 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = () => {
   const classes = useStyles();
-  const { user, isAuthenticated, logout } = useMoralis();
-  const { getDaiBalance } = useAccount();
   const router = useRouter();
   const [connectWalletOpen, setConnectWalletOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -76,11 +72,6 @@ const NavBar = () => {
   };
   const handleMenuClose = () => {
     setAnchorEl(null);
-  };
-  const handleLogout = () => {
-    logout();
-    router.push("/");
-    handleMenuClose();
   };
 
   const menuId = "primary-search-account-menu";
@@ -98,36 +89,32 @@ const NavBar = () => {
       elevation={2}
       className={classes.menu}
     >
-      {user && (
-        <>
-          <Card>
-            <CardContent>
-              <Typography gutterBottom variant="body1">
-                Balance
-              </Typography>
-              <Typography
-                color="textSecondary"
-                variant="body2"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  paddingTop: "8px"
-                }}
-              >
-                <Image
-                  src="/dai.svg"
-                  alt="dai"
-                  width="35px"
-                  height="22px"
-                  unoptimized
-                />{" "}
-                {getDaiBalance()} DAI
-              </Typography>
-            </CardContent>
-          </Card>
-          <MenuItem onClick={handleLogout}>Disconnect</MenuItem>
-        </>
-      )}
+      <>
+        <Card>
+          <CardContent>
+            <Typography gutterBottom variant="body1">
+              Balance
+            </Typography>
+            <Typography
+              color="textSecondary"
+              variant="body2"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                paddingTop: "8px"
+              }}
+            >
+              <Image
+                src="/dai.svg"
+                alt="dai"
+                width="35px"
+                height="22px"
+                unoptimized
+              />
+            </Typography>
+          </CardContent>
+        </Card>
+      </>
     </Menu>
   );
 
@@ -151,50 +138,44 @@ const NavBar = () => {
             />
           </Link>
           <div className={classes.options}>
-            {isAuthenticated && (
-              <>
-                <Link href="/dashboard" passHref>
-                  <Typography
-                    className={classes.textButton}
-                    style={{
-                      fontWeight: router.asPath === "/dashboard" ? 500 : 400,
-                      opacity: router.asPath === "/dashboard" && 1
-                    }}
-                    variant="body1"
-                  >
-                    Dashboard
-                  </Typography>
-                </Link>
-                <Chip
-                  variant="outlined"
-                  color="default"
-                  onClick={handleProfileMenuOpen}
-                  icon={
-                    <Image
-                      unoptimized
-                      src="/icon.png"
-                      width="30px"
-                      height="30px"
-                      objectFit="contain"
-                      alt="Account photo"
-                    />
-                  }
-                  label={`${user.get("ethAddress").slice(0, 4)}...${user
-                    .get("ethAddress")
-                    .slice(38)}`}
-                  className={classes.chip}
-                />
-              </>
-            )}
-            {!isAuthenticated && (
-              <Button
-                color="primary"
-                onClick={() => setConnectWalletOpen(true)}
+            <>
+              <Link href="/dashboard" passHref>
+                <Typography
+                  className={classes.textButton}
+                  style={{
+                    fontWeight: router.asPath === "/dashboard" ? 500 : 400,
+                    opacity: router.asPath === "/dashboard" && 1
+                  }}
+                  variant="body1"
+                >
+                  Dashboard
+                </Typography>
+              </Link>
+              <Chip
                 variant="outlined"
-              >
-                Connect Wallet
-              </Button>
-            )}
+                color="default"
+                onClick={handleProfileMenuOpen}
+                icon={
+                  <Image
+                    unoptimized
+                    src="/icon.png"
+                    width="30px"
+                    height="30px"
+                    objectFit="contain"
+                    alt="Account photo"
+                  />
+                }
+                label={"test"}
+                className={classes.chip}
+              />
+            </>
+            <Button
+              color="primary"
+              onClick={() => setConnectWalletOpen(true)}
+              variant="outlined"
+            >
+              Connect Wallet
+            </Button>
           </div>
         </Toolbar>
       </Container>
