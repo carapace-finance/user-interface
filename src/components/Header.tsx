@@ -75,7 +75,51 @@ const Header = () => {
             />
           </Link>
           <div className={classes.options}>
-          <>
+            <>
+              <Link href="/buy_protection" passHref>
+                <Typography
+                  className={classes.textButton}
+                  style={{
+                    fontWeight: router.asPath === "/buy_protection" ? 500 : 400,
+                    opacity: router.asPath === "/buy_protection" && 1
+                  }}
+                  variant="body1"
+                >
+                  Buy Protection
+                </Typography>
+              </Link>
+            </>
+            <>
+              <Link href="/lend_with_protection" passHref>
+                <Typography
+                  className={classes.textButton}
+                  style={{
+                    fontWeight:
+                      router.asPath === "/lend_with_protection" ? 500 : 400,
+                    opacity: router.asPath === "/lend_with_protection" && 1
+                  }}
+                  variant="body1"
+                >
+                  Lend With Protection
+                </Typography>
+              </Link>
+            </>
+            <>
+              <Link href="/sell_protection" passHref>
+                <Typography
+                  className={classes.textButton}
+                  style={{
+                    fontWeight:
+                      router.asPath === "/sell_protection" ? 500 : 400,
+                    opacity: router.asPath === "/sell_protection" && 1
+                  }}
+                  variant="body1"
+                >
+                  Sell Protection
+                </Typography>
+              </Link>
+            </>
+            <>
               <Link href="/dashboard" passHref>
                 <Typography
                   className={classes.textButton}
