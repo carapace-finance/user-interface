@@ -6,7 +6,7 @@ import { CssBaseline } from "@material-ui/core";
 import theme from "@utils/theme";
 
 import dynamic from "next/dynamic";
-const NavBar = dynamic(() => import("@components/NavBar"), { ssr: false });
+const Header = dynamic(() => import("@components/Header"), { ssr: false });
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           }
         `}
       </style>
-      <NavBar />
+      <Header />
       <Component {...pageProps} />
     </MuiThemeProvider>
   );
