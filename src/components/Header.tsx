@@ -2,17 +2,12 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  AppBar,
-  Button,
-  Container,
-  Toolbar,
-  Typography
-} from "@material-ui/core";
+import { AppBar, Container, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { useWeb3React } from "@web3-react/core";
 
+import Account from "@components/Account";
 import ConnectWalletPopup from "@components/ConnectWalletPopup";
+import Network from "@components/Network";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -133,15 +128,8 @@ const Header = () => {
                 </Typography>
               </Link>
             </>
-            <Account />
             <Network />
-            <Button
-              color="primary"
-              onClick={() => setConnectWalletOpen(true)}
-              variant="outlined"
-            >
-              Connect Wallet
-            </Button>
+            <Account />
           </div>
         </Toolbar>
       </Container>
@@ -152,36 +140,5 @@ const Header = () => {
     </AppBar>
   );
 };
-
-function Account() {
-  const { account } = useWeb3React();
-
-  return (
-    <>
-      <span>Account:</span>
-      <span>
-        {account === null
-          ? "-"
-          : account
-          ? `${account.substring(0, 6)}...${account.substring(
-              account.length - 4
-            )}`
-          : ""}
-      </span>
-    </>
-  );
-}
-
-function Network() {
-  const { active, error } = useWeb3React();
-  const { chainId } = useWeb3React();
-
-  return (
-    <>
-      <span>{chainId === 1 ? "Mainnet" : "Testnet"}</span>
-      <span>{active ? "🟢" : error ? "🔴" : "🟠"}</span>
-    </>
-  );
-}
 
 export default Header;
