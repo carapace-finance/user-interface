@@ -1,9 +1,6 @@
-import { useState } from "react";
 import { Container, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialTable from "material-table";
-
-import usePoolInfo from "@hooks/usePoolInfo";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,14 +45,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const DashboardTable = () => {
+const Table = (props) => {
   const classes = useStyles();
 
   // TODO: Make the following dynamic + into a hook after hackathon
   return (
     <Container className={classes.root} maxWidth="md">
       <Typography gutterBottom variant="h6">
-        Deposits
+        {props.title}
       </Typography>
       <MaterialTable
         title={"My Balance"}
@@ -64,29 +61,29 @@ const DashboardTable = () => {
         }}
         columns={[
           {
-            title: "Pool",
-            field: "pool",
+            title: "id",
+            field: "id",
             cellStyle: { fontWeight: 500, width: "25%" },
             disableClick: true
           },
-          { title: "Expiry", field: "expiry", cellStyle: { width: "25%" } },
+          { title: "Lending Pool", field: "lending_pool", cellStyle: { width: "25%" } },
           {
-            title: "Cover Token Balance",
-            field: "coverBalance",
+            title: "Protocols",
+            field: "protocols",
             cellStyle: { width: "25%" }
           },
           {
-            title: "Premium Token Balance",
-            field: "premBalance",
+            title: "Adjusted Yields",
+            field: "adjusted_yields",
             cellStyle: { width: "25%" }
           }
         ]}
         data={[
           {
-            pool: "Sublime Finance CDS",
-            expiry: "NA",
-            coverBalance: "NA",
-            premBalance: "NA"
+            id: "#1",
+            lending_pool: "Almavest Basket #6",
+            protocols: "NA",
+            adjusted_yields: "7 - 10%"
           }
         ]}
         options={{
@@ -102,4 +99,4 @@ const DashboardTable = () => {
   );
 };
 
-export default DashboardTable;
+export default Table;

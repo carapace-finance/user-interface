@@ -1,12 +1,12 @@
 import dynamic from "next/dynamic";
-const DashboardTable = dynamic(() => import("@components/DashboardTable"), {
+const Table = dynamic(() => import("@components/Table"), {
   ssr: false
 });
 
 const BuyProtection = () => {
   return (
     <div>
-      <DashboardTable />
+      <Table title="All Lending Pools" />
     </div>
   );
 };

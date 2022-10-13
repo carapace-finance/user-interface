@@ -1,12 +1,12 @@
 import dynamic from "next/dynamic";
-const DashboardTable = dynamic(() => import("@components/DashboardTable"), {
+const Table = dynamic(() => import("@components/Table"), {
   ssr: false
 });
 
 const LendWithProtection = () => {
   return (
     <div>
-      <DashboardTable />
+      <Table title="All Bonds with Protection" />
     </div>
   );
 };
