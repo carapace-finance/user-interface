@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
 const Table = (props) => {
   const classes = useStyles();
 
-  // TODO: Make the following dynamic + into a hook after hackathon
   return (
     <Container className={classes.root} maxWidth="md">
       <Typography gutterBottom variant="h6">
