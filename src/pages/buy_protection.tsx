@@ -13,6 +13,8 @@ const BuyProtection = () => {
       <TitleAndDescriptions
         title="Buy Protection"
         descriptions="Buy protection for your loans to hedge against default risks."
+        buttonExist={true}
+        button="Learn about buying protection"
       />
 
       <Table title="All Lending Pools" />

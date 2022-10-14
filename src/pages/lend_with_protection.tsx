@@ -13,6 +13,8 @@ const LendWithProtection = () => {
       <TitleAndDescriptions
         title="Lend with Protection"
         descriptions="Earn adjusted yields by purchasing bonds with protection."
+        buttonExist={true}
+        button="Learn about lending with protection"
       />
 
       <Table title="All Bonds with Protection" />

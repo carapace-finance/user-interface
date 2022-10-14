@@ -10,7 +10,10 @@ const TitleAndDescriptions = dynamic(
 const Dashboard = () => {
   return (
     <div>
-      <TitleAndDescriptions title="Dashboard" descriptions="" />
+      <TitleAndDescriptions
+        title="Dashboard"
+        buttonExist={false}
+      />
       <Table title="Protection Purchases" />
       <Table title="Deposits" />
     </div>

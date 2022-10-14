@@ -19,7 +19,7 @@ customShadows[3] = "0 35px 60px -15px rgba(0, 0, 0, 0.3)";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#12BB4F"
+      main: "#000000"
     },
     text: {
       primary: "#1F2433",
