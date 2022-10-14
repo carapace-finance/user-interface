@@ -7,6 +7,7 @@ import theme from "@utils/theme";
 
 import dynamic from "next/dynamic";
 const Header = dynamic(() => import("@components/Header"), { ssr: false });
+const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -30,6 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </style>
       <Header />
       <Component {...pageProps} />
+      <Footer />
     </MuiThemeProvider>
   );
 }
