@@ -65,7 +65,11 @@ const Table = (props) => {
             cellStyle: { fontWeight: 500, width: "25%" },
             disableClick: true
           },
-          { title: "Lending Pool", field: "lending_pool", cellStyle: { width: "25%" } },
+          {
+            title: "Lending Pool",
+            field: "lending_pool",
+            cellStyle: { width: "25%" }
+          },
           {
             title: "Protocols",
             field: "protocols",
@@ -87,11 +91,7 @@ const Table = (props) => {
         ]}
         options={{
           toolbar: false,
-          paging: false,
-          headerStyle: {
-            backgroundColor: "#009DC4",
-            color: "#FFF"
-          }
+          paging: false
         }}
       />
     </Container>

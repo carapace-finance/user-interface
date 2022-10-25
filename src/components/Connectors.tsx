@@ -5,11 +5,7 @@ import { useWeb3React } from "@web3-react/core";
 import Spinner from "./Spinner";
 import { useEagerConnect } from "../hooks/useEagerConnect";
 import { useInactiveListener } from "../hooks/useInactiveListener";
-import {
-  ConnectorNames,
-  connectorsByName,
-  getErrorMessage
-} from "../utils/connectors";
+import { connectorsByName, getErrorMessage } from "../utils/connectors";
 
 export default function Connectors() {
   const context = useWeb3React<Web3Provider>();
