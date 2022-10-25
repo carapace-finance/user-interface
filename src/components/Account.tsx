@@ -4,10 +4,9 @@ const Account = () => {
   const { account } = useWeb3React();
   return (
     <>
-      <span>Account:</span>
       <span>
         {account === null
-          ? "-"
+          ? ""
           : account
           ? `${account.substring(0, 6)}...${account.substring(
               account.length - 4

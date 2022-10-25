@@ -1,13 +1,14 @@
+import { useWeb3React } from "@web3-react/core";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import { AppBar, Container, Toolbar, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Account from "@components/Account";
 import ConnectWalletPopup from "@components/ConnectWalletPopup";
-import Network from "@components/Network";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -46,6 +47,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = () => {
+  const { active, error, deactivate } = useWeb3React();
+  const { chainId } = useWeb3React();
   const classes = useStyles();
   const router = useRouter();
   const [connectWalletOpen, setConnectWalletOpen] = useState(false);
@@ -128,7 +131,21 @@ const Header = () => {
                 </Typography>
               </Link>
             </>
-            <Network />
+            <Button
+              color="primary"
+              onClick={() => setConnectWalletOpen(true)}
+              variant="outlined"
+            >
+              <span>
+                {active && chainId === 1
+                  ? "Mainnet"
+                  : active && chainId != 1
+                  ? "Not Mainnet"
+                  : !active || error
+                  ? "Connect Wallet"
+                  : "Connect Wallet"}
+              </span>
+            </Button>
             <Account />
           </div>
         </Toolbar>
