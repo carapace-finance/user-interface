@@ -1,8 +1,10 @@
+import { Web3ReactProvider } from "@web3-react/core";
 import { useEffect } from "react";
 import type { AppProps } from "next/app";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
 import "tailwindcss/tailwind.css";
+import getWeb3Library from "../utils/providers";
 
 import theme from "@utils/theme";
 
@@ -22,17 +24,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <style jsx global>
-        {`
-          body {
-            height: 100vh;
-            transition: all 0.25s linear 0s;
-          }
-        `}
-      </style>
-      <Header />
-      <Component {...pageProps} />
-      <Footer />
+      <Web3ReactProvider getLibrary={getWeb3Library}>
+        <style jsx global>
+          {`
+            body {
+              height: 100vh;
+              transition: all 0.25s linear 0s;
+            }
+          `}
+        </style>
+        <Header />
+        <Component {...pageProps} />
+        <Footer />
+      </Web3ReactProvider>
     </MuiThemeProvider>
   );
 }
