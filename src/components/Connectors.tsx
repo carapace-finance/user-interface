@@ -80,20 +80,6 @@ export default function Connectors() {
           <p></p>
         )}
       </div>
-
-      <hr />
-
-      <div>
-        {connector === connectorsByName[ConnectorNames.WalletConnect] && (
-          <Button
-            onClick={() => {
-              (connector as any).close();
-            }}
-          >
-            Kill WalletConnect Session
-          </Button>
-        )}
-      </div>
     </>
   );
 }

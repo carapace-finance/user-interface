@@ -81,9 +81,6 @@ const ConnectWalletPopup = (props) => {
         }
         break;
       }
-      case "walletconnect": {
-        break;
-      }
     }
   };
 
@@ -135,23 +132,6 @@ const ConnectWalletPopup = (props) => {
           }
         >
           <Typography variant="body2">MetaMask</Typography>
-        </Button>
-        <Button
-          variant="outlined"
-          color="primary"
-          className={classes.button}
-          onClick={() => onConnect("walletconnect")}
-          startIcon={
-            <Image
-              src="/walletconnect.svg"
-              alt="walletconnect"
-              width="30px"
-              height="30px"
-              objectFit="contain"
-            />
-          }
-        >
-          <Typography variant="body2">WalletConnect</Typography>
         </Button>
       </DialogContent>
       <ErrorPopup error={error} handleCloseError={() => setError("")} />
