@@ -53,6 +53,14 @@ const Header = () => {
   const router = useRouter();
   const [connectWalletOpen, setConnectWalletOpen] = useState(false);
 
+  async function disconnect() {
+    try {
+      deactivate();
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
   return (
     <AppBar
       className={classes.appBar}
@@ -146,6 +154,17 @@ const Header = () => {
                   : "Connect Wallet"}
               </span>
             </Button>
+            {active ? (
+              <Button
+                color="primary"
+                onClick={() => disconnect()}
+                variant="outlined"
+              >
+                <span>{"Disconnect"}</span>
+              </Button>
+            ) : (
+              ""
+            )}
             <Account />
           </div>
         </Toolbar>
