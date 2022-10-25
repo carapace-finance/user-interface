@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core";
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -11,6 +12,7 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
+import { injected } from "../utils/connectors";
 
 import ErrorPopup from "@components/ErrorPopup";
 
@@ -18,21 +20,14 @@ const useStyles = makeStyles((theme) => ({
   root: {
     overflow: "hidden",
     borderRadius: theme.spacing(10),
-    width: "100vw",
-    height: "80vh",
+    width: "40%",
+    height: "40%",
     position: "absolute",
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    margin: "auto",
-    [theme.breakpoints.up("md")]: {
-      height: "max-content",
-      width: "max-content",
-      minWidth: theme.spacing(50),
-      maxHeight: "90%",
-      overflowY: "scroll"
-    }
+    margin: "auto"
   },
   title: {
     marginTop: theme.spacing(2),
@@ -40,10 +35,6 @@ const useStyles = makeStyles((theme) => ({
   },
   field: {
     width: "100%"
-  },
-  actions: {
-    display: "flex",
-    flexDirection: "row"
   },
   button: {
     width: "100%",
@@ -62,18 +53,27 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// Handle Metamask and walletconnect authentication. TODO: Walletconnect (not on Moralis)
 const ConnectWalletPopup = (props) => {
+  const { activate } = useWeb3React();
   const classes = useStyles();
   const router = useRouter();
   const { open, onClose } = props;
   const [error, setError] = useState("");
+
+  async function connect() {
+    try {
+      await activate(injected);
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
 
   const onConnect = async (wallet: string) => {
     setError("");
     switch (wallet) {
       case "metamask": {
         try {
+          await connect();
           onClose();
           router.push("/");
         } catch (e) {
@@ -115,7 +115,7 @@ const ConnectWalletPopup = (props) => {
           <CloseIcon fontSize="small" />
         </IconButton>
       </DialogTitle>
-      <DialogContent className={classes.actions}>
+      <DialogContent>
         <Button
           variant="outlined"
           color="primary"
