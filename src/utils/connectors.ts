@@ -6,8 +6,7 @@ import {
 } from "@web3-react/injected-connector";
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 1337, 31337]
-});
+  supportedChainIds: [1, 5] // 1 is Mainnet and 5 is Goerli.
 });
 
 export enum ConnectorNames {
