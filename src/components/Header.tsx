@@ -6,9 +6,9 @@ import Image from "next/image";
 import { AppBar, Container, Toolbar, Typography } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { injected } from "../utils/connectors";
 
 import Account from "@components/Account";
-import ConnectWalletPopup from "@components/ConnectWalletPopup";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -47,12 +47,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = () => {
-  const { active, error, deactivate } = useWeb3React();
+  const { active, activate, deactivate } = useWeb3React();
   const { chainId } = useWeb3React();
   const classes = useStyles();
   const router = useRouter();
-  const [connectWalletOpen, setConnectWalletOpen] = useState(false);
+  const [error, setError] = useState("");
 
+  const onConnect = async (wallet: string) => {
+    setError("");
+    switch (wallet) {
+      case "metamask": {
+        try {
+          await connect();
+          router.push("/");
+        } catch (e) {
+          console.log("Error", e);
+        }
+        break;
+      }
+    }
+  };
+
+  async function connect() {
+    try {
+      await activate(injected);
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+  
   async function disconnect() {
     try {
       deactivate();
@@ -141,7 +164,7 @@ const Header = () => {
             </>
             <Button
               color="primary"
-              onClick={() => setConnectWalletOpen(true)}
+              onClick={async () => await onConnect("metamask")}
               variant="outlined"
             >
               <span>
@@ -169,10 +192,6 @@ const Header = () => {
           </div>
         </Toolbar>
       </Container>
-      <ConnectWalletPopup
-        open={connectWalletOpen}
-        onClose={() => setConnectWalletOpen(false)}
-      />
     </AppBar>
   );
 };
