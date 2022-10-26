@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -8,9 +7,7 @@ import {
   IconButton,
   Typography
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
-import SwapHorizIcon from "@material-ui/icons/SwapHoriz";
 
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
@@ -133,7 +130,7 @@ const ClaimPopup = (props) => {
           onClick={onClose}
           size="small"
         >
-          <CloseIcon fontSize="small" />
+          close
         </IconButton>
         <>
           <DialogContent className={classes.content}>
@@ -141,7 +138,7 @@ const ClaimPopup = (props) => {
               <Typography gutterBottom variant="subtitle2"></Typography>
               <Typography variant="body2"></Typography>
             </div>
-            <SwapHorizIcon />
+            <Typography>swap horizon</Typography>
             <div>
               <Typography gutterBottom variant="subtitle2">
                 Amount in DAI

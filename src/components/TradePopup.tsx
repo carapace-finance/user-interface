@@ -13,7 +13,6 @@ import {
   TextField,
   Typography
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
 
 import SuccessPopup from "./SuccessPopup";
@@ -192,7 +191,7 @@ const TradePopup = (props) => {
               onClick={onClose}
               size="small"
             >
-              <CloseIcon fontSize="small" />
+              close
             </IconButton>
           </div>
           {daiBalance !== "0" ? (
