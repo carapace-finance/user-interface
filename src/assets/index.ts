@@ -1,7 +1,7 @@
 import footerLogo from "./footerLogo.png";
-import logo from "./logo.png";
+import headerLogo from "./headerLogo.png";
 
 export default {
   footerLogo,
-  logo
+  headerLogo
 };

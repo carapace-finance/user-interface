@@ -7,6 +7,8 @@ import { AppBar, Container, Toolbar, Typography } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { injected } from "../utils/connectors";
+import assets from "../assets";
+import { footerLinks } from "../constants";
 
 import Account from "@components/Account";
 
@@ -75,7 +77,7 @@ const Header = () => {
       console.log(ex);
     }
   }
-  
+
   async function disconnect() {
     try {
       deactivate();
@@ -95,11 +97,11 @@ const Header = () => {
         <Toolbar disableGutters variant="dense" className={classes.toolBar}>
           <Link href="/" passHref>
             <Image
-              src="/logo-dark.png"
+              src={assets.headerLogo.src}
               alt=""
               className={classes.logo}
-              height="30px"
-              width="124px"
+              height="32px"
+              width="136px"
               unoptimized
             />
           </Link>
