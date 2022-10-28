@@ -30,6 +30,9 @@
       "@contexts/*": [
         "src/contexts/*"
       ],
+      "@style/*": [
+        "src/style/*"
+      ],
       "@type/*": [
         "src/type/*"
       ],
