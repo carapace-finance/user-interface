@@ -1,6 +1,5 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { useWeb3React } from "@web3-react/core";
 import Spinner from "./Spinner";
 import { useEagerConnect } from "../hooks/useEagerConnect";
@@ -37,8 +36,9 @@ export default function Connectors() {
             !triedEager || !!activatingConnector || connected || !!error;
 
           return (
-            <SwitchButton
+            <button
               disabled={disabled}
+              className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
               key={name}
               onClick={() => {
                 setActivatingConnector(currentConnector);
@@ -54,19 +54,20 @@ export default function Connectors() {
                 )}
               </div>
               {name}
-            </SwitchButton>
+            </button>
           );
         })}
       </div>
       <div>
         {(active || error) && (
-          <Button
+          <button
             onClick={() => {
               deactivate();
             }}
+            className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           >
             Disconnect
-          </Button>
+          </button>
         )}
 
         {!!error && <h4>{getErrorMessage(error)}</h4>}
@@ -79,21 +80,3 @@ export default function Connectors() {
     </>
   );
 }
-
-const Button = styled.button`
-  background: transparent;
-  border-radius: 8px;
-  border: 2px solid palevioletred;
-  color: palevioletred;
-  padding: 4px 8px;
-`;
-
-const SwitchButton = styled.button`
-  background: transparent;
-  border-radius: 8px;
-  padding: 4px 8px;
-    borderColor: {
-      ${(props) =>
-        props.activating ? "orange" : props.connected ? "green" : "unset"};
-    cursor: ${(props) => (props.disabled ? "unset" : "pointer")}
-  `;

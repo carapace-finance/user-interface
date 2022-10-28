@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -46,11 +45,6 @@ const useStyles = makeStyles((theme) => ({
   fields: {
     display: "flex",
     justifyContent: "space-between"
-  },
-  button: {
-    width: "100%",
-    height: theme.spacing(6),
-    margin: theme.spacing(2, 2)
   },
   closeButton: {
     position: "absolute",
@@ -242,15 +236,13 @@ const TradePopup = (props) => {
                 </Typography>
               </DialogContent>
               <DialogActions>
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  variant="contained"
+                <button
+                  className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                   onClick={executeTrade}
                   disabled={!priceInput || priceInput === "0"}
                 >
                   {tab === 0 ? "Buy coverage" : "Supply coverage"}
-                </Button>
+                </button>
               </DialogActions>
             </>
           ) : (

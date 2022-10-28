@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Container } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialTable from "material-table";
 
@@ -35,11 +35,6 @@ const useStyles = makeStyles((theme) => ({
       color: `${theme.palette.primary} !important`,
       cursor: "pointer"
     }
-  },
-  button: {
-    display: "inline",
-    width: "100%",
-    margin: theme.spacing(0, 1)
   },
   row: {
     display: "flex",
@@ -95,23 +90,19 @@ const LendingPools = () => {
             totalPremium: "21915.10 DAI",
             action: (
               <div className={classes.row}>
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  variant="outlined"
+                <button
+                  className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                   onClick={() => {}}
                 >
                   Trade
-                </Button>
-                <Button
+                </button>
+                <button
                   disabled
-                  className={classes.button}
-                  color="primary"
-                  variant="contained"
+                  className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                   onClick={() => {}}
                 >
                   Claim
-                </Button>
+                </button>
               </div>
             )
           },
@@ -124,24 +115,20 @@ const LendingPools = () => {
             balance: "NA",
             action: (
               <div className={classes.row}>
-                <Button
+                <button
+                  className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                   disabled={false}
-                  className={classes.button}
-                  color="primary"
-                  variant="outlined"
                   onClick={() => {}}
                 >
                   Trade
-                </Button>
-                <Button
+                </button>
+                <button
                   disabled={false}
-                  className={classes.button}
-                  color="primary"
-                  variant="contained"
+                  className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                   onClick={() => {}}
                 >
                   Claim
-                </Button>
+                </button>
               </div>
             )
           }

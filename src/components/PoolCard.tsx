@@ -1,10 +1,4 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography
-} from "@material-ui/core";
+import { Card, CardActions, CardContent, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
 
@@ -27,9 +21,6 @@ const useStyles = makeStyles((theme) => ({
   actions: {
     display: "flex",
     justifyContent: "center"
-  },
-  button: {
-    width: "100%"
   }
 }));
 
@@ -63,9 +54,13 @@ const CoverCard = (props: PoolCardProps) => {
         </Typography>
       </CardContent>
       <CardActions className={classes.actions}>
-        <Button className={classes.button} color="primary" variant="contained">
+        <button
+          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          color="primary"
+          variant="contained"
+        >
           Trade
-        </Button>
+        </button>
       </CardActions>
     </Card>
   );
