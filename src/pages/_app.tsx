@@ -25,14 +25,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <Web3ReactProvider getLibrary={getWeb3Library}>
-        <style jsx global>
-          {`
-            body {
-              height: 100vh;
-              transition: all 0.25s linear 0s;
-            }
-          `}
-        </style>
         <Header />
         <Component {...pageProps} />
         <Footer />

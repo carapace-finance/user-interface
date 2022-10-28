@@ -25,6 +25,14 @@
     --ifm-code-font-size: 95%;
   }
 
+  body {
+    height: 100vh;
+    width: 95%;
+    margin: 0 auto;
+    text-align: center;
+    transition: all 0.25s linear 0s;
+  }
+
   nav {
     --ifm-navbar-height: 0;
     --ifm-navbar-padding-vertical: 0;
