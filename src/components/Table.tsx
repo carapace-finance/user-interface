@@ -1,11 +1,7 @@
-import { Container, Typography } from "@material-ui/core";
-
 const Table = (props) => {
   return (
-    <Container maxWidth="md">
-      <Typography gutterBottom variant="h6">
-        {props.title}
-      </Typography>
+    <div>
+      <div>{props.title}</div>
       <table className="table-auto w-full">
         <thead>
           <tr>
@@ -36,7 +32,7 @@ const Table = (props) => {
           </tr>
         </tbody>
       </table>
-    </Container>
+    </div>
   );
 };
 
