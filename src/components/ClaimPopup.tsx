@@ -141,7 +141,7 @@ const ClaimPopup = (props) => {
             <Typography>swap horizon</Typography>
             <div>
               <Typography gutterBottom variant="subtitle2">
-                Amount in DAI
+                Amount in USDC
               </Typography>
               <Typography variant="body2"></Typography>
             </div>

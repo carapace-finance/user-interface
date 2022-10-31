@@ -86,8 +86,8 @@ const LendingPools = () => {
             pool: "Goldfinch CDS",
             expiry: "January 8, 2022 3:22pm EDT",
             defaulted: false,
-            totalCoverage: "6508.15 DAI",
-            totalPremium: "21915.10 DAI",
+            totalCoverage: "6508.15 USDC",
+            totalPremium: "21915.10 USDC",
             action: (
               <div className={classes.row}>
                 <button
