@@ -3,7 +3,7 @@ import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialTable from "material-table";
 
-import TradePopup from "@components/TradePopup";
+import BuyProtectionPopUp from "@components/BuyProtectionPopUp";
 import ClaimPopup from "@components/ClaimPopup";
 import ErrorPopup from "@components/ErrorPopup";
 
@@ -145,7 +145,7 @@ const LendingPools = () => {
           }
         }}
       />
-      <TradePopup
+      <BuyProtectionPopUp
         open={tradeOpen}
         onClose={() => {}}
         poolContractAddress="NA"
