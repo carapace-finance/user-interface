@@ -1,6 +1,7 @@
 import React from "react";
 import assets from "../assets";
 import { footerLinks } from "../constants";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -41,13 +42,13 @@ const Footer = () => {
                       index !== footerlink.links.length - 1 ? "mb-4" : "mb-0"
                     }`}
                   >
-                    <a
+                    <Link
                       href={link.link}
                       target={link.target}
                       className="transition-all hover:text-black hover:no-underline hover:opacity-100 opacity-30"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

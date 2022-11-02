@@ -59,18 +59,14 @@ const LendWithProtection = () => {
               <td>{bond.lendingPool}</td>
               <td>{bond.protocol}</td>
               <td>
-                <Link
-                  key={bond.poolTokenId}
-                  href={"/bond/" + bond.poolTokenId}
-                >
-                  <a>link</a>
+                <Link key={bond.poolTokenId} href={"/bond/" + bond.poolTokenId}>
+                  link
                 </Link>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
     </div>
   );
 };

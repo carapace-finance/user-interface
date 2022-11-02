@@ -51,8 +51,8 @@ const Header = () => {
         <Image
           src={assets.headerLogo.src}
           alt=""
-          height="32px"
-          width="136px"
+          height="32"
+          width="136"
           unoptimized
         />
       </Link>

@@ -63,7 +63,7 @@ const BuyProtection = () => {
                   key={lendingPool.id}
                   href={"/lendingPool/" + lendingPool.id}
                 >
-                  <a>link</a>
+                  link
                 </Link>
               </td>
             </tr>
