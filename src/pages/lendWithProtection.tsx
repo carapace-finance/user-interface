@@ -1,34 +1,54 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Image from "next/image";
 const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
 );
+import assets from "../assets";
+
+const goldfinchLogo = assets.goldfinch.src;
 
 const bonds = [
   {
     poolTokenId: 424,
     price: "2542 USDC",
     lendingPool: "Almavest Basket #6",
-    protocol: "Goldfinch"
+    protocol: goldfinchLogo,
+    adjustedYields: "7 - 10%",
+    lendingPoolAPY: "17%",
+    CARATokenRewards: "~3.5%",
+    premium: "4 - 7%"
   },
   {
     poolTokenId: 4224,
     price: "42424242 USDC",
     lendingPool: "Almavest Basket #6",
-    protocol: "Goldfinch"
+    protocol: goldfinchLogo,
+    adjustedYields: "7 - 10%",
+    lendingPoolAPY: "17%",
+    CARATokenRewards: "~3.5%",
+    premium: "4 - 7%"
   },
   {
     poolTokenId: 342,
     price: "42424242 USDC",
     lendingPool: "Almavest Basket #6",
-    protocol: "Goldfinch"
+    protocol: goldfinchLogo,
+    adjustedYields: "7 - 10%",
+    lendingPoolAPY: "17%",
+    CARATokenRewards: "~3.5%",
+    premium: "4 - 7%"
   },
   {
     poolTokenId: 424,
     price: "900000 USDC",
     lendingPool: "Almavest Basket #6",
-    protocol: "Goldfinch"
+    protocol: goldfinchLogo,
+    adjustedYields: "7 - 10%",
+    lendingPoolAPY: "17%",
+    CARATokenRewards: "~3.5%",
+    premium: "4 - 7%"
   }
 ];
 
@@ -49,6 +69,10 @@ const LendWithProtection = () => {
             <th>Bond Price</th>
             <th>Lending Pool</th>
             <th>Protocol</th>
+            <th>Adjusted Yields</th>
+            <th>Lending Pool APY</th>
+            <th>CARA Token Rewards</th>
+            <th>Premium</th>
           </tr>
         </thead>
         <tbody>
@@ -57,7 +81,13 @@ const LendWithProtection = () => {
               <td>{bond.poolTokenId}</td>
               <td>{bond.price}</td>
               <td>{bond.lendingPool}</td>
-              <td>{bond.protocol}</td>
+              <td>
+                <Image src={bond.protocol} width={24} height={24} alt="" />
+              </td>
+              <td>{bond.adjustedYields}</td>
+              <td>{bond.lendingPoolAPY}</td>
+              <td>{bond.CARATokenRewards}</td>
+              <td>{bond.premium}</td>
               <td>
                 <Link key={bond.poolTokenId} href={"/bond/" + bond.poolTokenId}>
                   link
