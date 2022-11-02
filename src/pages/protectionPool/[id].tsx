@@ -9,7 +9,7 @@ const ProtectionPool = () => {
 
   return (
     <div>
-      <div>ProtectionPool #{protectionPoolId}</div>;
+      <div>ProtectionPool #{protectionPoolId}</div>
       <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         onClick={() => {

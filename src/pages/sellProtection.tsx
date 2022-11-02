@@ -12,28 +12,28 @@ const goldfinchLogo = assets.goldfinch.src;
 const protectionPools = [
   {
     id: 1,
-    protocol: goldfinchLogo,
+    protocols: goldfinchLogo,
     APY: "15 - 20%",
     totalCapital: "$1M",
     totalProtection: "$2M"
   },
   {
     id: 2,
-    protocol: goldfinchLogo,
+    protocols: goldfinchLogo,
     APY: "15 - 20%",
     totalCapital: "$1M",
     totalProtection: "$2M"
   },
   {
     id: 3,
-    protocol: goldfinchLogo,
+    protocols: goldfinchLogo,
     APY: "15 - 20%",
     totalCapital: "$1M",
     totalProtection: "$2M"
   },
   {
     id: 4,
-    protocol: goldfinchLogo,
+    protocols: goldfinchLogo,
     APY: "15 - 20%",
     totalCapital: "$1M",
     totalProtection: "$2M"
@@ -66,7 +66,7 @@ const SellProtection = () => {
               <td>{protectionPool.id}</td>
               <td>
                 <Image
-                  src={protectionPool.protocol}
+                  src={protectionPool.protocols}
                   width={24}
                   height={24}
                   alt=""

@@ -56,13 +56,13 @@ const Header = () => {
           unoptimized
         />
       </Link>
-      <Link href="/buy_protection">
-        <h1>Buy Protection</h1>
+      <Link href="/buyProtection">
+        <h3>Buy Protection</h3>
       </Link>
-      <Link href="/lend_with_protection">
+      <Link href="/lendWithProtection">
         <h3>Lend With Protection</h3>
       </Link>
-      <Link href="/sell_protection">
+      <Link href="/sellProtection">
         <h3>Sell Protection</h3>
       </Link>
       <Link href="/dashboard">

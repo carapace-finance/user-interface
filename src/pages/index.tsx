@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-const BuyProtection = dynamic(() => import("./buy_protection"), { ssr: false });
+const BuyProtection = dynamic(() => import("./buyProtection"), { ssr: false });
 
 const Home = () => {
   return (

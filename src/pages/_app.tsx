@@ -1,5 +1,4 @@
 import { Web3ReactProvider } from "@web3-react/core";
-import { useEffect } from "react";
 import type { AppProps } from "next/app";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
