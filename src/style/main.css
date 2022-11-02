@@ -50,4 +50,7 @@
   h4 {
     @apply text-xl;
   }
+  a {
+    cursor: pointer;
+  }
 }

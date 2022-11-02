@@ -1,30 +1,42 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Image from "next/image";
 const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
 );
+import assets from "../assets";
+
+const goldfinchLogo = assets.goldfinch.src;
 
 const protectionPools = [
   {
     id: 1,
-    protocol: "Goldfinch",
-    APY: "15 - 20%"
+    protocol: goldfinchLogo,
+    APY: "15 - 20%",
+    totalCapital: "$1M",
+    totalProtection: "$2M"
   },
   {
     id: 2,
-    protocol: "Goldfinch",
-    APY: "15 - 20%"
+    protocol: goldfinchLogo,
+    APY: "15 - 20%",
+    totalCapital: "$1M",
+    totalProtection: "$2M"
   },
   {
     id: 3,
-    protocol: "Goldfinch",
-    APY: "15 - 20%"
+    protocol: goldfinchLogo,
+    APY: "15 - 20%",
+    totalCapital: "$1M",
+    totalProtection: "$2M"
   },
   {
     id: 4,
-    protocol: "Goldfinch",
-    APY: "15 - 20%"
+    protocol: goldfinchLogo,
+    APY: "15 - 20%",
+    totalCapital: "$1M",
+    totalProtection: "$2M"
   }
 ];
 
@@ -42,22 +54,33 @@ const SellProtection = () => {
         <thead>
           <tr>
             <th>id</th>
-            <th>Protocol</th>
+            <th>Protocols</th>
             <th>APY</th>
+            <th>Total Capital</th>
+            <th>Total Protection</th>
           </tr>
         </thead>
         <tbody>
           {protectionPools.map((protectionPool) => (
             <tr>
               <td>{protectionPool.id}</td>
-              <td>{protectionPool.protocol}</td>
+              <td>
+                <Image
+                  src={protectionPool.protocol}
+                  width={24}
+                  height={24}
+                  alt=""
+                />
+              </td>
               <td>{protectionPool.APY}</td>
+              <td>{protectionPool.totalCapital}</td>
+              <td>{protectionPool.totalProtection}</td>
               <td>
                 <Link
                   key={protectionPool.id}
                   href={"/protectionPool/" + protectionPool.id}
                 >
-                  <a>link</a>
+                  link
                 </Link>
               </td>
             </tr>
