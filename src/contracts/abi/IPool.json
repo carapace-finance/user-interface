@@ -1,0 +1,645 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "msgSender",
+        "type": "address"
+      }
+    ],
+    "name": "BuyerAccountExists",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "msgSender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "sTokenBalance",
+        "type": "uint256"
+      }
+    ],
+    "name": "InsufficientSTokenBalance",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LendingPoolDefaulted",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LendingPoolExpired",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LendingPoolHasLatePayment",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LendingPoolNotSupported",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "msgSender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "poolCycleIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "NoWithdrawalRequested",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "msgSender",
+        "type": "address"
+      }
+    ],
+    "name": "OnlyDefaultStateManager",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalSTokenUnderlying",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolHasNoMinCapitalRequired",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolIsNotOpen",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "leverageRatio",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolLeverageRatioTooHigh",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "leverageRatio",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolLeverageRatioTooLow",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "protectionDurationInSeconds",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProtectionDurationTooLong",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "protectionDurationInSeconds",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProtectionDurationTooShort",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "lendingPoolAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nftLpTokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionExpirationTimestamp",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ProtectionPurchaseParams",
+        "name": "params",
+        "type": "tuple"
+      }
+    ],
+    "name": "ProtectionPurchaseNotAllowed",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "msgSender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "requestedSTokenAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "WithdrawalHigherThanRequested",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract IERC20Metadata",
+        "name": "underlyingToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract IReferenceLendingPools",
+        "name": "referenceLendingPools",
+        "type": "address"
+      }
+    ],
+    "name": "PoolInitialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "lendingPool",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "lastPremiumAccrualTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "PremiumAccrued",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "lendingPoolAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "protectionAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "premium",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProtectionBought",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "lendingPoolAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "protectionAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProtectionExpired",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "protectionSeller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "protectionAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProtectionSold",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "msgSender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      }
+    ],
+    "name": "WithdrawalMade",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "msgSender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sTokenAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "minPoolCycleIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "WithdrawalRequested",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "accruePremiumAndExpireProtections",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "lendingPoolAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nftLpTokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionExpirationTimestamp",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ProtectionPurchaseParams",
+        "name": "_protectionPurchaseParams",
+        "type": "tuple"
+      }
+    ],
+    "name": "buyProtection",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "calculateLeverageRatio",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_receiver",
+        "type": "address"
+      }
+    ],
+    "name": "claimUnlockedCapital",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_underlyingAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_receiver",
+        "type": "address"
+      }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPoolInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "poolId",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "leverageRatioFloor",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "leverageRatioCeiling",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "leverageRatioBuffer",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "minRequiredCapital",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "minRequiredProtection",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "curvature",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "minCarapaceRiskPremiumPercent",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "underlyingRiskPremiumPercent",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "minProtectionDurationInSeconds",
+                "type": "uint256"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "openCycleDuration",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cycleDuration",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct PoolCycleParams",
+                "name": "poolCycleParams",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct PoolParams",
+            "name": "params",
+            "type": "tuple"
+          },
+          {
+            "internalType": "contract IERC20Metadata",
+            "name": "underlyingToken",
+            "type": "address"
+          },
+          {
+            "internalType": "contract IReferenceLendingPools",
+            "name": "referenceLendingPools",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct PoolInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "lockCapital",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lockedAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_snapshotId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_sTokenAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "requestWithdrawal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_sTokenWithdrawalAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_receiver",
+        "type": "address"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

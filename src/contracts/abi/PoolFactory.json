@@ -1,0 +1,266 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "poolAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "floor",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "ceiling",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract IERC20Metadata",
+        "name": "underlyingToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract IReferenceLendingPools",
+        "name": "referenceLendingPools",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract IPremiumCalculator",
+        "name": "premiumCalculator",
+        "type": "address"
+      }
+    ],
+    "name": "PoolCreated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_salt",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "leverageRatioFloor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "leverageRatioCeiling",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "leverageRatioBuffer",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minRequiredCapital",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minRequiredProtection",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "curvature",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minCarapaceRiskPremiumPercent",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "underlyingRiskPremiumPercent",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minProtectionDurationInSeconds",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "openCycleDuration",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "cycleDuration",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct PoolCycleParams",
+            "name": "poolCycleParams",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct PoolParams",
+        "name": "_poolParameters",
+        "type": "tuple"
+      },
+      {
+        "internalType": "contract IERC20Metadata",
+        "name": "_underlyingToken",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IReferenceLendingPools",
+        "name": "_referenceLendingPools",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IPremiumCalculator",
+        "name": "_premiumCalculator",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_symbol",
+        "type": "string"
+      }
+    ],
+    "name": "createPool",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getDefaultStateManager",
+    "outputs": [
+      {
+        "internalType": "contract IDefaultStateManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPoolAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPoolCycleManager",
+    "outputs": [
+      {
+        "internalType": "contract IPoolCycleManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

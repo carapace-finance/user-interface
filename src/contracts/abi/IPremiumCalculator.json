@@ -1,0 +1,120 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_protectionExpirationTimestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_protectionAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_protectionBuyerApy",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_leverageRatio",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalCapital",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalProtection",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "leverageRatioFloor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "leverageRatioCeiling",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "leverageRatioBuffer",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minRequiredCapital",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minRequiredProtection",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "curvature",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minCarapaceRiskPremiumPercent",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "underlyingRiskPremiumPercent",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minProtectionDurationInSeconds",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "openCycleDuration",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "cycleDuration",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct PoolCycleParams",
+            "name": "poolCycleParams",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct PoolParams",
+        "name": "_poolParameters",
+        "type": "tuple"
+      }
+    ],
+    "name": "calculatePremium",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "premiumAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isMinPremium",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

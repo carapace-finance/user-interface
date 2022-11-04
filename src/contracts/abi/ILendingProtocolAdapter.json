@@ -1,0 +1,186 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "calculateProtectionBuyerAPR",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_nftLpTokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "calculateRemainingPrincipal",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lendingPool",
+        "type": "address"
+      }
+    ],
+    "name": "getLatestPaymentTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getLendingPoolTermEndTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "termEndTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "isLendingPoolDefaulted",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "isLendingPoolExpired",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "isLendingPoolLate",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "lendingPoolAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nftLpTokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionExpirationTimestamp",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ProtectionPurchaseParams",
+        "name": "_purchaseParams",
+        "type": "tuple"
+      }
+    ],
+    "name": "isProtectionAmountValid",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
