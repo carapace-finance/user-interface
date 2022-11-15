@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-import { injected } from "../utils/connectors";
+import { injected } from "../utils/mainnet/connectors";
 import assets from "../assets";
 
 import Account from "@components/Account";
