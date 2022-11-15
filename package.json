@@ -56,5 +56,9 @@
       "last 1 safari version"
     ]
   },
+  "browser": {
+    "fs": false,
+    "child_process": false
+  },
   "license": "MIT"
 }
