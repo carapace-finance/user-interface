@@ -1,58 +1,20 @@
 import { useState } from "react";
-import { Container } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import MaterialTable from "material-table";
+import { Container } from "@mui/material";
 
 import BuyProtectionPopUp from "@components/BuyProtectionPopUp";
 import ClaimPopup from "@components/ClaimPopup";
 import ErrorPopup from "@components/ErrorPopup";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(3),
-    "&:nth-child(1) .Component-horizontalScrollContainer-26": {
-      borderRadius: theme.spacing(1)
-    }
-  },
-  item: {
-    padding: theme.spacing(1)
-  },
-  containerItem: {
-    display: "grid",
-    gridTemplateColumns: `1fr`,
-    [theme.breakpoints.up("sm")]: {
-      gridTemplateColumns: `repeat(2, 1fr)`
-    },
-    [theme.breakpoints.up("md")]: {
-      gridTemplateColumns: `repeat(3, 1fr)`
-    }
-  },
-  table: {
-    minWidth: 700
-  },
-  cell: {
-    "&:hover": {
-      color: `${theme.palette.primary} !important`,
-      cursor: "pointer"
-    }
-  },
-  row: {
-    display: "flex",
-    flexDirection: "row"
-  }
-}));
-
 // Table of coverage pools
 const LendingPools = () => {
-  const classes = useStyles();
   const [error, setError] = useState("");
 
   const [tradeOpen, setTradeOpen] = useState(false);
   const [claimOpen, setClaimOpen] = useState(false);
 
   return (
-    <Container className={classes.root} maxWidth="lg">
-      <MaterialTable
+    <Container maxWidth="lg">
+      {/* <MaterialTable
         style={{
           borderRadius: "10px"
         }}
@@ -89,7 +51,7 @@ const LendingPools = () => {
             totalCoverage: "6508.15 USDC",
             totalPremium: "21915.10 USDC",
             action: (
-              <div className={classes.row}>
+              <div >
                 <button
                   className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                   onClick={() => {}}
@@ -114,7 +76,7 @@ const LendingPools = () => {
             totalPremium: "NA",
             balance: "NA",
             action: (
-              <div className={classes.row}>
+              <div >
                 <button
                   className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                   disabled={false}
@@ -144,7 +106,7 @@ const LendingPools = () => {
             padding: "8px"
           }
         }}
-      />
+      /> */}
       <BuyProtectionPopUp
         open={tradeOpen}
         onClose={() => {}}

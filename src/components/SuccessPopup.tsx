@@ -1,18 +1,7 @@
-import { Snackbar } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
-import { makeStyles } from "@material-ui/core/styles";
-import lightblue from "@material-ui/core/colors/lightBlue";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: lightblue[100],
-    color: "black"
-  }
-}));
+import { Snackbar } from "@mui/material";
+import Alert from "@mui/lab/Alert";
 
 const SuccessPopup = (props) => {
-  const classes = useStyles();
-
   return (
     <Snackbar
       open={props.message ? true : false}
@@ -23,11 +12,7 @@ const SuccessPopup = (props) => {
         horizontal: "center"
       }}
     >
-      <Alert
-        className={classes.root}
-        onClose={props.handleClose}
-        severity="success"
-      >
+      <Alert onClose={props.handleClose} severity="success">
         {props.message}
       </Alert>
     </Snackbar>
