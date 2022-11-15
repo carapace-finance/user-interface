@@ -8,9 +8,12 @@ Open your terminal, set up the frontend:
   npm install
 ```
 
-I encourage you to declare environment variables in your `.bash_profile`(or .zprofile and others) to avoid sharing your credentials accidentally. You can also make `.env` file in the root of this repository although I do not recommend it.
+Make `.env.local` file in the root of this repository.
 
 ```bash
+TENDERLY_ACCESS_KEY=<tenderly_access_key>
+NEXT_PUBLIC_TENDERLY_PROJECT=<next_public_tenderly_project>
+NEXT_PUBLIC_TENDERLY_USER=<next_public_tenderly_user>
 ```
 
 Run a dev server:
@@ -18,6 +21,8 @@ Run a dev server:
 ```bash
   npm run dev
 ```
+
+Open `localhost:3000` in a web browser.
 
 Open another terminal, set up contracts
 
@@ -34,5 +39,5 @@ Deploy the contracts
 ```bash
   npm run deploy:mainnet_forked
 ```
-
-Open `localhost:3000` in a web browser
+# Set up contracts for the forked mainnet
+export abi and bytecode from the contracts, and copy them into the folders. Make sure you change visibility of functions in the library to `internal` before your export abi and bytecode. 
