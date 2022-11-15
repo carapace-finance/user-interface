@@ -7,8 +7,9 @@ import { injected } from "../utils/connectors";
 import assets from "../assets";
 
 import Account from "@components/Account";
+import { deployToFork } from "@utils/forked/tenderly";
 
-const Header = () => {
+const Header = ({ tenderlyAccessKey }) => {
   const { active, activate, deactivate } = useWeb3React();
   const { chainId } = useWeb3React();
   const router = useRouter();
@@ -92,6 +93,14 @@ const Header = () => {
       ) : (
         ""
       )}
+      <button
+        className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+        onClick={async () =>
+          await deployToFork(tenderlyAccessKey)
+        }
+      >
+        <span>Playground</span>
+      </button>
       <Account />
     </div>
   );
