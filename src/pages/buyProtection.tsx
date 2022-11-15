@@ -77,7 +77,7 @@ const BuyProtection = () => {
         </thead>
         <tbody>
           {lendingPools.map((lendingPool) => (
-            <tr>
+            <tr key={lendingPool.id}>
               <td>{lendingPool.id}</td>
               <td>{lendingPool.name}</td>
               <td>

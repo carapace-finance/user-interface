@@ -77,7 +77,7 @@ const LendWithProtection = () => {
         </thead>
         <tbody>
           {bonds.map((bond) => (
-            <tr>
+            <tr key={bond.poolTokenId}>
               <td>{bond.poolTokenId}</td>
               <td>{bond.price}</td>
               <td>{bond.lendingPool}</td>

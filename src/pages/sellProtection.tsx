@@ -62,7 +62,7 @@ const SellProtection = () => {
         </thead>
         <tbody>
           {protectionPools.map((protectionPool) => (
-            <tr>
+            <tr key={protectionPool.id}>
               <td>{protectionPool.id}</td>
               <td>
                 <Image
