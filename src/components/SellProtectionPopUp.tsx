@@ -14,7 +14,7 @@ import ErrorPopup from "@components/ErrorPopup";
 
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
-  const { open, onClose, USDCBalance } = props;
+  const { open, onClose, amount, USDCBalance } = props;
   const [tab, setTab] = useState(0);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
@@ -103,7 +103,7 @@ const SellProtectionPopUp = (props) => {
                 onClick={executeTrade}
                 disabled={!priceInput || priceInput === "0"}
               >
-                Sell protection
+                Confirm Sell Protection
               </button>
             </>
           ) : (

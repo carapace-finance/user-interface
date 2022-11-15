@@ -14,7 +14,7 @@ import ErrorPopup from "@components/ErrorPopup";
 
 // Presentational component for handling trades
 const BuyProtectionPopUp = (props) => {
-  const { open, onClose, USDCBalance } = props;
+  const { open, onClose, amount, duration, USDCBalance } = props;
   const [tab, setTab] = useState(0);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");

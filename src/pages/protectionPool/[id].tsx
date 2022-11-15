@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import SellProtectionPopUp from "@components/SellProtectionPopUp";
 
 const ProtectionPool = () => {
   const router = useRouter();
@@ -18,10 +17,6 @@ const ProtectionPool = () => {
       >
         Preview
       </button>
-      <SellProtectionPopUp
-        open={tradeOpen}
-        onClose={() => setTradeOpen(false)}
-      />
     </div>
   );
 };
