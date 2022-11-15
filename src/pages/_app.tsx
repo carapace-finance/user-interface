@@ -20,4 +20,11 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
     </ThemeProvider>
   );
 }
-export default MyApp;
+
+App.getInitialProps = async () => {
+  return {
+    tenderlyAccessKey: process.env.TENDERLY_ACCESS_KEY // this value will be passed to the App component as props
+  };
+};
+
+export default App;
