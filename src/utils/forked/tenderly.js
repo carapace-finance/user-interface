@@ -12,7 +12,7 @@ export const fillEther = async (walletAddress, provider) => {
 };
 
 export const createFork = async (tenderlyAccessKey) => {
-  const forkingPoint = { networkId: "1", blockNumber: 15598870 }; // todo : is it possible for the block number to be causing the issue in the createReferenceLendingPools method? 
+  const forkingPoint = { networkId: "1" };
   const options = {
     method: "POST",
     headers: {
