@@ -69,6 +69,8 @@ function getLinkedBytecode(contractArtifact, libRefs) {
 }
 
 const deployContracts = async (forkProvider) => {
+  if (!process.env.NEXT_PUBLIC_FIRST_POOL_SALT) throw new Error("env var NEXT_PUBLIC_FIRST_POOL_SALT not set");
+  
   deployer = await forkProvider.getSigner(0);
   account1 = await forkProvider.getSigner(1);
   await fillEther(await deployer.getAddress(), forkProvider);
@@ -220,9 +222,7 @@ const deployContracts = async (forkProvider) => {
     };
 
     // Create a pool using PoolFactory instead of deploying new pool directly to mimic the prod behavior
-    // TODO: need to figure out why pool salt is not being loaded from env
-    // const _firstPoolFirstTrancheSalt = `0x${process.env.FIRST_POOL_SALT}`;
-    const _firstPoolFirstTrancheSalt = "0x0000000000000000000000000000000000000000000000000000000000000001";
+    const _firstPoolFirstTrancheSalt = `0x${process.env.NEXT_PUBLIC_FIRST_POOL_SALT}`;
 
     const tx = await poolFactoryInstance.createPool(
       _firstPoolFirstTrancheSalt,
