@@ -1,7 +1,7 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { hexValue } from "@ethersproject/bytes";
 import { parseEther, parseUnits } from "ethers/lib/utils";
-import { ContractFactory, Contract, Signer } from "ethers";
+import { ContractFactory, Contract } from "ethers";
 import { fillEther } from "./tenderly";
 
 import riskFactorCalculatorAbi from "../../contracts/forked/abi/RiskFactorCalculator.json";
@@ -9,26 +9,25 @@ import accruedPremiumCalculatorAbi from "../../contracts/forked/abi/AccruedPremi
 import premiumCalculatorAbi from "../../contracts/forked/abi/PremiumCalculator.json";
 import referenceLendingPoolsAbi from "../../contracts/forked/abi/ReferenceLendingPools.json";
 import referenceLendingPoolsFactoryAbi from "../../contracts/forked/abi/ReferenceLendingPoolsFactory.json";
-import poolCycleManagerAbi from "../../contracts/forked/abi/PoolCycleManager.json";
-import goldfinchV2AdapterAbi from "../../contracts/forked/abi/GoldfinchV2Adapter.json";
 import poolFactoryAbi from "../../contracts/forked/abi/PoolFactory.json";
 import defaultStateManagerAbi from "../../contracts/forked/abi/DefaultStateManager.json";
 import poolAbi from "../../contracts/forked/abi/Pool.json";
 
 import { riskFactorCalculatorBytecode } from "../../contracts/forked/bytecode/RiskFactorCalculator";
-import { accruedPremiumCalculatorBytecode } from "../../contracts/forked/bytecode/AccruedPremiumCalculator";
-import { premiumCalculatorBytecode } from "../../contracts/forked/bytecode/PremiumCalculator";
 import { referenceLendingPoolsBytecode } from "../../contracts/forked/bytecode/ReferenceLendingPools";
 import { referenceLendingPoolsFactoryBytecode } from "../../contracts/forked/bytecode/ReferenceLendingPoolsFactory";
-import { poolCycleManagerBytecode } from "../../contracts/forked/bytecode/PoolCycleManager";
-import { goldfinchV2AdapterBytecode } from "../../contracts/forked/bytecode/GoldfinchV2Adapter";
-import { poolFactoryBytecode } from "../../contracts/forked/bytecode/PoolFactory";
+import { linkBytecode } from "./bytecode";
 
 import {
   USDC_ADDRESS,
   USDC_NUM_OF_DECIMALS,
   SECONDS_PER_DAY
 } from "../../constants";
+
+//  Artifacts for contracts that have dependencies on libraries
+import accruedPremiumCalculatorArtifact from "../../contracts/forked/artifacts/AccruedPremiumCalculator.json";
+import premiumCalculatorArtifact from "../../contracts/forked/artifacts/PremiumCalculator.json";
+import poolFactoryArtifact from "../../contracts/forked/artifacts/PoolFactory.json";
 
 let deployer;
 let account1;
@@ -58,7 +57,20 @@ const getDaysInSeconds = (days) => {
   return BigNumber.from(days * SECONDS_PER_DAY);
 };
 
+function getLinkedBytecode(contractArtifact, libRefs) {
+  const libs = libRefs.map((libRef) => { 
+    return {
+      sourceName: `contracts/libraries/${libRef.libraryName}.sol`,
+      libraryName: libRef.libraryName,
+      address: libRef.address
+    };
+  });
+  return linkBytecode(contractArtifact, libs);
+}
+
 const deployContracts = async (forkProvider) => {
+  if (!process.env.NEXT_PUBLIC_FIRST_POOL_SALT) throw new Error("env var NEXT_PUBLIC_FIRST_POOL_SALT not set");
+  
   deployer = await forkProvider.getSigner(0);
   account1 = await forkProvider.getSigner(1);
   await fillEther(await deployer.getAddress(), forkProvider);
@@ -78,7 +90,13 @@ const deployContracts = async (forkProvider) => {
       "RiskFactorCalculator deployed to:",
       riskFactorCalculatorInstance.address
     );
+    
+    const riskFactorLibRef = {
+      libraryName: "RiskFactorCalculator",
+      address: riskFactorCalculatorInstance.address
+    };
 
+    const accruedPremiumCalculatorBytecode = getLinkedBytecode(accruedPremiumCalculatorArtifact, [riskFactorLibRef]);
     const accruedPremiumCalculatorFactory = new ContractFactory(
       accruedPremiumCalculatorAbi,
       accruedPremiumCalculatorBytecode,
@@ -91,7 +109,8 @@ const deployContracts = async (forkProvider) => {
       "AccruedPremiumCalculator deployed to:",
       accruedPremiumCalculatorInstance.address
     );
-
+    
+    const premiumCalculatorBytecode = getLinkedBytecode(premiumCalculatorArtifact, [riskFactorLibRef]);
     const premiumCalculatorFactory = new ContractFactory(
       premiumCalculatorAbi,
       premiumCalculatorBytecode,
@@ -133,16 +152,6 @@ const deployContracts = async (forkProvider) => {
       referenceLendingPoolsFactoryInstance.address
     );
 
-    console.log(
-      "code ==>",
-      await forkProvider.getCode(referenceLendingPoolsFactoryInstance.address)
-    );
-    console.log(
-      "referenceLendingPoolsFactoryInstance.owner() ==>",
-      await referenceLendingPoolsFactoryInstance.owner()
-    );
-    console.log("deployer.getAddress() ==>", await deployer.getAddress());
-
     // Create an instance of the ReferenceLendingPools
     const _lendingProtocols = [0, 0]; // 0 = Goldfinch
     const _purchaseLimitsInDays = [hexValue(90), hexValue(60)];
@@ -160,36 +169,17 @@ const deployContracts = async (forkProvider) => {
           gasLimit: "210000000"
         }
       );
-    console.log("tx1 ==>", tx1);
+  
     referenceLendingPoolsInstance =
       await getReferenceLendingPoolsInstanceFromTx(forkProvider, tx1);
-    // Deploy PoolCycleManager
-    const poolCycleManagerFactory = new ContractFactory(
-      poolCycleManagerAbi,
-      poolCycleManagerBytecode,
-      deployer
-    );
-    poolCycleManagerInstance = await poolCycleManagerFactory.deploy();
-    await poolCycleManagerInstance.deployed();
-    console.log(
-      "PoolCycleManager" + " deployed to:",
-      poolCycleManagerInstance.address
-    );
-
-    // Deploy GoldfinchV2Adapter
-    const goldfinchV2AdapterFactory = new ContractFactory(
-      goldfinchV2AdapterAbi,
-      goldfinchV2AdapterBytecode,
-      deployer
-    );
-    goldfinchV2AdapterInstance = await goldfinchV2AdapterFactory.deploy();
-    await goldfinchV2AdapterInstance.deployed();
-    console.log(
-      "GoldfinchV2Adapter" + " deployed to:",
-      goldfinchV2AdapterInstance.address
-    );
 
     // Deploy PoolFactory
+    const accruedPremiumCalculatorLibRef = {
+      libraryName: "AccruedPremiumCalculator",
+      address: accruedPremiumCalculatorInstance.address
+    };
+
+    const poolFactoryBytecode = getLinkedBytecode(poolFactoryArtifact, [accruedPremiumCalculatorLibRef]);
     const poolFactoryFactory = new ContractFactory(
       poolFactoryAbi,
       poolFactoryBytecode,
@@ -232,7 +222,7 @@ const deployContracts = async (forkProvider) => {
     };
 
     // Create a pool using PoolFactory instead of deploying new pool directly to mimic the prod behavior
-    const _firstPoolFirstTrancheSalt = "0x".concat(process.env.FIRST_POOL_SALT);
+    const _firstPoolFirstTrancheSalt = `0x${process.env.NEXT_PUBLIC_FIRST_POOL_SALT}`;
 
     const tx = await poolFactoryInstance.createPool(
       _firstPoolFirstTrancheSalt,
@@ -243,6 +233,8 @@ const deployContracts = async (forkProvider) => {
       "sToken11",
       "sT11"
     );
+    console.log("Pool creation tx ==> ", tx);
+
     poolInstance = await getPoolInstanceFromTx(tx);
   } catch (e) {
     console.log(e);
@@ -250,13 +242,7 @@ const deployContracts = async (forkProvider) => {
 };
 
 async function getReferenceLendingPoolsInstanceFromTx(forkProvider, tx) {
-  console.log("tx ==>", tx);
-  // let receipt = await forkProvider.waitForTransaction(tx.hash, 1, 150000);
-  // todo: forkProvider.waitForTransaction gives no logs object
   let receipt = await tx.wait();
-  // todo: tx.wait gives Call_EXCEPTION error
-
-  // todo: this error seems to be happening because of the initializer method in the ReferenceLendingPools contract. 
 
   try {
     receipt = await tx.wait();
