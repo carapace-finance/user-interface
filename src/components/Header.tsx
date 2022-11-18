@@ -8,12 +8,15 @@ import assets from "../assets";
 
 import Account from "@components/Account";
 import { deployToFork } from "@utils/forked/tenderly";
+import { preparePlayground } from "@utils/forked/playground";
+import { Playground } from "@utils/forked/types";
 
 const Header = ({ tenderlyAccessKey }) => {
   const { active, activate, deactivate } = useWeb3React();
   const { chainId } = useWeb3React();
   const router = useRouter();
   const [error, setError] = useState("");
+  const [playground, setPlayground] = useState<Playground>();
 
   const onConnect = async (wallet: string) => {
     setError("");
@@ -96,11 +99,22 @@ const Header = ({ tenderlyAccessKey }) => {
       <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         onClick={async () =>
-          await deployToFork(tenderlyAccessKey)
+          setPlayground(await deployToFork(tenderlyAccessKey))
+        }
+      >
+        <span>Deploy</span>
+      </button>
+      {playground?.deployedContracts ? (
+      <button
+        className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+        onClick={async () =>
+          await preparePlayground(playground)
         }
       >
         <span>Playground</span>
       </button>
+      ) : ("")}
+      
       <Account />
     </div>
   );

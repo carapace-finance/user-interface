@@ -1,6 +1,6 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { hexValue } from "@ethersproject/bytes";
-import { parseEther, parseUnits } from "ethers/lib/utils";
+import { parseEther } from "ethers/lib/utils";
 import { ContractFactory, Contract } from "ethers";
 import { fillEther } from "./tenderly";
 
@@ -12,6 +12,7 @@ import referenceLendingPoolsFactoryAbi from "../../contracts/forked/abi/Referenc
 import poolFactoryAbi from "../../contracts/forked/abi/PoolFactory.json";
 import defaultStateManagerAbi from "../../contracts/forked/abi/DefaultStateManager.json";
 import poolAbi from "../../contracts/forked/abi/Pool.json";
+import poolCycleManagerAbi from "../../contracts/forked/abi/PoolCycleManager.json";
 
 import { riskFactorCalculatorBytecode } from "../../contracts/forked/bytecode/RiskFactorCalculator";
 import { referenceLendingPoolsBytecode } from "../../contracts/forked/bytecode/ReferenceLendingPools";
@@ -20,9 +21,10 @@ import { linkBytecode } from "./bytecode";
 
 import {
   USDC_ADDRESS,
-  USDC_NUM_OF_DECIMALS,
-  SECONDS_PER_DAY
-} from "../../constants";
+  parseUSDC
+} from "../usdc";
+
+export const SECONDS_PER_DAY = 86400;
 
 //  Artifacts for contracts that have dependencies on libraries
 import accruedPremiumCalculatorArtifact from "../../contracts/forked/artifacts/AccruedPremiumCalculator.json";
@@ -48,10 +50,6 @@ const GOLDFINCH_LENDING_POOLS = [
   "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
   "0xd09a57127bc40d680be7cb061c2a6629fe71abef"
 ];
-
-const parseUSDC = (usdcAmtText) => {
-  return parseUnits(usdcAmtText, USDC_NUM_OF_DECIMALS);
-};
 
 const getDaysInSeconds = (days) => {
   return BigNumber.from(days * SECONDS_PER_DAY);
@@ -192,6 +190,17 @@ const deployContracts = async (forkProvider) => {
     await poolFactoryInstance.deployed();
     console.log("PoolFactory" + " deployed to:", poolFactoryInstance.address);
 
+    // Get PoolCycleManager instance from pool factory
+    poolCycleManagerInstance = new Contract(
+      await poolFactoryInstance.getPoolCycleManager(),
+      poolCycleManagerAbi,
+      deployer
+    );
+    console.log(
+      "PoolCycleManager" + " is deployed at:",
+      poolCycleManagerInstance.address
+    );
+
     // Get DefaultStateManager instance from pool factory
     defaultStateManagerInstance = new Contract(
       await poolFactoryInstance.getDefaultStateManager(),
@@ -236,6 +245,8 @@ const deployContracts = async (forkProvider) => {
     console.log("Pool creation tx ==> ", tx);
 
     poolInstance = await getPoolInstanceFromTx(tx);
+
+    return { poolCycleManagerInstance, poolFactoryInstance, poolInstance };
   } catch (e) {
     console.log(e);
   } 
