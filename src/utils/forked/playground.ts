@@ -5,7 +5,7 @@ import {
   formatUSDC,
   parseUSDC
 } from "@utils/usdc";
-import { sendTransaction } from "./tenderly";
+import { fillEther, sendTransaction } from "./tenderly";
 import { Playground } from "./types";
 
 export async function preparePlayground(playground: Playground) {
@@ -45,13 +45,19 @@ export async function preparePlayground(playground: Playground) {
   );
 
   // buy protection for buyer1
+  const protectionBuyer1 = playground.provider.getSigner(
+    "0x008c84421da5527f462886cec43d2717b686a7e4"
+  );
+  await fillEther(await protectionBuyer1.getAddress(), playground.provider);
   console.log("Buyer1 buys protection...");
   await transferApproveAndBuyProtection(
     usdcContract,
     playground.provider,
     poolInstance,
-    buyer1
+    protectionBuyer1
   );
+
+  console.log("Playground run completed!");
 }
 
 async function transferApproveAndDeposit(
@@ -111,7 +117,7 @@ async function transferApproveAndBuyProtection(
   await transferUsdc(provider, buyerAddress, premiumAmt);
 
   // Approve premium USDC
-  await usdcContract.approve(poolInstance.address, premiumAmt);
+  await usdcContract.connect(buyer).approve(poolInstance.address, premiumAmt);
 
   // Buy protection
   const purchaseParams = {
@@ -121,13 +127,14 @@ async function transferApproveAndBuyProtection(
     protectionExpirationTimestamp:
       (await getLatestBlockTimestamp(provider)) + 86400 * 30 // 30 days
   };
-  // await poolInstance
-  //   .connect(provider.getSigner("0x008c84421da5527f462886cec43d2717b686a7e4"))
-  //   .buyProtection(purchaseParams);
+  // await poolInstance.connect(buyer).buyProtection(purchaseParams, {
+  //   gasPrice: "259000000000",
+  //   gasLimit: "210000000"
+  // });
 
   await sendTransaction(
     provider,
-    "0x008c84421da5527f462886cec43d2717b686a7e4",
+    buyerAddress,
     poolInstance,
     "buyProtection",
     purchaseParams
