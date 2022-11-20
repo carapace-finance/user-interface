@@ -21,8 +21,8 @@ export async function preparePlayground(playground: Playground) {
   await transferApproveAndDeposit(
     playground.provider,
     poolInstance,
-    deployer,
-    parseUSDC("5000")
+    parseUSDC("5000"),
+    deployer
   );
   console.log("Starting deposit...");
   console.log(
