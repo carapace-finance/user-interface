@@ -16,58 +16,48 @@ export async function preparePlayground(playground: Playground) {
     playground.deployedContracts
   );
 
-  // const poolInfo = await poolInstance.getPoolInfo();
-  // console.log("Pool Info: ", poolInfo);
-
-  // console.log(
-  //   "Current pool cycle: ",
-  //   await poolCycleManagerInstance.getCurrentPoolCycle(poolInfo.poolId)
-  // );
-
   const deployer = await playground.provider.getSigner(0);
-  const deployerAddress = await deployer.getAddress();
-  console.log("Deployer address: ", deployerAddress);
-
-  const seller1 = await playground.provider.getSigner(1);
-  const buyer1 = await playground.provider.getSigner(2);
-  const usdcContract = getUsdcContract(deployer);
 
   await transferApproveAndDeposit(
-    usdcContract,
     playground.provider,
     poolInstance,
-    deployer
+    deployer,
+    parseUSDC("5000")
   );
-
+  console.log("Starting deposit...");
   console.log(
     "Pool's total sToken underlying: ",
     formatUSDC(await poolInstance.totalSTokenUnderlying())
   );
 
-  // buy protection for buyer1
+  // buy protection
   const protectionBuyer1 = playground.provider.getSigner(
     "0x008c84421da5527f462886cec43d2717b686a7e4"
   );
   await fillEther(await protectionBuyer1.getAddress(), playground.provider);
-  console.log("Buyer1 buys protection...");
+
   await transferApproveAndBuyProtection(
-    usdcContract,
     playground.provider,
     poolInstance,
     protectionBuyer1
   );
 
+  console.log(
+    "Pool leverage ratio: ",
+    formatEther(await poolInstance.calculateLeverageRatio())
+  );
+
   console.log("Playground run completed!");
 }
 
-async function transferApproveAndDeposit(
-  usdcContract,
+export async function transferApproveAndDeposit(
   provider,
   poolInstance,
+  depositAmt,
   receiver
 ) {
+  const usdcContract = getUsdcContract(receiver);
   const receiverAddress = await receiver.getAddress();
-  const depositAmt = parseUSDC("5000");
 
   console.log(
     "Receiver's USDC balance before: ",
@@ -97,14 +87,17 @@ async function transferApproveAndDeposit(
     "Receiver's USDC balance after deposit: ",
     formatUSDC(await usdcContract.balanceOf(receiverAddress))
   );
+
+  console.log("Finished deposit");
 }
 
-async function transferApproveAndBuyProtection(
-  usdcContract,
+export async function transferApproveAndBuyProtection(
   provider,
   poolInstance,
   buyer
 ) {
+  const usdcContract = getUsdcContract(buyer);
+  console.log("Starting buyProtection...");
   console.log(
     "Total protection before buyProtection: ",
     formatUSDC(await poolInstance.totalProtection())
@@ -144,6 +137,8 @@ async function transferApproveAndBuyProtection(
     "Total protection after buyProtection: ",
     formatUSDC(await poolInstance.totalProtection())
   );
+
+  console.log("Finished buyProtection");
 }
 
 const getLatestBlockTimestamp: Function = async (provider): Promise<number> => {

@@ -3,11 +3,11 @@ import SellProtectionCard from "@components/SellProtectionCard";
 
 const ProtectionPool = () => {
   const router = useRouter();
-  const protectionPoolId = router.query.id;
+  const protectionPoolAddress = router.query.address;
 
   return (
     <div>
-      <div>ProtectionPool #{protectionPoolId}</div>
+      <div>ProtectionPool #{protectionPoolAddress}</div>
       <SellProtectionCard></SellProtectionCard>
     </div>
   );

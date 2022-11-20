@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Input } from "@material-tailwind/react";
 import SellProtectionPopUp from "./SellProtectionPopUp";
+import { useRouter } from "next/router";
 
 export default function SellProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
-
+  const router = useRouter();
+  const protectionPoolAddress = router.query.address;
+  
   return (
     <div className="flex justify-center">
       <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
@@ -29,6 +32,7 @@ export default function SellProtectionCard() {
           open={isOpen}
           onClose={() => setIsOpen(false)}
           amount={amount}
+          protectionPoolAddress={protectionPoolAddress}
         ></SellProtectionPopUp>
       </div>
     </div>

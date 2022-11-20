@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,10 +11,15 @@ import {
 
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
+import { getPoolContract } from "@contracts/contractService";
+import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { parseUSDC } from "@utils/usdc";
+import { transferApproveAndDeposit } from "@utils/forked/playground";
 
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
-  const { open, onClose, amount, USDCBalance } = props;
+  const { provider } = useContext(ContractAddressesContext);
+  const { open, onClose, amount, USDCBalance, protectionPoolAddress } = props;
   const [tab, setTab] = useState(0);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
@@ -29,29 +34,33 @@ const SellProtectionPopUp = (props) => {
     setSuccessMessage("");
     setError("");
     setTab(0);
-  }, [open]);
+  }, [open, protectionPoolAddress]);
 
   // Function passed into 'onClick'
   const executeTrade = async () => {
     setError("");
     let message = "";
     try {
-      if (tab === 0) {
-        message = `You successfully exchanged ${priceInput} USDC for ${priceOutput} Cover tokens`;
-      } else {
-        message = `You successfully staked ${priceInput} USDC in exchange for ${priceOutput} Prem tokens`;
-      }
+      const seller = provider.getSigner();
+      const pool = getPoolContract(protectionPoolAddress, seller);
+      transferApproveAndDeposit(provider, pool, parseUSDC(amount), seller).then((tx) => {
+        if (tab === 0) {
+            message = `You successfully exchanged ${priceInput} USDC for ${priceOutput} Cover tokens`;
+          } else {
+            message = `You successfully staked ${priceInput} USDC in exchange for ${priceOutput} Prem tokens`;
+          }
+
+          // Show success message for 2 seconds before closing popup
+          setSuccessMessage(message);
+          setTimeout(() => {
+            onClose();
+          }, 2000);
+      });
     } catch (e) {
       const err = JSON.stringify(JSON.stringify(e.message));
       console.log("Error", err);
       return setError(err);
     }
-
-    // Show success message for 2 seconds before closing popup
-    setSuccessMessage(message);
-    setTimeout(() => {
-      onClose();
-    }, 2000);
   };
 
   return (

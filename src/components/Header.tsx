@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import Account from "@components/Account";
 import { deployToFork } from "@utils/forked/tenderly";
 import { preparePlayground } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
+import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 
 const Header = ({ tenderlyAccessKey }) => {
   const { active, activate, deactivate } = useWeb3React();
@@ -17,6 +18,7 @@ const Header = ({ tenderlyAccessKey }) => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
+  const { updateContractAddresses, updateProvider } = useContext(ContractAddressesContext);
 
   const onConnect = async (wallet: string) => {
     setError("");
@@ -47,6 +49,15 @@ const Header = ({ tenderlyAccessKey }) => {
     } catch (ex) {
       console.log(ex);
     }
+  }
+
+  async function createPlayground() {
+    await preparePlayground(playground);
+    updateContractAddresses({
+      poolFactory: await playground.deployedContracts.poolFactoryInstance.address,
+      pool: await playground.deployedContracts.poolInstance.address,
+    });
+    updateProvider(playground.provider);
   }
 
   return (
@@ -98,9 +109,7 @@ const Header = ({ tenderlyAccessKey }) => {
       )}
       <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={async () =>
-          setPlayground(await deployToFork(tenderlyAccessKey))
-        }
+        onClick={async () => setPlayground(await deployToFork(tenderlyAccessKey))}
       >
         <span>Deploy</span>
       </button>
@@ -108,7 +117,7 @@ const Header = ({ tenderlyAccessKey }) => {
       <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         onClick={async () =>
-          await preparePlayground(playground)
+          await createPlayground()
         }
       >
         <span>Playground</span>
@@ -121,3 +130,4 @@ const Header = ({ tenderlyAccessKey }) => {
 };
 
 export default Header;
+
