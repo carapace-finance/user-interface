@@ -6,10 +6,22 @@ const TitleAndDescriptions = dynamic(
   { ssr: false }
 );
 import assets from "../assets";
+import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { useContext, useEffect, useState } from "react";
+import { getPoolContract, getPoolFactoryContract } from "@contracts/contractService";
+import { formatUSDC } from "@utils/usdc";
 
 const goldfinchLogo = assets.goldfinch.src;
 
-const protectionPools = [
+interface ProtectionPool {
+  id: number;
+  address: string;
+  APY: string;
+  protocols: string;
+  totalCapital: string;
+  totalProtection: string;
+}
+const defaultProtectionPools: ProtectionPool[] = [
   {
     id: 1,
     protocols: goldfinchLogo,
@@ -41,6 +53,36 @@ const protectionPools = [
 ];
 
 const SellProtection = () => {
+  const { contractAddresses, provider } = useContext(ContractAddressesContext);
+  const [protectionPools, setProtectionPools ] = useState<ProtectionPool[]>(defaultProtectionPools);
+  
+  useEffect(() => {
+    if (contractAddresses?.poolFactory && provider) {
+      
+      console.log("Fetching pools...");
+      const poolFactory = getPoolFactoryContract(contractAddresses.poolFactory, provider.getSigner());
+      poolFactory.getPoolAddress(1).then((poolAddress) => {
+        console.log("Pool address", poolAddress);
+
+        const pool = getPoolContract(poolAddress, provider.getSigner());
+        pool.totalProtection().then((totalProtection) => { 
+          pool.totalSTokenUnderlying().then((totalCapital) => { 
+            setProtectionPools([
+            {
+              id: 1,
+              address: poolAddress,
+              protocols: goldfinchLogo,
+              APY: "8 - 15%",
+              totalCapital: formatUSDC(totalCapital),
+              totalProtection: formatUSDC(totalProtection)
+            }
+          ]);
+          });
+        });
+      });
+    }
+  },[contractAddresses?.poolFactory, provider]);
+  
   return (
     <div>
       <TitleAndDescriptions
@@ -78,7 +120,7 @@ const SellProtection = () => {
               <td>
                 <Link
                   key={protectionPool.id}
-                  href={"/protectionPool/" + protectionPool.id}
+                  href={"/protectionPool/" + protectionPool.address}
                 >
                   link
                 </Link>

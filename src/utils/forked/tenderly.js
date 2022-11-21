@@ -42,7 +42,8 @@ export const createFork = async (tenderlyAccessKey) => {
 
 export const deployToFork = async (tenderlyAccessKey) => {
   const forkProvider = await createFork(tenderlyAccessKey);
-  await deployContracts(forkProvider);
+  const deployedContracts = await deployContracts(forkProvider);
+  return { provider: forkProvider, deployedContracts };
 };
 
 export const sendTransaction = async (
