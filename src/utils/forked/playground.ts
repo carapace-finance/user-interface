@@ -5,10 +5,14 @@ import {
   formatUSDC,
   parseUSDC
 } from "@utils/usdc";
-import { fillEther, sendTransaction } from "./tenderly";
+import { deleteFork, fillEther, sendTransaction } from "./tenderly";
 import { Playground } from "./types";
 
 export async function preparePlayground(playground: Playground) {
+  // Take snapshot to revert to later
+  playground.snapshotId = await playground.provider.send("evm_snapshot", []);
+  console.log("Snapshot ID:", playground.snapshotId);
+
   const { poolCycleManagerInstance, poolFactoryInstance, poolInstance } =
     playground.deployedContracts;
   console.log(
@@ -144,3 +148,24 @@ export async function transferApproveAndBuyProtection(
 const getLatestBlockTimestamp: Function = async (provider): Promise<number> => {
   return (await provider.getBlock("latest")).timestamp;
 };
+
+export async function resetPlayground(playground: Playground) {
+  await playground.provider.send("evm_revert", [playground.snapshotId]);
+
+  console.log(
+    "Total capital: ",
+    formatUSDC(
+      await playground.deployedContracts.poolInstance.totalSTokenUnderlying()
+    )
+  );
+  console.log(
+    "Total protection: ",
+    formatUSDC(
+      await playground.deployedContracts.poolInstance.totalProtection()
+    )
+  );
+}
+
+export async function deletePlayground(forkId: string) {
+  await deleteFork(forkId);
+}

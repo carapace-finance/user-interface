@@ -8,7 +8,7 @@ import assets from "../assets";
 
 import Account from "@components/Account";
 import { deployToFork } from "@utils/forked/tenderly";
-import { preparePlayground } from "@utils/forked/playground";
+import { preparePlayground, resetPlayground } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
 import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 
@@ -60,6 +60,21 @@ const Header = ({ tenderlyAccessKey }) => {
     updateProvider(playground.provider);
   }
 
+  let playgroundButtonTitle;
+  let playgroundButtonAction;
+  if (playground?.snapshotId) {
+    playgroundButtonTitle = "Reset Playground";
+    playgroundButtonAction = async () => await resetPlayground(playground);
+  }
+  else if (playground?.deployedContracts) {
+    playgroundButtonTitle = "Create Playground";
+    playgroundButtonAction = async () => await createPlayground();
+  }
+  else { 
+    playgroundButtonTitle = "Deploy Playground";
+    playgroundButtonAction = async () => setPlayground(await deployToFork(tenderlyAccessKey));
+  }
+
   return (
     <div className="flex justify-between items-center">
       <Link href="/">
@@ -109,21 +124,10 @@ const Header = ({ tenderlyAccessKey }) => {
       )}
       <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={async () => setPlayground(await deployToFork(tenderlyAccessKey))}
+        onClick={playgroundButtonAction}
       >
-        <span>Deploy</span>
+        <span>{playgroundButtonTitle}</span>
       </button>
-      {playground?.deployedContracts ? (
-      <button
-        className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={async () =>
-          await createPlayground()
-        }
-      >
-        <span>Playground</span>
-      </button>
-      ) : ("")}
-      
       <Account />
     </div>
   );

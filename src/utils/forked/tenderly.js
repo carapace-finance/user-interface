@@ -34,16 +34,16 @@ export const createFork = async (tenderlyAccessKey) => {
   let forkResponse = await fetch(TENDERLY_FORK_URL_FOR_CREATION, options);
   console.log('forkResponse ==>', forkResponse);
   forkResponse = await forkResponse.json();
-  const forkId = forkResponse.root_transaction.fork_id;
-  const TENDERLY_FORK_URL_FOR_REQUESTS = `https://rpc.tenderly.co/fork/${forkId}`;
-  const forkProvider = new JsonRpcProvider(TENDERLY_FORK_URL_FOR_REQUESTS);
-  return forkProvider;
+  return forkResponse.root_transaction.fork_id;
 };
 
 export const deployToFork = async (tenderlyAccessKey) => {
-  const forkProvider = await createFork(tenderlyAccessKey);
+  const forkId = await createFork(tenderlyAccessKey);
+  const TENDERLY_FORK_URL_FOR_REQUESTS = `https://rpc.tenderly.co/fork/${forkId}`;
+  const forkProvider = new JsonRpcProvider(TENDERLY_FORK_URL_FOR_REQUESTS);
+
   const deployedContracts = await deployContracts(forkProvider);
-  return { provider: forkProvider, deployedContracts };
+  return { forkId, provider: forkProvider, deployedContracts };
 };
 
 export const sendTransaction = async (
