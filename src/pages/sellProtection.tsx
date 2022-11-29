@@ -7,20 +7,13 @@ const TitleAndDescriptions = dynamic(
 );
 import assets from "../assets";
 import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ProtectionPool } from "@type/types";
 import { useContext, useEffect, useState } from "react";
 import { getPoolContract, getPoolFactoryContract } from "@contracts/contractService";
 import { formatUSDC } from "@utils/usdc";
 
 const goldfinchLogo = assets.goldfinch.src;
 
-interface ProtectionPool {
-  id: number;
-  address: string;
-  APY: string;
-  protocols: string;
-  totalCapital: string;
-  totalProtection: string;
-}
 const defaultProtectionPools: ProtectionPool[] = [
   {
     id: 1,
@@ -58,7 +51,6 @@ const SellProtection = () => {
   
   useEffect(() => {
     if (contractAddresses?.poolFactory && provider) {
-      
       console.log("Fetching pools...");
       const poolFactory = getPoolFactoryContract(contractAddresses.poolFactory, provider.getSigner());
       poolFactory.getPoolAddress(1).then((poolAddress) => {

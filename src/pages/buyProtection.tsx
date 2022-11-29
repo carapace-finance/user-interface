@@ -6,53 +6,96 @@ const TitleAndDescriptions = dynamic(
   { ssr: false }
 );
 import assets from "../assets";
-
+import { useContext, useEffect, useState } from "react";
+import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { LendingPool } from "@type/types";
+import { getPoolContract, getPoolFactoryContract, getReferenceLendingPoolsContract } from "@contracts/contractService";
+ 
 const goldfinchLogo = assets.goldfinch.src;
 
-const lendingPools = [
+const defaultLendingPools: LendingPool[] = [
   {
-    id: 1,
+    address: "1",
     name: "Almavest Basket #6",
     protocol: goldfinchLogo,
     adjustedYields: "7 - 10%",
     lendingPoolAPY: "17%",
     CARATokenRewards: "~3.5%",
     premium: "4 - 7%",
-    timeLeft: "7 Days 8 Hours 2 Mins"
+    timeLeft: "7 Days 8 Hours 2 Mins",
+    protectionPoolAddress: "0xTest1"
   },
   {
-    id: 2,
+    address: "2",
     name: "Almavest Basket #6",
     protocol: goldfinchLogo,
     adjustedYields: "7 - 10%",
     lendingPoolAPY: "17%",
     CARATokenRewards: "~3.5%",
     premium: "4 - 7%",
-    timeLeft: "7 Days 8 Hours 2 Mins"
+    timeLeft: "7 Days 8 Hours 2 Mins",
+    protectionPoolAddress: "0xTest2"
   },
   {
-    id: 3,
+    address: "3",
     name: "Almavest Basket #6",
     protocol: goldfinchLogo,
     adjustedYields: "7 - 10%",
     lendingPoolAPY: "17%",
     CARATokenRewards: "~3.5%",
     premium: "4 - 7%",
-    timeLeft: "7 Days 8 Hours 2 Mins"
+    timeLeft: "7 Days 8 Hours 2 Mins",
+    protectionPoolAddress: "0xTest3"
   },
   {
-    id: 4,
+    address: "4",
     name: "Almavest Basket #6",
     protocol: goldfinchLogo,
     adjustedYields: "7 - 10%",
     lendingPoolAPY: "17%",
     CARATokenRewards: "~3.5%",
     premium: "4 - 7%",
-    timeLeft: "7 Days 8 Hours 2 Mins"
+    timeLeft: "7 Days 8 Hours 2 Mins",
+    protectionPoolAddress: "0xTest4"
   }
 ];
 
 const BuyProtection = () => {
+  const { contractAddresses, provider } = useContext(ContractAddressesContext);
+  const [lendingPools, setLendingPools ] = useState<LendingPool[]>(defaultLendingPools);
+  
+  useEffect(() => {
+    if (contractAddresses?.poolFactory && provider) {
+      console.log("Fetching pools...");
+      const poolFactory = getPoolFactoryContract(contractAddresses.poolFactory, provider.getSigner());
+      poolFactory.getPoolAddress(1).then((poolAddress) => {
+        console.log("Pool address", poolAddress);
+
+        const pool = getPoolContract(poolAddress, provider.getSigner());
+        pool.getPoolInfo().then((poolInfo) => { 
+          console.log("Pool info", poolInfo);
+          const referenceLendingPoolsContract = getReferenceLendingPoolsContract(poolInfo.referenceLendingPools, provider.getSigner());
+          referenceLendingPoolsContract.getLendingPools().then((lendingPools) => {
+            console.log("Lending pools", lendingPools);
+            setLendingPools(lendingPools.map((lendingPool) => { 
+              return {
+                address: lendingPool,
+                name: "Lend East #1: Emerging Asia Fintech Pool",
+                protocol: goldfinchLogo,
+                adjustedYields: "7 - 10%",
+                lendingPoolAPY: "17%",
+                CARATokenRewards: "~3.5%",
+                premium: "4 - 7%",
+                timeLeft: "59 Days 8 Hours 2 Mins",
+                protectionPoolAddress: poolAddress
+              };
+            }));
+          });
+        });
+      });
+    }
+  }, [contractAddresses?.poolFactory]);
+  
   return (
     <div>
       <TitleAndDescriptions
@@ -77,8 +120,8 @@ const BuyProtection = () => {
         </thead>
         <tbody>
           {lendingPools.map((lendingPool) => (
-            <tr key={lendingPool.id}>
-              <td>{lendingPool.id}</td>
+            <tr key={lendingPool.address}>
+              <td>{lendingPool.address}</td>
               <td>{lendingPool.name}</td>
               <td>
                 <Image
@@ -95,10 +138,10 @@ const BuyProtection = () => {
               <td>{lendingPool.timeLeft}</td>
               <td>
                 <Link
-                  key={lendingPool.id}
-                  href={"/lendingPool/" + lendingPool.id}
+                  key={lendingPool.address}
+                  href={`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`}
                 >
-                  link
+                  Buy Protection
                 </Link>
               </td>
             </tr>
