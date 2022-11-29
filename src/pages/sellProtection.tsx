@@ -11,33 +11,34 @@ import { ProtectionPool } from "@type/types";
 import { useContext, useEffect, useState } from "react";
 import { getPoolContract, getPoolFactoryContract } from "@contracts/contractService";
 import { formatUSDC } from "@utils/usdc";
+import { formatAddress } from "@utils/utils";
 
 const goldfinchLogo = assets.goldfinch.src;
 
 const defaultProtectionPools: ProtectionPool[] = [
   {
-    id: 1,
+    address: "1",
     protocols: goldfinchLogo,
     APY: "15 - 20%",
     totalCapital: "$1M",
     totalProtection: "$2M"
   },
   {
-    id: 2,
+    address: "2",
     protocols: goldfinchLogo,
     APY: "15 - 20%",
     totalCapital: "$1M",
     totalProtection: "$2M"
   },
   {
-    id: 3,
+    address: "3",
     protocols: goldfinchLogo,
     APY: "15 - 20%",
     totalCapital: "$1M",
     totalProtection: "$2M"
   },
   {
-    id: 4,
+    address: "4",
     protocols: goldfinchLogo,
     APY: "15 - 20%",
     totalCapital: "$1M",
@@ -61,7 +62,6 @@ const SellProtection = () => {
           pool.totalSTokenUnderlying().then((totalCapital) => { 
             setProtectionPools([
             {
-              id: 1,
               address: poolAddress,
               protocols: goldfinchLogo,
               APY: "8 - 15%",
@@ -87,7 +87,7 @@ const SellProtection = () => {
       <table className="table-auto w-full">
         <thead>
           <tr>
-            <th>id</th>
+            <th>Address</th>
             <th>Protocols</th>
             <th>APY</th>
             <th>Total Capital</th>
@@ -96,8 +96,8 @@ const SellProtection = () => {
         </thead>
         <tbody>
           {protectionPools.map((protectionPool) => (
-            <tr key={protectionPool.id}>
-              <td>{protectionPool.id}</td>
+            <tr key={protectionPool.address}>
+              <td>{formatAddress(protectionPool.address)}</td>
               <td>
                 <Image
                   src={protectionPool.protocols}
@@ -111,7 +111,7 @@ const SellProtection = () => {
               <td>{protectionPool.totalProtection}</td>
               <td>
                 <Link
-                  key={protectionPool.id}
+                  key={protectionPool.address}
                   href={"/protectionPool/" + protectionPool.address}
                 >
                   link

@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 import { LendingPool } from "@type/types";
 import { getPoolContract, getPoolFactoryContract, getReferenceLendingPoolsContract } from "@contracts/contractService";
+import { formatAddress } from "@utils/utils";
  
 const goldfinchLogo = assets.goldfinch.src;
 
@@ -108,7 +109,7 @@ const BuyProtection = () => {
       <table className="table-auto w-full">
         <thead>
           <tr>
-            <th>id</th>
+            <th>Address</th>
             <th>Name</th>
             <th>Protocol </th>
             <th>Adjusted Yields</th>
@@ -121,7 +122,7 @@ const BuyProtection = () => {
         <tbody>
           {lendingPools.map((lendingPool) => (
             <tr key={lendingPool.address}>
-              <td>{lendingPool.address}</td>
+              <td>{formatAddress(lendingPool.address)}</td>
               <td>{lendingPool.name}</td>
               <td>
                 <Image

@@ -13,7 +13,6 @@ export type ContractAddressesContextType = {
 };
 
 export interface ProtectionPool {
-  id: number;
   address: string;
   APY: string;
   protocols: string;

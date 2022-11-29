@@ -10,7 +10,6 @@ export default function BuyProtectionCard() {
   const [tokenId, setTokenId] = useState(0);
 
   const router = useRouter();
-  const lendingPoolAddress = router.query.address;
 
   return (
     <div className="flex justify-center">
