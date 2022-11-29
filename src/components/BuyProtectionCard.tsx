@@ -7,6 +7,7 @@ export default function BuyProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
   const [protectionAmount, setProtectionAmount] = useState(0);
   const [protectionDurationInDays, setProtectionDurationInDays] = useState(90);
+  const [tokenId, setTokenId] = useState(0);
 
   const router = useRouter();
   const lendingPoolAddress = router.query.address;
