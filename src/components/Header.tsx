@@ -7,12 +7,14 @@ import { injected } from "../utils/mainnet/connectors";
 import assets from "../assets";
 
 import Account from "@components/Account";
+import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
 import { deployToFork } from "@utils/forked/tenderly";
 import { preparePlayground } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
 import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 
 const Header = ({ tenderlyAccessKey }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { active, activate, deactivate } = useWeb3React();
   const { chainId } = useWeb3React();
   const router = useRouter();
@@ -109,9 +111,12 @@ const Header = ({ tenderlyAccessKey }) => {
       )}
       <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={async () => setPlayground(await deployToFork(tenderlyAccessKey))}
+        onClick={async () => {
+          setPlayground(await deployToFork(tenderlyAccessKey));
+          setIsOpen(true);
+        }}
       >
-        <span>Deploy</span>
+        <span>Start Playground</span>
       </button>
       {playground?.deployedContracts ? (
       <button
@@ -125,6 +130,10 @@ const Header = ({ tenderlyAccessKey }) => {
       ) : ("")}
       
       <Account />
+      <PlaygroundModePopUp
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+        ></PlaygroundModePopUp>
     </div>
   );
 };
