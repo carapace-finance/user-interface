@@ -8,7 +8,7 @@ export default function SellProtectionCard() {
   const [amount, setAmount] = useState("");
   const router = useRouter();
   const protectionPoolAddress = router.query.address;
-  
+
   return (
     <div className="flex justify-center">
       <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">

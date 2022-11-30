@@ -19,10 +19,7 @@ import { referenceLendingPoolsBytecode } from "../../contracts/forked/bytecode/R
 import { referenceLendingPoolsFactoryBytecode } from "../../contracts/forked/bytecode/ReferenceLendingPoolsFactory";
 import { linkBytecode } from "./bytecode";
 
-import {
-  USDC_ADDRESS,
-  parseUSDC
-} from "../usdc";
+import { USDC_ADDRESS, parseUSDC } from "../usdc";
 
 export const SECONDS_PER_DAY = 86400;
 
@@ -56,7 +53,7 @@ const getDaysInSeconds = (days) => {
 };
 
 function getLinkedBytecode(contractArtifact, libRefs) {
-  const libs = libRefs.map((libRef) => { 
+  const libs = libRefs.map((libRef) => {
     return {
       sourceName: `contracts/libraries/${libRef.libraryName}.sol`,
       libraryName: libRef.libraryName,
@@ -67,8 +64,9 @@ function getLinkedBytecode(contractArtifact, libRefs) {
 }
 
 const deployContracts = async (forkProvider) => {
-  if (!process.env.NEXT_PUBLIC_FIRST_POOL_SALT) throw new Error("env var NEXT_PUBLIC_FIRST_POOL_SALT not set");
-  
+  if (!process.env.NEXT_PUBLIC_FIRST_POOL_SALT)
+    throw new Error("env var NEXT_PUBLIC_FIRST_POOL_SALT not set");
+
   deployer = await forkProvider.getSigner(0);
   account1 = await forkProvider.getSigner(1);
   await fillEther(await deployer.getAddress(), forkProvider);
@@ -88,13 +86,16 @@ const deployContracts = async (forkProvider) => {
       "RiskFactorCalculator deployed to:",
       riskFactorCalculatorInstance.address
     );
-    
+
     const riskFactorLibRef = {
       libraryName: "RiskFactorCalculator",
       address: riskFactorCalculatorInstance.address
     };
 
-    const accruedPremiumCalculatorBytecode = getLinkedBytecode(accruedPremiumCalculatorArtifact, [riskFactorLibRef]);
+    const accruedPremiumCalculatorBytecode = getLinkedBytecode(
+      accruedPremiumCalculatorArtifact,
+      [riskFactorLibRef]
+    );
     const accruedPremiumCalculatorFactory = new ContractFactory(
       accruedPremiumCalculatorAbi,
       accruedPremiumCalculatorBytecode,
@@ -107,8 +108,11 @@ const deployContracts = async (forkProvider) => {
       "AccruedPremiumCalculator deployed to:",
       accruedPremiumCalculatorInstance.address
     );
-    
-    const premiumCalculatorBytecode = getLinkedBytecode(premiumCalculatorArtifact, [riskFactorLibRef]);
+
+    const premiumCalculatorBytecode = getLinkedBytecode(
+      premiumCalculatorArtifact,
+      [riskFactorLibRef]
+    );
     const premiumCalculatorFactory = new ContractFactory(
       premiumCalculatorAbi,
       premiumCalculatorBytecode,
@@ -167,7 +171,7 @@ const deployContracts = async (forkProvider) => {
           gasLimit: "210000000"
         }
       );
-  
+
     referenceLendingPoolsInstance =
       await getReferenceLendingPoolsInstanceFromTx(forkProvider, tx1);
 
@@ -177,7 +181,9 @@ const deployContracts = async (forkProvider) => {
       address: accruedPremiumCalculatorInstance.address
     };
 
-    const poolFactoryBytecode = getLinkedBytecode(poolFactoryArtifact, [accruedPremiumCalculatorLibRef]);
+    const poolFactoryBytecode = getLinkedBytecode(poolFactoryArtifact, [
+      accruedPremiumCalculatorLibRef
+    ]);
     const poolFactoryFactory = new ContractFactory(
       poolFactoryAbi,
       poolFactoryBytecode,
@@ -249,7 +255,7 @@ const deployContracts = async (forkProvider) => {
     return { poolCycleManagerInstance, poolFactoryInstance, poolInstance };
   } catch (e) {
     console.log(e);
-  } 
+  }
 };
 
 async function getReferenceLendingPoolsInstanceFromTx(forkProvider, tx) {

@@ -51,7 +51,9 @@ const BuyProtectionPopUp = (props) => {
     let message = "";
 
     try {
-      const buyer = provider.getSigner("0x008c84421da5527f462886cec43d2717b686a7e4");
+      const buyer = provider.getSigner(
+        "0x008c84421da5527f462886cec43d2717b686a7e4"
+      );
       const pool = getPoolContract(protectionPoolAddress, buyer);
       transferApproveAndBuyProtection(
         provider,
@@ -61,17 +63,20 @@ const BuyProtectionPopUp = (props) => {
         tokenId,
         parseUSDC(protectionAmount),
         protectionDurationInDays
-      ).then((tx) => {
-        message = `You successfully bought protection for ${protectionDurationInDays} days!`;
+      ).then(
+        (tx) => {
+          message = `You successfully bought protection for ${protectionDurationInDays} days!`;
 
-        // Show success message for 2 seconds before closing popup
-        setSuccessMessage(message);
-        setTimeout(() => {
-          onClose();
-        }, 2000);
-      }, (err) => { 
-        setError(err.message);
-      });
+          // Show success message for 2 seconds before closing popup
+          setSuccessMessage(message);
+          setTimeout(() => {
+            onClose();
+          }, 2000);
+        },
+        (err) => {
+          setError(err.message);
+        }
+      );
     } catch (e) {
       const err = JSON.stringify(JSON.stringify(e.message));
       console.log("Error", err);

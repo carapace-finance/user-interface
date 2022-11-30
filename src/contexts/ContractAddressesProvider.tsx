@@ -2,7 +2,8 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { ContractAddresses, ContractAddressesContextType } from "@type/types";
 import { createContext, useState } from "react";
 
-export const ContractAddressesContext = createContext<ContractAddressesContextType | null>(null);
+export const ContractAddressesContext =
+  createContext<ContractAddressesContextType | null>(null);
 
 export const ContractAddressesProvider = ({ children }) => {
   const [contractAddresses, setContractAddresses] = useState(null);
@@ -14,11 +15,16 @@ export const ContractAddressesProvider = ({ children }) => {
   const updateProvider = (provider: JsonRpcProvider) => {
     console.log("Updating provider", provider);
     setProvider(provider);
-  }
+  };
 
   return (
     <ContractAddressesContext.Provider
-      value={{ provider, contractAddresses, updateContractAddresses, updateProvider }}
+      value={{
+        provider,
+        contractAddresses,
+        updateContractAddresses,
+        updateProvider
+      }}
     >
       {children}
     </ContractAddressesContext.Provider>

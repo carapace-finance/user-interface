@@ -20,7 +20,9 @@ const Header = ({ tenderlyAccessKey }) => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
-  const { updateContractAddresses, updateProvider } = useContext(ContractAddressesContext);
+  const { updateContractAddresses, updateProvider } = useContext(
+    ContractAddressesContext
+  );
 
   const onConnect = async (wallet: string) => {
     setError("");
@@ -56,8 +58,9 @@ const Header = ({ tenderlyAccessKey }) => {
   async function createPlayground() {
     await preparePlayground(playground);
     updateContractAddresses({
-      poolFactory: await playground.deployedContracts.poolFactoryInstance.address,
-      pool: await playground.deployedContracts.poolInstance.address,
+      poolFactory: await playground.deployedContracts.poolFactoryInstance
+        .address,
+      pool: await playground.deployedContracts.poolInstance.address
     });
     updateProvider(playground.provider);
   }
@@ -67,14 +70,13 @@ const Header = ({ tenderlyAccessKey }) => {
   if (playground?.snapshotId) {
     playgroundButtonTitle = "Reset Playground";
     playgroundButtonAction = async () => await resetPlayground(playground);
-  }
-  else if (playground?.deployedContracts) {
+  } else if (playground?.deployedContracts) {
     playgroundButtonTitle = "Create Playground";
     playgroundButtonAction = async () => await createPlayground();
-  }
-  else { 
+  } else {
     playgroundButtonTitle = "Deploy Playground";
-    playgroundButtonAction = async () => setPlayground(await deployToFork(tenderlyAccessKey));
+    playgroundButtonAction = async () =>
+      setPlayground(await deployToFork(tenderlyAccessKey));
   }
 
   return (
@@ -126,22 +128,20 @@ const Header = ({ tenderlyAccessKey }) => {
       )}
       <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={ () => {
-            playgroundButtonAction;
-            setIsOpen(true);
-          }
-        }
+        onClick={() => {
+          playgroundButtonAction;
+          setIsOpen(true);
+        }}
       >
         <span>{playgroundButtonTitle}</span>
       </button>
       <Account />
       <PlaygroundModePopUp
-          open={isOpen}
-          onClose={() => setIsOpen(false)}
-        ></PlaygroundModePopUp>
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+      ></PlaygroundModePopUp>
     </div>
   );
 };
 
 export default Header;
-

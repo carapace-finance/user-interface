@@ -38,7 +38,7 @@ export const createFork = async (tenderlyAccessKey) => {
 
 export const deployToFork = async (tenderlyAccessKey) => {
   const forkId = await createFork(tenderlyAccessKey);
-  console.log('Created fork ==> ', forkId);
+  console.log("Created fork ==> ", forkId);
   const TENDERLY_FORK_URL_FOR_REQUESTS = `https://rpc.tenderly.co/fork/${forkId}`;
   const forkProvider = new JsonRpcProvider(TENDERLY_FORK_URL_FOR_REQUESTS);
 

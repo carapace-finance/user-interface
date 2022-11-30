@@ -49,7 +49,7 @@ const Dashboard = () => {
         <tbody>
           {protectionPurchases.map((protectionPurchase) => (
             <tr key={protectionPurchase.id}>
-            <td>{protectionPurchase.id}</td>
+              <td>{protectionPurchase.id}</td>
               <td>{protectionPurchase.name}</td>
               <td>{protectionPurchase.protocol}</td>
               <td>{protectionPurchase.adjustedYields}</td>
@@ -69,7 +69,7 @@ const Dashboard = () => {
         <tbody>
           {deposits.map((deposit) => (
             <tr key={deposit.id}>
-            <td>{deposit.id}</td>
+              <td>{deposit.id}</td>
               <td>{deposit.protocol}</td>
               <td>{deposit.APY}</td>
             </tr>

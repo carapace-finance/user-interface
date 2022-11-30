@@ -9,9 +9,13 @@ import assets from "../assets";
 import { useContext, useEffect, useState } from "react";
 import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 import { LendingPool } from "@type/types";
-import { getPoolContract, getPoolFactoryContract, getReferenceLendingPoolsContract } from "@contracts/contractService";
+import {
+  getPoolContract,
+  getPoolFactoryContract,
+  getReferenceLendingPoolsContract
+} from "@contracts/contractService";
 import { formatAddress } from "@utils/utils";
- 
+
 const goldfinchLogo = assets.goldfinch.src;
 
 const defaultLendingPools: LendingPool[] = [
@@ -63,40 +67,52 @@ const defaultLendingPools: LendingPool[] = [
 
 const BuyProtection = () => {
   const { contractAddresses, provider } = useContext(ContractAddressesContext);
-  const [lendingPools, setLendingPools ] = useState<LendingPool[]>(defaultLendingPools);
-  
+  const [lendingPools, setLendingPools] =
+    useState<LendingPool[]>(defaultLendingPools);
+
   useEffect(() => {
     if (contractAddresses?.poolFactory && provider) {
       console.log("Fetching pools...");
-      const poolFactory = getPoolFactoryContract(contractAddresses.poolFactory, provider.getSigner());
+      const poolFactory = getPoolFactoryContract(
+        contractAddresses.poolFactory,
+        provider.getSigner()
+      );
       poolFactory.getPoolAddress(1).then((poolAddress) => {
         console.log("Pool address", poolAddress);
 
         const pool = getPoolContract(poolAddress, provider.getSigner());
-        pool.getPoolInfo().then((poolInfo) => { 
+        pool.getPoolInfo().then((poolInfo) => {
           console.log("Pool info", poolInfo);
-          const referenceLendingPoolsContract = getReferenceLendingPoolsContract(poolInfo.referenceLendingPools, provider.getSigner());
-          referenceLendingPoolsContract.getLendingPools().then((lendingPools) => {
-            console.log("Lending pools", lendingPools);
-            setLendingPools(lendingPools.map((lendingPool) => { 
-              return {
-                address: lendingPool,
-                name: "Lend East #1: Emerging Asia Fintech Pool",
-                protocol: goldfinchLogo,
-                adjustedYields: "7 - 10%",
-                lendingPoolAPY: "17%",
-                CARATokenRewards: "~3.5%",
-                premium: "4 - 7%",
-                timeLeft: "59 Days 8 Hours 2 Mins",
-                protectionPoolAddress: poolAddress
-              };
-            }));
-          });
+          const referenceLendingPoolsContract =
+            getReferenceLendingPoolsContract(
+              poolInfo.referenceLendingPools,
+              provider.getSigner()
+            );
+          referenceLendingPoolsContract
+            .getLendingPools()
+            .then((lendingPools) => {
+              console.log("Lending pools", lendingPools);
+              setLendingPools(
+                lendingPools.map((lendingPool) => {
+                  return {
+                    address: lendingPool,
+                    name: "Lend East #1: Emerging Asia Fintech Pool",
+                    protocol: goldfinchLogo,
+                    adjustedYields: "7 - 10%",
+                    lendingPoolAPY: "17%",
+                    CARATokenRewards: "~3.5%",
+                    premium: "4 - 7%",
+                    timeLeft: "59 Days 8 Hours 2 Mins",
+                    protectionPoolAddress: poolAddress
+                  };
+                })
+              );
+            });
         });
       });
     }
   }, [contractAddresses?.poolFactory]);
-  
+
   return (
     <div>
       <TitleAndDescriptions

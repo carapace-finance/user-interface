@@ -9,7 +9,10 @@ import assets from "../assets";
 import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 import { ProtectionPool } from "@type/types";
 import { useContext, useEffect, useState } from "react";
-import { getPoolContract, getPoolFactoryContract } from "@contracts/contractService";
+import {
+  getPoolContract,
+  getPoolFactoryContract
+} from "@contracts/contractService";
 import { formatUSDC } from "@utils/usdc";
 import { formatAddress } from "@utils/utils";
 
@@ -48,33 +51,38 @@ const defaultProtectionPools: ProtectionPool[] = [
 
 const SellProtection = () => {
   const { contractAddresses, provider } = useContext(ContractAddressesContext);
-  const [protectionPools, setProtectionPools ] = useState<ProtectionPool[]>(defaultProtectionPools);
-  
+  const [protectionPools, setProtectionPools] = useState<ProtectionPool[]>(
+    defaultProtectionPools
+  );
+
   useEffect(() => {
     if (contractAddresses?.poolFactory && provider) {
       console.log("Fetching pools...");
-      const poolFactory = getPoolFactoryContract(contractAddresses.poolFactory, provider.getSigner());
+      const poolFactory = getPoolFactoryContract(
+        contractAddresses.poolFactory,
+        provider.getSigner()
+      );
       poolFactory.getPoolAddress(1).then((poolAddress) => {
         console.log("Pool address", poolAddress);
 
         const pool = getPoolContract(poolAddress, provider.getSigner());
-        pool.totalProtection().then((totalProtection) => { 
-          pool.totalSTokenUnderlying().then((totalCapital) => { 
+        pool.totalProtection().then((totalProtection) => {
+          pool.totalSTokenUnderlying().then((totalCapital) => {
             setProtectionPools([
-            {
-              address: poolAddress,
-              protocols: goldfinchLogo,
-              APY: "8 - 15%",
-              totalCapital: formatUSDC(totalCapital),
-              totalProtection: formatUSDC(totalProtection)
-            }
-          ]);
+              {
+                address: poolAddress,
+                protocols: goldfinchLogo,
+                APY: "8 - 15%",
+                totalCapital: formatUSDC(totalCapital),
+                totalProtection: formatUSDC(totalProtection)
+              }
+            ]);
           });
         });
       });
     }
-  },[contractAddresses?.poolFactory, provider]);
-  
+  }, [contractAddresses?.poolFactory, provider]);
+
   return (
     <div>
       <TitleAndDescriptions

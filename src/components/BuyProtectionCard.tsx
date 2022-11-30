@@ -20,25 +20,29 @@ export default function BuyProtectionCard() {
         <p className="text-gray-700 text-base mb-4">7 - 10%</p>
         <div className="flex w-72 flex-col gap-4">
           <Input
-          label="Protection Amount"
-          value={protectionAmount}
-          onChange={(e) => setProtectionAmount(e.target.value)}
-        />
-        <Input
-          label="Protection Duration (days)"
-          value={protectionDurationInDays}
-          onChange={(e) => setProtectionDurationInDays(e.target.value)}
+            label="Protection Amount"
+            value={protectionAmount}
+            onChange={(e) => setProtectionAmount(e.target.value)}
           />
           <Input
-          label="Goldfinch Token ID"
-          value={tokenId}
-          onChange={(e) => setTokenId(e.target.value)}
-        />
+            label="Protection Duration (days)"
+            value={protectionDurationInDays}
+            onChange={(e) => setProtectionDurationInDays(e.target.value)}
+          />
+          <Input
+            label="Goldfinch Token ID"
+            value={tokenId}
+            onChange={(e) => setTokenId(e.target.value)}
+          />
         </div>
         <button
           type="button"
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          disabled={protectionAmount === 0 || protectionDurationInDays === 0 || tokenId === 0}
+          disabled={
+            protectionAmount === 0 ||
+            protectionDurationInDays === 0 ||
+            tokenId === 0
+          }
           onClick={() => setIsOpen(true)}
         >
           Preview

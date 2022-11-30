@@ -4,7 +4,7 @@ import { formatAddress } from "@utils/utils";
 
 const LendingPool = () => {
   const router = useRouter();
-  
+
   return (
     <div>
       <div>LendingPool: {formatAddress(router.query.address)}</div>
