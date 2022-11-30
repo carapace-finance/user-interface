@@ -102,7 +102,7 @@ const Header = ({ tenderlyAccessKey }) => {
       <Link href="/dashboard">
         <h3>Dashboard</h3>
       </Link>
-      <button
+      {/* <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         onClick={async () => await onConnect("metamask")}
       >
@@ -115,7 +115,7 @@ const Header = ({ tenderlyAccessKey }) => {
             ? "Connect Wallet"
             : "Connect Wallet"}
         </span>
-      </button>
+      </button> */}
       {active ? (
         <button
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
