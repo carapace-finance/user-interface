@@ -13,6 +13,7 @@ import poolFactoryAbi from "../../contracts/forked/abi/PoolFactory.json";
 import defaultStateManagerAbi from "../../contracts/forked/abi/DefaultStateManager.json";
 import poolAbi from "../../contracts/forked/abi/Pool.json";
 import poolCycleManagerAbi from "../../contracts/forked/abi/PoolCycleManager.json";
+import poolHelperAbi from "../../contracts/forked/abi/PoolHelper.json";
 
 import { riskFactorCalculatorBytecode } from "../../contracts/forked/bytecode/RiskFactorCalculator";
 import { referenceLendingPoolsBytecode } from "../../contracts/forked/bytecode/ReferenceLendingPools";
@@ -27,6 +28,7 @@ export const SECONDS_PER_DAY = 86400;
 import accruedPremiumCalculatorArtifact from "../../contracts/forked/artifacts/AccruedPremiumCalculator.json";
 import premiumCalculatorArtifact from "../../contracts/forked/artifacts/PremiumCalculator.json";
 import poolFactoryArtifact from "../../contracts/forked/artifacts/PoolFactory.json";
+import poolHelperArtifact from "../../contracts/forked/artifacts/PoolHelper.json";
 
 let deployer;
 let account1;
@@ -38,7 +40,6 @@ let referenceLendingPoolsInstance;
 let poolCycleManagerInstance;
 let accruedPremiumCalculatorInstance;
 let riskFactorCalculatorInstance;
-let goldfinchV2AdapterInstance;
 let referenceLendingPoolsFactoryInstance;
 let referenceLendingPoolsImplementation;
 let defaultStateManagerInstance;
@@ -175,14 +176,32 @@ const deployContracts = async (forkProvider) => {
     referenceLendingPoolsInstance =
       await getReferenceLendingPoolsInstanceFromTx(forkProvider, tx1);
 
-    // Deploy PoolFactory
+    // Deploy PoolHelper library contract
     const accruedPremiumCalculatorLibRef = {
       libraryName: "AccruedPremiumCalculator",
       address: accruedPremiumCalculatorInstance.address
     };
 
+    const poolHelperBytecode = getLinkedBytecode(
+      poolHelperArtifact,
+      [accruedPremiumCalculatorLibRef]
+    );
+    const poolHelperFactory = new ContractFactory(
+      poolHelperAbi,
+      poolHelperBytecode,
+      deployer
+    );
+    const poolHelperInstance = await poolHelperFactory.deploy();
+    await poolHelperInstance.deployed();
+    console.log("PoolHelper deployed to: ", poolHelperInstance.address);
+
+    // Deploy PoolFactory
+    const poolHelperLibRef = {
+      libraryName: "PoolHelper",
+      address: poolHelperInstance.address
+    };
     const poolFactoryBytecode = getLinkedBytecode(poolFactoryArtifact, [
-      accruedPremiumCalculatorLibRef
+      accruedPremiumCalculatorLibRef, poolHelperLibRef
     ]);
     const poolFactoryFactory = new ContractFactory(
       poolFactoryAbi,
@@ -224,16 +243,16 @@ const deployContracts = async (forkProvider) => {
     };
 
     const _poolParams = {
-      leverageRatioFloor: parseEther("0.1"),
-      leverageRatioCeiling: parseEther("0.2"),
+      leverageRatioFloor: parseEther("0.5"),
+      leverageRatioCeiling: parseEther("1"),
       leverageRatioBuffer: parseEther("0.05"),
-      minRequiredCapital: parseUSDC("5000"),
-      minRequiredProtection: parseUSDC("200000"),
+      minRequiredCapital: parseUSDC("100000"),  // 100k
       curvature: parseEther("0.05"),
       minCarapaceRiskPremiumPercent: parseEther("0.02"),
       underlyingRiskPremiumPercent: parseEther("0.1"),
       minProtectionDurationInSeconds: getDaysInSeconds(10),
-      poolCycleParams: _poolCycleParams
+      poolCycleParams: _poolCycleParams,
+      protectionExtensionGracePeriodInSeconds: getDaysInSeconds(14) // 2 weeks
     };
 
     // Create a pool using PoolFactory instead of deploying new pool directly to mimic the prod behavior
@@ -245,8 +264,8 @@ const deployContracts = async (forkProvider) => {
       USDC_ADDRESS,
       referenceLendingPoolsInstance.address,
       premiumCalculatorInstance.address,
-      "sToken11",
-      "sT11"
+      "sToken1",
+      "ST1"
     );
     console.log("Pool creation tx ==> ", tx);
 

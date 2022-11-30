@@ -25,7 +25,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_protectionExpirationTimestamp",
+        "name": "_protectionDurationInSeconds",
         "type": "uint256"
       },
       {
@@ -49,11 +49,6 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_totalProtection",
-        "type": "uint256"
-      },
-      {
         "components": [
           {
             "internalType": "uint256",
@@ -73,11 +68,6 @@
           {
             "internalType": "uint256",
             "name": "minRequiredCapital",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "minRequiredProtection",
             "type": "uint256"
           },
           {
@@ -116,6 +106,11 @@
             "internalType": "struct PoolCycleParams",
             "name": "poolCycleParams",
             "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionExtensionGracePeriodInSeconds",
+            "type": "uint256"
           }
         ],
         "internalType": "struct PoolParams",
