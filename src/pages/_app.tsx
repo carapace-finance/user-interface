@@ -16,10 +16,10 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
       <CssBaseline />
       <Web3ReactProvider getLibrary={getWeb3Library}>
         <ContractAddressesProvider>
-        <Header tenderlyAccessKey={tenderlyAccessKey} />
-        <Component {...pageProps} />
+          <Header tenderlyAccessKey={tenderlyAccessKey} />
+          <Component {...pageProps} />
           <Footer />
-          </ContractAddressesProvider>
+        </ContractAddressesProvider>
       </Web3ReactProvider>
     </ThemeProvider>
   );

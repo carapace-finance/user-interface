@@ -6,7 +6,7 @@ import { deployContracts } from "./deploy";
 export const fillEther = async (walletAddress, provider) => {
   const params = [
     [walletAddress],
-    hexValue(10000000) // hex encoded wei amount
+    hexValue(1000000000000000000) // hex encoded wei amount
   ];
   await provider.send("tenderly_addBalance", params);
 };
@@ -38,7 +38,7 @@ export const createFork = async (tenderlyAccessKey) => {
 
 export const deployToFork = async (tenderlyAccessKey) => {
   const forkId = await createFork(tenderlyAccessKey);
-  console.log('Created fork ==> ', forkId);
+  console.log("Created fork ==> ", forkId);
   const TENDERLY_FORK_URL_FOR_REQUESTS = `https://rpc.tenderly.co/fork/${forkId}`;
   const forkProvider = new JsonRpcProvider(TENDERLY_FORK_URL_FOR_REQUESTS);
 

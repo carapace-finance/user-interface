@@ -43,8 +43,9 @@ const SellProtectionPopUp = (props) => {
     try {
       const seller = provider.getSigner();
       const pool = getPoolContract(protectionPoolAddress, seller);
-      transferApproveAndDeposit(provider, pool, parseUSDC(amount), seller).then((tx) => {
-        if (tab === 0) {
+      transferApproveAndDeposit(provider, pool, parseUSDC(amount), seller).then(
+        (tx) => {
+          if (tab === 0) {
             message = `You successfully exchanged ${priceInput} USDC for ${priceOutput} Cover tokens`;
           } else {
             message = `You successfully staked ${priceInput} USDC in exchange for ${priceOutput} Prem tokens`;
@@ -55,7 +56,8 @@ const SellProtectionPopUp = (props) => {
           setTimeout(() => {
             onClose();
           }, 2000);
-      });
+        }
+      );
     } catch (e) {
       const err = JSON.stringify(JSON.stringify(e.message));
       console.log("Error", err);
