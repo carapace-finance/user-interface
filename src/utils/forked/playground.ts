@@ -5,10 +5,14 @@ import {
   formatUSDC,
   parseUSDC
 } from "@utils/usdc";
-import { fillEther, sendTransaction } from "./tenderly";
+import { deleteFork, fillEther, sendTransaction } from "./tenderly";
 import { Playground } from "./types";
 
 export async function preparePlayground(playground: Playground) {
+  // Take snapshot to revert to later
+  playground.snapshotId = await playground.provider.send("evm_snapshot", []);
+  console.log("Snapshot ID:", playground.snapshotId);
+
   const { poolCycleManagerInstance, poolFactoryInstance, poolInstance } =
     playground.deployedContracts;
   console.log(
@@ -39,7 +43,11 @@ export async function preparePlayground(playground: Playground) {
   await transferApproveAndBuyProtection(
     playground.provider,
     poolInstance,
-    protectionBuyer1
+    protectionBuyer1,
+    "0xd09a57127bc40d680be7cb061c2a6629fe71abef",
+    590,
+    parseUSDC("100000"),
+    30
   );
 
   console.log(
@@ -94,7 +102,11 @@ export async function transferApproveAndDeposit(
 export async function transferApproveAndBuyProtection(
   provider,
   poolInstance,
-  buyer
+  buyer,
+  lendingPoolAddress,
+  nftLpTokenId,
+  protectionAmount,
+  protectionDurationInDays
 ) {
   const usdcContract = getUsdcContract(buyer);
   console.log("Starting buyProtection...");
@@ -114,16 +126,20 @@ export async function transferApproveAndBuyProtection(
 
   // Buy protection
   const purchaseParams = {
-    lendingPoolAddress: "0xd09a57127bc40d680be7cb061c2a6629fe71abef",
-    nftLpTokenId: 590,
-    protectionAmount: parseUSDC("100000"),
+    lendingPoolAddress: lendingPoolAddress,
+    nftLpTokenId: nftLpTokenId,
+    protectionAmount: protectionAmount,
     protectionExpirationTimestamp:
-      (await getLatestBlockTimestamp(provider)) + 86400 * 30 // 30 days
+      (await getLatestBlockTimestamp(provider)) +
+      86400 * protectionDurationInDays
   };
+
   // await poolInstance.connect(buyer).buyProtection(purchaseParams, {
   //   gasPrice: "259000000000",
   //   gasLimit: "210000000"
   // });
+
+  console.log("Protection purchase params: ", purchaseParams);
 
   await sendTransaction(
     provider,
@@ -144,3 +160,24 @@ export async function transferApproveAndBuyProtection(
 const getLatestBlockTimestamp: Function = async (provider): Promise<number> => {
   return (await provider.getBlock("latest")).timestamp;
 };
+
+export async function resetPlayground(playground: Playground) {
+  await playground.provider.send("evm_revert", [playground.snapshotId]);
+
+  console.log(
+    "Total capital: ",
+    formatUSDC(
+      await playground.deployedContracts.poolInstance.totalSTokenUnderlying()
+    )
+  );
+  console.log(
+    "Total protection: ",
+    formatUSDC(
+      await playground.deployedContracts.poolInstance.totalProtection()
+    )
+  );
+}
+
+export async function deletePlayground(forkId: string) {
+  await deleteFork(forkId);
+}

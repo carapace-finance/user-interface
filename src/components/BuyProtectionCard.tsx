@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { Input, Radio } from "@material-tailwind/react";
+import { Input } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
+import { useRouter } from "next/router";
 
 export default function BuyProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
-  const [amount, setAmount] = useState(false);
-  const [duration, setDuration] = useState(false);
+  const [protectionAmount, setProtectionAmount] = useState(0);
+  const [protectionDurationInDays, setProtectionDurationInDays] = useState(90);
+  const [tokenId, setTokenId] = useState(0);
+
+  const router = useRouter();
 
   return (
     <div className="flex justify-center">
@@ -14,24 +18,27 @@ export default function BuyProtectionCard() {
           Estimated Adjusted Yields
         </h5>
         <p className="text-gray-700 text-base mb-4">7 - 10%</p>
-        <div
-          className="flex gap-10"
-          // onChange={(e) => setAmount(e.target.value)}
-        >
-          <Radio id="full" name="type" label="Full" defaultChecked />
-          <Radio id="1/2" name="type" label="1/2" />
-          <Radio id="1/4" name="type" label="1/4" />
-        </div>
-        <div
-          className="flex gap-10"
-          // onChange={(e) => setDuration(e.target.value)}
-        >
-          <Radio id="full" name="type" label="full" defaultChecked />
-          <Radio id="90days" name="type" label="90 Days" />
+        <div className="flex w-72 flex-col gap-4">
+          <Input
+          label="Protection Amount"
+          value={protectionAmount}
+          onChange={(e) => setProtectionAmount(e.target.value)}
+        />
+        <Input
+          label="Protection Duration (days)"
+          value={protectionDurationInDays}
+          onChange={(e) => setProtectionDurationInDays(e.target.value)}
+          />
+          <Input
+          label="Goldfinch Token ID"
+          value={tokenId}
+          onChange={(e) => setTokenId(e.target.value)}
+        />
         </div>
         <button
           type="button"
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          disabled={protectionAmount === 0 || protectionDurationInDays === 0 || tokenId === 0}
           onClick={() => setIsOpen(true)}
         >
           Preview
@@ -39,8 +46,11 @@ export default function BuyProtectionCard() {
         <BuyProtectionPopUp
           open={isOpen}
           onClose={() => setIsOpen(false)}
-          amount={amount}
-          duration={duration}
+          protectionAmount={protectionAmount}
+          protectionDurationInDays={protectionDurationInDays}
+          tokenId={tokenId}
+          lendingPoolAddress={router.query.address}
+          protectionPoolAddress={router.query.protectionPoolAddress}
         ></BuyProtectionPopUp>
       </div>
     </div>
