@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import SellProtectionCard from "@components/SellProtectionCard";
+import { formatAddress } from "@utils/utils";
 
 const ProtectionPool = () => {
   const router = useRouter();
-  const protectionPoolAddress = router.query.address;
 
   return (
     <div>
-      <div>ProtectionPool #{protectionPoolAddress}</div>
+      <div>ProtectionPool #{formatAddress(router.query.address)}</div>
       <SellProtectionCard></SellProtectionCard>
     </div>
   );

@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { ContractAddresses, ContractAddressesContextType } from "@type/ContractAddressesContextType";
+import { ContractAddresses, ContractAddressesContextType } from "@type/types";
 import { createContext, useState } from "react";
 
 export const ContractAddressesContext = createContext<ContractAddressesContextType | null>(null);

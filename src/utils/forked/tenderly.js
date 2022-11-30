@@ -32,18 +32,18 @@ export const createFork = async (tenderlyAccessKey) => {
 
   const TENDERLY_FORK_URL_FOR_CREATION = `https://api.tenderly.co/api/v1/account/${process.env.NEXT_PUBLIC_TENDERLY_USER}/project/${process.env.NEXT_PUBLIC_TENDERLY_PROJECT}/fork/`;
   let forkResponse = await fetch(TENDERLY_FORK_URL_FOR_CREATION, options);
-  console.log('forkResponse ==>', forkResponse);
   forkResponse = await forkResponse.json();
-  const forkId = forkResponse.root_transaction.fork_id;
-  const TENDERLY_FORK_URL_FOR_REQUESTS = `https://rpc.tenderly.co/fork/${forkId}`;
-  const forkProvider = new JsonRpcProvider(TENDERLY_FORK_URL_FOR_REQUESTS);
-  return forkProvider;
+  return forkResponse.root_transaction.fork_id;
 };
 
 export const deployToFork = async (tenderlyAccessKey) => {
-  const forkProvider = await createFork(tenderlyAccessKey);
+  const forkId = await createFork(tenderlyAccessKey);
+  console.log('Created fork ==> ', forkId);
+  const TENDERLY_FORK_URL_FOR_REQUESTS = `https://rpc.tenderly.co/fork/${forkId}`;
+  const forkProvider = new JsonRpcProvider(TENDERLY_FORK_URL_FOR_REQUESTS);
+
   const deployedContracts = await deployContracts(forkProvider);
-  return { provider: forkProvider, deployedContracts };
+  return { forkId, provider: forkProvider, deployedContracts };
 };
 
 export const sendTransaction = async (
@@ -76,6 +76,7 @@ export const sendTransaction = async (
       };
     } catch (err) {
       console.log(err);
+      throw err;
     }
   } else if (provider instanceof Signer) {
     try {
@@ -86,6 +87,7 @@ export const sendTransaction = async (
       };
     } catch (err) {
       console.log(err);
+      throw err;
     }
   }
 };
