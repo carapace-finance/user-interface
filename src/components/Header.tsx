@@ -68,15 +68,15 @@ const Header = ({ tenderlyAccessKey }) => {
   let playgroundButtonTitle;
   let playgroundButtonAction;
   if (playground?.snapshotId) {
-    playgroundButtonTitle = "Reset Playground";
+    playgroundButtonTitle = "Stop Playground";
     playgroundButtonAction = async () => await resetPlayground(playground);
   } else if (playground?.deployedContracts) {
     playgroundButtonTitle = "Create Playground";
     playgroundButtonAction = async () => await createPlayground();
   } else {
-    playgroundButtonTitle = "Deploy Playground";
     playgroundButtonAction = async () =>
       setPlayground(await deployToFork(tenderlyAccessKey));
+    playgroundButtonTitle = "Start Playground";
   }
 
   return (
