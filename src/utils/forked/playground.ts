@@ -75,7 +75,7 @@ export async function transferApproveAndDeposit(
   );
 
   console.log(
-    "Receiver's sToken bal before: ",
+    "Receiver's sToken balance before: ",
     formatEther(await poolInstance.balanceOf(receiverAddress))
   );
 
@@ -83,7 +83,7 @@ export async function transferApproveAndDeposit(
   await usdcContract.approve(poolInstance.address, depositAmt);
   await poolInstance.connect(receiver).deposit(depositAmt, receiverAddress);
   console.log(
-    "Receiver's sToken bal after: ",
+    "Receiver's sToken balance after: ",
     formatEther(await poolInstance.balanceOf(receiverAddress))
   );
 
