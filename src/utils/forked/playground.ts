@@ -172,6 +172,6 @@ export async function resetPlayground(playground: Playground) {
   );
 }
 
-export async function deletePlayground(forkId: string) {
-  await deleteFork(forkId);
+export async function deletePlayground(forkId: string, tenderlyAccessKey: string) {
+  await deleteFork(forkId, tenderlyAccessKey);
 }

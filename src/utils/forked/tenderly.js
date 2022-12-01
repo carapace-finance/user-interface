@@ -98,12 +98,12 @@ export const sendTransaction = async (
   }
 };
 
-export const deleteFork = async (forkId) => {
   const TENDERLY_FORK_URL_TO_DELETE = `TENDERLY_FORK_URL/${forkId}`;
+export const deleteFork = async (forkId, tenderlyAccessKey) => {
   const options = {
     method: "DELETE",
     headers: {
-      "X-Access-Key": process.env.TENDERLY_ACCESS_KEY
+      "X-Access-Key": tenderlyAccessKey
     }
   };
 
