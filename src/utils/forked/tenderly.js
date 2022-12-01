@@ -108,16 +108,12 @@ export const deleteFork = async (forkId, tenderlyAccessKey) => {
     }
   };
 
-  const resp = fetch(TENDERLY_FORK_URL_TO_DELETE, options)
-    .then((response) => {
-      response.json();
-      // console.log(
-      //   `Forked with fork ID ${response.data.simulation_fork.id}. Check the Dashboard!`
-      // );
-    })
-    .then((data) => {
-      console.log(data);
-    });
-
-  return resp;
+  const response = await fetch(TENDERLY_FORK_URL_TO_DELETE, options);
+  if (response.status >= 200 && response.status <= 299) {
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
+  } else {
+    // Handle errors
+    console.log(response.status, response.statusText);
+  }
 };
