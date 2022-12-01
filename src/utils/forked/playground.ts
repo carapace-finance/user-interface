@@ -125,9 +125,7 @@ export async function transferApproveAndBuyProtection(
     lendingPoolAddress: lendingPoolAddress,
     nftLpTokenId: nftLpTokenId,
     protectionAmount: protectionAmount,
-    protectionExpirationTimestamp:
-      (await getLatestBlockTimestamp(provider)) +
-      86400 * protectionDurationInDays
+    protectionDurationInSeconds: 86400 * protectionDurationInDays
   };
 
   // await poolInstance.connect(buyer).buyProtection(purchaseParams, {

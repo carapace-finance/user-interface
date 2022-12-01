@@ -163,7 +163,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "protectionExpirationTimestamp",
+            "name": "protectionDurationInSeconds",
             "type": "uint256"
           }
         ],
