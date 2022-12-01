@@ -9,10 +9,6 @@ import { deleteFork, fillEther, sendTransaction } from "./tenderly";
 import { Playground } from "./types";
 
 export async function preparePlayground(playground: Playground) {
-  // Take snapshot to revert to later
-  playground.snapshotId = await playground.provider.send("evm_snapshot", []);
-  console.log("Snapshot ID:", playground.snapshotId);
-
   const { poolCycleManagerInstance, poolFactoryInstance, poolInstance } =
     playground.deployedContracts;
   console.log(

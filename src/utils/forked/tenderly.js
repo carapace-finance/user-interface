@@ -43,7 +43,11 @@ export const deployToFork = async (tenderlyAccessKey) => {
   const forkProvider = new JsonRpcProvider(TENDERLY_FORK_URL_FOR_REQUESTS);
 
   const deployedContracts = await deployContracts(forkProvider);
-  return { forkId, provider: forkProvider, deployedContracts };
+  // Take snapshot to revert to later
+  const snapshotId = await forkProvider.send("evm_snapshot", []);
+  console.log("Snapshot ID:", snapshotId);
+
+  return { forkId, provider: forkProvider, deployedContracts, snapshotId };
 };
 
 export const sendTransaction = async (
