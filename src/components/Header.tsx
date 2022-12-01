@@ -9,7 +9,11 @@ import assets from "../assets";
 import Account from "@components/Account";
 import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
 import { deployToFork } from "@utils/forked/tenderly";
-import { preparePlayground, resetPlayground } from "@utils/forked/playground";
+import {
+  preparePlayground,
+  resetPlayground,
+  deletePlayground
+} from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
 import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 
@@ -69,7 +73,11 @@ const Header = ({ tenderlyAccessKey }) => {
   let playgroundButtonAction;
   if (playground?.snapshotId) {
     playgroundButtonTitle = "Stop Playground";
-    playgroundButtonAction = async () => await resetPlayground(playground);
+    playgroundButtonAction = async () => {
+      await resetPlayground(playground);
+      await deletePlayground(playground.forkId, tenderlyAccessKey);
+      await setPlayground(undefined);
+    };
   } else {
     playgroundButtonTitle = "Start Playground";
     playgroundButtonAction = async () => {
