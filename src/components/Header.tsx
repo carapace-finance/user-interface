@@ -133,6 +133,9 @@ const Header = ({ tenderlyAccessKey }) => {
       >
         <span>{playgroundButtonTitle}</span>
       </button>
+      <span>
+        Test app features in a sandbox, with a starting balance of 1 ETH.
+      </span>
       <Account />
       <PlaygroundModePopUp
         open={isOpen}
