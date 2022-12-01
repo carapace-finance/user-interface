@@ -103,11 +103,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "minRequiredProtection",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "curvature",
             "type": "uint256"
           },
@@ -142,6 +137,11 @@
             "internalType": "struct PoolCycleParams",
             "name": "poolCycleParams",
             "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionExtensionGracePeriodInSeconds",
+            "type": "uint256"
           }
         ],
         "internalType": "struct PoolParams",

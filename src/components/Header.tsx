@@ -128,10 +128,7 @@ const Header = ({ tenderlyAccessKey }) => {
       )}
       <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={() => {
-          playgroundButtonAction;
-          setIsOpen(true);
-        }}
+        onClick={playgroundButtonAction}
       >
         <span>{playgroundButtonTitle}</span>
       </button>

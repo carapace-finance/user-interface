@@ -32,11 +32,6 @@
               },
               {
                 "internalType": "uint256",
-                "name": "minRequiredProtection",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
                 "name": "curvature",
                 "type": "uint256"
               },
@@ -71,6 +66,11 @@
                 "internalType": "struct PoolCycleParams",
                 "name": "poolCycleParams",
                 "type": "tuple"
+              },
+              {
+                "internalType": "uint256",
+                "name": "protectionExtensionGracePeriodInSeconds",
+                "type": "uint256"
               }
             ],
             "internalType": "struct PoolParams",
@@ -86,6 +86,11 @@
             "internalType": "contract IReferenceLendingPools",
             "name": "referenceLendingPools",
             "type": "address"
+          },
+          {
+            "internalType": "enum PoolPhase",
+            "name": "currentPhase",
+            "type": "uint8"
           }
         ],
         "internalType": "struct PoolInfo",
@@ -122,14 +127,8 @@
     "type": "constructor"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "msgSender",
-        "type": "address"
-      }
-    ],
-    "name": "BuyerAccountExists",
+    "inputs": [],
+    "name": "CanNotExtendProtectionAfterGracePeriod",
     "type": "error"
   },
   {
@@ -193,6 +192,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "NoExpiredProtectionToExtend",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -233,6 +237,28 @@
       }
     ],
     "name": "PoolHasNoMinCapitalRequired",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolInOpenToBuyersPhase",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolInOpenToSellersPhase",
     "type": "error"
   },
   {
@@ -321,7 +347,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "protectionExpirationTimestamp",
+            "name": "protectionDurationInSeconds",
             "type": "uint256"
           }
         ],
@@ -454,6 +480,25 @@
       }
     ],
     "name": "PoolInitialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum PoolPhase",
+        "name": "newState",
+        "type": "uint8"
+      }
+    ],
+    "name": "PoolPhaseUpdated",
     "type": "event"
   },
   {
@@ -671,7 +716,13 @@
     "type": "event"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_lendingPools",
+        "type": "address[]"
+      }
+    ],
     "name": "accruePremiumAndExpireProtections",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -789,7 +840,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "protectionExpirationTimestamp",
+            "name": "protectionDurationInSeconds",
             "type": "uint256"
           }
         ],
@@ -925,6 +976,41 @@
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "lendingPoolAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nftLpTokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionDurationInSeconds",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ProtectionPurchaseParams",
+        "name": "_protectionPurchaseParams",
+        "type": "tuple"
+      }
+    ],
+    "name": "extendProtection",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_buyer",
         "type": "address"
@@ -978,7 +1064,7 @@
               },
               {
                 "internalType": "uint256",
-                "name": "protectionExpirationTimestamp",
+                "name": "protectionDurationInSeconds",
                 "type": "uint256"
               }
             ],
@@ -1050,7 +1136,7 @@
               },
               {
                 "internalType": "uint256",
-                "name": "protectionExpirationTimestamp",
+                "name": "protectionDurationInSeconds",
                 "type": "uint256"
               }
             ],
@@ -1065,7 +1151,7 @@
           }
         ],
         "internalType": "struct ProtectionInfo[]",
-        "name": "",
+        "name": "_protections",
         "type": "tuple[]"
       }
     ],
@@ -1090,6 +1176,11 @@
       {
         "internalType": "uint256",
         "name": "_totalPremium",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalProtection",
         "type": "uint256"
       }
     ],
@@ -1131,11 +1222,6 @@
               },
               {
                 "internalType": "uint256",
-                "name": "minRequiredProtection",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
                 "name": "curvature",
                 "type": "uint256"
               },
@@ -1170,6 +1256,11 @@
                 "internalType": "struct PoolCycleParams",
                 "name": "poolCycleParams",
                 "type": "tuple"
+              },
+              {
+                "internalType": "uint256",
+                "name": "protectionExtensionGracePeriodInSeconds",
+                "type": "uint256"
               }
             ],
             "internalType": "struct PoolParams",
@@ -1185,6 +1276,11 @@
             "internalType": "contract IReferenceLendingPools",
             "name": "referenceLendingPools",
             "type": "address"
+          },
+          {
+            "internalType": "enum PoolPhase",
+            "name": "currentPhase",
+            "type": "uint8"
           }
         ],
         "internalType": "struct PoolInfo",
@@ -1300,6 +1396,19 @@
         "internalType": "uint256",
         "name": "_snapshotId",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "movePoolPhase",
+    "outputs": [
+      {
+        "internalType": "enum PoolPhase",
+        "name": "_newPhase",
+        "type": "uint8"
       }
     ],
     "stateMutability": "nonpayable",

@@ -83,7 +83,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "protectionExpirationTimestamp",
+        "name": "protectionPurchaseLimitTimestamp",
         "type": "uint256"
       }
     ],
@@ -182,7 +182,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "protectionExpirationTimestamp",
+            "name": "protectionDurationInSeconds",
             "type": "uint256"
           }
         ],
@@ -192,7 +192,7 @@
       },
       {
         "internalType": "bool",
-        "name": "_buyerHasActiveProtection",
+        "name": "_isExtension",
         "type": "bool"
       }
     ],
