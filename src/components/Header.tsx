@@ -136,6 +136,7 @@ const Header = ({ tenderlyAccessKey }) => {
       <Account />
       <PlaygroundModePopUp
         open={isOpen}
+        playground={playground}
         onClose={() => setIsOpen(false)}
       ></PlaygroundModePopUp>
     </div>
