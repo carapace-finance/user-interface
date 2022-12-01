@@ -55,7 +55,7 @@ const Header = ({ tenderlyAccessKey }) => {
     }
   }
 
-  async function createPlayground() {
+  async function createPlayground(playground) {
     await preparePlayground(playground);
     updateContractAddresses({
       poolFactory: await playground.deployedContracts.poolFactoryInstance
@@ -70,13 +70,14 @@ const Header = ({ tenderlyAccessKey }) => {
   if (playground?.snapshotId) {
     playgroundButtonTitle = "Stop Playground";
     playgroundButtonAction = async () => await resetPlayground(playground);
-  } else if (playground?.deployedContracts) {
-    playgroundButtonTitle = "Create Playground";
-    playgroundButtonAction = async () => await createPlayground();
   } else {
-    playgroundButtonAction = async () =>
-      setPlayground(await deployToFork(tenderlyAccessKey));
     playgroundButtonTitle = "Start Playground";
+    playgroundButtonAction = async () => {
+      setIsOpen(true);
+      const playground = await deployToFork(tenderlyAccessKey);
+      await setPlayground(playground);
+      await createPlayground(playground);
+    };
   }
 
   return (
@@ -128,10 +129,7 @@ const Header = ({ tenderlyAccessKey }) => {
       )}
       <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={() => {
-          playgroundButtonAction;
-          setIsOpen(true);
-        }}
+        onClick={playgroundButtonAction}
       >
         <span>{playgroundButtonTitle}</span>
       </button>
