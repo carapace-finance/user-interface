@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 const PlaygroundModePopUp = (props) => {
   const { open, onClose, playground } = props;
@@ -15,18 +15,16 @@ const PlaygroundModePopUp = (props) => {
         }
       }}
     >
+      <DialogTitle>Carapace Playground Mode</DialogTitle>
       <DialogContent>
-        The application is running in playground mode.
-      </DialogContent>
-      <DialogContent>
+        <span>Following are the things to take into consideration:</span>
         <ul>
+          <li>You have 1 ETH and 5000 USDC to test</li>
           <li>
-            While in simulation mode, you'll be able to explore some features
-            with a starting balance of ??? ETH.
+            You can test different features like deposit, withdrawal request,
+            withdrawal, and buy protection
           </li>
-          <li>
-            Feel free to explore and play around for as long as you'd like.
-          </li>
+          <li>The set up may take some time</li>
         </ul>
       </DialogContent>
       {playground?.snapshotId ? (
@@ -34,10 +32,12 @@ const PlaygroundModePopUp = (props) => {
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           onClick={onClose}
         >
-          <span>Start Playing Around</span>
+          <span>Start Playing Around!</span>
         </button>
       ) : (
-        <div>please be patient...wait...</div>
+        <button className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline">
+          <span>Setting Up the Playground Mode...</span>
+        </button>
       )}
     </Dialog>
   );
