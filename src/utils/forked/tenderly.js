@@ -98,8 +98,9 @@ export const sendTransaction = async (
   }
 };
 
-  const TENDERLY_FORK_URL_TO_DELETE = `TENDERLY_FORK_URL/${forkId}`;
 export const deleteFork = async (forkId, tenderlyAccessKey) => {
+  const TENDERLY_FORK_URL_TO_DELETE = `https://api.tenderly.co/api/v1/account/${process.env.NEXT_PUBLIC_TENDERLY_USER}/project/${process.env.NEXT_PUBLIC_TENDERLY_PROJECT}/fork/${forkId}`;
+
   const options = {
     method: "DELETE",
     headers: {
