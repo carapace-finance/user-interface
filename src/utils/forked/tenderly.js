@@ -6,7 +6,7 @@ import { deployContracts } from "./deploy";
 export const fillEther = async (walletAddress, provider) => {
   const params = [
     [walletAddress],
-    hexValue(1000000000000000000) // hex encoded wei amount
+    hexValue(100) // hex encoded wei amount
   ];
   await provider.send("tenderly_addBalance", params);
 };
