@@ -9,7 +9,11 @@ import assets from "../assets";
 import Account from "@components/Account";
 import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
 import { deployToFork } from "@utils/forked/tenderly";
-import { preparePlayground, resetPlayground } from "@utils/forked/playground";
+import {
+  preparePlayground,
+  resetPlayground,
+  deletePlayground
+} from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
 import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 
@@ -55,7 +59,7 @@ const Header = ({ tenderlyAccessKey }) => {
     }
   }
 
-  async function createPlayground() {
+  async function createPlayground(playground) {
     await preparePlayground(playground);
     updateContractAddresses({
       poolFactory: await playground.deployedContracts.poolFactoryInstance
@@ -68,15 +72,20 @@ const Header = ({ tenderlyAccessKey }) => {
   let playgroundButtonTitle;
   let playgroundButtonAction;
   if (playground?.snapshotId) {
-    playgroundButtonTitle = "Reset Playground";
-    playgroundButtonAction = async () => await resetPlayground(playground);
-  } else if (playground?.deployedContracts) {
-    playgroundButtonTitle = "Create Playground";
-    playgroundButtonAction = async () => await createPlayground();
+    playgroundButtonTitle = "Stop Playground";
+    playgroundButtonAction = async () => {
+      await resetPlayground(playground);
+      await deletePlayground(playground.forkId, tenderlyAccessKey);
+      await setPlayground(undefined);
+    };
   } else {
-    playgroundButtonTitle = "Deploy Playground";
-    playgroundButtonAction = async () =>
-      setPlayground(await deployToFork(tenderlyAccessKey));
+    playgroundButtonTitle = "Start Playground";
+    playgroundButtonAction = async () => {
+      setIsOpen(true);
+      const playground = await deployToFork(tenderlyAccessKey);
+      await setPlayground(playground);
+      await createPlayground(playground);
+    };
   }
 
   return (
@@ -102,7 +111,7 @@ const Header = ({ tenderlyAccessKey }) => {
       <Link href="/dashboard">
         <h3>Dashboard</h3>
       </Link>
-      <button
+      {/* <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         onClick={async () => await onConnect("metamask")}
       >
@@ -115,7 +124,7 @@ const Header = ({ tenderlyAccessKey }) => {
             ? "Connect Wallet"
             : "Connect Wallet"}
         </span>
-      </button>
+      </button> */}
       {active ? (
         <button
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
@@ -132,9 +141,17 @@ const Header = ({ tenderlyAccessKey }) => {
       >
         <span>{playgroundButtonTitle}</span>
       </button>
+      {playgroundButtonTitle === "Start Playground" ? (
+        <span>
+          Test app features in a sandbox, with a starting balance of 1 ETH.
+        </span>
+      ) : (
+        <span></span>
+      )}
       <Account />
       <PlaygroundModePopUp
         open={isOpen}
+        playground={playground}
         onClose={() => setIsOpen(false)}
       ></PlaygroundModePopUp>
     </div>

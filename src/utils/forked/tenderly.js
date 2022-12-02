@@ -24,7 +24,7 @@ export const createFork = async (tenderlyAccessKey) => {
     body: JSON.stringify({
       // standard TX fields
       network_id: forkingPoint.networkId,
-      block_number: forkingPoint.blockNumber,
+      block_number: 16088185,
       // simulation config (tenderly specific)
       save_if_fails: true,
       save: false,
@@ -45,7 +45,11 @@ export const deployToFork = async (tenderlyAccessKey) => {
   const forkProvider = new JsonRpcProvider(TENDERLY_FORK_URL_FOR_REQUESTS);
 
   const deployedContracts = await deployContracts(forkProvider);
-  return { forkId, provider: forkProvider, deployedContracts };
+  // Take snapshot to revert to later
+  const snapshotId = await forkProvider.send("evm_snapshot", []);
+  console.log("Snapshot ID:", snapshotId);
+
+  return { forkId, provider: forkProvider, deployedContracts, snapshotId };
 };
 
 export const sendTransaction = async (
@@ -94,25 +98,21 @@ export const sendTransaction = async (
   }
 };
 
-export const deleteFork = async (forkId) => {
-  const TENDERLY_FORK_URL_TO_DELETE = `TENDERLY_FORK_URL/${forkId}`;
+export const deleteFork = async (forkId, tenderlyAccessKey) => {
+  const TENDERLY_FORK_URL_TO_DELETE = `https://api.tenderly.co/api/v1/account/${process.env.NEXT_PUBLIC_TENDERLY_USER}/project/${process.env.NEXT_PUBLIC_TENDERLY_PROJECT}/fork/${forkId}`;
+
   const options = {
     method: "DELETE",
     headers: {
-      "X-Access-Key": process.env.TENDERLY_ACCESS_KEY
+      "X-Access-Key": tenderlyAccessKey
     }
   };
 
-  const resp = fetch(TENDERLY_FORK_URL_TO_DELETE, options)
-    .then((response) => {
-      response.json();
-      // console.log(
-      //   `Forked with fork ID ${response.data.simulation_fork.id}. Check the Dashboard!`
-      // );
-    })
-    .then((data) => {
-      console.log(data);
-    });
-
-  return resp;
+  const response = await fetch(TENDERLY_FORK_URL_TO_DELETE, options);
+  if (response.status === 204) {
+    console.log("the fork is deleted... status =>", response.status);
+  } else {
+    // Handle errors
+    console.log(response.status, response.statusText);
+  }
 };

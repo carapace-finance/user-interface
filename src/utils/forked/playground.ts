@@ -9,10 +9,6 @@ import { deleteFork, fillEther, sendTransaction } from "./tenderly";
 import { Playground } from "./types";
 
 export async function preparePlayground(playground: Playground) {
-  // Take snapshot to revert to later
-  playground.snapshotId = await playground.provider.send("evm_snapshot", []);
-  console.log("Snapshot ID:", playground.snapshotId);
-
   const { poolCycleManagerInstance, poolFactoryInstance, poolInstance } =
     playground.deployedContracts;
   console.log(
@@ -79,7 +75,7 @@ export async function transferApproveAndDeposit(
   );
 
   console.log(
-    "Receiver's sToken bal before: ",
+    "Receiver's sToken balance before: ",
     formatEther(await poolInstance.balanceOf(receiverAddress))
   );
 
@@ -87,7 +83,7 @@ export async function transferApproveAndDeposit(
   await usdcContract.approve(poolInstance.address, depositAmt);
   await poolInstance.connect(receiver).deposit(depositAmt, receiverAddress);
   console.log(
-    "Receiver's sToken bal after: ",
+    "Receiver's sToken balance after: ",
     formatEther(await poolInstance.balanceOf(receiverAddress))
   );
 
@@ -176,6 +172,6 @@ export async function resetPlayground(playground: Playground) {
   );
 }
 
-export async function deletePlayground(forkId: string) {
-  await deleteFork(forkId);
+export async function deletePlayground(forkId: string, tenderlyAccessKey: string) {
+  await deleteFork(forkId, tenderlyAccessKey);
 }
