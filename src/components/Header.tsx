@@ -11,7 +11,6 @@ import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
 import { deployToFork } from "@utils/forked/tenderly";
 import {
   preparePlayground,
-  resetPlayground,
   deletePlayground
 } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
@@ -74,7 +73,6 @@ const Header = ({ tenderlyAccessKey }) => {
   if (playground?.snapshotId) {
     playgroundButtonTitle = "Stop Playground";
     playgroundButtonAction = async () => {
-      await resetPlayground(playground);
       await deletePlayground(playground.forkId, tenderlyAccessKey);
       await setPlayground(undefined);
     };
@@ -83,8 +81,8 @@ const Header = ({ tenderlyAccessKey }) => {
     playgroundButtonAction = async () => {
       setIsOpen(true);
       const playground = await deployToFork(tenderlyAccessKey);
-      await setPlayground(playground);
       await createPlayground(playground);
+      await setPlayground(playground);
     };
   }
 
