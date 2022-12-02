@@ -109,9 +109,8 @@ export const deleteFork = async (forkId, tenderlyAccessKey) => {
   };
 
   const response = await fetch(TENDERLY_FORK_URL_TO_DELETE, options);
-  if (response.status >= 200 && response.status <= 299) {
-    const jsonResponse = await response.json();
-    console.log(jsonResponse);
+  if (response.status === 204) {
+    console.log("the fork is deleted... status =>", response.status);
   } else {
     // Handle errors
     console.log(response.status, response.statusText);
