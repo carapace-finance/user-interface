@@ -24,7 +24,7 @@ export const createFork = async (tenderlyAccessKey) => {
     body: JSON.stringify({
       // standard TX fields
       network_id: forkingPoint.networkId,
-      block_number: forkingPoint.blockNumber,
+      block_number: 16088185,
       // simulation config (tenderly specific)
       save_if_fails: true,
       save: false,
