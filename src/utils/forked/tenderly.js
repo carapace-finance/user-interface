@@ -39,15 +39,21 @@ export const createFork = async (tenderlyAccessKey) => {
 };
 
 export const deployToFork = async (tenderlyAccessKey) => {
+  let startTime = Date.now();
   const forkId = await createFork(tenderlyAccessKey);
   console.log("Created fork ==> ", forkId);
+  console.log("Time taken to create fork: ", Date.now() - startTime);
+
   const TENDERLY_FORK_URL_FOR_REQUESTS = `https://rpc.tenderly.co/fork/${forkId}`;
   const forkProvider = new JsonRpcProvider(TENDERLY_FORK_URL_FOR_REQUESTS);
 
+  startTime = Date.now();
   const deployedContracts = await deployContracts(forkProvider);
+  console.log("Time taken to deploy contracts: ", Date.now() - startTime);
+
   // Take snapshot to revert to later
   const snapshotId = await forkProvider.send("evm_snapshot", []);
-  console.log("Snapshot ID:", snapshotId);
+  console.log("Snapshot ID: ", snapshotId);
 
   return { forkId, provider: forkProvider, deployedContracts, snapshotId };
 };
@@ -96,6 +102,13 @@ export const sendTransaction = async (
       throw err;
     }
   }
+};
+
+export const moveForwardTime = async (provider, seconds) => {
+  await provider.send("evm_increaseTime", [hexValue(seconds)]);
+  await provider.send("evm_increaseBlocks", [
+    hexValue(1) // hex encoded number of blocks to increase
+  ]);
 };
 
 export const deleteFork = async (forkId, tenderlyAccessKey) => {

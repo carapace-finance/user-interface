@@ -6,8 +6,8 @@ import { useRouter } from "next/router";
 export default function BuyProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
   const [protectionAmount, setProtectionAmount] = useState(0);
-  const [protectionDurationInDays, setProtectionDurationInDays] = useState(90);
-  const [tokenId, setTokenId] = useState(0);
+  const [protectionDurationInDays, setProtectionDurationInDays] = useState(50);
+  const [tokenId, setTokenId] = useState(590);
 
   const router = useRouter();
 

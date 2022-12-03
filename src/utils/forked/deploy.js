@@ -1,4 +1,3 @@
-import { BigNumber } from "@ethersproject/bignumber";
 import { hexValue } from "@ethersproject/bytes";
 import { parseEther } from "ethers/lib/utils";
 import { ContractFactory, Contract } from "ethers";
@@ -21,8 +20,7 @@ import { referenceLendingPoolsFactoryBytecode } from "../../contracts/forked/byt
 import { linkBytecode } from "./bytecode";
 
 import { USDC_ADDRESS, parseUSDC } from "../usdc";
-
-export const SECONDS_PER_DAY = 86400;
+import { getDaysInSeconds } from "@utils/utils";
 
 //  Artifacts for contracts that have dependencies on libraries
 import accruedPremiumCalculatorArtifact from "../../contracts/forked/artifacts/AccruedPremiumCalculator.json";
@@ -45,13 +43,9 @@ let referenceLendingPoolsImplementation;
 let defaultStateManagerInstance;
 
 const GOLDFINCH_LENDING_POOLS = [
-  "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
+  // "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
   "0xd09a57127bc40d680be7cb061c2a6629fe71abef"
 ];
-
-const getDaysInSeconds = (days) => {
-  return BigNumber.from(days * SECONDS_PER_DAY);
-};
 
 function getLinkedBytecode(contractArtifact, libRefs) {
   const libs = libRefs.map((libRef) => {
@@ -156,8 +150,8 @@ const deployContracts = async (forkProvider) => {
     );
 
     // Create an instance of the ReferenceLendingPools
-    const _lendingProtocols = [0, 0]; // 0 = Goldfinch
-    const _purchaseLimitsInDays = [hexValue(90), hexValue(60)];
+    const _lendingProtocols = [0]; // 0 = Goldfinch
+    const _purchaseLimitsInDays = [hexValue(90)];
     console.log(
       "referenceLendingPoolsFactoryInstance.address ==>",
       referenceLendingPoolsFactoryInstance.address
@@ -182,10 +176,9 @@ const deployContracts = async (forkProvider) => {
       address: accruedPremiumCalculatorInstance.address
     };
 
-    const poolHelperBytecode = getLinkedBytecode(
-      poolHelperArtifact,
-      [accruedPremiumCalculatorLibRef]
-    );
+    const poolHelperBytecode = getLinkedBytecode(poolHelperArtifact, [
+      accruedPremiumCalculatorLibRef
+    ]);
     const poolHelperFactory = new ContractFactory(
       poolHelperAbi,
       poolHelperBytecode,
@@ -201,7 +194,8 @@ const deployContracts = async (forkProvider) => {
       address: poolHelperInstance.address
     };
     const poolFactoryBytecode = getLinkedBytecode(poolFactoryArtifact, [
-      accruedPremiumCalculatorLibRef, poolHelperLibRef
+      accruedPremiumCalculatorLibRef,
+      poolHelperLibRef
     ]);
     const poolFactoryFactory = new ContractFactory(
       poolFactoryAbi,
@@ -246,7 +240,7 @@ const deployContracts = async (forkProvider) => {
       leverageRatioFloor: parseEther("0.5"),
       leverageRatioCeiling: parseEther("1"),
       leverageRatioBuffer: parseEther("0.05"),
-      minRequiredCapital: parseUSDC("100000"),  // 100k
+      minRequiredCapital: parseUSDC("100000"), // 100k
       curvature: parseEther("0.05"),
       minCarapaceRiskPremiumPercent: parseEther("0.02"),
       underlyingRiskPremiumPercent: parseEther("0.1"),
