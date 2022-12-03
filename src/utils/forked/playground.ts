@@ -13,6 +13,7 @@ import {
   sendTransaction
 } from "./tenderly";
 import { Playground } from "./types";
+import { payToLendingPoolAddress } from "./goldfinch";
 
 export async function preparePlayground(playground: Playground) {
   const { poolCycleManagerInstance, poolFactoryInstance, poolInstance } =
@@ -62,11 +63,12 @@ export async function preparePlayground(playground: Playground) {
   console.log("********** Pool Phase: OpenToBuyers **********");
 
   // buy protection 1
+  const lendingPoolAddress = "0xd09a57127bc40d680be7cb061c2a6629fe71abef";
   await transferApproveAndBuyProtection(
     playground.provider,
     poolInstance,
     user,
-    "0xd09a57127bc40d680be7cb061c2a6629fe71abef",
+    lendingPoolAddress,
     590,
     parseUSDC("150000"),
     30
@@ -122,6 +124,13 @@ export async function preparePlayground(playground: Playground) {
 
   console.log("********** Pool Cycle: 3, Day: 62     **********");
 
+  // make payment to lending pool, so user can buy protection
+  await payToLendingPoolAddress(
+    lendingPoolAddress,
+    "200000",
+    playground.provider
+  );
+
   console.log("Playground is ready!");
 }
 
@@ -131,10 +140,6 @@ async function movePoolCycle(provider, poolInstance, poolCycleManagerInstance) {
   // move from open to locked state
   await moveForwardTime(provider, getDaysInSeconds(11));
   await poolCycleManagerInstance.calculateAndSetPoolCycleState(poolInfo.poolId);
-  console.log(
-    "Pool Cycle:",
-    await poolCycleManagerInstance.getCurrentPoolCycle(poolInfo.poolId)
-  );
 
   // move to new cycle
   await moveForwardTime(provider, getDaysInSeconds(20));

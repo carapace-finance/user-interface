@@ -43,7 +43,7 @@ let referenceLendingPoolsImplementation;
 let defaultStateManagerInstance;
 
 const GOLDFINCH_LENDING_POOLS = [
-  "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
+  // "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
   "0xd09a57127bc40d680be7cb061c2a6629fe71abef"
 ];
 
@@ -150,8 +150,8 @@ const deployContracts = async (forkProvider) => {
     );
 
     // Create an instance of the ReferenceLendingPools
-    const _lendingProtocols = [0, 0]; // 0 = Goldfinch
-    const _purchaseLimitsInDays = [hexValue(90), hexValue(90)];
+    const _lendingProtocols = [0]; // 0 = Goldfinch
+    const _purchaseLimitsInDays = [hexValue(90)];
     console.log(
       "referenceLendingPoolsFactoryInstance.address ==>",
       referenceLendingPoolsFactoryInstance.address
