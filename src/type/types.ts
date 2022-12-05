@@ -1,4 +1,5 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
+import { ProtectionPoolService } from "@services/ProtectionPoolService";
 
 export interface ContractAddresses {
   poolFactory: string;
@@ -10,6 +11,7 @@ export type ContractAddressesContextType = {
   contractAddresses: ContractAddresses;
   updateContractAddresses: (newContractAddresses: ContractAddresses) => void;
   updateProvider: (newProvider: JsonRpcProvider) => void;
+  protectionPoolService: ProtectionPoolService;
 };
 
 export interface ProtectionPool {

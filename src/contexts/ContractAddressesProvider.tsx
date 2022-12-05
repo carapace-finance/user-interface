@@ -1,6 +1,7 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { ContractAddresses, ContractAddressesContextType } from "@type/types";
 import { createContext, useState } from "react";
+import { ProtectionPoolService } from "../services/ProtectionPoolService";
 
 export const ContractAddressesContext =
   createContext<ContractAddressesContextType | null>(null);
@@ -23,7 +24,8 @@ export const ContractAddressesProvider = ({ children }) => {
         provider,
         contractAddresses,
         updateContractAddresses,
-        updateProvider
+        updateProvider,
+        protectionPoolService: provider ? new ProtectionPoolService(provider) : null
       }}
     >
       {children}

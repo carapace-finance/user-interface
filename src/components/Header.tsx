@@ -19,7 +19,6 @@ import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 const Header = ({ tenderlyAccessKey }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { active, activate, deactivate } = useWeb3React();
-  const { chainId } = useWeb3React();
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
@@ -58,14 +57,15 @@ const Header = ({ tenderlyAccessKey }) => {
     }
   }
 
-  async function createPlayground(playground) {
-    await preparePlayground(playground);
-    updateContractAddresses({
-      poolFactory: await playground.deployedContracts.poolFactoryInstance
-        .address,
-      pool: await playground.deployedContracts.poolInstance.address
+  function createPlayground(playground) {
+    preparePlayground(playground).then(() => {
+      updateContractAddresses({
+        poolFactory: playground.deployedContracts.poolFactoryInstance.address,
+        pool: playground.deployedContracts.poolInstance.address
+      });
+      updateProvider(playground.provider);
+      setPlayground(playground);
     });
-    updateProvider(playground.provider);
   }
 
   let playgroundButtonTitle;
@@ -74,15 +74,14 @@ const Header = ({ tenderlyAccessKey }) => {
     playgroundButtonTitle = "Stop Playground";
     playgroundButtonAction = async () => {
       await deletePlayground(playground.forkId, tenderlyAccessKey);
-      await setPlayground(undefined);
+      setPlayground(undefined);
     };
   } else {
     playgroundButtonTitle = "Start Playground";
     playgroundButtonAction = async () => {
       setIsOpen(true);
       const playground = await deployToFork(tenderlyAccessKey);
-      await createPlayground(playground);
-      await setPlayground(playground);
+      createPlayground(playground);
     };
   }
 

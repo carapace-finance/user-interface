@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
@@ -6,6 +6,7 @@ const TitleAndDescriptions = dynamic(
 );
 import WithdrawalRequestPopUp from "@components/WithdrawalRequestPopUp";
 import WithdrawPopUp from "@components/WithdrawPopUp";
+import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
 
 const protectionPurchases = [
   {
@@ -54,6 +55,12 @@ const deposits = [
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const { contractAddresses } = useContext(ContractAddressesContext);
+  const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
+
+  useEffect(() => { 
+    setProtectionPoolAddress(contractAddresses?.pool);
+  }, [contractAddresses]);
 
   return (
     <div>
@@ -133,6 +140,7 @@ const Dashboard = () => {
       <WithdrawalRequestPopUp
         open={isWithdrawalRequestOpen}
         onClose={() => setIsWithdrawalRequestOpen(false)}
+        protectionPoolAddress={protectionPoolAddress}
       ></WithdrawalRequestPopUp>
       <WithdrawPopUp
         open={isWithdrawOpen}
