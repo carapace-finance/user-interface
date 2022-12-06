@@ -34,3 +34,10 @@ export interface LendingPool {
   timeLeft: string;
   protectionPoolAddress: string;
 }
+
+export interface ProtectionPurchaseParams {
+  lendingPoolAddress: string;
+  nftLpTokenId: string;
+  protectionAmount: string;
+  protectionDurationInSeconds: string;
+}

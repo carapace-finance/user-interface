@@ -12,11 +12,10 @@ import {
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
-import { getPoolContract } from "@contracts/contractService";
 import { parseUSDC } from "@utils/usdc";
-import { transferApproveAndBuyProtection } from "@utils/forked/playground";
+import { getDaysInSeconds } from "@utils/utils";
 
-// Presentational component for handling trades
+// Presentational component for handling buy protection
 const BuyProtectionPopUp = (props) => {
   const {
     open,
@@ -34,7 +33,7 @@ const BuyProtectionPopUp = (props) => {
   const [priceInput, setPriceInput] = useState<string>();
   const [priceOutput, setPriceOutput] = useState<string>();
   const quantityRef = useRef<HTMLInputElement>();
-  const { provider } = useContext(ContractAddressesContext);
+  const { protectionPoolService } = useContext(ContractAddressesContext);
 
   useEffect(() => {
     // Reset
@@ -45,42 +44,41 @@ const BuyProtectionPopUp = (props) => {
     setTab(0);
   }, [open]);
 
-  // Function passed into 'onClick'
-  const executeTrade = async () => {
+  const onError = (e) => {
+    if (e) {
+      console.log("Error: ", e);
+    }
+    console.log('The buy protection transaction failed');
+    setError("Failed to buy protection...");
+  };
+
+  // Function passed into 'onClick' of 'Buy Protection' button
+  const buyProtection = async () => {
     setError("");
-    let message = "";
 
     try {
-      const buyer = provider.getSigner(
-        "0x008c84421da5527f462886cec43d2717b686a7e4"
-      );
-      const pool = getPoolContract(protectionPoolAddress, buyer);
-      transferApproveAndBuyProtection(
-        provider,
-        pool,
-        buyer,
-        lendingPoolAddress,
-        tokenId,
-        parseUSDC(protectionAmount),
-        protectionDurationInDays
-      ).then(
-        (tx) => {
-          message = `You successfully bought protection for ${protectionDurationInDays} days!`;
+      const tx = await protectionPoolService.buyProtection(protectionPoolAddress, {
+        lendingPoolAddress: lendingPoolAddress,
+        nftLpTokenId: tokenId,
+        protectionAmount: parseUSDC(protectionAmount),
+        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
+      });
 
-          // Show success message for 2 seconds before closing popup
-          setSuccessMessage(message);
-          setTimeout(() => {
-            onClose();
-          }, 2000);
-        },
-        (err) => {
-          setError(err.message);
-        }
-      );
-    } catch (e) {
-      const err = JSON.stringify(JSON.stringify(e.message));
-      console.log("Error", err);
-      return setError(err);
+      const receipt = await tx.wait();
+      if (receipt.status === 1) { 
+        console.log('The buy protection transaction was successful');
+        // Show success message for 2 seconds before closing popup
+        setSuccessMessage(`You successfully bought protection for ${protectionDurationInDays} days!`);
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      }
+      else {
+        onError(receipt);
+      }
+    }
+    catch (e) {
+      onError(e);
     }
   };
 
@@ -129,7 +127,7 @@ const BuyProtectionPopUp = (props) => {
               </DialogContent>
               <button
                 className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-                onClick={executeTrade}
+                onClick={buyProtection}
                 disabled={!priceInput || priceInput === "0"}
               >
                 Buy protection
