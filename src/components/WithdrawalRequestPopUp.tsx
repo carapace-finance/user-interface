@@ -16,30 +16,35 @@ const WithdrawalRequestPopUp = (props) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
 
+  const onError = (e) => {
+    if (e) {
+      console.log("Error: ", e);
+    }
+    console.log('The requestWithdrawal transaction failed');
+    setError("Failed to request withdrawal...");
+  };
+  
   const requestedWithdrawal = async () => {
     try {
-      protectionPoolService.requestWithdrawal(protectionPoolAddress, parseUSDC(amount)).then((tx) => {
-        tx.wait().then((receipt) => { 
-          if (receipt.status === 1) {
-            console.log('The requestWithdrawal transaction was successful');
-            // Show success message for 2 seconds before closing popup
-            setSuccessMessage(`You successfully requested to withdraw ${amount} USDC from the protection pool!`);
-            setTimeout(() => {
-              onClose();
-            }, 2000);
-          } else {
-            console.log('The requestWithdrawal transaction failed');
-            setError("Failed to request withdrawal");
-          }
-        });
-      });
+      const tx = await protectionPoolService.requestWithdrawal(protectionPoolAddress, parseUSDC(amount));
+      const receipt = await tx.wait();
+      if (receipt.status === 1) { 
+        console.log('The requestWithdrawal transaction was successful');
+        // Show success message for 2 seconds before closing popup
+        setSuccessMessage(`You successfully requested to withdraw ${amount} USDC from the protection pool!`);
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      }
+      else {
+        onError(receipt);
+      }
     }
     catch (e) {
-      const err = JSON.stringify(JSON.stringify(e.message));
-      console.log("Error: ", err);
-      setError(err);
+      onError(e);
     }
   };
+
   const setMaxAmount = async () => { setAmount(requestableAmount) };
 
   useEffect(() => {
