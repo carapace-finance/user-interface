@@ -60,6 +60,7 @@ const Header = ({ tenderlyAccessKey }) => {
   function createPlayground(playground) {
     preparePlayground(playground).then(() => {
       updateContractAddresses({
+        isPlayground: true,
         poolFactory: playground.deployedContracts.poolFactoryInstance.address,
         pool: playground.deployedContracts.poolInstance.address
       });

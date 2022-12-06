@@ -99,7 +99,7 @@ const WithdrawalRequestPopUp = (props) => {
         <button
           type="button"
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount === "0"}
+          disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount === "0" || amount > requestableAmount}
           onClick={requestedWithdrawal}
         >
           Confirm Withdrawal Request

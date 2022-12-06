@@ -2,6 +2,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { ProtectionPoolService } from "@services/ProtectionPoolService";
 
 export interface ContractAddresses {
+  isPlayground: boolean;
   poolFactory: string;
   pool: string;
 }

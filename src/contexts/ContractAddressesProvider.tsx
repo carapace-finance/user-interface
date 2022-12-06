@@ -25,7 +25,7 @@ export const ContractAddressesProvider = ({ children }) => {
         contractAddresses,
         updateContractAddresses,
         updateProvider,
-        protectionPoolService: provider ? new ProtectionPoolService(provider) : null
+        protectionPoolService: provider ? new ProtectionPoolService(provider, contractAddresses.isPlayground) : null
       }}
     >
       {children}

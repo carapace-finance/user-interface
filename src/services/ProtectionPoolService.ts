@@ -2,13 +2,31 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { BigNumber } from "@ethersproject/bignumber";
 
 import { getPoolContract } from "@contracts/contractService";
+import { transferApproveAndDeposit } from "@utils/forked/playground";
 
 export class ProtectionPoolService {
-  constructor(private readonly provider: JsonRpcProvider) {
+  constructor(
+    private readonly provider: JsonRpcProvider,
+    public readonly isPlayground: boolean
+  ) {
     this.provider = provider;
+    this.isPlayground = isPlayground;
   }
 
-  public async deposit(depositAmt: BigNumber) {}
+  public async deposit(poolAddress: string, depositAmt: BigNumber) {
+    const signer = this.provider.getSigner();
+    const poolInstance = getPoolContract(poolAddress, signer);
+    if (this.isPlayground) {
+      return await transferApproveAndDeposit(
+        this.provider,
+        poolInstance,
+        depositAmt,
+        signer
+      );
+    } else {
+      return await poolInstance.deposit(depositAmt, await signer.getAddress());
+    }
+  }
 
   public async requestWithdrawal(poolAddress: string, usdcAmt: BigNumber) {
     const signer = this.provider.getSigner();

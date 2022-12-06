@@ -183,36 +183,14 @@ export async function transferApproveAndDeposit(
   const usdcContract = getUsdcContract(receiver);
   const receiverAddress = await receiver.getAddress();
 
-  console.log(
-    "Receiver's USDC balance before: ",
-    formatUSDC(await usdcContract.balanceOf(receiverAddress))
-  );
   // transfer usdc to deployer
   await transferUsdc(provider, receiverAddress, depositAmt);
-  console.log(
-    "Receiver's USDC balance after: ",
-    formatUSDC(await usdcContract.balanceOf(receiverAddress))
-  );
-
-  console.log(
-    "Receiver's sToken balance before: ",
-    formatEther(await poolInstance.balanceOf(receiverAddress))
-  );
 
   // Approve & deposit 5K USDC
   await usdcContract.approve(poolInstance.address, depositAmt);
-  await poolInstance.connect(receiver).deposit(depositAmt, receiverAddress);
-  console.log(
-    "Receiver's sToken balance after: ",
-    formatEther(await poolInstance.balanceOf(receiverAddress))
-  );
-
-  console.log(
-    "Receiver's USDC balance after deposit: ",
-    formatUSDC(await usdcContract.balanceOf(receiverAddress))
-  );
-
-  console.log("Finished deposit");
+  return await poolInstance
+    .connect(receiver)
+    .deposit(depositAmt, receiverAddress);
 }
 
 export async function transferApproveAndBuyProtection(
