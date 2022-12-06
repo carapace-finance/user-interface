@@ -1,7 +1,58 @@
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, InputAdornment, TextField } from "@mui/material";
+import { IconButton } from "@material-tailwind/react";
+import { useContext, useEffect, useState } from "react";
+import { formatAddress } from "@utils/utils";
+import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { formatEther } from "@ethersproject/units";
+import { parseUSDC } from "@utils/usdc";
+import SuccessPopup from "./SuccessPopup";
+import ErrorPopup from "@components/ErrorPopup";
 
 const WithdrawalRequestPopUp = (props) => {
-  const { open, onClose } = props;
+  const { open, onClose, protectionPoolAddress } = props;
+  const [amount, setAmount] = useState("");
+  const [requestableAmount, setRequestableAmount] = useState("");
+  const { protectionPoolService } = useContext(ContractAddressesContext);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [error, setError] = useState("");
+
+  const requestedWithdrawal = async () => {
+    try {
+      protectionPoolService.requestWithdrawal(protectionPoolAddress, parseUSDC(amount)).then((tx) => {
+        tx.wait().then((receipt) => { 
+          if (receipt.status === 1) {
+            console.log('The requestWithdrawal transaction was successful');
+            // Show success message for 2 seconds before closing popup
+            setSuccessMessage(`You successfully requested to withdraw ${amount} USDC from the protection pool!`);
+            setTimeout(() => {
+              onClose();
+            }, 2000);
+          } else {
+            console.log('The requestWithdrawal transaction failed');
+            setError("Failed to request withdrawal");
+          }
+        });
+      });
+    }
+    catch (e) {
+      const err = JSON.stringify(JSON.stringify(e.message));
+      console.log("Error: ", err);
+      setError(err);
+    }
+  };
+  const setMaxAmount = async () => { setAmount(requestableAmount) };
+
+  useEffect(() => {
+    setAmount("");
+    setRequestableAmount("");
+    setSuccessMessage("");
+    setError("");
+
+    if (protectionPoolService && protectionPoolAddress) {
+      console.log("Getting pool balance...");
+      protectionPoolService.getBalance(protectionPoolAddress).then((balance) => { setRequestableAmount(formatEther(balance))});
+    }
+   }, [protectionPoolService, protectionPoolAddress]);
 
   return (
     <Dialog
@@ -15,8 +66,45 @@ const WithdrawalRequestPopUp = (props) => {
         }
       }}
     >
-      <DialogTitle>Withdrawal Request</DialogTitle>
-      <DialogContent></DialogContent>
+      <DialogTitle>
+        Withdrawal Request
+        <IconButton className="absolute top-0 right-0" aria-label="close" onClick={onClose} size="sm" color="white">x</IconButton>
+      </DialogTitle>
+      <DialogContent>
+        <div className="flex justify-left mb-3">Protection Pool:{formatAddress(protectionPoolAddress)}</div>
+        <div className="flex justify-left mb-3">Requestable Amount: {requestableAmount}</div>
+        <div className="flex justify-center mb-3">
+          <TextField
+            type="number"
+            placeholder={"0.0"}
+            variant="outlined"
+            size="medium"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">USDC</InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end"><IconButton aria-label="close" onClick={setMaxAmount} size="sm">Max</IconButton></InputAdornment>
+              )
+            }}
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        </div>
+        <button
+          type="button"
+          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount === "0"}
+          onClick={requestedWithdrawal}
+        >
+          Confirm Withdrawal Request
+        </button>
+      </DialogContent>
+      <SuccessPopup
+        handleClose={() => setSuccessMessage("")}
+        message={successMessage}
+      />
+      <ErrorPopup error={error} handleCloseError={() => setError("")} />
     </Dialog>
   );
 };

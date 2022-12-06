@@ -55,7 +55,14 @@ export const deployToFork = async (tenderlyAccessKey) => {
   const snapshotId = await forkProvider.send("evm_snapshot", []);
   console.log("Snapshot ID: ", snapshotId);
 
-  return { forkId, provider: forkProvider, deployedContracts, snapshotId };
+  const playground = {
+    forkId,
+    provider: forkProvider,
+    deployedContracts,
+    snapshotId
+  };
+  window.playground = playground;
+  return playground;
 };
 
 export const sendTransaction = async (
