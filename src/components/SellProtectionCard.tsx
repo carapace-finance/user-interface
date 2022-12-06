@@ -24,6 +24,7 @@ export default function SellProtectionCard() {
         <button
           type="button"
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          disabled={!amount || amount === "0"}
           onClick={() => setIsOpen(true)}
         >
           Preview

@@ -6,7 +6,7 @@ const TitleAndDescriptions = dynamic(
   { ssr: false }
 );
 import assets from "../assets";
-import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { ProtectionPool } from "@type/types";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -50,7 +50,7 @@ const defaultProtectionPools: ProtectionPool[] = [
 ];
 
 const SellProtection = () => {
-  const { contractAddresses, provider } = useContext(ContractAddressesContext);
+  const { contractAddresses, provider } = useContext(ApplicationContext);
   const [protectionPools, setProtectionPools] = useState<ProtectionPool[]>(
     defaultProtectionPools
   );

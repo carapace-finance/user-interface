@@ -11,12 +11,12 @@ import {
 
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
-import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { parseUSDC } from "@utils/usdc";
 
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
-  const { protectionPoolService } = useContext(ContractAddressesContext);
+  const { protectionPoolService } = useContext(ApplicationContext);
   const { open, onClose, amount, USDCBalance, protectionPoolAddress } = props;
   const [tab, setTab] = useState(0);
   const [successMessage, setSuccessMessage] = useState("");
@@ -114,7 +114,7 @@ const SellProtectionPopUp = (props) => {
               <button
                 className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                 onClick={sellProtection}
-                disabled={!priceInput || priceInput === "0"}
+                disabled={!protectionPoolService || !priceInput || priceInput === "0"}
               >
                 Confirm Sell Protection
               </button>

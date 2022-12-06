@@ -10,5 +10,4 @@ export interface Playground {
   forkId: string;
   provider: JsonRpcProvider;
   deployedContracts: DeployedContracts;
-  snapshotId: string;
 }

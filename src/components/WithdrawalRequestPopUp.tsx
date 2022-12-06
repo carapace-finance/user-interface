@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle, InputAdornment, TextField } from "@
 import { IconButton } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { formatAddress } from "@utils/utils";
-import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { formatEther } from "@ethersproject/units";
 import { parseUSDC } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
@@ -12,7 +12,7 @@ const WithdrawalRequestPopUp = (props) => {
   const { open, onClose, protectionPoolAddress } = props;
   const [amount, setAmount] = useState("");
   const [requestableAmount, setRequestableAmount] = useState("");
-  const { protectionPoolService } = useContext(ContractAddressesContext);
+  const { protectionPoolService } = useContext(ApplicationContext);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
 

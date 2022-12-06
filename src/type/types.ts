@@ -7,7 +7,7 @@ export interface ContractAddresses {
   pool: string;
 }
 
-export type ContractAddressesContextType = {
+export type ApplicationContextType = {
   provider: JsonRpcProvider;
   contractAddresses: ContractAddresses;
   updateContractAddresses: (newContractAddresses: ContractAddresses) => void;

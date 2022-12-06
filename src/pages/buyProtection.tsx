@@ -7,7 +7,7 @@ const TitleAndDescriptions = dynamic(
 );
 import assets from "../assets";
 import { useContext, useEffect, useState } from "react";
-import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { LendingPool } from "@type/types";
 import {
   getPoolContract,
@@ -66,7 +66,7 @@ const defaultLendingPools: LendingPool[] = [
 ];
 
 const BuyProtection = () => {
-  const { contractAddresses, provider } = useContext(ContractAddressesContext);
+  const { contractAddresses, provider } = useContext(ApplicationContext);
   const [lendingPools, setLendingPools] =
     useState<LendingPool[]>(defaultLendingPools);
 

@@ -11,7 +11,7 @@ import {
 
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
-import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { parseUSDC } from "@utils/usdc";
 import { getDaysInSeconds } from "@utils/utils";
 
@@ -33,7 +33,7 @@ const BuyProtectionPopUp = (props) => {
   const [priceInput, setPriceInput] = useState<string>();
   const [priceOutput, setPriceOutput] = useState<string>();
   const quantityRef = useRef<HTMLInputElement>();
-  const { protectionPoolService } = useContext(ContractAddressesContext);
+  const { protectionPoolService } = useContext(ApplicationContext);
 
   useEffect(() => {
     // Reset
@@ -128,7 +128,7 @@ const BuyProtectionPopUp = (props) => {
               <button
                 className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                 onClick={buyProtection}
-                disabled={!priceInput || priceInput === "0"}
+                disabled={!protectionPoolService || !priceInput || priceInput === "0"}
               >
                 Buy protection
               </button>
