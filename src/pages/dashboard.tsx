@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
@@ -7,58 +8,20 @@ const TitleAndDescriptions = dynamic(
 import WithdrawalRequestPopUp from "@components/WithdrawalRequestPopUp";
 import WithdrawPopUp from "@components/WithdrawPopUp";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-
-const protectionPurchases = [
-  {
-    id: 1,
-    name: "Lending Pool #1",
-    protocol: "Goldfinch",
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%",
-    timeUntilExpiration: "7 Days 8 Hours 2 Mins"
-  },
-  {
-    id: 2,
-    name: "Lending Pool #1",
-    protocol: "Goldfinch",
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%",
-    timeUntilExpiration: "7 Days 8 Hours 2 Mins"
-  }
-];
-
-const deposits = [
-  {
-    id: 1,
-    protocol: "Goldfinch",
-    APY: "15 - 20%",
-    totalCapital: "$1,803,000",
-    totalProtection: "$2,203,000",
-    depositedAmount: "$203,000",
-    requestedWithdrawal: "$203,000"
-  },
-  {
-    id: 2,
-    protocol: "Goldfinch",
-    APY: "15 - 20%",
-    totalCapital: "$1,803,000",
-    totalProtection: "$2,203,000",
-    depositedAmount: "$203,000",
-    requestedWithdrawal: "$203,000"
-  }
-];
+import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
+import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const { contractAddresses } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
+  const { lendingPools, setLendingPools } = useContext(LendingPoolContext);
+  const { protectionPools, setProtectionPools } = useContext(
+    ProtectionPoolContext
+  );
 
-  useEffect(() => { 
+  useEffect(() => {
     setProtectionPoolAddress(contractAddresses?.pool);
   }, [contractAddresses]);
 
@@ -69,7 +32,7 @@ const Dashboard = () => {
       <table className="table-auto w-full">
         <thead>
           <tr>
-            <th>id</th>
+            <th>address</th>
             <th>Lending Pool</th>
             <th>Protocol</th>
             <th>Adjusted Yields</th>
@@ -81,16 +44,23 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {protectionPurchases.map((protectionPurchase) => (
-            <tr key={protectionPurchase.id}>
-              <td>{protectionPurchase.id}</td>
-              <td>{protectionPurchase.name}</td>
-              <td>{protectionPurchase.protocol}</td>
-              <td>{protectionPurchase.adjustedYields}</td>
-              <td>{protectionPurchase.lendingPoolAPY}</td>
-              <td>{protectionPurchase.CARATokenRewards}</td>
-              <td>{protectionPurchase.premium}</td>
-              <td>{protectionPurchase.timeUntilExpiration}</td>
+          {lendingPools.map((lendingPool) => (
+            <tr key={lendingPool.address}>
+              <td>{lendingPool.address}</td>
+              <td>{lendingPool.name}</td>
+              <td>
+                <Image
+                  src={lendingPool.protocol}
+                  width={24}
+                  height={24}
+                  alt=""
+                />
+              </td>
+              <td>{lendingPool.adjustedYields}</td>
+              <td>{lendingPool.lendingPoolAPY}</td>
+              <td>{lendingPool.CARATokenRewards}</td>
+              <td>{lendingPool.premium}</td>
+              <td>timeUntilExpiration</td>
               <td>
                 <button>claim</button>
               </td>
@@ -102,7 +72,7 @@ const Dashboard = () => {
       <table className="table-auto w-full">
         <thead>
           <tr>
-            <th>id</th>
+            <th>address</th>
             <th>Protocols</th>
             <th>APY</th>
             <th>Total Capital</th>
@@ -114,15 +84,22 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {deposits.map((deposit) => (
-            <tr key={deposit.id}>
-              <td>{deposit.id}</td>
-              <td>{deposit.protocol}</td>
-              <td>{deposit.APY}</td>
-              <td>{deposit.totalCapital}</td>
-              <td>{deposit.totalProtection}</td>
-              <td>{deposit.depositedAmount}</td>
-              <td>{deposit.requestedWithdrawal}</td>
+          {protectionPools.map((protectionPool) => (
+            <tr key={protectionPool.address}>
+              <td>{protectionPool.address}</td>
+              <td>
+                <Image
+                  src={protectionPool.protocols}
+                  width={24}
+                  height={24}
+                  alt=""
+                />
+              </td>
+              <td>{protectionPool.APY}</td>
+              <td>{protectionPool.totalCapital}</td>
+              <td>{protectionPool.totalProtection}</td>
+              <td>depositedAmount</td>
+              <td>requestedWithdrawal</td>
               <td>
                 <button onClick={() => setIsWithdrawalRequestOpen(true)}>
                   request withdrawal
