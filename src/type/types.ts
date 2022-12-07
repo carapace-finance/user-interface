@@ -15,6 +15,21 @@ export type ApplicationContextType = {
   protectionPoolService: ProtectionPoolService;
 };
 
+export type ProtectionPoolContextType = {
+  protectionPools: ProtectionPool[];
+  setProtectionPools: (protectionPools: ProtectionPool[]) => void;
+};
+
+export type LendingPoolContextType = {
+  lendingPools: LendingPool[];
+  setLendingPools: (lendingPools: LendingPool[]) => void;
+};
+
+export type BondContextType = {
+  bonds: Bond[];
+  setBonds: (bonds: Bond[]) => void;
+};
+
 export interface ProtectionPool {
   address: string;
   APY: string;
@@ -33,6 +48,17 @@ export interface LendingPool {
   premium: string;
   timeLeft: string;
   protectionPoolAddress: string;
+}
+
+export interface Bond {
+  poolTokenId: string;
+  price: string;
+  lendingPool: string;
+  protocol: string;
+  adjustedYields: string;
+  lendingPoolAPY: string;
+  CARATokenRewards: string;
+  premium: string;
 }
 
 export interface ProtectionPurchaseParams {

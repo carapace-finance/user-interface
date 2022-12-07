@@ -73,7 +73,7 @@ const WithdrawalRequestPopUp = (props) => {
     >
       <DialogTitle>
         Withdrawal Request
-        <IconButton className="absolute top-0 right-0" aria-label="close" onClick={onClose} size="sm" color="white">x</IconButton>
+        <button className="absolute top-0 right-0" onClick={onClose}>x</button>
       </DialogTitle>
       <DialogContent>
         <div className="flex justify-left mb-3">Protection Pool:{formatAddress(protectionPoolAddress)}</div>
