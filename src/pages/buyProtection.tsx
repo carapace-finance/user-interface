@@ -5,70 +5,22 @@ const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
 );
-import assets from "../assets";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { LendingPool } from "@type/types";
+import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import {
   getPoolContract,
   getPoolFactoryContract,
   getReferenceLendingPoolsContract
 } from "@contracts/contractService";
 import { formatAddress } from "@utils/utils";
-
-const goldfinchLogo = assets.goldfinch.src;
-
-const defaultLendingPools: LendingPool[] = [
-  {
-    address: "1",
-    name: "Almavest Basket #6",
-    protocol: goldfinchLogo,
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%",
-    timeLeft: "7 Days 8 Hours 2 Mins",
-    protectionPoolAddress: "0xTest1"
-  },
-  {
-    address: "2",
-    name: "Almavest Basket #6",
-    protocol: goldfinchLogo,
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%",
-    timeLeft: "7 Days 8 Hours 2 Mins",
-    protectionPoolAddress: "0xTest2"
-  },
-  {
-    address: "3",
-    name: "Almavest Basket #6",
-    protocol: goldfinchLogo,
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%",
-    timeLeft: "7 Days 8 Hours 2 Mins",
-    protectionPoolAddress: "0xTest3"
-  },
-  {
-    address: "4",
-    name: "Almavest Basket #6",
-    protocol: goldfinchLogo,
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%",
-    timeLeft: "7 Days 8 Hours 2 Mins",
-    protectionPoolAddress: "0xTest4"
-  }
-];
+import assets from "../assets";
 
 const BuyProtection = () => {
   const { contractAddresses, provider } = useContext(ApplicationContext);
-  const [lendingPools, setLendingPools] =
-    useState<LendingPool[]>(defaultLendingPools);
+  const { lendingPools, setLendingPools } = useContext(LendingPoolContext);
+
+  const goldfinchLogo = assets.goldfinch.src;
 
   useEffect(() => {
     if (contractAddresses?.poolFactory && provider) {
@@ -125,9 +77,9 @@ const BuyProtection = () => {
       <table className="table-auto w-full">
         <thead>
           <tr>
-            <th>Address</th>
-            <th>Name</th>
-            <th>Protocol </th>
+            <th>address</th>
+            <th>Lending Pool</th>
+            <th>Protocol</th>
             <th>Adjusted Yields</th>
             <th>Lending Pool APY</th>
             <th>CARA Token Rewards</th>
