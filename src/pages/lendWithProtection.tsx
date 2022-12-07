@@ -1,58 +1,19 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
+import { useContext, useEffect } from "react";
 const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
 );
+import { BondContext } from "@contexts/BondContextProvider";
 import assets from "../assets";
 
-const goldfinchLogo = assets.goldfinch.src;
-
-const bonds = [
-  {
-    poolTokenId: 424,
-    price: "2542 USDC",
-    lendingPool: "Almavest Basket #6",
-    protocol: goldfinchLogo,
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%"
-  },
-  {
-    poolTokenId: 4224,
-    price: "42424242 USDC",
-    lendingPool: "Almavest Basket #6",
-    protocol: goldfinchLogo,
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%"
-  },
-  {
-    poolTokenId: 342,
-    price: "42424242 USDC",
-    lendingPool: "Almavest Basket #6",
-    protocol: goldfinchLogo,
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%"
-  },
-  {
-    poolTokenId: 424,
-    price: "900000 USDC",
-    lendingPool: "Almavest Basket #6",
-    protocol: goldfinchLogo,
-    adjustedYields: "7 - 10%",
-    lendingPoolAPY: "17%",
-    CARATokenRewards: "~3.5%",
-    premium: "4 - 7%"
-  }
-];
-
 const LendWithProtection = () => {
+  const goldfinchLogo = assets.goldfinch.src;
+
+  const { bonds, setBonds } = useContext(BondContext);
+
   return (
     <div>
       <TitleAndDescriptions

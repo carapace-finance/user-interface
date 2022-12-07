@@ -6,6 +6,7 @@ import "@style/main.css";
 
 import dynamic from "next/dynamic";
 import { ApplicationContextProvider } from "@contexts/ApplicationContextProvider";
+import { BondContextProvider } from "@contexts/BondContextProvider";
 
 const Header = dynamic(() => import("@components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
@@ -19,6 +20,8 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
           <Header tenderlyAccessKey={tenderlyAccessKey} />
           <Component {...pageProps} />
           <Footer />
+            <BondContextProvider>
+            </BondContextProvider>
         </ApplicationContextProvider>
       </Web3ReactProvider>
     </ThemeProvider>
