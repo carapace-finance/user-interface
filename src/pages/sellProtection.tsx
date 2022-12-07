@@ -5,55 +5,23 @@ const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
 );
-import assets from "../assets";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { ProtectionPool } from "@type/types";
-import { useContext, useEffect, useState } from "react";
+import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
+import { useContext, useEffect } from "react";
 import {
   getPoolContract,
   getPoolFactoryContract
 } from "@contracts/contractService";
 import { formatUSDC } from "@utils/usdc";
 import { formatAddress } from "@utils/utils";
-
-const goldfinchLogo = assets.goldfinch.src;
-
-const defaultProtectionPools: ProtectionPool[] = [
-  {
-    address: "1",
-    protocols: goldfinchLogo,
-    APY: "15 - 20%",
-    totalCapital: "$1M",
-    totalProtection: "$2M"
-  },
-  {
-    address: "2",
-    protocols: goldfinchLogo,
-    APY: "15 - 20%",
-    totalCapital: "$1M",
-    totalProtection: "$2M"
-  },
-  {
-    address: "3",
-    protocols: goldfinchLogo,
-    APY: "15 - 20%",
-    totalCapital: "$1M",
-    totalProtection: "$2M"
-  },
-  {
-    address: "4",
-    protocols: goldfinchLogo,
-    APY: "15 - 20%",
-    totalCapital: "$1M",
-    totalProtection: "$2M"
-  }
-];
+import assets from "../assets";
 
 const SellProtection = () => {
   const { contractAddresses, provider } = useContext(ApplicationContext);
-  const [protectionPools, setProtectionPools] = useState<ProtectionPool[]>(
-    defaultProtectionPools
+  const { protectionPools, setProtectionPools } = useContext(
+    ProtectionPoolContext
   );
+  const goldfinchLogo = assets.goldfinch.src;
 
   useEffect(() => {
     if (contractAddresses?.poolFactory && provider) {

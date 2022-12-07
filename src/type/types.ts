@@ -15,6 +15,10 @@ export type ApplicationContextType = {
   protectionPoolService: ProtectionPoolService;
 };
 
+export type ProtectionPoolContextType = {
+  protectionPools: ProtectionPool[];
+  setProtectionPools: (protectionPools: ProtectionPool[]) => void;
+};
 
 export type LendingPoolContextType = {
   lendingPools: LendingPool[];
