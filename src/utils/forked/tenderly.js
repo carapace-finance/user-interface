@@ -1,5 +1,4 @@
 import { Signer } from "@ethersproject/abstract-signer";
-import { BigNumber } from "@ethersproject/bignumber";
 import { hexValue } from "@ethersproject/bytes";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { parseEther } from "@ethersproject/units";
@@ -51,15 +50,10 @@ export const deployToFork = async (tenderlyAccessKey) => {
   const deployedContracts = await deployContracts(forkProvider);
   console.log("Time taken to deploy contracts: ", Date.now() - startTime);
 
-  // Take snapshot to revert to later
-  const snapshotId = await forkProvider.send("evm_snapshot", []);
-  console.log("Snapshot ID: ", snapshotId);
-
   const playground = {
     forkId,
     provider: forkProvider,
-    deployedContracts,
-    snapshotId
+    deployedContracts
   };
   window.playground = playground;
   return playground;

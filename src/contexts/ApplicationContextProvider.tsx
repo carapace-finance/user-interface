@@ -1,12 +1,12 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { ContractAddresses, ContractAddressesContextType } from "@type/types";
+import { ContractAddresses, ApplicationContextType } from "@type/types";
 import { createContext, useState } from "react";
 import { ProtectionPoolService } from "../services/ProtectionPoolService";
 
-export const ContractAddressesContext =
-  createContext<ContractAddressesContextType | null>(null);
+export const ApplicationContext =
+  createContext<ApplicationContextType | null>(null);
 
-export const ContractAddressesProvider = ({ children }) => {
+export const ApplicationContextProvider = ({ children }) => {
   const [contractAddresses, setContractAddresses] = useState(null);
   const [provider, setProvider] = useState(null);
   const updateContractAddresses = (newContractAddresses: ContractAddresses) => {
@@ -19,16 +19,16 @@ export const ContractAddressesProvider = ({ children }) => {
   };
 
   return (
-    <ContractAddressesContext.Provider
+    <ApplicationContext.Provider
       value={{
         provider,
         contractAddresses,
         updateContractAddresses,
         updateProvider,
-        protectionPoolService: provider ? new ProtectionPoolService(provider) : null
+        protectionPoolService: provider ? new ProtectionPoolService(provider, contractAddresses.isPlayground) : null
       }}
     >
       {children}
-    </ContractAddressesContext.Provider>
+    </ApplicationContext.Provider>
   );
 };

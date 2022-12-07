@@ -1,5 +1,5 @@
 import { Snackbar } from "@mui/material";
-import Alert from "@mui/lab/Alert";
+import Alert from '@mui/material/Alert';
 
 const SuccessPopup = (props) => {
   return (

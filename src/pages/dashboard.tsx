@@ -6,7 +6,7 @@ const TitleAndDescriptions = dynamic(
 );
 import WithdrawalRequestPopUp from "@components/WithdrawalRequestPopUp";
 import WithdrawPopUp from "@components/WithdrawPopUp";
-import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 
 const protectionPurchases = [
   {
@@ -55,7 +55,7 @@ const deposits = [
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
-  const { contractAddresses } = useContext(ContractAddressesContext);
+  const { contractAddresses } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
 
   useEffect(() => { 

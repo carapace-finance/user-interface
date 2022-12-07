@@ -62,16 +62,19 @@ export async function preparePlayground(playground: Playground) {
 
   console.log("********** Pool Phase: OpenToBuyers **********");
 
-  // buy protection 1
   const lendingPoolAddress = "0xd09a57127bc40d680be7cb061c2a6629fe71abef";
+
+  // buy protection 1
   await transferApproveAndBuyProtection(
     playground.provider,
     poolInstance,
     user,
-    lendingPoolAddress,
-    590,
-    parseUSDC("150000"),
-    30
+    {
+      lendingPoolAddress: lendingPoolAddress,
+      nftLpTokenId: 590,
+      protectionAmount: parseUSDC("150000"),
+      protectionDurationInSeconds: getDaysInSeconds(30)
+    }
   );
 
   console.log(
@@ -183,49 +186,24 @@ export async function transferApproveAndDeposit(
   const usdcContract = getUsdcContract(receiver);
   const receiverAddress = await receiver.getAddress();
 
-  console.log(
-    "Receiver's USDC balance before: ",
-    formatUSDC(await usdcContract.balanceOf(receiverAddress))
-  );
   // transfer usdc to deployer
   await transferUsdc(provider, receiverAddress, depositAmt);
-  console.log(
-    "Receiver's USDC balance after: ",
-    formatUSDC(await usdcContract.balanceOf(receiverAddress))
-  );
-
-  console.log(
-    "Receiver's sToken balance before: ",
-    formatEther(await poolInstance.balanceOf(receiverAddress))
-  );
 
   // Approve & deposit 5K USDC
   await usdcContract.approve(poolInstance.address, depositAmt);
-  await poolInstance.connect(receiver).deposit(depositAmt, receiverAddress);
-  console.log(
-    "Receiver's sToken balance after: ",
-    formatEther(await poolInstance.balanceOf(receiverAddress))
-  );
-
-  console.log(
-    "Receiver's USDC balance after deposit: ",
-    formatUSDC(await usdcContract.balanceOf(receiverAddress))
-  );
-
-  console.log("Finished deposit");
+  return await poolInstance
+    .connect(receiver)
+    .deposit(depositAmt, receiverAddress);
 }
 
 export async function transferApproveAndBuyProtection(
   provider,
   poolInstance,
   buyer,
-  lendingPoolAddress,
-  nftLpTokenId,
-  protectionAmount,
-  protectionDurationInDays
+  purchaseParams
 ) {
   const usdcContract = getUsdcContract(buyer);
-  console.log("Starting buyProtection...");
+
   console.log(
     "Total protection before buyProtection: ",
     formatUSDC(await poolInstance.totalProtection())
@@ -240,35 +218,12 @@ export async function transferApproveAndBuyProtection(
   // Approve premium USDC
   await usdcContract.connect(buyer).approve(poolInstance.address, premiumAmt);
 
-  // Buy protection
-  const purchaseParams = {
-    lendingPoolAddress: lendingPoolAddress,
-    nftLpTokenId: nftLpTokenId,
-    protectionAmount: protectionAmount,
-    protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
-  };
+  console.log("Purchasing a protection using params: ", purchaseParams);
 
-  // await poolInstance.connect(buyer).buyProtection(purchaseParams, {
-  //   gasPrice: "259000000000",
-  //   gasLimit: "210000000"
-  // });
-
-  console.log("Protection purchase params: ", purchaseParams);
-
-  await sendTransaction(
-    provider,
-    buyerAddress,
-    poolInstance,
-    "buyProtection",
-    purchaseParams
-  );
-
-  console.log(
-    "Total protection after buyProtection: ",
-    formatUSDC(await poolInstance.totalProtection())
-  );
-
-  console.log("Finished buyProtection");
+  return await poolInstance.connect(buyer).buyProtection(purchaseParams, {
+    gasPrice: "259000000000",
+    gasLimit: "210000000"
+  });
 }
 
 const getLatestBlockTimestamp: Function = async (provider): Promise<number> => {

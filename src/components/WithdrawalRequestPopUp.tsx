@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle, InputAdornment, TextField } from "@
 import { IconButton } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { formatAddress } from "@utils/utils";
-import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { formatEther } from "@ethersproject/units";
 import { parseUSDC } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
@@ -12,34 +12,39 @@ const WithdrawalRequestPopUp = (props) => {
   const { open, onClose, protectionPoolAddress } = props;
   const [amount, setAmount] = useState("");
   const [requestableAmount, setRequestableAmount] = useState("");
-  const { protectionPoolService } = useContext(ContractAddressesContext);
+  const { protectionPoolService } = useContext(ApplicationContext);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
 
+  const onError = (e) => {
+    if (e) {
+      console.log("Error: ", e);
+    }
+    console.log('The requestWithdrawal transaction failed');
+    setError("Failed to request withdrawal...");
+  };
+  
   const requestedWithdrawal = async () => {
     try {
-      protectionPoolService.requestWithdrawal(protectionPoolAddress, parseUSDC(amount)).then((tx) => {
-        tx.wait().then((receipt) => { 
-          if (receipt.status === 1) {
-            console.log('The requestWithdrawal transaction was successful');
-            // Show success message for 2 seconds before closing popup
-            setSuccessMessage(`You successfully requested to withdraw ${amount} USDC from the protection pool!`);
-            setTimeout(() => {
-              onClose();
-            }, 2000);
-          } else {
-            console.log('The requestWithdrawal transaction failed');
-            setError("Failed to request withdrawal");
-          }
-        });
-      });
+      const tx = await protectionPoolService.requestWithdrawal(protectionPoolAddress, parseUSDC(amount));
+      const receipt = await tx.wait();
+      if (receipt.status === 1) { 
+        console.log('The requestWithdrawal transaction was successful');
+        // Show success message for 2 seconds before closing popup
+        setSuccessMessage(`You successfully requested to withdraw ${amount} USDC from the protection pool!`);
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      }
+      else {
+        onError(receipt);
+      }
     }
     catch (e) {
-      const err = JSON.stringify(JSON.stringify(e.message));
-      console.log("Error: ", err);
-      setError(err);
+      onError(e);
     }
   };
+
   const setMaxAmount = async () => { setAmount(requestableAmount) };
 
   useEffect(() => {
@@ -94,7 +99,7 @@ const WithdrawalRequestPopUp = (props) => {
         <button
           type="button"
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount === "0"}
+          disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount === "0" || amount > requestableAmount}
           onClick={requestedWithdrawal}
         >
           Confirm Withdrawal Request

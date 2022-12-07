@@ -14,7 +14,7 @@ import {
   deletePlayground
 } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
-import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 
 const Header = ({ tenderlyAccessKey }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +23,7 @@ const Header = ({ tenderlyAccessKey }) => {
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
   const { updateContractAddresses, updateProvider } = useContext(
-    ContractAddressesContext
+    ApplicationContext
   );
 
   const onConnect = async (wallet: string) => {
@@ -44,6 +44,7 @@ const Header = ({ tenderlyAccessKey }) => {
   async function connect() {
     try {
       await activate(injected);
+      // TODO: should update contract addresses & provider here for mainnet similar to "initializePlayground"
     } catch (ex) {
       console.log(ex);
     }
@@ -57,20 +58,20 @@ const Header = ({ tenderlyAccessKey }) => {
     }
   }
 
-  function createPlayground(playground) {
-    preparePlayground(playground).then(() => {
-      updateContractAddresses({
-        poolFactory: playground.deployedContracts.poolFactoryInstance.address,
-        pool: playground.deployedContracts.poolInstance.address
-      });
-      updateProvider(playground.provider);
-      setPlayground(playground);
+  async function initializePlayground(playground) {
+    await preparePlayground(playground);
+    updateContractAddresses({
+      isPlayground: true,
+      poolFactory: playground.deployedContracts.poolFactoryInstance.address,
+      pool: playground.deployedContracts.poolInstance.address
     });
+    updateProvider(playground.provider);
+    setPlayground(playground);
   }
 
   let playgroundButtonTitle;
   let playgroundButtonAction;
-  if (playground?.snapshotId) {
+  if (playground?.forkId) {
     playgroundButtonTitle = "Stop Playground";
     playgroundButtonAction = async () => {
       await deletePlayground(playground.forkId, tenderlyAccessKey);
@@ -81,7 +82,7 @@ const Header = ({ tenderlyAccessKey }) => {
     playgroundButtonAction = async () => {
       setIsOpen(true);
       const playground = await deployToFork(tenderlyAccessKey);
-      createPlayground(playground);
+      await initializePlayground(playground);
     };
   }
 

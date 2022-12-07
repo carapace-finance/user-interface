@@ -5,7 +5,7 @@ import getWeb3Library from "../utils/mainnet/providers";
 import "@style/main.css";
 
 import dynamic from "next/dynamic";
-import { ContractAddressesProvider } from "@contexts/ContractAddressesProvider";
+import { ApplicationContextProvider } from "@contexts/ApplicationContextProvider";
 
 const Header = dynamic(() => import("@components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
@@ -15,11 +15,11 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
     <ThemeProvider>
       <CssBaseline />
       <Web3ReactProvider getLibrary={getWeb3Library}>
-        <ContractAddressesProvider>
+        <ApplicationContextProvider>
           <Header tenderlyAccessKey={tenderlyAccessKey} />
           <Component {...pageProps} />
           <Footer />
-        </ContractAddressesProvider>
+        </ApplicationContextProvider>
       </Web3ReactProvider>
     </ThemeProvider>
   );

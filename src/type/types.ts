@@ -2,11 +2,12 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { ProtectionPoolService } from "@services/ProtectionPoolService";
 
 export interface ContractAddresses {
+  isPlayground: boolean;
   poolFactory: string;
   pool: string;
 }
 
-export type ContractAddressesContextType = {
+export type ApplicationContextType = {
   provider: JsonRpcProvider;
   contractAddresses: ContractAddresses;
   updateContractAddresses: (newContractAddresses: ContractAddresses) => void;
@@ -32,4 +33,11 @@ export interface LendingPool {
   premium: string;
   timeLeft: string;
   protectionPoolAddress: string;
+}
+
+export interface ProtectionPurchaseParams {
+  lendingPoolAddress: string;
+  nftLpTokenId: string;
+  protectionAmount: string;
+  protectionDurationInSeconds: string;
 }

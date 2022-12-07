@@ -11,14 +11,12 @@ import {
 
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
-import { getPoolContract } from "@contracts/contractService";
-import { ContractAddressesContext } from "@contexts/ContractAddressesProvider";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { parseUSDC } from "@utils/usdc";
-import { transferApproveAndDeposit } from "@utils/forked/playground";
 
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
-  const { provider } = useContext(ContractAddressesContext);
+  const { protectionPoolService } = useContext(ApplicationContext);
   const { open, onClose, amount, USDCBalance, protectionPoolAddress } = props;
   const [tab, setTab] = useState(0);
   const [successMessage, setSuccessMessage] = useState("");
@@ -36,33 +34,36 @@ const SellProtectionPopUp = (props) => {
     setTab(0);
   }, [open, protectionPoolAddress]);
 
-  // Function passed into 'onClick'
-  const executeTrade = async () => {
-    setError("");
-    let message = "";
-    try {
-      const seller = provider.getSigner();
-      const pool = getPoolContract(protectionPoolAddress, seller);
-      const s = await pool.balanceOf(seller.getAddress());
-      transferApproveAndDeposit(provider, pool, parseUSDC(amount), seller).then(
-        (tx) => {
-          if (tab === 0) {
-            message = `You successfully exchanged ${amount} USDC for ${amount} Cover tokens`;
-          } else {
-            message = `You successfully staked ${priceInput} USDC in exchange for ${priceOutput} Prem tokens`;
-          }
 
-          // Show success message for 2 seconds before closing popup
-          setSuccessMessage(message);
-          setTimeout(() => {
-            onClose();
-          }, 2000);
-        }
-      );
-    } catch (e) {
-      const err = JSON.stringify(JSON.stringify(e.message));
-      console.log("Error", err);
-      return setError(err);
+  const onError = (e) => {
+    if (e) {
+      console.log("Error: ", e);
+    }
+    console.log('The deposit transaction failed');
+    setError("Failed to sell protection...");
+  };
+
+  // Function passed into 'onClick' of 'Sell Protection' button
+  const sellProtection = async () => {
+    setError("");
+
+    try {
+      const tx = await protectionPoolService.deposit(protectionPoolAddress, parseUSDC(amount));
+      const receipt = await tx.wait();
+      if (receipt.status === 1) { 
+        console.log('The deposit transaction was successful');
+        // Show success message for 2 seconds before closing popup
+        setSuccessMessage(`You successfully deposited ${amount} USDC in to the protection pool!`);
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      }
+      else {
+        onError(receipt);
+      }
+    }
+    catch (e) {
+      onError(e);
     }
   };
 
@@ -112,8 +113,8 @@ const SellProtectionPopUp = (props) => {
               </DialogContent>
               <button
                 className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-                onClick={executeTrade}
-                disabled={!priceInput || priceInput === "0"}
+                onClick={sellProtection}
+                disabled={!protectionPoolService || !priceInput || priceInput === "0"}
               >
                 Confirm Sell Protection
               </button>
