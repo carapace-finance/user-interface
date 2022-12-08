@@ -9,6 +9,7 @@ import { ApplicationContextProvider } from "@contexts/ApplicationContextProvider
 import { BondContextProvider } from "@contexts/BondContextProvider";
 import { LendingPoolContextProvider } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContextProvider } from "@contexts/ProtectionPoolContextProvider";
+import { UserContextProvider } from "@contexts/UserContextProvider";
 
 const Header = dynamic(() => import("@components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
@@ -19,15 +20,17 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
       <CssBaseline />
       <Web3ReactProvider getLibrary={getWeb3Library}>
         <ApplicationContextProvider>
-          <LendingPoolContextProvider>
-            <BondContextProvider>
-              <ProtectionPoolContextProvider>
+          <ProtectionPoolContextProvider>
+            <LendingPoolContextProvider>
+              <BondContextProvider>
+              <UserContextProvider>
                 <Header tenderlyAccessKey={tenderlyAccessKey} />
                 <Component {...pageProps} />
                 <Footer />
-              </ProtectionPoolContextProvider>
-            </BondContextProvider>
-          </LendingPoolContextProvider>
+                </UserContextProvider>
+              </BondContextProvider>
+            </LendingPoolContextProvider>
+          </ProtectionPoolContextProvider>
         </ApplicationContextProvider>
       </Web3ReactProvider>
     </ThemeProvider>
