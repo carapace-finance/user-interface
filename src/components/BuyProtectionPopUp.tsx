@@ -1,8 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import {
+  Box,
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
+  Grid,
   IconButton,
   Typography
 } from "@mui/material";
@@ -29,6 +32,8 @@ const BuyProtectionPopUp = (props) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [adjustedYield, setAdjustedYield] = useState("10 - 17%");
+  const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
   const { protectionPoolService } = useContext(ApplicationContext);
 
   const reset = () => {
@@ -98,21 +103,18 @@ const BuyProtectionPopUp = (props) => {
       </DialogTitle>
       <DialogContent>
         <div>
-          <Typography className="flex justify-left" variant="subtitle2">Lending Pool</Typography>
-          <div className="flex justify-left mb-4">{formatAddress(lendingPoolAddress)}</div>
-
-          <Typography className="flex justify-left" variant="subtitle2">Protection Amount</Typography>
-          <div className="flex justify-left mb-4">{numeral(protectionAmount).format(USDC_FORMAT)} USDC</div>
-
-          <Typography className="flex justify-left" variant="subtitle2">Protection Duration</Typography>
-          <div className="flex justify-left mb-4">{protectionDurationInDays} Days</div>
-
-          <Typography className="flex justify-left" variant="subtitle2">Token Id</Typography>
-          <div className="flex justify-left mb-4">{tokenId}</div>
-
-          <Typography className="flex justify-left" variant="subtitle2">Premium Price</Typography>
-          <div className="flex justify-left mb-4">{numeral(premiumAmount).format(USDC_FORMAT)} USDC</div>
+          {renderFieldAndValue("Lending Pool", formatAddress(lendingPoolAddress))}
+          {renderFieldAndValue("Protection Amount", numeral(protectionAmount).format(USDC_FORMAT) + " USDC")}
+          {renderFieldAndValue("Protection Duration", protectionDurationInDays + " Days")}
+          {renderFieldAndValue("Token Id", tokenId)}
+          {renderFieldAndValue("Premium Price", numeral(premiumAmount).format(USDC_FORMAT) + " USDC")}
           
+          <Divider className="mb-2"/>
+          
+          <Typography className="flex justify-left mb-4" variant="subtitle2">Estimated Stats</Typography>
+          <Typography className="flex justify-left mb-2" variant="caption">Expected Adjusted Yield: {adjustedYield}</Typography>
+          <Typography className="flex justify-left mb-4" variant="caption">Expected Network Fees: ${numeral(expectedNetworkFee).format("0.00")}</Typography>
+
           <LoadingButton style={{ textTransform: "none" }}
             onClick={buyProtection}
             disabled={!protectionPoolService || !protectionPoolAddress || !protectionAmount || !protectionDurationInDays || !tokenId || !lendingPoolAddress}
@@ -131,5 +133,14 @@ const BuyProtectionPopUp = (props) => {
     </Dialog>
   );
 };
+
+const renderFieldAndValue = (fieldLabel, fieldValue) => {
+  return (
+    <div>
+      <Typography className="flex justify-left" variant="subtitle2">{fieldLabel}</Typography>
+      <div className="flex justify-left mb-4">{fieldValue}</div>
+    </div>
+  )
+ };
 
 export default BuyProtectionPopUp;
