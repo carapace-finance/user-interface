@@ -209,6 +209,7 @@ const Dashboard = () => {
       <WithdrawPopUp
         open={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
+        protectionPoolAddress={protectionPoolAddress}
       ></WithdrawPopUp>
     </div>
   );

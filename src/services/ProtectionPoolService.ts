@@ -69,16 +69,55 @@ export class ProtectionPoolService {
     }
   }
 
-  public async withdraw(poolAddress: string, usdcAmt: BigNumber) {}
+  /**
+   * Sends withdrawal transaction to the pool contract with specified amount with receiver as signed user.
+   * @param poolAddress
+   * @param usdcAmt
+   * @returns
+   */
+  public async withdraw(poolAddress: string, usdcAmt: BigNumber) {
+    const signer = this.provider.getSigner();
+    const poolInstance = getPoolContract(poolAddress, signer);
+    const sTokenAmt = await poolInstance.convertToSToken(usdcAmt);
 
-  public async getBalance(poolAddress: string) {
+    console.log("Withdrawing sTokenAmt: ", sTokenAmt.toString());
+    return await poolInstance.withdraw(sTokenAmt, signer.getAddress(), {
+      gasPrice: "259000000000",
+      gasLimit: "210000000"
+    });
+  }
+
+  /**
+   * Provides USDC balance of signed user in the pool.
+   * @param poolAddress
+   * @returns
+   */
+  public async getUsdcBalance(poolAddress: string) {
     const poolInstance = getPoolContract(
       poolAddress,
       this.provider.getSigner()
     );
-    const balance = await poolInstance.balanceOf(
+    const sTokenBalance = await poolInstance.balanceOf(
       await this.provider.getSigner().getAddress()
     );
-    return balance;
+    const usdcBalance = await poolInstance.convertToUnderlying(sTokenBalance);
+    return usdcBalance;
+  }
+
+  /**
+   * Provides requested withdrawal amount in USDC for a signed user in the pool for current pool cycle.
+   * @param poolAddress
+   * @returns
+   */
+  public async getRequestedWithdrawalAmount(poolAddress: string) {
+    const poolInstance = getPoolContract(
+      poolAddress,
+      this.provider.getSigner()
+    );
+
+    // TODO: use the new contract method to get the requested withdrawal amount for current cycle
+    const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(2);
+    const usdcBalance = await poolInstance.convertToUnderlying(sTokenBalance);
+    return usdcBalance;
   }
 }
