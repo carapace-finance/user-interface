@@ -10,20 +10,85 @@ import WithdrawPopUp from "@components/WithdrawPopUp";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
+import {
+  getPoolContract,
+  getPoolFactoryContract,
+  getReferenceLendingPoolsContract
+} from "@contracts/contractService";
+import { formatUSDC } from "@utils/usdc";
+import assets from "../assets";
 
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
-  const { contractAddresses } = useContext(ApplicationContext);
+  const { contractAddresses, provider } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
   const { lendingPools, setLendingPools } = useContext(LendingPoolContext);
   const { protectionPools, setProtectionPools } = useContext(
     ProtectionPoolContext
   );
 
+  const goldfinchLogo = assets.goldfinch.src;
+
   useEffect(() => {
     setProtectionPoolAddress(contractAddresses?.pool);
   }, [contractAddresses]);
+
+  useEffect(() => {
+    if (contractAddresses?.poolFactory && provider) {
+      console.log("Fetching pools...");
+      const poolFactory = getPoolFactoryContract(
+        contractAddresses.poolFactory,
+        provider.getSigner()
+      );
+      poolFactory.getPoolAddress(1).then((poolAddress) => {
+        console.log("Pool address", poolAddress);
+
+        const pool = getPoolContract(poolAddress, provider.getSigner());
+        pool.getPoolInfo().then((poolInfo) => {
+          console.log("Pool info", poolInfo);
+          const referenceLendingPoolsContract =
+            getReferenceLendingPoolsContract(
+              poolInfo.referenceLendingPools,
+              provider.getSigner()
+            );
+          referenceLendingPoolsContract
+            .getLendingPools()
+            .then((lendingPools) => {
+              console.log("Lending pools", lendingPools);
+              setLendingPools(
+                lendingPools.map((lendingPool) => {
+                  return {
+                    address: lendingPool,
+                    name: "Lend East #1: Emerging Asia Fintech Pool",
+                    protocol: goldfinchLogo,
+                    adjustedYields: "7 - 10%",
+                    lendingPoolAPY: "17%",
+                    CARATokenRewards: "~3.5%",
+                    premium: "4 - 7%",
+                    timeLeft: "59 Days 8 Hours 2 Mins",
+                    protectionPoolAddress: poolAddress
+                  };
+                })
+              );
+            });
+        });
+        pool.totalProtection().then((totalProtection) => {
+          pool.totalSTokenUnderlying().then((totalCapital) => {
+            setProtectionPools([
+              {
+                address: poolAddress,
+                protocols: goldfinchLogo,
+                APY: "8 - 15%",
+                totalCapital: formatUSDC(totalCapital),
+                totalProtection: formatUSDC(totalProtection)
+              }
+            ]);
+          });
+        });
+      });
+    }
+  }, [contractAddresses?.poolFactory]);
 
   return (
     <div>
