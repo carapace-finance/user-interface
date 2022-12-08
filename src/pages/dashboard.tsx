@@ -1,3 +1,4 @@
+import { formatEther } from "@ethersproject/units";
 import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -10,6 +11,7 @@ import WithdrawPopUp from "@components/WithdrawPopUp";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
+import { UserContext } from "@contexts/UserContextProvider";
 import {
   getPoolContract,
   getPoolFactoryContract,
@@ -27,6 +29,7 @@ const Dashboard = () => {
   const { protectionPools, setProtectionPools } = useContext(
     ProtectionPoolContext
   );
+  const { user, setUser } = useContext(UserContext);
 
   const goldfinchLogo = assets.goldfinch.src;
 
@@ -41,10 +44,29 @@ const Dashboard = () => {
         contractAddresses.poolFactory,
         provider.getSigner()
       );
+
       poolFactory.getPoolAddress(1).then((poolAddress) => {
         console.log("Pool address", poolAddress);
 
         const pool = getPoolContract(poolAddress, provider.getSigner());
+        const withdrawalCycleIndex = 2;
+        const requestedWithdrawalAmount = pool
+          .connect(provider.getSigner(user.address))
+          .getRequestedWithdrawalAmount(withdrawalCycleIndex);
+        requestedWithdrawalAmount.then(
+          (result) => {
+            setUser({
+              ...user,
+              requestedWithdrawalAmount: formatEther(result)
+            });
+
+            console.log(result);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+
         pool.getPoolInfo().then((poolInfo) => {
           console.log("Pool info", poolInfo);
           const referenceLendingPoolsContract =
@@ -163,8 +185,8 @@ const Dashboard = () => {
               <td>{protectionPool.APY}</td>
               <td>{protectionPool.totalCapital}</td>
               <td>{protectionPool.totalProtection}</td>
-              <td>depositedAmount</td>
-              <td>requestedWithdrawal</td>
+              <th>{user.depositedAmount}</th>
+              <th>{user.requestedWithdrawalAmount}</th>
               <td>
                 <button onClick={() => setIsWithdrawalRequestOpen(true)}>
                   request withdrawal
