@@ -19,16 +19,6 @@ export const BondContextProvider = ({ children }) => {
       premium: "4 - 7%"
     },
     {
-      poolTokenId: "4224",
-      price: "42424242 USDC",
-      lendingPool: "Almavest Basket #6",
-      protocol: goldfinchLogo,
-      adjustedYields: "7 - 10%",
-      lendingPoolAPY: "17%",
-      CARATokenRewards: "~3.5%",
-      premium: "4 - 7%"
-    },
-    {
       poolTokenId: "342",
       price: "42424242 USDC",
       lendingPool: "Almavest Basket #6",

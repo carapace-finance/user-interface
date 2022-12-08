@@ -19,7 +19,7 @@ export const LendingPoolContextProvider = ({ children }) => {
       CARATokenRewards: "~3.5%",
       premium: "4 - 7%",
       timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0xTest1"
+      protectionPoolAddress: "0x0..."
     },
     {
       address: "0x1...",
@@ -31,28 +31,6 @@ export const LendingPoolContextProvider = ({ children }) => {
       premium: "4 - 7%",
       timeLeft: "7 Days 8 Hours 2 Mins",
       protectionPoolAddress: "0xTest2"
-    },
-    {
-      address: "0x2...",
-      name: "Almavest Basket #6",
-      protocol: goldfinchLogo,
-      adjustedYields: "7 - 10%",
-      lendingPoolAPY: "17%",
-      CARATokenRewards: "~3.5%",
-      premium: "4 - 7%",
-      timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0xTest3"
-    },
-    {
-      address: "0x3...",
-      name: "Almavest Basket #6",
-      protocol: goldfinchLogo,
-      adjustedYields: "7 - 10%",
-      lendingPoolAPY: "17%",
-      CARATokenRewards: "~3.5%",
-      premium: "4 - 7%",
-      timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0xTest4"
     }
   ];
 

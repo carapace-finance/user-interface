@@ -22,20 +22,6 @@ export const ProtectionPoolContextProvider = ({ children }) => {
       APY: "15 - 20%",
       totalCapital: "$1M",
       totalProtection: "$2M"
-    },
-    {
-      address: "0x2...",
-      protocols: goldfinchLogo,
-      APY: "15 - 20%",
-      totalCapital: "$1M",
-      totalProtection: "$2M"
-    },
-    {
-      address: "0x3...",
-      protocols: goldfinchLogo,
-      APY: "15 - 20%",
-      totalCapital: "$1M",
-      totalProtection: "$2M"
     }
   ];
 
