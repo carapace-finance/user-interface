@@ -19,15 +19,15 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
       <CssBaseline />
       <Web3ReactProvider getLibrary={getWeb3Library}>
         <ApplicationContextProvider>
-          <LendingPoolContextProvider>
-            <BondContextProvider>
-              <ProtectionPoolContextProvider>
+          <ProtectionPoolContextProvider>
+            <LendingPoolContextProvider>
+              <BondContextProvider>
                 <Header tenderlyAccessKey={tenderlyAccessKey} />
                 <Component {...pageProps} />
                 <Footer />
-              </ProtectionPoolContextProvider>
-            </BondContextProvider>
-          </LendingPoolContextProvider>
+              </BondContextProvider>
+            </LendingPoolContextProvider>
+          </ProtectionPoolContextProvider>
         </ApplicationContextProvider>
       </Web3ReactProvider>
     </ThemeProvider>
