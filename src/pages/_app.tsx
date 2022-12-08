@@ -9,6 +9,7 @@ import { ApplicationContextProvider } from "@contexts/ApplicationContextProvider
 import { BondContextProvider } from "@contexts/BondContextProvider";
 import { LendingPoolContextProvider } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContextProvider } from "@contexts/ProtectionPoolContextProvider";
+import { UserContextProvider } from "@contexts/UserContextProvider";
 
 const Header = dynamic(() => import("@components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
@@ -22,9 +23,11 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
           <ProtectionPoolContextProvider>
             <LendingPoolContextProvider>
               <BondContextProvider>
+              <UserContextProvider>
                 <Header tenderlyAccessKey={tenderlyAccessKey} />
                 <Component {...pageProps} />
                 <Footer />
+                </UserContextProvider>
               </BondContextProvider>
             </LendingPoolContextProvider>
           </ProtectionPoolContextProvider>

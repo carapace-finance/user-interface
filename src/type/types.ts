@@ -30,6 +30,11 @@ export type BondContextType = {
   setBonds: (bonds: Bond[]) => void;
 };
 
+export type UserContextType = {
+  user: User;
+  setUser: (user: User) => void;
+};
+
 export interface ProtectionPool {
   address: string;
   APY: string;
@@ -59,6 +64,16 @@ export interface Bond {
   lendingPoolAPY: string;
   CARATokenRewards: string;
   premium: string;
+}
+
+export interface User {
+  address: string;
+  ETHBalance: string;
+  USDCBalance: string;
+  depositedAmount: string;
+  requestedWithdrawalAmount: string;
+  protectionAmount: string;
+  protectionDuration: string;
 }
 
 export interface ProtectionPurchaseParams {
