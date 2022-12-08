@@ -721,6 +721,8 @@ const transferUsdc: Function = async (
   );
 };
 
+export const USDC_FORMAT = "0,0.00";
+
 export {
   formatUSDC,
   parseUSDC,
