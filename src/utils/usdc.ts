@@ -693,6 +693,14 @@ const parseUSDC: Function = (usdcAmtText: string): BigNumber => {
   return parseUnits(usdcAmtText, USDC_NUM_OF_DECIMALS);
 };
 
+const convertNumberToUSDC: Function = (amt: number): BigNumber => {
+  return parseUSDC(amt.toFixed(USDC_NUM_OF_DECIMALS));
+};
+
+const convertUSDCToNumber: Function = (usdcAmt: BigNumber): number => {
+  return parseFloat(formatUSDC(usdcAmt));
+};
+
 const getUsdcContract: Function = (provider) => {
   return new Contract(USDC_ADDRESS, USDC_ABI, provider);
 };
@@ -713,4 +721,11 @@ const transferUsdc: Function = async (
   );
 };
 
-export { formatUSDC, parseUSDC, getUsdcContract, transferUsdc };
+export {
+  formatUSDC,
+  parseUSDC,
+  getUsdcContract,
+  transferUsdc,
+  convertNumberToUSDC,
+  convertUSDCToNumber
+};

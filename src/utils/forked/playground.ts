@@ -35,7 +35,7 @@ export async function preparePlayground(playground: Playground) {
   await fillEther(await user.getAddress(), playground.provider);
   console.log("User address: ", await user.getAddress());
 
-  // Deposit 1
+  // Deposit 1 by user
   await transferApproveAndDeposit(
     playground.provider,
     poolInstance,
@@ -43,12 +43,12 @@ export async function preparePlayground(playground: Playground) {
     user
   );
 
-  // Deposit 2
+  // Deposit 2 by deployer
   await transferApproveAndDeposit(
     playground.provider,
     poolInstance,
     parseUSDC("51000"),
-    user
+    deployer
   );
 
   console.log(
@@ -91,12 +91,12 @@ export async function preparePlayground(playground: Playground) {
 
   console.log("********** Pool Phase: Open **********");
 
-  // Withdrawal request 1: 10K sTokens
+  // Withdrawal request 1: 10K sTokens for deployer
   // We are in cycle with index 0, so withdrawal index is 2
   const withdrawalCycleIndex = 2;
   await requestWithdrawal(
     poolInstance,
-    user,
+    deployer,
     parseEther("10000"),
     withdrawalCycleIndex
   );

@@ -1,10 +1,9 @@
-import { Dialog, DialogContent, DialogTitle, InputAdornment, TextField } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, InputAdornment, TextField, IconButton as MuiIconButton } from "@mui/material";
 import { IconButton } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { formatEther } from "@ethersproject/units";
-import { parseUSDC } from "@utils/usdc";
+import { formatUSDC, parseUSDC } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 
@@ -55,7 +54,7 @@ const WithdrawalRequestPopUp = (props) => {
 
     if (protectionPoolService && protectionPoolAddress) {
       console.log("Getting pool balance...");
-      protectionPoolService.getBalance(protectionPoolAddress).then((balance) => { setRequestableAmount(formatEther(balance))});
+      protectionPoolService.getUsdcBalance(protectionPoolAddress).then((balance) => { setRequestableAmount(formatUSDC(balance))});
     }
    }, [protectionPoolService, protectionPoolAddress]);
 
@@ -73,7 +72,7 @@ const WithdrawalRequestPopUp = (props) => {
     >
       <DialogTitle>
         Withdrawal Request
-        <button className="absolute top-0 right-0" onClick={onClose}>x</button>
+        <MuiIconButton onClick={onClose} color="primary" className="absolute top-0 right-0" size="small">X</MuiIconButton>
       </DialogTitle>
       <DialogContent>
         <div className="flex justify-left mb-3">Protection Pool:{formatAddress(protectionPoolAddress)}</div>
@@ -89,7 +88,7 @@ const WithdrawalRequestPopUp = (props) => {
                 <InputAdornment position="start">USDC</InputAdornment>
               ),
               endAdornment: (
-                <InputAdornment position="end"><IconButton aria-label="close" onClick={setMaxAmount} size="sm">Max</IconButton></InputAdornment>
+                <InputAdornment position="end"><IconButton disabled={!protectionPoolService} onClick={setMaxAmount} size="sm">Max</IconButton></InputAdornment>
               )
             }}
             value={amount}
