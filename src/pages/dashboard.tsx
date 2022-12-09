@@ -169,7 +169,7 @@ const Dashboard = () => {
               <td>{lendingPool.premium}</td>
               <td>timeUntilExpiration</td>
               <td>
-                <button>claim</button>
+                <button disabled>claim</button>
               </td>
             </tr>
           ))}
