@@ -230,8 +230,8 @@ const getLatestBlockTimestamp: Function = async (provider): Promise<number> => {
   return (await provider.getBlock("latest")).timestamp;
 };
 
-export async function resetPlayground(playground: Playground) {
-  await playground.provider.send("evm_revert", [playground.snapshotId]);
+export async function resetPlayground(playground: Playground, snapshotId: string) {
+  await playground.provider.send("evm_revert", [snapshotId]);
 
   console.log(
     "Total capital: ",
