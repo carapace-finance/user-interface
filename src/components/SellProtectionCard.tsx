@@ -18,6 +18,7 @@ export default function SellProtectionCard() {
         <p className="text-gray-700 text-base mb-4">18 - 25%</p>
         <Input
           label="Amount"
+          type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />

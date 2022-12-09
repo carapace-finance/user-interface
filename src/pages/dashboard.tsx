@@ -17,8 +17,10 @@ import {
   getPoolFactoryContract,
   getReferenceLendingPoolsContract
 } from "@contracts/contractService";
-import { formatUSDC } from "@utils/usdc";
+import { convertUSDCToNumber, formatUSDC, USDC_FORMAT } from "@utils/usdc";
 import assets from "../assets";
+import numeral from "numeral";
+import { formatAddress } from "@utils/utils";
 
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
@@ -81,7 +83,7 @@ const Dashboard = () => {
               setLendingPools(
                 lendingPools.map((lendingPool) => {
                   return {
-                    address: lendingPool,
+                    address: formatAddress(lendingPool),
                     name: "Lend East #1: Emerging Asia Fintech Pool",
                     protocol: goldfinchLogo,
                     adjustedYields: "7 - 10%",
@@ -102,8 +104,8 @@ const Dashboard = () => {
                 address: poolAddress,
                 protocols: goldfinchLogo,
                 APY: "8 - 15%",
-                totalCapital: formatUSDC(totalCapital),
-                totalProtection: formatUSDC(totalProtection)
+                totalCapital: numeral(convertUSDCToNumber(totalCapital)).format(USDC_FORMAT) + " USDC",
+                totalProtection: numeral(convertUSDCToNumber(totalProtection)).format(USDC_FORMAT) + " USDC"
               }
             ]);
           });

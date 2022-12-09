@@ -3,37 +3,36 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
   IconButton,
-  InputAdornment,
-  TextField,
   Typography
 } from "@mui/material";
+import numeral from "numeral";
 
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { parseUSDC } from "@utils/usdc";
+import { parseUSDC, USDC_FORMAT } from "@utils/usdc";
+import { formatAddress } from "@utils/utils";
+import { LoadingButton } from "@mui/lab";
 
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
   const { protectionPoolService } = useContext(ApplicationContext);
-  const { open, onClose, amount, USDCBalance, protectionPoolAddress } = props;
-  const [tab, setTab] = useState(0);
+  const { open, onClose, amount, protectionPoolAddress } = props;
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
-  const [priceInput, setPriceInput] = useState<string>();
-  const [priceOutput, setPriceOutput] = useState<string>();
-  const quantityRef = useRef<HTMLInputElement>();
+  const [loading, setLoading] = useState(false);
+  const [expectedYield, setExpectedYield] = useState("18 - 25%");
+  const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
 
-  useEffect(() => {
-    // Reset
-    setPriceInput(undefined);
-    setPriceOutput(undefined);
+ const reset = () => {
     setSuccessMessage("");
     setError("");
-    setTab(0);
-  }, [open, protectionPoolAddress]);
+    setLoading(false);
+  };
 
+  useEffect(reset, [open]);
 
   const onError = (e) => {
     if (e) {
@@ -41,16 +40,19 @@ const SellProtectionPopUp = (props) => {
     }
     console.log('The deposit transaction failed');
     setError("Failed to sell protection...");
+    setLoading(false);
   };
 
   // Function passed into 'onClick' of 'Sell Protection' button
   const sellProtection = async () => {
+    setLoading(true);
     setError("");
 
     try {
       const tx = await protectionPoolService.deposit(protectionPoolAddress, parseUSDC(amount));
       const receipt = await tx.wait();
-      if (receipt.status === 1) { 
+      if (receipt.status === 1) {
+        setLoading(false);
         console.log('The deposit transaction was successful');
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(`You successfully deposited ${amount} USDC in to the protection pool!`);
@@ -69,8 +71,6 @@ const SellProtectionPopUp = (props) => {
 
   return (
     <Dialog
-      fullScreen
-      fullWidth
       maxWidth="lg"
       disableScrollLock
       open={open}
@@ -81,50 +81,26 @@ const SellProtectionPopUp = (props) => {
         }
       }}
     >
-      <DialogTitle>Sell Protection</DialogTitle>
+      <DialogTitle>Deposit
+        <IconButton onClick={onClose} className="absolute top-0 right-0" color="primary" size="small">X</IconButton>
+      </DialogTitle>
       <DialogContent>
-        <div>
-          <IconButton aria-label="close" onClick={onClose} size="small">
-            close
-          </IconButton>
-          {USDCBalance !== "0" ? (
-            <>
-              <DialogContent>
-                <Typography gutterBottom variant="subtitle2">
-                  Pay
-                </Typography>
-                {amount}
-                <TextField
-                  type="number"
-                  placeholder={"0.0"}
-                  variant="outlined"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">USDC</InputAdornment>
-                    )
-                  }}
-                  onChange={(e) => {
-                    const val = `${Math.abs(+e.target.value)}`;
-                    setPriceInput(val);
-                    setPriceOutput(val);
-                  }}
-                  inputRef={quantityRef}
-                />
-              </DialogContent>
-              <button
-                className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-                onClick={sellProtection}
-                disabled={!protectionPoolService || !priceInput || priceInput === "0"}
-              >
-                Confirm Sell Protection
-              </button>
-            </>
-          ) : (
-            <Typography style={{ textAlign: "center" }} variant="body2">
-              You don&apos;t have enough USDC to buy protection
-            </Typography>
-          )}
-        </div>
+        {renderFieldAndValue("Protection Pool", formatAddress(protectionPoolAddress))}
+        {renderFieldAndValue("Protection Amount", numeral(amount).format(USDC_FORMAT) + " USDC")}
+        
+        <Divider className="mb-2" />
+          
+        <Typography className="flex justify-left mb-4" variant="subtitle2">Estimated Stats</Typography>
+        <Typography className="flex justify-left mb-2" variant="caption">Expected APY: {expectedYield}</Typography>
+        <Typography className="flex justify-left mb-4" variant="caption">Expected Network Fees: ${numeral(expectedNetworkFee).format("0.00")}</Typography>
+        <LoadingButton style={{ textTransform: "none" }}
+            onClick={sellProtection}
+            disabled={!protectionPoolService || !protectionPoolAddress || !amount}
+            loading={loading}
+            variant="outlined"
+        >
+          Confirm Deposit
+        </LoadingButton>
       </DialogContent>
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}
@@ -133,6 +109,15 @@ const SellProtectionPopUp = (props) => {
       <ErrorPopup error={error} handleCloseError={() => setError("")} />
     </Dialog>
   );
+};
+
+const renderFieldAndValue = (fieldLabel, fieldValue) => {
+  return (
+    <div>
+      <Typography className="flex justify-left" variant="subtitle2">{fieldLabel}</Typography>
+      <div className="flex justify-left mb-4">{fieldValue}</div>
+    </div>
+  )
 };
 
 export default SellProtectionPopUp;
