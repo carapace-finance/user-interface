@@ -17,8 +17,9 @@ import {
   getPoolFactoryContract,
   getReferenceLendingPoolsContract
 } from "@contracts/contractService";
-import { formatUSDC } from "@utils/usdc";
+import { convertUSDCToNumber, formatUSDC, USDC_FORMAT } from "@utils/usdc";
 import assets from "../assets";
+import numeral from "numeral";
 
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
@@ -102,8 +103,8 @@ const Dashboard = () => {
                 address: poolAddress,
                 protocols: goldfinchLogo,
                 APY: "8 - 15%",
-                totalCapital: formatUSDC(totalCapital),
-                totalProtection: formatUSDC(totalProtection)
+                totalCapital: numeral(convertUSDCToNumber(totalCapital)).format(USDC_FORMAT) + " USDC",
+                totalProtection: numeral(convertUSDCToNumber(totalProtection)).format(USDC_FORMAT) + " USDC"
               }
             ]);
           });

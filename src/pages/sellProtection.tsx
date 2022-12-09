@@ -8,11 +8,12 @@ const TitleAndDescriptions = dynamic(
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { useContext, useEffect } from "react";
+import numeral from "numeral";
 import {
   getPoolContract,
   getPoolFactoryContract
 } from "@contracts/contractService";
-import { formatUSDC } from "@utils/usdc";
+import { convertUSDCToNumber, formatUSDC, USDC_FORMAT } from "@utils/usdc";
 import { formatAddress } from "@utils/utils";
 import assets from "../assets";
 
@@ -41,8 +42,8 @@ const SellProtection = () => {
                 address: poolAddress,
                 protocols: goldfinchLogo,
                 APY: "8 - 15%",
-                totalCapital: formatUSDC(totalCapital),
-                totalProtection: formatUSDC(totalProtection)
+                totalCapital: numeral(convertUSDCToNumber(totalCapital)).format(USDC_FORMAT) + " USDC",
+                totalProtection: numeral(convertUSDCToNumber(totalProtection)).format(USDC_FORMAT) + " USDC"
               }
             ]);
           });
