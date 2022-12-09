@@ -55,7 +55,7 @@ export default function SellProtectionCard() {
                 <IconButton
                   disabled={!protectionPoolService}
                   onClick={setMaxAmount}
-                  size="sm"
+                  size="small"
                 >
                   Max
                 </IconButton>
