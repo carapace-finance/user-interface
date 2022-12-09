@@ -96,7 +96,7 @@ const Dashboard = () => {
               setLendingPools(
                 lendingPools.map((lendingPool) => {
                   return {
-                    address: formatAddress(lendingPool),
+                    address: lendingPool,
                     name: "Lend East #1: Emerging Asia Fintech Pool",
                     protocol: goldfinchLogo,
                     adjustedYields: "7 - 10%",
@@ -153,7 +153,7 @@ const Dashboard = () => {
         <tbody>
           {lendingPools.map((lendingPool) => (
             <tr key={lendingPool.address}>
-              <td>{lendingPool.address}</td>
+              <td>{formatAddress(lendingPool.address)}</td>
               <td>{lendingPool.name}</td>
               <td>
                 <Image
@@ -193,7 +193,7 @@ const Dashboard = () => {
         <tbody>
           {protectionPools.map((protectionPool) => (
             <tr key={protectionPool.address}>
-              <td>{protectionPool.address}</td>
+              <td>{formatAddress(protectionPool.address)}</td>
               <td>
                 <Image
                   src={protectionPool.protocols}

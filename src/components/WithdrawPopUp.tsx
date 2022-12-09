@@ -4,9 +4,10 @@ import { IconButton } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { formatUSDC, convertNumberToUSDC, convertUSDCToNumber } from "@utils/usdc";
+import { formatUSDC, convertNumberToUSDC, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
+import numeral from "numeral";
 
 const WithdrawalPopUp = (props) => {
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -31,10 +32,12 @@ const WithdrawalPopUp = (props) => {
     if (protectionPoolService && protectionPoolAddress) {
       console.log("Getting user's withdrawal request...");
       protectionPoolService.getRequestedWithdrawalAmount(protectionPoolAddress)
-        .then((balance) => { setWithdrawableAmount(balance) });
+        .then((balance) => { setWithdrawableAmount(convertUSDCToNumber(balance)) });
     }
   }, [open]);
   
+  const setMaxAmount = async () => { setAmount(withdrawableAmount) };
+
   const onError = (e) => {
     if (e) {
       console.log("Error: ", e);
@@ -68,8 +71,6 @@ const WithdrawalPopUp = (props) => {
     }
   };
 
-  const setMaxAmount = async () => { setAmount(convertUSDCToNumber(withdrawableAmount)) };
-
   return (
     <Dialog
       maxWidth="lg"
@@ -87,8 +88,7 @@ const WithdrawalPopUp = (props) => {
       </DialogTitle>
       <DialogContent>
         <div className="flex justify-left mb-3">Protection Pool:{formatAddress(protectionPoolAddress)}</div>
-        <div className="flex justify-left mb-3">Withdrawable Amount: {formatUSDC(withdrawableAmount)}</div>
-        <div className="flex justify-center mb-3">
+        <div className="flex justify-center">
           <TextField
             type="number"
             placeholder={"0"}
@@ -106,8 +106,9 @@ const WithdrawalPopUp = (props) => {
             onChange={(e) => e.target.value ? setAmount(parseFloat(e.target.value)) : 0}
           />
         </div>
-        <LoadingButton style={{ textTransform: "none" }}
-          disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount === 0 || convertNumberToUSDC(amount) > withdrawableAmount}
+        <p>Withdrawable Amount: {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}</p>
+        <LoadingButton style={{ textTransform: "none", marginTop: "1.5em", marginBottom: "1.5em" }}
+          disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount === 0 || amount > withdrawableAmount}
           onClick={withdraw}
           loading={loading}
           variant="outlined"

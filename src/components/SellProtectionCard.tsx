@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
-import { InputAdornment, TextField, IconButton } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
+import { IconButton } from "@material-tailwind/react";
 import { getUsdcBalance, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
@@ -9,29 +10,28 @@ import numeral from "numeral";
 
 export default function SellProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [usdcBalance, setUsdcBalance] = useState(0);
   const router = useRouter();
   const { protectionPoolService, provider } = useContext(ApplicationContext);
   const { user, setUser } = useContext(UserContext);
   const protectionPoolAddress = router.query.address;
 
   const setMaxAmount = async () => {
-    setAmount(user.USDCBalance.replace(",", ""));
+    setAmount(usdcBalance);
   };
 
   useEffect(() => {
     (async () => {
       if (provider) {
-        let USDCBalance = await getUsdcBalance(provider, user.address);
-        USDCBalance = numeral(convertUSDCToNumber(USDCBalance)).format(
-          USDC_FORMAT
-        );
-        if (USDCBalance != user.USDCBalance) {
-          setUser({ ...user, USDCBalance: USDCBalance });
+        let newUsdcBalance = await getUsdcBalance(provider, user.address);
+        setUsdcBalance(convertUSDCToNumber(newUsdcBalance));
+        if (newUsdcBalance != user.USDCBalance) {
+          setUser({ ...user, USDCBalance: newUsdcBalance });
         }
       }
     })();
-  }, []);
+  }, [isOpen]);
 
   return (
     <div className="flex justify-center">
@@ -55,7 +55,7 @@ export default function SellProtectionCard() {
                 <IconButton
                   disabled={!protectionPoolService}
                   onClick={setMaxAmount}
-                  size="small"
+                  size="sm"
                 >
                   Max
                 </IconButton>
@@ -63,13 +63,13 @@ export default function SellProtectionCard() {
             )
           }}
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => e.target.value ? setAmount(parseFloat(e.target.value)) : 0}
         />
-        <p>Balance: {user.USDCBalance}</p>
+        <p>Balance: {numeral(usdcBalance).format(USDC_FORMAT)} USDC</p>
         <button
           type="button"
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          disabled={!amount || amount === "0"}
+          disabled={!amount || amount > usdcBalance}
           onClick={() => setIsOpen(true)}
         >
           Preview

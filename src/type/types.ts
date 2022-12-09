@@ -1,5 +1,6 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { ProtectionPoolService } from "@services/ProtectionPoolService";
+import { BigNumber } from "ethers";
 
 export interface ContractAddresses {
   isPlayground: boolean;
@@ -69,7 +70,7 @@ export interface Bond {
 export interface User {
   address: string;
   ETHBalance: string;
-  USDCBalance: string;
+  USDCBalance: BigNumber;
   sTokenUnderlyingAmount: string;
   requestedWithdrawalAmount: string;
   protectionAmount: string;

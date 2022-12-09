@@ -3,17 +3,40 @@ import { IconButton } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { formatUSDC, parseUSDC } from "@utils/usdc";
+import { convertNumberToUSDC, convertUSDCToNumber, formatUSDC, parseUSDC, USDC_FORMAT } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
+import { LoadingButton } from "@mui/lab";
+import numeral from "numeral";
 
 const WithdrawalRequestPopUp = (props) => {
-  const { open, onClose, protectionPoolAddress } = props;
-  const [amount, setAmount] = useState("");
-  const [requestableAmount, setRequestableAmount] = useState("");
   const { protectionPoolService } = useContext(ApplicationContext);
+  const { open, onClose, protectionPoolAddress } = props;
+  const [amount, setAmount] = useState(0);
+  const [requestableAmount, setRequestableAmount] = useState(0);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const reset = () => {
+    setAmount(0);
+    setRequestableAmount(0);
+    setSuccessMessage("");
+    setError("");
+    setLoading(false);
+  };
+  
+  useEffect(() => {
+    reset();
+
+    if (protectionPoolService && protectionPoolAddress) {
+      console.log("Getting pool balance...");
+      protectionPoolService.getSTokenUnderlyingBalance(protectionPoolAddress)
+        .then((balance) => { setRequestableAmount(convertUSDCToNumber(balance)) });
+    }
+  }, [open]);
+  
+  const setMaxAmount = async () => { setAmount(requestableAmount) };
 
   const onError = (e) => {
     if (e) {
@@ -21,17 +44,22 @@ const WithdrawalRequestPopUp = (props) => {
     }
     console.log('The requestWithdrawal transaction failed');
     setError("Failed to request withdrawal...");
+    setLoading(false);
   };
   
   const requestedWithdrawal = async () => {
+    setLoading(true);
+
     try {
-      const tx = await protectionPoolService.requestWithdrawal(protectionPoolAddress, parseUSDC(amount));
+      const tx = await protectionPoolService.requestWithdrawal(protectionPoolAddress, convertNumberToUSDC(amount));
       const receipt = await tx.wait();
-      if (receipt.status === 1) { 
+      if (receipt.status === 1) {
+        setLoading(false);
         console.log('The requestWithdrawal transaction was successful');
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(`You successfully requested to withdraw ${amount} USDC from the protection pool!`);
         setTimeout(() => {
+          reset();
           onClose();
         }, 2000);
       }
@@ -43,20 +71,6 @@ const WithdrawalRequestPopUp = (props) => {
       onError(e);
     }
   };
-
-  const setMaxAmount = async () => { setAmount(requestableAmount) };
-
-  useEffect(() => {
-    setAmount("");
-    setRequestableAmount("");
-    setSuccessMessage("");
-    setError("");
-
-    if (protectionPoolService && protectionPoolAddress) {
-      console.log("Getting pool balance...");
-      protectionPoolService.getSTokenUnderlyingBalance(protectionPoolAddress).then((balance) => { setRequestableAmount(formatUSDC(balance))});
-    }
-   }, [protectionPoolService, protectionPoolAddress]);
 
   return (
     <Dialog
@@ -76,8 +90,8 @@ const WithdrawalRequestPopUp = (props) => {
       </DialogTitle>
       <DialogContent>
         <div className="flex justify-left mb-3">Protection Pool:{formatAddress(protectionPoolAddress)}</div>
-        <div className="flex justify-left mb-3">Requestable Amount: {requestableAmount}</div>
-        <div className="flex justify-center mb-3">
+        <div className="flex justify-left mb-3"></div>
+        <div className="flex justify-center">
           <TextField
             type="number"
             placeholder={"0.0"}
@@ -92,17 +106,18 @@ const WithdrawalRequestPopUp = (props) => {
               )
             }}
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => e.target.value ? setAmount(parseFloat(e.target.value)) : 0}
           />
         </div>
-        <button
-          type="button"
-          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount === "0" || amount > requestableAmount}
-          onClick={requestedWithdrawal}
-        >
-          Confirm Withdrawal Request
-        </button>
+        <p>Requestable Amount: {numeral(requestableAmount).format(USDC_FORMAT) + " USDC"}</p>
+        <LoadingButton style={{ textTransform: "none", marginTop: "1.5em", marginBottom: "1.5em" }}
+            onClick={requestedWithdrawal}
+            disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount > requestableAmount}
+            loading={loading}
+            variant="outlined"
+          >
+            Confirm Withdrawal Request
+          </LoadingButton>
         <div>
           By clicking &quot;Confirm Withdrawal Request&quot;, you agree to Carapace&apos;s
           Terms of Service and acknowledge that you have read and understand the

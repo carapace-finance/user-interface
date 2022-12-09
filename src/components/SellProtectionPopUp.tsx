@@ -12,7 +12,7 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { parseUSDC, USDC_FORMAT } from "@utils/usdc";
+import { convertNumberToUSDC, parseUSDC, USDC_FORMAT } from "@utils/usdc";
 import { formatAddress } from "@utils/utils";
 import { LoadingButton } from "@mui/lab";
 
@@ -49,7 +49,7 @@ const SellProtectionPopUp = (props) => {
     setError("");
 
     try {
-      const tx = await protectionPoolService.deposit(protectionPoolAddress, parseUSDC(amount));
+      const tx = await protectionPoolService.deposit(protectionPoolAddress, convertNumberToUSDC(amount));
       const receipt = await tx.wait();
       if (receipt.status === 1) {
         setLoading(false);
