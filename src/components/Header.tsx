@@ -100,9 +100,9 @@ const Header = ({ tenderlyAccessKey }) => {
       <Link href="/buyProtection">
         <h3>Buy Protection</h3>
       </Link>
-      <Link href="/lendWithProtection">
+      {/* <Link href="/lendWithProtection">
         <h3>Lend With Protection</h3>
-      </Link>
+      </Link> */}
       <Link href="/sellProtection">
         <h3>Sell Protection</h3>
       </Link>
