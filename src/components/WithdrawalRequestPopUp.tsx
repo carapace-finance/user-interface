@@ -54,7 +54,7 @@ const WithdrawalRequestPopUp = (props) => {
 
     if (protectionPoolService && protectionPoolAddress) {
       console.log("Getting pool balance...");
-      protectionPoolService.getUsdcBalance(protectionPoolAddress).then((balance) => { setRequestableAmount(formatUSDC(balance))});
+      protectionPoolService.getSTokenUnderlyingBalance(protectionPoolAddress).then((balance) => { setRequestableAmount(formatUSDC(balance))});
     }
    }, [protectionPoolService, protectionPoolAddress]);
 

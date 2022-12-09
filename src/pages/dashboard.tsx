@@ -1,4 +1,3 @@
-import { formatEther } from "@ethersproject/units";
 import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -17,7 +16,7 @@ import {
   getPoolFactoryContract,
   getReferenceLendingPoolsContract
 } from "@contracts/contractService";
-import { convertUSDCToNumber, formatUSDC, USDC_FORMAT } from "@utils/usdc";
+import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import assets from "../assets";
 import numeral from "numeral";
 import { formatAddress } from "@utils/utils";
@@ -25,7 +24,8 @@ import { formatAddress } from "@utils/utils";
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
-  const { contractAddresses, provider } = useContext(ApplicationContext);
+  const { contractAddresses, provider, protectionPoolService } =
+    useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
   const { lendingPools, setLendingPools } = useContext(LendingPoolContext);
   const { protectionPools, setProtectionPools } = useContext(
@@ -51,23 +51,36 @@ const Dashboard = () => {
         console.log("Pool address", poolAddress);
 
         const pool = getPoolContract(poolAddress, provider.getSigner());
-        const withdrawalCycleIndex = 2;
-        const requestedWithdrawalAmount = pool
-          .connect(provider.getSigner(user.address))
-          .getRequestedWithdrawalAmount(withdrawalCycleIndex);
-        requestedWithdrawalAmount.then(
-          (result) => {
-            setUser({
-              ...user,
-              requestedWithdrawalAmount: formatEther(result)
-            });
 
-            console.log(result);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
+        protectionPoolService
+          .getSTokenUnderlyingBalance(poolAddress)
+          .then((sTokenUnderlingBalance) => {
+            protectionPoolService
+              .getRequestedWithdrawalAmount(poolAddress)
+              .then((requestedWithdrawalBalance) => {
+                setUser({
+                  ...user,
+                  sTokenUnderlyingAmount: numeral(
+                    convertUSDCToNumber(sTokenUnderlingBalance)
+                  ).format(USDC_FORMAT),
+                  requestedWithdrawalAmount: numeral(
+                    convertUSDCToNumber(requestedWithdrawalBalance)
+                  ).format(USDC_FORMAT)
+                });
+                console.log(
+                  "sTokenUnderlingBalance ==>",
+                  numeral(convertUSDCToNumber(sTokenUnderlingBalance)).format(
+                    USDC_FORMAT
+                  )
+                );
+                console.log(
+                  "requestedWithdrawalBalance ==>",
+                  numeral(
+                    convertUSDCToNumber(requestedWithdrawalBalance)
+                  ).format(USDC_FORMAT)
+                );
+              });
+          });
 
         pool.getPoolInfo().then((poolInfo) => {
           console.log("Pool info", poolInfo);
@@ -97,6 +110,7 @@ const Dashboard = () => {
               );
             });
         });
+
         pool.totalProtection().then((totalProtection) => {
           pool.totalSTokenUnderlying().then((totalCapital) => {
             setProtectionPools([
@@ -104,8 +118,12 @@ const Dashboard = () => {
                 address: poolAddress,
                 protocols: goldfinchLogo,
                 APY: "8 - 15%",
-                totalCapital: numeral(convertUSDCToNumber(totalCapital)).format(USDC_FORMAT) + " USDC",
-                totalProtection: numeral(convertUSDCToNumber(totalProtection)).format(USDC_FORMAT) + " USDC"
+                totalCapital: numeral(convertUSDCToNumber(totalCapital)).format(
+                  USDC_FORMAT
+                ),
+                totalProtection: numeral(
+                  convertUSDCToNumber(totalProtection)
+                ).format(USDC_FORMAT)
               }
             ]);
           });
@@ -185,10 +203,10 @@ const Dashboard = () => {
                 />
               </td>
               <td>{protectionPool.APY}</td>
-              <td>{protectionPool.totalCapital}</td>
-              <td>{protectionPool.totalProtection}</td>
-              <th>{user.depositedAmount}</th>
-              <th>{user.requestedWithdrawalAmount}</th>
+              <td>{protectionPool.totalCapital} USDC</td>
+              <td>{protectionPool.totalProtection} USDC</td>
+              <td>{user.sTokenUnderlyingAmount} USDC</td>
+              <td>{user.requestedWithdrawalAmount} USDC</td>
               <td>
                 <button onClick={() => setIsWithdrawalRequestOpen(true)}>
                   request withdrawal

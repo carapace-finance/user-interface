@@ -86,7 +86,7 @@ const SellProtectionPopUp = (props) => {
       </DialogTitle>
       <DialogContent>
         {renderFieldAndValue("Protection Pool", formatAddress(protectionPoolAddress))}
-        {renderFieldAndValue("Protection Amount", numeral(amount).format(USDC_FORMAT) + " USDC")}
+        {renderFieldAndValue("Deposit Amount", numeral(amount).format(USDC_FORMAT) + " USDC")}
         
         <Divider className="mb-2" />
           

@@ -70,7 +70,7 @@ export interface User {
   address: string;
   ETHBalance: string;
   USDCBalance: string;
-  depositedAmount: string;
+  sTokenUnderlyingAmount: string;
   requestedWithdrawalAmount: string;
   protectionAmount: string;
   protectionDuration: string;
