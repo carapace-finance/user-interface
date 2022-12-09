@@ -122,7 +122,7 @@ const BuyProtectionPopUp = (props) => {
             Confirm Protection Purchase
           </LoadingButton>
           <div>
-          By clicking "Confirm Protection Purchase", you agree to Carapace's
+          By clicking &quot;Confirm Protection Purchase&quot;, you agree to Carapace's
           Terms of Service and acknowledge that you have read and understand the
           Carapace protocol disclaimer.
           </div>
