@@ -36,7 +36,7 @@ const ProtectionPool = () => {
         {formatAddress(router.query.address)}
       </div>
       <Image src={protocols} width={24} height={24} alt="" />
-      <a href={`https://etherscan.io/address/${protectionPoolAddress}`}>link</a>
+      <a target="_blank" href={`https://etherscan.io/address/${protectionPoolAddress}`}>link</a>
       <div>
         <h2>Capital in the Pool</h2>
         <div>{totalCapital}</div>
