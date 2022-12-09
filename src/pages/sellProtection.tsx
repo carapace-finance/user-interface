@@ -13,7 +13,7 @@ import {
   getPoolContract,
   getPoolFactoryContract
 } from "@contracts/contractService";
-import { convertUSDCToNumber, formatUSDC, USDC_FORMAT } from "@utils/usdc";
+import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import { formatAddress } from "@utils/utils";
 import assets from "../assets";
 
