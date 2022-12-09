@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
-import { Input } from "@material-tailwind/react";
+import { InputAdornment, TextField, IconButton } from "@mui/material";
 import { getUsdcBalance, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
@@ -11,15 +11,21 @@ export default function SellProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const router = useRouter();
-  const { provider } = useContext(ApplicationContext);
+  const { protectionPoolService, provider } = useContext(ApplicationContext);
   const { user, setUser } = useContext(UserContext);
   const protectionPoolAddress = router.query.address;
+
+  const setMaxAmount = async () => {
+    setAmount(user.USDCBalance.replace(",", ""));
+  };
 
   useEffect(() => {
     (async () => {
       if (provider) {
         let USDCBalance = await getUsdcBalance(provider, user.address);
-        USDCBalance = numeral(convertUSDCToNumber(USDCBalance)).format(USDC_FORMAT);
+        USDCBalance = numeral(convertUSDCToNumber(USDCBalance)).format(
+          USDC_FORMAT
+        );
         if (USDCBalance != user.USDCBalance) {
           setUser({ ...user, USDCBalance: USDCBalance });
         }
@@ -35,9 +41,27 @@ export default function SellProtectionCard() {
         </h5>
         <p className="text-gray-700 text-base mb-4">18 - 25%</p>
         <div>Deposit Amount</div>
-        <Input
-          label="0.0"
+        <TextField
           type="number"
+          placeholder={"0.0"}
+          variant="outlined"
+          size="medium"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">USDC</InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  disabled={!protectionPoolService}
+                  onClick={setMaxAmount}
+                  size="sm"
+                >
+                  Max
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
