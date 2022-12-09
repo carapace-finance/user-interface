@@ -11,7 +11,7 @@ export const LendingPoolContext = createContext<LendingPoolContextType | null>(
 export const LendingPoolContextProvider = ({ children }) => {
   const defaultLendingPools: LendingPool[] = [
     {
-      address: "0x0...",
+      address: "0x00...",
       name: "Almavest Basket #6",
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",
@@ -22,7 +22,7 @@ export const LendingPoolContextProvider = ({ children }) => {
       protectionPoolAddress: "0x0..."
     },
     {
-      address: "0x1...",
+      address: "0x01...",
       name: "Almavest Basket #6",
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",
@@ -30,7 +30,7 @@ export const LendingPoolContextProvider = ({ children }) => {
       CARATokenRewards: "~3.5%",
       premium: "4 - 7%",
       timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0xTest2"
+      protectionPoolAddress: "0x0..."
     }
   ];
 

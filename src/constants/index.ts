@@ -22,22 +22,22 @@ export const footerLinks = [
   {
     title: "PROTOCOL DESIGN",
     links: [
-      {
-        name: "Coming soon",
-        link: "",
-        target: ""
-      }
       // {
-      //   name: "Whitepaper",
-      //   link: "whitepaper",
+      //   name: "Coming soon",
+      //   link: "",
       //   target: ""
       // },
+      {
+        name: "Whitepaper",
+        link: "https://www.carapace.finance/whitepaper",
+        target: "_blank"
+      },
       // {
       //   name: "User Doc",
       //   link: "",
       //   target: ""
       // },
-    ]
+    ],
   },
   {
     title: "DEVELOPER",

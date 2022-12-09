@@ -39,7 +39,7 @@ const LendingPool = () => {
         {name}{formatAddress(router.query.address)}
       </div>
       <Image src={protocol} width={24} height={24} alt="" />
-      <a href={`https://etherscan.io/address/${lendingPoolAddress}`}>link</a>
+      <a target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${lendingPoolAddress}`}>link</a>
       <div>
         <h1>Lending Pool Details</h1>
         <h3>Protection Purchase Details</h3>

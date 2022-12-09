@@ -8,7 +8,7 @@ export const UserContextProvider = ({ children }) => {
     address: "0x008c84421da5527f462886cec43d2717b686a7e4",
     ETHBalance: "0",
     USDCBalance: "0",
-    depositedAmount: "0",
+    sTokenUnderlyingAmount: "0",
     requestedWithdrawalAmount: "0",
     protectionAmount: "0",
     protectionDuration: "0"

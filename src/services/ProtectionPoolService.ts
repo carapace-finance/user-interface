@@ -92,7 +92,7 @@ export class ProtectionPoolService {
    * @param poolAddress
    * @returns
    */
-  public async getUsdcBalance(poolAddress: string) {
+  public async getSTokenUnderlyingBalance(poolAddress: string) {
     const poolInstance = getPoolContract(
       poolAddress,
       this.provider.getSigner()
@@ -116,7 +116,8 @@ export class ProtectionPoolService {
     );
 
     // TODO: use the new contract method to get the requested withdrawal amount for current cycle
-    const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(2);
+    const withdrawalCycleIndex = 2;
+    const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(withdrawalCycleIndex);
     const usdcBalance = await poolInstance.convertToUnderlying(sTokenBalance);
     return usdcBalance;
   }

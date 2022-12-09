@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import {
-  Box,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -62,7 +61,7 @@ const BuyProtectionPopUp = (props) => {
         lendingPoolAddress: lendingPoolAddress,
         nftLpTokenId: tokenId,
         protectionAmount: parseUSDC(protectionAmount),
-        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
+        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays).toString()
       });
 
       const receipt = await tx.wait();
@@ -122,6 +121,11 @@ const BuyProtectionPopUp = (props) => {
           >
             Confirm Protection Purchase
           </LoadingButton>
+          <div>
+          By clicking &quot;Confirm Protection Purchase&quot;, you agree to Carapace&apos;s
+          Terms of Service and acknowledge that you have read and understand the
+          Carapace protocol disclaimer.
+          </div>
         </div>
       </DialogContent>
       <SuccessPopup

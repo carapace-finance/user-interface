@@ -86,7 +86,7 @@ const SellProtectionPopUp = (props) => {
       </DialogTitle>
       <DialogContent>
         {renderFieldAndValue("Protection Pool", formatAddress(protectionPoolAddress))}
-        {renderFieldAndValue("Protection Amount", numeral(amount).format(USDC_FORMAT) + " USDC")}
+        {renderFieldAndValue("Deposit Amount", numeral(amount).format(USDC_FORMAT) + " USDC")}
         
         <Divider className="mb-2" />
           
@@ -101,6 +101,11 @@ const SellProtectionPopUp = (props) => {
         >
           Confirm Deposit
         </LoadingButton>
+        <div>
+          By clicking &quot;Confirm Deposit&quot;, you agree to Carapace&apos;s
+          Terms of Service and acknowledge that you have read and understand the
+          Carapace protocol disclaimer.
+        </div>
       </DialogContent>
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}

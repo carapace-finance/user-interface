@@ -23,7 +23,8 @@
       "@style/*": ["src/style/*"],
       "@type/*": ["src/type/*"],
       "@contracts/*": ["src/contracts/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@services/*": ["src/services/*"]
     },
     "incremental": true
   },

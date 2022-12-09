@@ -705,6 +705,14 @@ const getUsdcContract: Function = (provider) => {
   return new Contract(USDC_ADDRESS, USDC_ABI, provider);
 };
 
+const getUsdcBalance: Function = async (
+  provider: JsonRpcProvider,
+  owner: string
+) => {
+  const usdcContract = getUsdcContract(provider);
+  return await usdcContract.balanceOf(owner);
+};
+
 const transferUsdc: Function = async (
   provider: JsonRpcProvider,
   receiver: string,
@@ -727,6 +735,7 @@ export {
   formatUSDC,
   parseUSDC,
   getUsdcContract,
+  getUsdcBalance,
   transferUsdc,
   convertNumberToUSDC,
   convertUSDCToNumber

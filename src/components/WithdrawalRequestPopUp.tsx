@@ -54,7 +54,7 @@ const WithdrawalRequestPopUp = (props) => {
 
     if (protectionPoolService && protectionPoolAddress) {
       console.log("Getting pool balance...");
-      protectionPoolService.getUsdcBalance(protectionPoolAddress).then((balance) => { setRequestableAmount(formatUSDC(balance))});
+      protectionPoolService.getSTokenUnderlyingBalance(protectionPoolAddress).then((balance) => { setRequestableAmount(formatUSDC(balance))});
     }
    }, [protectionPoolService, protectionPoolAddress]);
 
@@ -103,6 +103,11 @@ const WithdrawalRequestPopUp = (props) => {
         >
           Confirm Withdrawal Request
         </button>
+        <div>
+          By clicking &quot;Confirm Withdrawal Request&quot;, you agree to Carapace&apos;s
+          Terms of Service and acknowledge that you have read and understand the
+          Carapace protocol disclaimer.
+        </div>
       </DialogContent>
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}

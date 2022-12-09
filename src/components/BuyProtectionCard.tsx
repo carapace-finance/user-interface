@@ -22,19 +22,19 @@ export default function BuyProtectionCard() {
           label="Protection Amount"
           value={protectionAmount}
           type="number"
-          onChange={(e) => setProtectionAmount(e.target.value)}
+          onChange={(e) => setProtectionAmount(parseInt(e.target.value))}
         />
         <Input
           label="Protection Duration (days)"
           value={protectionDurationInDays}
           type="number"
-          onChange={(e) => setProtectionDurationInDays(e.target.value)}
+          onChange={(e) => setProtectionDurationInDays(parseInt(e.target.value))}
         />
         <Input
           label="Goldfinch Token ID"
           value={tokenId}
           type="number"
-          onChange={(e) => setTokenId(e.target.value)}
+          onChange={(e) => setTokenId(parseInt(e.target.value))}
         />
       </div>
       <button
