@@ -101,6 +101,11 @@ const SellProtectionPopUp = (props) => {
         >
           Confirm Deposit
         </LoadingButton>
+        <div>
+          By clicking "Confirm Deposit", you agree to Carapace's
+          Terms of Service and acknowledge that you have read and understand the
+          Carapace protocol disclaimer.
+        </div>
       </DialogContent>
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}

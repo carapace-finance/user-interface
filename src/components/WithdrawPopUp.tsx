@@ -112,8 +112,9 @@ const WithdrawalPopUp = (props) => {
           loading={loading}
           variant="outlined"
         >
-          Confirm Withdraw
+          Confirm Withdrawal
         </LoadingButton>
+        <div>By clicking "Confirm Withdrawal", you agree to Carapace's Terms of Service and acknowledge that you have read and understand the Carapace protocol disclaimer.</div>
       </DialogContent>
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}
