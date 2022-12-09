@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import {
-  Box,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -62,7 +61,7 @@ const BuyProtectionPopUp = (props) => {
         lendingPoolAddress: lendingPoolAddress,
         nftLpTokenId: tokenId,
         protectionAmount: parseUSDC(protectionAmount),
-        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
+        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays).toString()
       });
 
       const receipt = await tx.wait();
