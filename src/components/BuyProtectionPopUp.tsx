@@ -12,7 +12,7 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { parseUSDC, USDC_FORMAT } from "@utils/usdc";
+import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
 import { formatAddress, getDaysInSeconds } from "@utils/utils";
 
 // Presentational component for handling buy protection
@@ -60,7 +60,7 @@ const BuyProtectionPopUp = (props) => {
       const tx = await protectionPoolService.buyProtection(protectionPoolAddress, {
         lendingPoolAddress: lendingPoolAddress,
         nftLpTokenId: tokenId,
-        protectionAmount: parseUSDC(protectionAmount),
+        protectionAmount: convertNumberToUSDC(protectionAmount),
         protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays).toString()
       });
 
