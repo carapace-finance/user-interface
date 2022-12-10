@@ -1,6 +1,8 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useContext, useEffect } from "react";
 import { LendingPool, LendingPoolContextType } from "@type/types";
 import assets from "../assets";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import { ProtectionPoolContext } from "./ProtectionPoolContextProvider";
 
 const goldfinchLogo = assets.goldfinch.src;
 
@@ -9,6 +11,9 @@ export const LendingPoolContext = createContext<LendingPoolContextType | null>(
 );
 
 export const LendingPoolContextProvider = ({ children }) => {
+  const { provider, protectionPoolService } = useContext(ApplicationContext);
+  const { protectionPools } = useContext(ProtectionPoolContext);
+  
   const defaultLendingPools: LendingPool[] = [
     {
       address: "0x00...",
@@ -37,6 +42,22 @@ export const LendingPoolContextProvider = ({ children }) => {
   const [lendingPools, setLendingPools] =
     useState<LendingPool[]>(defaultLendingPools);
 
+   useEffect(() => {
+    if (protectionPools && provider && protectionPoolService) {
+      const promises = protectionPools.map((protectionPool) => {
+          return protectionPoolService.getLendingPools(protectionPool.address).then((lendingPools) => {
+            console.log("Retrieved Lending Pools: ", lendingPools);
+            return lendingPools.map(lendingPool => ({...lendingPool, protocol: lendingPool.protocol === "goldfinch" ? goldfinchLogo : ""}));
+          });
+        });
+
+        Promise.all(promises).then((arrayOfLendingPools) => {
+          const allLendingPools = arrayOfLendingPools.flat();
+          setLendingPools(allLendingPools);
+        });
+    }
+  }, [protectionPools]);
+  
   return (
     <LendingPoolContext.Provider value={{ lendingPools, setLendingPools }}>
       {children}

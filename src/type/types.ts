@@ -1,4 +1,5 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
+import { ProtectionPoolFactoryService } from "@services/ProtectionPoolFactoryService";
 import { ProtectionPoolService } from "@services/ProtectionPoolService";
 import { BigNumber } from "ethers";
 
@@ -14,6 +15,7 @@ export type ApplicationContextType = {
   updateContractAddresses: (newContractAddresses: ContractAddresses) => void;
   updateProvider: (newProvider: JsonRpcProvider) => void;
   protectionPoolService: ProtectionPoolService;
+  protectionPoolFactoryService: ProtectionPoolFactoryService;
 };
 
 export type ProtectionPoolContextType = {

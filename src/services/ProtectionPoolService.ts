@@ -1,12 +1,16 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { BigNumber } from "@ethersproject/bignumber";
 
-import { getPoolContract } from "@contracts/contractService";
+import {
+  getPoolContract,
+  getReferenceLendingPoolsContract
+} from "@contracts/contractService";
 import {
   transferApproveAndDeposit,
   transferApproveAndBuyProtection
 } from "@utils/forked/playground";
-import { ProtectionPurchaseParams } from "@type/types";
+import { LendingPool, ProtectionPurchaseParams } from "@type/types";
+import LendingPools from "@components/LendingPools";
 
 export class ProtectionPoolService {
   constructor(
@@ -117,8 +121,39 @@ export class ProtectionPoolService {
 
     // TODO: use the new contract method to get the requested withdrawal amount for current cycle
     const withdrawalCycleIndex = 2;
-    const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(withdrawalCycleIndex);
+    const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(
+      withdrawalCycleIndex
+    );
     const usdcBalance = await poolInstance.convertToUnderlying(sTokenBalance);
     return usdcBalance;
+  }
+
+  public async getLendingPools(poolAddress: string): Promise<LendingPool[]> {
+    const user = this.provider.getSigner();
+    const pool = getPoolContract(poolAddress, user);
+    const poolInfo = await pool.getPoolInfo();
+    console.log("Retrieved Pool Info: ", poolInfo);
+    const referenceLendingPoolsContract = getReferenceLendingPoolsContract(
+      poolInfo.referenceLendingPools,
+      user
+    );
+
+    return referenceLendingPoolsContract
+      .getLendingPools()
+      .then((lendingPools) =>
+        lendingPools.map((lendingPool) => {
+          return {
+            address: lendingPool,
+            name: "Lend East #1: Emerging Asia Fintech Pool",
+            protocol: "goldfinch",
+            adjustedYields: "7 - 10%",
+            lendingPoolAPY: "17%",
+            CARATokenRewards: "~3.5%",
+            premium: "4 - 7%",
+            timeLeft: "59 Days 8 Hours 2 Mins",
+            protectionPoolAddress: poolAddress
+          };
+        })
+      );
   }
 }

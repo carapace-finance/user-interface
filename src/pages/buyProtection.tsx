@@ -5,65 +5,12 @@ const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
 );
-import { useContext, useEffect } from "react";
-import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import { useContext } from "react";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
-import {
-  getPoolContract,
-  getPoolFactoryContract,
-  getReferenceLendingPoolsContract
-} from "@contracts/contractService";
 import { formatAddress } from "@utils/utils";
-import assets from "../assets";
 
 const BuyProtection = () => {
-  const { contractAddresses, provider } = useContext(ApplicationContext);
-  const { lendingPools, setLendingPools } = useContext(LendingPoolContext);
-
-  const goldfinchLogo = assets.goldfinch.src;
-
-  useEffect(() => {
-    if (contractAddresses?.poolFactory && provider) {
-      console.log("Fetching pools...");
-      const poolFactory = getPoolFactoryContract(
-        contractAddresses.poolFactory,
-        provider.getSigner()
-      );
-      poolFactory.getPoolAddress(1).then((poolAddress) => {
-        console.log("Pool address", poolAddress);
-
-        const pool = getPoolContract(poolAddress, provider.getSigner());
-        pool.getPoolInfo().then((poolInfo) => {
-          console.log("Pool info", poolInfo);
-          const referenceLendingPoolsContract =
-            getReferenceLendingPoolsContract(
-              poolInfo.referenceLendingPools,
-              provider.getSigner()
-            );
-          referenceLendingPoolsContract
-            .getLendingPools()
-            .then((lendingPools) => {
-              console.log("Lending pools", lendingPools);
-              setLendingPools(
-                lendingPools.map((lendingPool) => {
-                  return {
-                    address: lendingPool,
-                    name: "Lend East #1: Emerging Asia Fintech Pool",
-                    protocol: goldfinchLogo,
-                    adjustedYields: "7 - 10%",
-                    lendingPoolAPY: "17%",
-                    CARATokenRewards: "~3.5%",
-                    premium: "4 - 7%",
-                    timeLeft: "59 Days 8 Hours 2 Mins",
-                    protectionPoolAddress: poolAddress
-                  };
-                })
-              );
-            });
-        });
-      });
-    }
-  }, [contractAddresses?.poolFactory]);
+  const { lendingPools } = useContext(LendingPoolContext);
 
   return (
     <div>

@@ -11,13 +11,7 @@ import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
-import {
-  getPoolContract,
-  getPoolFactoryContract,
-  getReferenceLendingPoolsContract
-} from "@contracts/contractService";
 import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
-import assets from "../assets";
 import numeral from "numeral";
 import { formatAddress } from "@utils/utils";
 
@@ -27,110 +21,40 @@ const Dashboard = () => {
   const { contractAddresses, provider, protectionPoolService } =
     useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
-  const { lendingPools, setLendingPools } = useContext(LendingPoolContext);
-  const { protectionPools, setProtectionPools } = useContext(
+  const { lendingPools } = useContext(LendingPoolContext);
+  const { protectionPools } = useContext(
     ProtectionPoolContext
   );
   const { user, setUser } = useContext(UserContext);
-
-  const goldfinchLogo = assets.goldfinch.src;
 
   useEffect(() => {
     setProtectionPoolAddress(contractAddresses?.pool);
   }, [contractAddresses]);
 
   useEffect(() => {
-    if (contractAddresses?.poolFactory && provider) {
-      console.log("Fetching pools...");
-      const poolFactory = getPoolFactoryContract(
-        contractAddresses.poolFactory,
-        provider.getSigner()
-      );
-
-      poolFactory.getPoolAddress(1).then((poolAddress) => {
-        console.log("Pool address", poolAddress);
-
-        const pool = getPoolContract(poolAddress, provider.getSigner());
-
+    if (protectionPools && protectionPoolService) {
+      protectionPools.map((protectionPool) => {
+        const poolAddress = protectionPool.address;
         protectionPoolService
           .getSTokenUnderlyingBalance(poolAddress)
-          .then((sTokenUnderlingBalance) => {
+          .then((sTokenUnderlyingBalance) => {
             protectionPoolService
               .getRequestedWithdrawalAmount(poolAddress)
               .then((requestedWithdrawalBalance) => {
+                const formattedUnderlyingBalance = numeral(convertUSDCToNumber(sTokenUnderlyingBalance)).format(USDC_FORMAT);
+                const formattedWithdrawalBalance = numeral(convertUSDCToNumber(requestedWithdrawalBalance)).format(USDC_FORMAT);
                 setUser({
                   ...user,
-                  sTokenUnderlyingAmount: numeral(
-                    convertUSDCToNumber(sTokenUnderlingBalance)
-                  ).format(USDC_FORMAT),
-                  requestedWithdrawalAmount: numeral(
-                    convertUSDCToNumber(requestedWithdrawalBalance)
-                  ).format(USDC_FORMAT)
+                  sTokenUnderlyingAmount: formattedUnderlyingBalance,
+                  requestedWithdrawalAmount: formattedWithdrawalBalance,
                 });
-                console.log(
-                  "sTokenUnderlingBalance ==>",
-                  numeral(convertUSDCToNumber(sTokenUnderlingBalance)).format(
-                    USDC_FORMAT
-                  )
-                );
-                console.log(
-                  "requestedWithdrawalBalance ==>",
-                  numeral(
-                    convertUSDCToNumber(requestedWithdrawalBalance)
-                  ).format(USDC_FORMAT)
-                );
+                console.log("sTokenUnderlingBalance ==>", formattedUnderlyingBalance);
+                console.log("requestedWithdrawalBalance ==>", formattedWithdrawalBalance);
               });
           });
-
-        pool.getPoolInfo().then((poolInfo) => {
-          console.log("Pool info", poolInfo);
-          const referenceLendingPoolsContract =
-            getReferenceLendingPoolsContract(
-              poolInfo.referenceLendingPools,
-              provider.getSigner()
-            );
-          referenceLendingPoolsContract
-            .getLendingPools()
-            .then((lendingPools) => {
-              console.log("Lending pools", lendingPools);
-              setLendingPools(
-                lendingPools.map((lendingPool) => {
-                  return {
-                    address: lendingPool,
-                    name: "Lend East #1: Emerging Asia Fintech Pool",
-                    protocol: goldfinchLogo,
-                    adjustedYields: "7 - 10%",
-                    lendingPoolAPY: "17%",
-                    CARATokenRewards: "~3.5%",
-                    premium: "4 - 7%",
-                    timeLeft: "59 Days 8 Hours 2 Mins",
-                    protectionPoolAddress: poolAddress
-                  };
-                })
-              );
-            });
-        });
-
-        pool.totalProtection().then((totalProtection) => {
-          pool.totalSTokenUnderlying().then((totalCapital) => {
-            setProtectionPools([
-              {
-                address: poolAddress,
-                protocols: goldfinchLogo,
-                APY: "8 - 15%",
-                totalCapital: numeral(convertUSDCToNumber(totalCapital)).format(
-                  USDC_FORMAT
-                ),
-                totalProtection: numeral(
-                  convertUSDCToNumber(totalProtection)
-                ).format(USDC_FORMAT)
-              }
-            ]);
-          });
-        });
       });
     }
-  }, [contractAddresses?.poolFactory]);
+  }, [protectionPools]);
 
   return (
     <div>

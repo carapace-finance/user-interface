@@ -5,52 +5,12 @@ const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
 );
-import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
-import { useContext, useEffect } from "react";
-import numeral from "numeral";
-import {
-  getPoolContract,
-  getPoolFactoryContract
-} from "@contracts/contractService";
-import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
+import { useContext } from "react";
 import { formatAddress } from "@utils/utils";
-import assets from "../assets";
 
 const SellProtection = () => {
-  const { contractAddresses, provider } = useContext(ApplicationContext);
-  const { protectionPools, setProtectionPools } = useContext(
-    ProtectionPoolContext
-  );
-  const goldfinchLogo = assets.goldfinch.src;
-
-  useEffect(() => {
-    if (contractAddresses?.poolFactory && provider) {
-      console.log("Fetching pools...");
-      const poolFactory = getPoolFactoryContract(
-        contractAddresses.poolFactory,
-        provider.getSigner()
-      );
-      poolFactory.getPoolAddress(1).then((poolAddress) => {
-        console.log("Pool address", poolAddress);
-
-        const pool = getPoolContract(poolAddress, provider.getSigner());
-        pool.totalProtection().then((totalProtection) => {
-          pool.totalSTokenUnderlying().then((totalCapital) => {
-            setProtectionPools([
-              {
-                address: poolAddress,
-                protocols: goldfinchLogo,
-                APY: "8 - 15%",
-                totalCapital: numeral(convertUSDCToNumber(totalCapital)).format(USDC_FORMAT) + " USDC",
-                totalProtection: numeral(convertUSDCToNumber(totalProtection)).format(USDC_FORMAT) + " USDC"
-              }
-            ]);
-          });
-        });
-      });
-    }
-  }, [contractAddresses?.poolFactory, provider]);
+  const { protectionPools } = useContext(ProtectionPoolContext);
 
   return (
     <div>
