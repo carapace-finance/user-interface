@@ -14,6 +14,7 @@ import { UserContext } from "@contexts/UserContextProvider";
 import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import numeral from "numeral";
 import { formatAddress } from "@utils/utils";
+import moment from "moment";
 
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
@@ -52,9 +53,32 @@ const Dashboard = () => {
                 console.log("requestedWithdrawalBalance ==>", formattedWithdrawalBalance);
               });
           });
+        
+        (async () => {
+          const protectionPurchases = await protectionPoolService.getProtectionPurchases(poolAddress);
+          console.log("Retrieved Protection Purchases ==>", protectionPurchases);
+          setUser({
+            ...user,
+            protectionPurchases: protectionPurchases
+          });
+        })();
       });
     }
   }, [protectionPools]);
+
+  const getTimeUntilExpiration = (lendingPool) => { 
+    let timeUntilExpirationInSeconds = moment().unix() + 1854120; // "21 Days 11 Hours 2 Mins" from now;
+    if (user?.protectionPurchases?.length > 0) { 
+      user.protectionPurchases.map((protection) => { 
+        if(protection.purchaseParams.lendingPoolAddress === lendingPool.address) { 
+           timeUntilExpirationInSeconds = protection.startTimestamp.add(protection.purchaseParams.protectionDurationInSeconds).toNumber();
+        }
+      });
+    }
+
+    // TODO: need to figure out how to display hours and minutes
+    return moment.duration(timeUntilExpirationInSeconds - moment().unix(), "seconds").humanize();
+  };
 
   return (
     <div>
@@ -91,7 +115,7 @@ const Dashboard = () => {
               <td>{lendingPool.lendingPoolAPY}</td>
               <td>{lendingPool.CARATokenRewards}</td>
               <td>{lendingPool.premium}</td>
-              <td>timeUntilExpiration</td>
+              <td>{getTimeUntilExpiration(lendingPool)}</td>
               <td>
                 <button disabled>claim</button>
               </td>

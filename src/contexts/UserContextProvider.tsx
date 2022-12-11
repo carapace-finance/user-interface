@@ -12,7 +12,8 @@ export const UserContextProvider = ({ children }) => {
     sTokenUnderlyingAmount: "0",
     requestedWithdrawalAmount: "0",
     protectionAmount: "0",
-    protectionDuration: "0"
+    protectionDuration: "0",
+    protectionPurchases: []
   };
 
   const [user, setUser] = useState<User>(defaultUser);

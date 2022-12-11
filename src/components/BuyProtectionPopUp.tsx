@@ -12,10 +12,9 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
+import { convertNumberToUSDC, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import { formatAddress, getDaysInSeconds } from "@utils/utils";
 
-// Presentational component for handling buy protection
 const BuyProtectionPopUp = (props) => {
   const {
     open,
@@ -24,14 +23,14 @@ const BuyProtectionPopUp = (props) => {
     protectionDurationInDays,
     tokenId,
     lendingPoolAddress,
-    protectionPoolAddress,
-    premiumAmount
+    protectionPoolAddress
   } = props;
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [adjustedYield, setAdjustedYield] = useState("10 - 17%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
+  const [premiumAmount, setPremiumAmount] = useState(0);
   const { protectionPoolService } = useContext(ApplicationContext);
 
   const reset = () => {
@@ -40,7 +39,23 @@ const BuyProtectionPopUp = (props) => {
     setLoading(false);
   };
 
-  useEffect(reset, [open]);
+  const protectionPurchaseParams = {
+    lendingPoolAddress: lendingPoolAddress,
+    nftLpTokenId: tokenId,
+    protectionAmount: convertNumberToUSDC(protectionAmount),
+    protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
+  };
+
+  useEffect(() => {
+    reset();
+    if (protectionPoolService && protectionPoolAddress) {
+      console.log("Protection Purchase Params: ", protectionPurchaseParams);
+      protectionPoolService.calculatePremiumPrice(protectionPoolAddress, protectionPurchaseParams).then((premiumPrice) => {
+        console.log("Premium Price: ", premiumPrice);
+        setPremiumAmount(convertUSDCToNumber(premiumPrice));
+      });
+    }
+  }, [open]);
 
   const onError = (e) => {
     if (e) {
@@ -57,15 +72,11 @@ const BuyProtectionPopUp = (props) => {
     setError("");
 
     try {
-      const tx = await protectionPoolService.buyProtection(protectionPoolAddress, {
-        lendingPoolAddress: lendingPoolAddress,
-        nftLpTokenId: tokenId,
-        protectionAmount: convertNumberToUSDC(protectionAmount),
-        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays).toString()
-      });
+      const tx = await protectionPoolService.buyProtection(protectionPoolAddress, protectionPurchaseParams);
 
       const receipt = await tx.wait();
       if (receipt.status === 1) {
+        protectionPoolService.updateProtectionPurchaseByLendingPool(lendingPoolAddress, protectionPurchaseParams.protectionAmount)
         setLoading(false);
         console.log('The buy protection transaction was successful');
         // Show success message for 2 seconds before closing popup
