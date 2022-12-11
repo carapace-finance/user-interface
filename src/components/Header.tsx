@@ -1,3 +1,4 @@
+import { Tooltip } from "@material-tailwind/react";
 import { useWeb3React } from "@web3-react/core";
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
@@ -9,10 +10,7 @@ import assets from "../assets";
 import Account from "@components/Account";
 import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
 import { deployToFork } from "@utils/forked/tenderly";
-import {
-  preparePlayground,
-  deletePlayground
-} from "@utils/forked/playground";
+import { preparePlayground, deletePlayground } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 
@@ -22,9 +20,8 @@ const Header = ({ tenderlyAccessKey }) => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
-  const { updateContractAddresses, updateProvider } = useContext(
-    ApplicationContext
-  );
+  const { updateContractAddresses, updateProvider } =
+    useContext(ApplicationContext);
 
   const onConnect = async (wallet: string) => {
     setError("");
@@ -133,18 +130,25 @@ const Header = ({ tenderlyAccessKey }) => {
       ) : (
         ""
       )}
-      <button
-        className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={playgroundButtonAction}
-      >
-        <span>{playgroundButtonTitle}</span>
-      </button>
       {playgroundButtonTitle === "Start Playground" ? (
-        <span>
-          Test app features in a sandbox, with a starting balance of 1 ETH.
-        </span>
+        <Tooltip
+          content="Test app features in a sandbox, with a starting balance of 1 ETH."
+          placement="right"
+        >
+          <button
+            className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            onClick={playgroundButtonAction}
+          >
+            <span>{playgroundButtonTitle}</span>
+          </button>
+        </Tooltip>
       ) : (
-        <span></span>
+        <button
+          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          onClick={playgroundButtonAction}
+        >
+          <span>{playgroundButtonTitle}</span>
+        </button>
       )}
       <Account />
       <PlaygroundModePopUp

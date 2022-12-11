@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
 import { InputAdornment, TextField } from "@mui/material";
-import { IconButton } from "@material-tailwind/react";
+import { IconButton, Tooltip } from "@material-tailwind/react";
 import { getUsdcBalance, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
@@ -38,6 +38,22 @@ export default function SellProtectionCard() {
       <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
         <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">
           Estimated APY
+          <Tooltip content="test test" placement="top">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+              />
+            </svg>
+          </Tooltip>
         </h5>
         <p className="text-gray-700 text-base mb-4">18 - 25%</p>
         <div>Deposit Amount</div>
@@ -63,7 +79,9 @@ export default function SellProtectionCard() {
             )
           }}
           value={amount}
-          onChange={(e) => e.target.value ? setAmount(parseFloat(e.target.value)) : 0}
+          onChange={(e) =>
+            e.target.value ? setAmount(parseFloat(e.target.value)) : 0
+          }
         />
         <p>Balance: {numeral(usdcBalance).format(USDC_FORMAT)} USDC</p>
         <button
