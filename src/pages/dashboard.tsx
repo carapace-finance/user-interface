@@ -136,6 +136,7 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
+          {/*  TODO: use User.protectionPurchases */}
           {lendingPools.map((lendingPool) => (
             <tr key={lendingPool.address}>
               <td>{formatAddress(lendingPool.address)}</td>

@@ -92,6 +92,7 @@ export interface ProtectionPurchaseParams {
 }
 
 export interface ProtectionPurchase {
+  protectionPool: string;
   buyer: string;
   purchaseParams: ProtectionPurchaseParams;
   startTimestamp: BigNumber;
