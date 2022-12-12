@@ -1,6 +1,6 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import { IconButton as MuiIconButton, Dialog, DialogContent, DialogTitle, InputAdornment, TextField } from "@mui/material";
-import { IconButton } from "@material-tailwind/react";
+import { IconButton, Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
@@ -88,6 +88,7 @@ const WithdrawalPopUp = (props) => {
       </DialogTitle>
       <DialogContent>
         <div className="flex justify-left mb-3">Protection Pool:{formatAddress(protectionPoolAddress)}</div>
+        <h4>Withdraw Amount</h4>
         <div className="flex justify-center">
           <TextField
             type="number"
@@ -107,6 +108,26 @@ const WithdrawalPopUp = (props) => {
           />
         </div>
         <p>Withdrawable Amount: {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}</p>
+        <h4 className="flex justify-left mb-4">Estimated Stats</h4>
+        <p className="flex justify-left mb-4">Expected Network Fees
+        <Tooltip content="test test" placement="right">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+            />
+          </svg>
+        </Tooltip>
+        </p>
+        <p>$10.00</p>
         <LoadingButton style={{ textTransform: "none", marginTop: "1.5em", marginBottom: "1.5em" }}
           disabled={!protectionPoolService || !protectionPoolAddress || !amount || amount === 0 || amount > withdrawableAmount}
           onClick={withdraw}

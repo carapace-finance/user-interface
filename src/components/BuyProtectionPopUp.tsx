@@ -114,7 +114,7 @@ const BuyProtectionPopUp = (props) => {
         <div>
           {renderFieldAndValue("Lending Pool", formatAddress(lendingPoolAddress))}
           {renderFieldAndValue("Protection Amount", numeral(protectionAmount).format(USDC_FORMAT) + " USDC")}
-          {renderFieldAndValue("Protection Duration", protectionDurationInDays + " Days")}
+          {renderFieldAndValue("Duration", protectionDurationInDays + " Days")}
           {renderFieldAndValue("Token Id", tokenId)}
           {renderFieldAndValue("Premium Price", numeral(premiumAmount).format(USDC_FORMAT) + " USDC")}
           

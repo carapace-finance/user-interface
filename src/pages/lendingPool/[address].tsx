@@ -51,10 +51,9 @@ const LendingPool = () => {
         link
       </a>
       <div>
-        <h1>Lending Pool Details</h1>
         <h3>Protection Purchase Details</h3>
+        <h4>Purchased Protection: {totalProtection}</h4>
         <h4>Protection Purchase Limit: {purchaseLimit}</h4>
-        <div>{totalProtection}</div>
         <h3>
           Leverage Ratio
           <Tooltip content="test test" placement="top">
@@ -74,8 +73,8 @@ const LendingPool = () => {
             </svg>
           </Tooltip>
         </h3>
-        <div>{totalCapital}</div>
-        <div>{totalProtection}</div>
+        <h4>Total Capital: {totalCapital}</h4>
+        <h4>Purchased Protection: {totalProtection}</h4>
       </div>
       <BuyProtectionCard></BuyProtectionCard>
     </div>

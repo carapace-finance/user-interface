@@ -41,7 +41,7 @@ const ProtectionPool = () => {
       <a target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${protectionPoolAddress}`}>link</a>
       <div>
         <h2>Capital in the Pool</h2>
-        <div>{totalCapital}</div>
+        <div>Deposited Amount: {totalCapital}</div>
         <h4>Deposit Limit: {depositLimit}</h4>
         <h2>Protection Purchases Till Date</h2>
         {underlyingLendingPools.map((lendingPool) => {

@@ -15,8 +15,8 @@ export const ProtectionPoolContextProvider = ({ children }) => {
       address: "0x0...",
       protocols: goldfinchLogo,
       APY: "15 - 20%",
-      totalCapital: "$1M",
-      totalProtection: "$2M",
+      totalCapital: "4,500,000 USDC",
+      totalProtection: "7,000,000 USDC",
       protectionPurchaseLimit: "100,000 USDC",
       depositLimit: "51,000 USDC"
     },
@@ -24,8 +24,8 @@ export const ProtectionPoolContextProvider = ({ children }) => {
       address: "0x1...",
       protocols: goldfinchLogo,
       APY: "15 - 20%",
-      totalCapital: "$1M",
-      totalProtection: "$2M",
+      totalCapital: "4,500,000 USDC",
+      totalProtection: "7,000,000 USDC",
       protectionPurchaseLimit: "151,000 USDC",
       depositLimit: "121,000 USDC"
     }
