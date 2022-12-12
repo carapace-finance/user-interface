@@ -12,7 +12,11 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { convertNumberToUSDC, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
+import {
+  convertNumberToUSDC,
+  convertUSDCToNumber,
+  USDC_FORMAT
+} from "@utils/usdc";
 import { formatAddress, getDaysInSeconds } from "@utils/utils";
 
 const BuyProtectionPopUp = (props) => {
@@ -50,10 +54,12 @@ const BuyProtectionPopUp = (props) => {
     reset();
     if (protectionPoolService && protectionPoolAddress) {
       console.log("Protection Purchase Params: ", protectionPurchaseParams);
-      protectionPoolService.calculatePremiumPrice(protectionPoolAddress, protectionPurchaseParams).then((premiumPrice) => {
-        console.log("Premium Price: ", premiumPrice);
-        setPremiumAmount(convertUSDCToNumber(premiumPrice));
-      });
+      protectionPoolService
+        .calculatePremiumPrice(protectionPoolAddress, protectionPurchaseParams)
+        .then((premiumPrice) => {
+          console.log("Premium Price: ", premiumPrice);
+          setPremiumAmount(convertUSDCToNumber(premiumPrice));
+        });
     }
   }, [open]);
 
@@ -61,7 +67,7 @@ const BuyProtectionPopUp = (props) => {
     if (e) {
       console.log("Error: ", e);
     }
-    console.log('The buy protection transaction failed');
+    console.log("The buy protection transaction failed");
     setError("Failed to buy protection...");
     setLoading(false);
   };
@@ -72,24 +78,30 @@ const BuyProtectionPopUp = (props) => {
     setError("");
 
     try {
-      const tx = await protectionPoolService.buyProtection(protectionPoolAddress, protectionPurchaseParams);
+      const tx = await protectionPoolService.buyProtection(
+        protectionPoolAddress,
+        protectionPurchaseParams
+      );
 
       const receipt = await tx.wait();
       if (receipt.status === 1) {
-        protectionPoolService.updateProtectionPurchaseByLendingPool(lendingPoolAddress, protectionPurchaseParams.protectionAmount)
+        protectionPoolService.updateProtectionPurchaseByLendingPool(
+          lendingPoolAddress,
+          protectionPurchaseParams.protectionAmount
+        );
         setLoading(false);
-        console.log('The buy protection transaction was successful');
+        console.log("The buy protection transaction was successful");
         // Show success message for 2 seconds before closing popup
-        setSuccessMessage(`You successfully bought protection for ${protectionDurationInDays} days!`);
+        setSuccessMessage(
+          `You successfully bought protection for ${protectionDurationInDays} days!`
+        );
         setTimeout(() => {
           onClose();
         }, 2000);
-      }
-      else {
+      } else {
         onError(receipt);
       }
-    }
-    catch (e) {
+    } catch (e) {
       onError(e);
     }
   };
@@ -108,34 +120,64 @@ const BuyProtectionPopUp = (props) => {
     >
       <DialogTitle>
         Buy Protection
-        <IconButton onClick={onClose} className="absolute top-0 right-0" color="primary" size="small">X</IconButton>
+        <IconButton
+          onClick={onClose}
+          className="absolute top-0 right-0"
+          color="primary"
+          size="small"
+        >
+          X
+        </IconButton>
       </DialogTitle>
       <DialogContent>
         <div>
-          {renderFieldAndValue("Lending Pool", formatAddress(lendingPoolAddress))}
-          {renderFieldAndValue("Protection Amount", numeral(protectionAmount).format(USDC_FORMAT) + " USDC")}
+          {renderFieldAndValue(
+            "Lending Pool",
+            formatAddress(lendingPoolAddress)
+          )}
+          {renderFieldAndValue(
+            "Protection Amount",
+            numeral(protectionAmount).format(USDC_FORMAT) + " USDC"
+          )}
           {renderFieldAndValue("Duration", protectionDurationInDays + " Days")}
           {renderFieldAndValue("Token Id", tokenId)}
-          {renderFieldAndValue("Premium Price", numeral(premiumAmount).format(USDC_FORMAT) + " USDC")}
-          
-          <Divider className="mb-2"/>
-          
-          <Typography className="flex justify-left mb-4" variant="subtitle2">Estimated Stats</Typography>
-          <Typography className="flex justify-left mb-2" variant="caption">Expected Adjusted Yield: {adjustedYield}</Typography>
-          <Typography className="flex justify-left mb-4" variant="caption">Expected Network Fees: ${numeral(expectedNetworkFee).format("0.00")}</Typography>
+          {renderFieldAndValue(
+            "Premium Price",
+            numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
+          )}
 
-          <LoadingButton style={{ textTransform: "none" }}
+          <Divider className="mb-2" />
+
+          <Typography className="flex justify-left mb-4" variant="subtitle2">
+            Estimated Stats
+          </Typography>
+          <Typography className="flex justify-left mb-2" variant="caption">
+            Expected Adjusted Yield: {adjustedYield}
+          </Typography>
+          <Typography className="flex justify-left mb-4" variant="caption">
+            Expected Network Fees: ${numeral(expectedNetworkFee).format("0.00")}
+          </Typography>
+
+          <LoadingButton
+            style={{ textTransform: "none" }}
             onClick={buyProtection}
-            disabled={!protectionPoolService || !protectionPoolAddress || !protectionAmount || !protectionDurationInDays || !tokenId || !lendingPoolAddress}
+            disabled={
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !protectionAmount ||
+              !protectionDurationInDays ||
+              !tokenId ||
+              !lendingPoolAddress
+            }
             loading={loading}
             variant="outlined"
           >
             Confirm Protection Purchase
           </LoadingButton>
           <div>
-          By clicking &quot;Confirm Protection Purchase&quot;, you agree to Carapace&apos;s
-          Terms of Service and acknowledge that you have read and understand the
-          Carapace protocol disclaimer.
+            By clicking &quot;Confirm Protection Purchase&quot;, you agree to
+            Carapace&apos;s Terms of Service and acknowledge that you have read
+            and understand the Carapace protocol disclaimer.
           </div>
         </div>
       </DialogContent>
@@ -151,10 +193,12 @@ const BuyProtectionPopUp = (props) => {
 const renderFieldAndValue = (fieldLabel, fieldValue) => {
   return (
     <div>
-      <Typography className="flex justify-left" variant="subtitle2">{fieldLabel}</Typography>
+      <Typography className="flex justify-left" variant="subtitle2">
+        {fieldLabel}
+      </Typography>
       <div className="flex justify-left mb-4">{fieldValue}</div>
     </div>
-  )
- };
+  );
+};
 
 export default BuyProtectionPopUp;

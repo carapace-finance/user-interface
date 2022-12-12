@@ -230,7 +230,10 @@ const getLatestBlockTimestamp: Function = async (provider): Promise<number> => {
   return (await provider.getBlock("latest")).timestamp;
 };
 
-export async function resetPlayground(playground: Playground, snapshotId: string) {
+export async function resetPlayground(
+  playground: Playground,
+  snapshotId: string
+) {
   await playground.provider.send("evm_revert", [snapshotId]);
 
   console.log(

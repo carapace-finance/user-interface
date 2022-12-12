@@ -23,10 +23,10 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
           <ProtectionPoolContextProvider>
             <LendingPoolContextProvider>
               <BondContextProvider>
-              <UserContextProvider>
-                <Header tenderlyAccessKey={tenderlyAccessKey} />
-                <Component {...pageProps} />
-                <Footer />
+                <UserContextProvider>
+                  <Header tenderlyAccessKey={tenderlyAccessKey} />
+                  <Component {...pageProps} />
+                  <Footer />
                 </UserContextProvider>
               </BondContextProvider>
             </LendingPoolContextProvider>

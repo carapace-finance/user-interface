@@ -26,7 +26,7 @@ const SellProtectionPopUp = (props) => {
   const [expectedYield, setExpectedYield] = useState("18 - 25%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
 
- const reset = () => {
+  const reset = () => {
     setSuccessMessage("");
     setError("");
     setLoading(false);
@@ -38,7 +38,7 @@ const SellProtectionPopUp = (props) => {
     if (e) {
       console.log("Error: ", e);
     }
-    console.log('The deposit transaction failed');
+    console.log("The deposit transaction failed");
     setError("Failed to sell protection...");
     setLoading(false);
   };
@@ -49,22 +49,25 @@ const SellProtectionPopUp = (props) => {
     setError("");
 
     try {
-      const tx = await protectionPoolService.deposit(protectionPoolAddress, convertNumberToUSDC(amount));
+      const tx = await protectionPoolService.deposit(
+        protectionPoolAddress,
+        convertNumberToUSDC(amount)
+      );
       const receipt = await tx.wait();
       if (receipt.status === 1) {
         setLoading(false);
-        console.log('The deposit transaction was successful');
+        console.log("The deposit transaction was successful");
         // Show success message for 2 seconds before closing popup
-        setSuccessMessage(`You successfully deposited ${amount} USDC in to the protection pool!`);
+        setSuccessMessage(
+          `You successfully deposited ${amount} USDC in to the protection pool!`
+        );
         setTimeout(() => {
           onClose();
         }, 2000);
-      }
-      else {
+      } else {
         onError(receipt);
       }
-    }
-    catch (e) {
+    } catch (e) {
       onError(e);
     }
   };
@@ -81,23 +84,44 @@ const SellProtectionPopUp = (props) => {
         }
       }}
     >
-      <DialogTitle>Deposit
-        <IconButton onClick={onClose} className="absolute top-0 right-0" color="primary" size="small">X</IconButton>
+      <DialogTitle>
+        Deposit
+        <IconButton
+          onClick={onClose}
+          className="absolute top-0 right-0"
+          color="primary"
+          size="small"
+        >
+          X
+        </IconButton>
       </DialogTitle>
       <DialogContent>
-        {renderFieldAndValue("Protection Pool", formatAddress(protectionPoolAddress))}
-        {renderFieldAndValue("Deposit Amount", numeral(amount).format(USDC_FORMAT) + " USDC")}
-        
+        {renderFieldAndValue(
+          "Protection Pool",
+          formatAddress(protectionPoolAddress)
+        )}
+        {renderFieldAndValue(
+          "Deposit Amount",
+          numeral(amount).format(USDC_FORMAT) + " USDC"
+        )}
+
         <Divider className="mb-2" />
-          
-        <Typography className="flex justify-left mb-4" variant="subtitle2">Estimated Stats</Typography>
-        <Typography className="flex justify-left mb-2" variant="caption">Expected APY: {expectedYield}</Typography>
-        <Typography className="flex justify-left mb-4" variant="caption">Expected Network Fees: ${numeral(expectedNetworkFee).format("0.00")}</Typography>
-        <LoadingButton style={{ textTransform: "none" }}
-            onClick={sellProtection}
-            disabled={!protectionPoolService || !protectionPoolAddress || !amount}
-            loading={loading}
-            variant="outlined"
+
+        <Typography className="flex justify-left mb-4" variant="subtitle2">
+          Estimated Stats
+        </Typography>
+        <Typography className="flex justify-left mb-2" variant="caption">
+          Expected APY: {expectedYield}
+        </Typography>
+        <Typography className="flex justify-left mb-4" variant="caption">
+          Expected Network Fees: ${numeral(expectedNetworkFee).format("0.00")}
+        </Typography>
+        <LoadingButton
+          style={{ textTransform: "none" }}
+          onClick={sellProtection}
+          disabled={!protectionPoolService || !protectionPoolAddress || !amount}
+          loading={loading}
+          variant="outlined"
         >
           Confirm Deposit
         </LoadingButton>
@@ -119,10 +143,12 @@ const SellProtectionPopUp = (props) => {
 const renderFieldAndValue = (fieldLabel, fieldValue) => {
   return (
     <div>
-      <Typography className="flex justify-left" variant="subtitle2">{fieldLabel}</Typography>
+      <Typography className="flex justify-left" variant="subtitle2">
+        {fieldLabel}
+      </Typography>
       <div className="flex justify-left mb-4">{fieldValue}</div>
     </div>
-  )
+  );
 };
 
 export default SellProtectionPopUp;

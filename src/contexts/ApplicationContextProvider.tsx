@@ -4,8 +4,9 @@ import { createContext, useState } from "react";
 import { ProtectionPoolService } from "../services/ProtectionPoolService";
 import { ProtectionPoolFactoryService } from "../services/ProtectionPoolFactoryService";
 
-export const ApplicationContext =
-  createContext<ApplicationContextType | null>(null);
+export const ApplicationContext = createContext<ApplicationContextType | null>(
+  null
+);
 
 export const ApplicationContextProvider = ({ children }) => {
   const [contractAddresses, setContractAddresses] = useState(null);
@@ -29,9 +30,14 @@ export const ApplicationContextProvider = ({ children }) => {
         protectionPoolService: provider
           ? new ProtectionPoolService(provider, contractAddresses.isPlayground)
           : null,
-        protectionPoolFactoryService: (provider && contractAddresses?.poolFactory)
-          ? new ProtectionPoolFactoryService(provider, contractAddresses.isPlayground, contractAddresses.poolFactory)
-          : null
+        protectionPoolFactoryService:
+          provider && contractAddresses?.poolFactory
+            ? new ProtectionPoolFactoryService(
+                provider,
+                contractAddresses.isPlayground,
+                contractAddresses.poolFactory
+              )
+            : null
       }}
     >
       {children}

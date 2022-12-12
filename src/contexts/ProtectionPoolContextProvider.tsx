@@ -34,13 +34,15 @@ export const ProtectionPoolContextProvider = ({ children }) => {
   const [protectionPools, setProtectionPools] = useState<ProtectionPool[]>(
     defaultProtectionPools
   );
-  
-  useEffect(() => { 
+
+  useEffect(() => {
     if (!protectionPoolFactoryService) return;
-    protectionPoolFactoryService.getProtectionPools().then((protectionPools) => {
-      console.log("Retrieved Protection Pools in context: ", protectionPools);
-      setProtectionPools(protectionPools);
-    });
+    protectionPoolFactoryService
+      .getProtectionPools()
+      .then((protectionPools) => {
+        console.log("Retrieved Protection Pools in context: ", protectionPools);
+        setProtectionPools(protectionPools);
+      });
   }, [protectionPoolFactoryService]);
 
   return (
