@@ -24,9 +24,7 @@ const Dashboard = () => {
     useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
   const { lendingPools } = useContext(LendingPoolContext);
-  const { protectionPools } = useContext(
-    ProtectionPoolContext
-  );
+  const { protectionPools } = useContext(ProtectionPoolContext);
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
@@ -43,21 +41,35 @@ const Dashboard = () => {
             protectionPoolService
               .getRequestedWithdrawalAmount(poolAddress)
               .then((requestedWithdrawalBalance) => {
-                const formattedUnderlyingBalance = numeral(convertUSDCToNumber(sTokenUnderlyingBalance)).format(USDC_FORMAT);
-                const formattedWithdrawalBalance = numeral(convertUSDCToNumber(requestedWithdrawalBalance)).format(USDC_FORMAT);
+                const formattedUnderlyingBalance = numeral(
+                  convertUSDCToNumber(sTokenUnderlyingBalance)
+                ).format(USDC_FORMAT);
+                const formattedWithdrawalBalance = numeral(
+                  convertUSDCToNumber(requestedWithdrawalBalance)
+                ).format(USDC_FORMAT);
                 setUser({
                   ...user,
                   sTokenUnderlyingAmount: formattedUnderlyingBalance,
-                  requestedWithdrawalAmount: formattedWithdrawalBalance,
+                  requestedWithdrawalAmount: formattedWithdrawalBalance
                 });
-                console.log("sTokenUnderlingBalance ==>", formattedUnderlyingBalance);
-                console.log("requestedWithdrawalBalance ==>", formattedWithdrawalBalance);
+                console.log(
+                  "sTokenUnderlingBalance ==>",
+                  formattedUnderlyingBalance
+                );
+                console.log(
+                  "requestedWithdrawalBalance ==>",
+                  formattedWithdrawalBalance
+                );
               });
           });
-        
+
         (async () => {
-          const protectionPurchases = await protectionPoolService.getProtectionPurchases(poolAddress);
-          console.log("Retrieved Protection Purchases ==>", protectionPurchases);
+          const protectionPurchases =
+            await protectionPoolService.getProtectionPurchases(poolAddress);
+          console.log(
+            "Retrieved Protection Purchases ==>",
+            protectionPurchases
+          );
           setUser({
             ...user,
             protectionPurchases: protectionPurchases
@@ -67,18 +79,24 @@ const Dashboard = () => {
     }
   }, [protectionPools]);
 
-  const getTimeUntilExpiration = (lendingPool) => { 
+  const getTimeUntilExpiration = (lendingPool) => {
     let timeUntilExpirationInSeconds = moment().unix() + 1854120; // "21 Days 11 Hours 2 Mins" from now;
-    if (user?.protectionPurchases?.length > 0) { 
-      user.protectionPurchases.map((protection) => { 
-        if(protection.purchaseParams.lendingPoolAddress === lendingPool.address) { 
-           timeUntilExpirationInSeconds = protection.startTimestamp.add(protection.purchaseParams.protectionDurationInSeconds).toNumber();
+    if (user?.protectionPurchases?.length > 0) {
+      user.protectionPurchases.map((protection) => {
+        if (
+          protection.purchaseParams.lendingPoolAddress === lendingPool.address
+        ) {
+          timeUntilExpirationInSeconds = protection.startTimestamp
+            .add(protection.purchaseParams.protectionDurationInSeconds)
+            .toNumber();
         }
       });
     }
 
     // TODO: need to figure out how to display hours and minutes
-    return moment.duration(timeUntilExpirationInSeconds - moment().unix(), "seconds").humanize();
+    return moment
+      .duration(timeUntilExpirationInSeconds - moment().unix(), "seconds")
+      .humanize();
   };
 
   return (

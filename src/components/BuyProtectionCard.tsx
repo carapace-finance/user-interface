@@ -33,6 +33,30 @@ export default function BuyProtectionCard() {
         </Tooltip>
       </h5>
       <p className="text-gray-700 text-base mb-4">7 - 10%</p>
+      <h5>
+        Underlying APY
+        <Tooltip content="test test" placement="top">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+            />
+          </svg>
+        </Tooltip>
+      </h5>
+      <p>17%</p>
+      <h5>Premium</h5>
+      <p>7% - 10%</p>
+      <h5>CARA Token Rewards</h5>
+      <p>~3.5%</p>
       <div className="flex w-72 flex-col gap-4">
         <Input
           label="Protection Amount"
@@ -61,6 +85,8 @@ export default function BuyProtectionCard() {
           }
         />
       </div>
+      <h5>Premium</h5>
+      <p>1,024 USDCs</p>
       <button
         type="button"
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
@@ -73,6 +99,7 @@ export default function BuyProtectionCard() {
       >
         Preview
       </button>
+      <p>time left: 2 days 12 hours 34 mins</p>
       <BuyProtectionPopUp
         open={isOpen}
         onClose={() => setIsOpen(false)}

@@ -38,16 +38,25 @@ const ProtectionPool = () => {
         {formatAddress(router.query.address)}
       </div>
       <Image src={protocols} width={24} height={24} alt="" />
-      <a target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${protectionPoolAddress}`}>link</a>
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href={`https://etherscan.io/address/${protectionPoolAddress}`}
+      >
+        link
+      </a>
       <div>
         <h2>Capital in the Pool</h2>
-        <div>{totalCapital}</div>
+        <div>Deposited Amount: {totalCapital}</div>
         <h4>Deposit Limit: {depositLimit}</h4>
         <h2>Protection Purchases Till Date</h2>
         {underlyingLendingPools.map((lendingPool) => {
           return (
-            <div key={lendingPool.address}>{formatAddress(lendingPool.address)} : {lendingPool.protectionPurchase}</div>
-          )
+            <div key={lendingPool.address}>
+              {formatAddress(lendingPool.address)} :{" "}
+              {lendingPool.protectionPurchase}
+            </div>
+          );
         })}
         <div>Total Protection: {totalProtection}</div>
       </div>

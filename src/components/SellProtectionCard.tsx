@@ -56,6 +56,10 @@ export default function SellProtectionCard() {
           </Tooltip>
         </h5>
         <p className="text-gray-700 text-base mb-4">18 - 25%</p>
+        <h5>Interest from Premium</h5>
+        <p>10 - 15%</p>
+        <h5>CARA Token Rewards</h5>
+        <p>8 - 10%</p>
         <div>Deposit Amount</div>
         <TextField
           type="number"
@@ -87,7 +91,7 @@ export default function SellProtectionCard() {
         <button
           type="button"
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          disabled={!amount || amount > usdcBalance}
+          // disabled={!amount || amount > usdcBalance} // todo: enable the button for styling
           onClick={() => setIsOpen(true)}
         >
           Preview
