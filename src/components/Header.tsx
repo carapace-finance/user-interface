@@ -1,6 +1,6 @@
 import { Tooltip } from "@material-tailwind/react";
 import { useWeb3React } from "@web3-react/core";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,12 +16,25 @@ import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 
 const Header = ({ tenderlyAccessKey }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { active, activate, deactivate } = useWeb3React();
+  const { active, activate, deactivate, chainId, account } = useWeb3React();
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
   const { updateContractAddresses, updateProvider } =
     useContext(ApplicationContext);
+
+  const requestFork = async () => { 
+    const result = await fetch(`/api/tenderly/fork?userAddress=${account}`);
+    console.log("Fetch result: ", await result.json());
+  };
+
+  useEffect(() => { 
+    if (account) {
+      (async () => {
+        await requestFork();
+      })();
+    }
+  }, [account]);
 
   const onConnect = async (wallet: string) => {
     setError("");
@@ -31,6 +44,7 @@ const Header = ({ tenderlyAccessKey }) => {
           await connect();
           router.push("/");
         } catch (e) {
+          setError("Failed to connect to Metamask. Please try again.");
           console.log("Error", e);
         }
         break;
@@ -106,7 +120,7 @@ const Header = ({ tenderlyAccessKey }) => {
       <Link href="/dashboard">
         <h3>Dashboard</h3>
       </Link>
-      {/* <button
+      <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         onClick={async () => await onConnect("metamask")}
       >
@@ -119,7 +133,7 @@ const Header = ({ tenderlyAccessKey }) => {
             ? "Connect Wallet"
             : "Connect Wallet"}
         </span>
-      </button> */}
+      </button>
       {active ? (
         <button
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
