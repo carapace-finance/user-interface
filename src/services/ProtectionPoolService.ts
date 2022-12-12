@@ -1,20 +1,52 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { BigNumber } from "@ethersproject/bignumber";
 
-import { getPoolContract } from "@contracts/contractService";
+import {
+  getPoolContract,
+  getReferenceLendingPoolsContract
+} from "@contracts/contractService";
 import {
   transferApproveAndDeposit,
   transferApproveAndBuyProtection
 } from "@utils/forked/playground";
-import { ProtectionPurchaseParams } from "@type/types";
+import {
+  LendingPool,
+  ProtectionPurchase,
+  ProtectionPurchaseParams
+} from "@type/types";
+import { convertUSDCToNumber, parseUSDC, USDC_FORMAT } from "@utils/usdc";
+import numeral from "numeral";
 
 export class ProtectionPoolService {
+  private protectionPurchaseByLendingPool: Map<string, BigNumber>;
   constructor(
-    private readonly provider: JsonRpcProvider,
+    public readonly provider: JsonRpcProvider,
     public readonly isPlayground: boolean
   ) {
     this.provider = provider;
     this.isPlayground = isPlayground;
+
+    // TODO: need to get this from the contract
+    this.protectionPurchaseByLendingPool = new Map();
+    this.protectionPurchaseByLendingPool.set(
+      "0xd09a57127bc40d680be7cb061c2a6629fe71abef",
+      parseUSDC("150000")
+    );
+  }
+
+  // TODO: remove this function and its usage, once we have this data from the contract
+  public updateProtectionPurchaseByLendingPool(
+    lendingPoolAddress: string,
+    purchaseAmt: BigNumber
+  ) {
+    this.protectionPurchaseByLendingPool.set(
+      lendingPoolAddress.toLowerCase(),
+      purchaseAmt
+    );
+  }
+
+  public getProtectionPurchaseByLendingPool(lendingPoolAddress: string) {
+    return this.protectionPurchaseByLendingPool.get(lendingPoolAddress);
   }
 
   public async deposit(poolAddress: string, depositAmt: BigNumber) {
@@ -117,8 +149,72 @@ export class ProtectionPoolService {
 
     // TODO: use the new contract method to get the requested withdrawal amount for current cycle
     const withdrawalCycleIndex = 2;
-    const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(withdrawalCycleIndex);
+    const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(
+      withdrawalCycleIndex
+    );
     const usdcBalance = await poolInstance.convertToUnderlying(sTokenBalance);
     return usdcBalance;
+  }
+
+  /**
+   * Provides all lending pools for a given protection pool.
+   * @param poolAddress
+   * @returns
+   */
+  public async getLendingPools(poolAddress: string): Promise<LendingPool[]> {
+    const user = this.provider.getSigner();
+    const pool = getPoolContract(poolAddress, user);
+    const poolInfo = await pool.getPoolInfo();
+    console.log("Retrieved Pool Info: ", poolInfo);
+    const referenceLendingPoolsContract = getReferenceLendingPoolsContract(
+      poolInfo.referenceLendingPools,
+      user
+    );
+
+    return referenceLendingPoolsContract
+      .getLendingPools()
+      .then((lendingPools) =>
+        lendingPools.map((lendingPool) => {
+          console.log("lendingPool: ", lendingPool);
+          const protectionPurchase = this.getProtectionPurchaseByLendingPool(
+            lendingPool.toLowerCase()
+          );
+
+          console.log(
+            "protectionPurchaseByLendingPool: ",
+            this.protectionPurchaseByLendingPool
+          );
+
+          return {
+            address: lendingPool,
+            name: "Lend East #1: Emerging Asia Fintech Pool",
+            protocol: "goldfinch",
+            adjustedYields: "7 - 10%",
+            lendingPoolAPY: "17%",
+            CARATokenRewards: "~3.5%",
+            premium: "4 - 7%",
+            timeLeft: "59 Days 8 Hours 2 Mins",
+            protectionPoolAddress: poolAddress,
+            protectionPurchase: protectionPurchase
+              ? numeral(convertUSDCToNumber(protectionPurchase)).format(
+                  USDC_FORMAT
+                ) + " USDC"
+              : "-"
+          };
+        })
+      );
+  }
+
+  public async calculatePremiumPrice(
+    poolAddress: string,
+    purchaseParams: ProtectionPurchaseParams
+  ): Promise<BigNumber> {
+    return Promise.resolve(parseUSDC("1024"));
+  }
+
+  public async getProtectionPurchases(
+    poolAddress: string
+  ): Promise<ProtectionPurchase[]> {
+    return Promise.resolve([]);
   }
 }

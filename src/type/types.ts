@@ -1,4 +1,5 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
+import { ProtectionPoolFactoryService } from "@services/ProtectionPoolFactoryService";
 import { ProtectionPoolService } from "@services/ProtectionPoolService";
 import { BigNumber } from "ethers";
 
@@ -14,6 +15,7 @@ export type ApplicationContextType = {
   updateContractAddresses: (newContractAddresses: ContractAddresses) => void;
   updateProvider: (newProvider: JsonRpcProvider) => void;
   protectionPoolService: ProtectionPoolService;
+  protectionPoolFactoryService: ProtectionPoolFactoryService;
 };
 
 export type ProtectionPoolContextType = {
@@ -42,6 +44,8 @@ export interface ProtectionPool {
   protocols: string;
   totalCapital: string;
   totalProtection: string;
+  protectionPurchaseLimit: string;
+  depositLimit: string;
 }
 
 export interface LendingPool {
@@ -54,6 +58,8 @@ export interface LendingPool {
   premium: string;
   timeLeft: string;
   protectionPoolAddress: string;
+  // Total amount of protection purchased in the protection pool for this lending pool
+  protectionPurchase: string;
 }
 
 export interface Bond {
@@ -75,11 +81,20 @@ export interface User {
   requestedWithdrawalAmount: string;
   protectionAmount: string;
   protectionDuration: string;
+  protectionPurchases: ProtectionPurchase[];
 }
 
 export interface ProtectionPurchaseParams {
   lendingPoolAddress: string;
-  nftLpTokenId: string;
-  protectionAmount: string;
-  protectionDurationInSeconds: string;
+  nftLpTokenId: number;
+  protectionAmount: BigNumber;
+  protectionDurationInSeconds: BigNumber;
+}
+
+export interface ProtectionPurchase {
+  protectionPool: string;
+  buyer: string;
+  purchaseParams: ProtectionPurchaseParams;
+  startTimestamp: BigNumber;
+  premium: BigNumber;
 }

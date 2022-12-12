@@ -14,3 +14,7 @@ export const formatAddress: Function = (address: string): string => {
 export const getDaysInSeconds = (days) => {
   return BigNumber.from(days * SECONDS_PER_DAY);
 };
+
+export const scale18DecimalsAmtToUsdcDecimals = (amt: BigNumber) => {
+  return amt.div(BigNumber.from(10).pow(12));
+};

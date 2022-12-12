@@ -27,10 +27,12 @@ const LendingPool = () => {
 
   let totalCapital;
   let totalProtection;
+  let purchaseLimit;
   protectionPools.map((protectionPool) => {
     if (protectionPool.address === protectionPoolAddress) {
       totalCapital = protectionPool.totalCapital;
       totalProtection = protectionPool.totalProtection;
+      purchaseLimit = protectionPool.protectionPurchaseLimit;
     }
   });
 
@@ -51,6 +53,7 @@ const LendingPool = () => {
       <div>
         <h1>Lending Pool Details</h1>
         <h3>Protection Purchase Details</h3>
+        <h4>Protection Purchase Limit: {purchaseLimit}</h4>
         <div>{totalProtection}</div>
         <h3>
           Leverage Ratio

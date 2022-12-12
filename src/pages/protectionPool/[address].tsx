@@ -16,12 +16,14 @@ const ProtectionPool = () => {
   let protocols;
   let totalCapital;
   let totalProtection;
+  let depositLimit;
   protectionPools.map((protectionPool) => {
     if (protectionPool.address === router.query.address) {
       protectionPoolAddress = protectionPool.address;
       protocols = protectionPool.protocols;
       totalCapital = protectionPool.totalCapital;
       totalProtection = protectionPool.totalProtection;
+      depositLimit = protectionPool.depositLimit;
     }
   });
 
@@ -40,8 +42,14 @@ const ProtectionPool = () => {
       <div>
         <h2>Capital in the Pool</h2>
         <div>{totalCapital}</div>
-        <h2>Protection Purchases</h2>
-        <div>{totalProtection}</div>
+        <h4>Deposit Limit: {depositLimit}</h4>
+        <h2>Protection Purchases Till Date</h2>
+        {underlyingLendingPools.map((lendingPool) => {
+          return (
+            <div key={lendingPool.address}>{formatAddress(lendingPool.address)} : {lendingPool.protectionPurchase}</div>
+          )
+        })}
+        <div>Total Protection: {totalProtection}</div>
       </div>
       <SellProtectionCard></SellProtectionCard>
 
