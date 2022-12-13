@@ -84,29 +84,34 @@ const Header = ({ tenderlyAccessKey }) => {
   }
 
   return (
-    <div className="flex justify-between items-center">
-      <Link href="/">
-        <Image
-          src={assets.headerLogo.src}
-          alt=""
-          height="32"
-          width="136"
-          unoptimized
-        />
-      </Link>
-      <Link href="/buyProtection">
+    <div className="flex justify-between items-center top-0 h-16 border-b border-headerBorder mb-10">
+      <div className="-my-3 ml-8">
+        <Link href="/">
+          <Image
+            src={assets.headerLogo.src}
+            alt=""
+            height="36"
+            width="128"
+            unoptimized
+          />
+        </Link>
+      </div>
+      <div className="flex items-center">
+      <Link href="/buyProtection" className="hover:text-headerPageHover">
         <h3>Buy Protection</h3>
       </Link>
       {/* <Link href="/lendWithProtection">
         <h3>Lend With Protection</h3>
       </Link> */}
-      <Link href="/sellProtection">
+      <Link href="/sellProtection" className="ml-14 hover:text-headerPageHover">
         <h3>Sell Protection</h3>
       </Link>
-      <Link href="/dashboard">
+      <Link href="/dashboard"className="ml-14 hover:text-headerPageHover">
         <h3>Dashboard</h3>
       </Link>
-      {/* <button
+      </div>
+      <div className="mr-8">
+        {/* <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         onClick={async () => await onConnect("metamask")}
       >
@@ -136,7 +141,7 @@ const Header = ({ tenderlyAccessKey }) => {
           placement="right"
         >
           <button
-            className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
             onClick={playgroundButtonAction}
           >
             <span>{playgroundButtonTitle}</span>
@@ -156,6 +161,7 @@ const Header = ({ tenderlyAccessKey }) => {
         playground={playground}
         onClose={() => setIsOpen(false)}
       ></PlaygroundModePopUp>
+      </div>
     </div>
   );
 };
