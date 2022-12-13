@@ -44,8 +44,9 @@ export default async function forkHandler(
 let counter = 1;
 async function createAndAddFork(): Promise<string> {
   try {
-    // const id = await createFork(process.env.TENDERLY_API_KEY);
-    const id = counter++;
+    console.log("Redis URL: ", process.env.UPSTASH_REDIS_REST_URL);
+    console.log(process.env.TENDERLY_API_KEY);
+    const id = await createFork(process.env.TENDERLY_API_KEY);
     console.log("Successfully created fork: ", id);
 
     await redis.hset(`${AVAILABLE_FORKS}:${id}`, {
