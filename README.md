@@ -14,6 +14,8 @@ Make `.env.local` file in the root of this repository.
 TENDERLY_ACCESS_KEY=<tenderly_access_key>
 NEXT_PUBLIC_TENDERLY_PROJECT=<next_public_tenderly_project>
 NEXT_PUBLIC_TENDERLY_USER=<next_public_tenderly_user>
+UPSTASH_REDIS_REST_URL=<Upstash Redis Rest Url>;
+UPSTASH_REDIS_REST_TOKEN=<Token to access Redis Rest APIs>
 ```
 
 Run a dev server:

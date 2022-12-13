@@ -11,3 +11,12 @@ export interface Playground {
   provider: JsonRpcProvider;
   deployedContracts: DeployedContracts;
 }
+
+export interface PlaygroundInfo {
+  forkId: string;
+  url: string;
+  snapshotId: string;
+  poolFactoryAddress: string;
+  poolAddress: string;
+  poolCycleManagerAddress: string;
+}

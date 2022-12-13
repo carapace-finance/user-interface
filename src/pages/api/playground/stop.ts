@@ -1,10 +1,11 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
+import { PlaygroundInfo } from "@utils/forked/types";
 import { NextApiRequest, NextApiResponse } from "next";
 import {
   addAvailablePlaygroundId,
   removeUsedPlaygroundId,
   retrievePlaygroundDetails
-} from "./start";
+} from "src/db/redis";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {

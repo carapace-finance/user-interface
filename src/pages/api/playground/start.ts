@@ -1,78 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Redis } from "@upstash/redis";
 import { deployToFork } from "@utils/forked/tenderly";
 import { preparePlayground } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
-
-type PlaygroundInfo = {
-  forkId: string;
-  url: string;
-  snapshotId: string;
-  poolFactoryAddress: string;
-  poolAddress: string;
-  poolCycleManagerAddress: string;
-};
+import {
+  addAvailablePlaygroundId,
+  addUsedPlaygroundId,
+  getAvailablePlaygroundCount,
+  popRandomAvailablePlaygroundId,
+  retrievePlaygroundDetails,
+  saveAvailablePlaygroundDetails
+} from "src/db/redis";
 
 const MIN_AVAILABLE_PLAYGROUNDS = 2;
-const AVAILABLE_PLAYGROUNDS = "availablePlaygrounds";
-const USED_PLAYGROUNDS = "usedPlaygrounds";
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN
-});
-
-/**
- * removes & returns the random playground id from the available playgrounds set in redis persistence store
- * @returns playground id in redis store
- */
-const popRandomAvailablePlaygroundId = async (): Promise<string> => {
-  return await redis.spop(AVAILABLE_PLAYGROUNDS);
-};
-
-/**
- * removes the specified playground id from the used playgrounds set in redis persistence store
- * @returns playground id in redis store
- */
-export const removeUsedPlaygroundId = async (playgroundId: string) => {
-  return await redis.srem(USED_PLAYGROUNDS, playgroundId);
-};
-
-/**
- * Adds playground id to the used playgrounds set in redis persistence store
- * @param playgroundIdToUse playground id in redis store
- */
-const addUsedPlaygroundId = async (playgroundIdToUse: string) => {
-  return await redis.sadd(USED_PLAYGROUNDS, `${playgroundIdToUse}`);
-};
-
-/**
- * Adds playground id to the available playgrounds set in redis persistence store
- * @param playgroundIdToUse playground id in redis store
- */
-export const addAvailablePlaygroundId = async (playgroundId: string) => {
-  return await redis.sadd(AVAILABLE_PLAYGROUNDS, `${playgroundId}`);
-};
-
-/**
- * Retrieve the playground details from redis persistence store
- * @param playgroundId
- * @returns Playground details
- */
-export const retrievePlaygroundDetails = async (
-  playgroundId: string
-): Promise<PlaygroundInfo> => {
-  return await redis.hgetall(`${AVAILABLE_PLAYGROUNDS}:${playgroundId}`);
-};
-
-const saveAvailablePlaygroundDetails = async (
-  playgroundInfo: PlaygroundInfo
-) => {
-  return await redis.hset(
-    `${AVAILABLE_PLAYGROUNDS}:${playgroundInfo.forkId}`,
-    playgroundInfo
-  );
-};
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -84,9 +23,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     switch (method) {
       case "GET":
       case "POST":
-        let availablePlaygroundCount: number = await redis.scard(
-          AVAILABLE_PLAYGROUNDS
-        );
+        let availablePlaygroundCount: number =
+          await getAvailablePlaygroundCount();
         console.log("availablePlaygroundCount: ", availablePlaygroundCount);
 
         if (availablePlaygroundCount === 0) {
