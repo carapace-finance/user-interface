@@ -1,15 +1,17 @@
 const TitleAndDescriptions = (props) => {
   return (
-    <div>
-      <h1 className="text-left">{props.title}</h1>
-      <p className="text-left">{props.descriptions}</p>
-      <div className="text-right">
+    <div className="mb-16">
+      <div>
+        <h1 className="text-left font-bold leading-12 text-5xl mb-6">{props.title}</h1>
+        <p className="text-left font-normal text-2xl leading-6">{props.descriptions}</p>
+      </div>
+      <div className="text-right flex justify-end">
         {props.buttonExist ? (
           <button
-            className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            className="border rounded-md border-black px-4 py-4 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
             onClick={() => {}}
           >
-            <p>{props.button}</p>
+            <p className="font-normal text-lg leading-6">{props.button}</p>
           </button>
         ) : null}
       </div>
