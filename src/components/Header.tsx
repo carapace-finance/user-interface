@@ -24,7 +24,7 @@ const Header = ({ tenderlyAccessKey }) => {
     useContext(ApplicationContext);
 
   const requestFork = async () => { 
-    const result = await fetch(`/api/tenderly/fork?userAddress=${account}`);
+    const result = await fetch(`/api/tenderly/fork?userAddress=${account}`); // todo: we can use a metamask address an authentication but we won't use their address in the fork
     console.log("Fetch result: ", await result.json());
   };
 

@@ -1,3 +1,4 @@
+import { Contract } from "@ethersproject/contracts";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { ProtectionPoolFactoryService } from "@services/ProtectionPoolFactoryService";
 import { ProtectionPoolService } from "@services/ProtectionPoolService";
@@ -97,4 +98,10 @@ export interface ProtectionPurchase {
   purchaseParams: ProtectionPurchaseParams;
   startTimestamp: BigNumber;
   premium: BigNumber;
+}
+
+export interface deployedContracts {
+  poolCycleManagerInstance: Contract;
+  poolFactoryInstance: Contract;
+  poolInstance: Contract;
 }

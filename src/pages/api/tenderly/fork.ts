@@ -1,13 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Redis } from "@upstash/redis";
-import { createFork } from "../../../utils/forked/tenderly";
+import { deployToFork } from "@utils/forked/tenderly";
+import { JsonRpcProvider } from "@ethersproject/providers";
+import { deployedContracts } from "@type/types";
 
 type Fork = {
-  id: string;
+  forkId: string;
   url: string;
   snapshotId: string;
+  provider: JsonRpcProvider;
+  deployedContracts: deployedContracts;
 };
 
+const MAX_FORKS = 2; //todo: increase this number later
 const AVAILABLE_FORKS = "availableForks";
 const USED_FORKS = "usedForks";
 const redis = new Redis({
@@ -27,13 +32,25 @@ export default async function forkHandler(
   switch (method) {
     case "GET":
       let availableForkCount: number = await redis.scard(AVAILABLE_FORKS);
-      if (availableForkCount === 0) {
-        await createAndAddFork();
+      console.log("availableForkCount ==>", availableForkCount);
+      const necessaryForkCount = MAX_FORKS - availableForkCount;
+      console.log("necessaryForkCount ==>", necessaryForkCount);
+      if (necessaryForkCount === 0) {
+        console.log("we have enough forks available");
+      } else {
+        for (let i = 0; i < necessaryForkCount; i++) {
+          await createAndAddFork();
+          let forkIdToUse: string;
+          if (i === 0) {
+            forkIdToUse = await redis.spop(AVAILABLE_FORKS);
+            console.log("forkIdToUse ==>", forkIdToUse);
+            await redis.sadd(USED_FORKS, `${forkIdToUse}`);
+          }
+          // todo: need the logic to figure out which fork is in use instead of putting all the created forks in use
+          // todo: this is the case not only in the initial creation but also when two forks need to be added when two users simultaneously use two forks
+          res.status(200);
+        }
       }
-      let availableForkKey: string = await redis.spop(AVAILABLE_FORKS);
-      const availableFork: Fork = await redis.hgetall(availableForkKey);
-      await redis.sadd(USED_FORKS, `${USED_FORKS}:${availableFork.id}`);
-      res.status(200).json(availableFork);
       break;
     default:
       res.setHeader("Allow", ["GET"]);
@@ -41,25 +58,25 @@ export default async function forkHandler(
   }
 }
 
-let counter = 1;
-async function createAndAddFork(): Promise<string> {
+// todo: what happens if two users call this function simultaneously?
+// todo: I thought about making a build script to make ten forks initially but I think we can create ten forks the first time this function is called.
+async function createAndAddFork() {
   try {
-    console.log("Redis URL: ", process.env.UPSTASH_REDIS_REST_URL);
-    console.log(process.env.TENDERLY_ACCESS_KEY);
-    const id = await createFork(process.env.TENDERLY_ACCESS_KEY);
-    console.log("Successfully created fork: ", id);
-
-    await redis.hset(`${AVAILABLE_FORKS}:${id}`, {
-      id: id,
-      url: `https://rpc.tenderly.co/fork/${id}`,
-      snapshotId: "0x123"
+    const playground = await deployToFork(process.env.TENDERLY_ACCESS_KEY);
+    // todo: initializePlayground as well
+    console.log("Successfully created a fork: ", playground.forkId);
+    await redis.hset(`${AVAILABLE_FORKS}:${playground.forkId}`, {
+      forkId: playground.forkId,
+      url: `https://rpc.tenderly.co/fork/${playground.forkId}`,
+      snapshotId: "0x123", // todo: what should be the snapshotId?
+      provider: playground.provider,
+      deployedContracts: playground.deployedContracts
     });
 
-    const availableForkKey = `${AVAILABLE_FORKS}:${id}`;
     //Store the id of the fork to retrieve it later
-    await redis.sadd(AVAILABLE_FORKS, availableForkKey);
+    await redis.sadd(AVAILABLE_FORKS, `${playground.forkId}`);
     console.log("Successfully added a fork to redis");
-    return availableForkKey;
+    return playground.forkId;
   } catch (e) {
     console.error("Failed to retrieve data from redis", e);
   }

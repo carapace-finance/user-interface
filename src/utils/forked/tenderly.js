@@ -55,7 +55,7 @@ export const deployToFork = async (tenderlyAccessKey) => {
     provider: forkProvider,
     deployedContracts
   };
-  window.playground = playground;
+  // window.playground = playground; // todo: didn't have time to get into this but we get the error with this line of code
   return playground;
 };
 
