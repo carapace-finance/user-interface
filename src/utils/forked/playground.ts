@@ -18,10 +18,7 @@ import { payToLendingPoolAddress } from "./goldfinch";
 export async function preparePlayground(playground: Playground) {
   const { poolCycleManagerInstance, poolFactoryInstance, poolInstance } =
     playground.deployedContracts;
-  console.log(
-    "Preparing a playground with contracts: ",
-    playground.deployedContracts
-  );
+  console.log("Preparing a playground: ", playground.forkId);
 
   console.log("********** Pool Phase: OpenToSellers **********");
   console.log("********** Pool Cycle: 1, Day: 1     **********");

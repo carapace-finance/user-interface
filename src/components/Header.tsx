@@ -1,6 +1,6 @@
 import { Tooltip } from "@material-tailwind/react";
 import { useWeb3React } from "@web3-react/core";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,10 +9,9 @@ import assets from "../assets";
 
 import Account from "@components/Account";
 import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
-import { deployToFork } from "@utils/forked/tenderly";
-import { preparePlayground, deletePlayground } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import { JsonRpcProvider } from "@ethersproject/providers";
 
 const Header = ({ tenderlyAccessKey }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,18 +22,46 @@ const Header = ({ tenderlyAccessKey }) => {
   const { updateContractAddresses, updateProvider } =
     useContext(ApplicationContext);
 
-  const requestFork = async () => { 
-    const result = await fetch(`/api/tenderly/fork?userAddress=${account}`); // todo: we can use a metamask address an authentication but we won't use their address in the fork
-    console.log("Fetch result: ", await result.json());
+  const startPlayground = async () => {
+    const result = await fetch(`/api/playground/start?userAddress=${account}`);
+    if (result.status === 200) {
+      const data = await result.json();
+      if (data.success) {
+        const playground = data.playground;
+        playground.provider = new JsonRpcProvider(playground.url);
+        
+        updateContractAddresses({
+          isPlayground: true,
+          poolFactory: playground.poolFactoryAddress,
+          pool: playground.poolAddress
+        });
+        updateProvider(playground.provider);
+        setPlayground(playground);
+
+        console.log("Successfully started a playground: ", playground);
+      }
+    }
+    else { 
+      console.log("Failed to start playground: ", await result.json());
+      setError("Failed to start playground. Please try again.");
+    }
   };
 
-  useEffect(() => { 
-    if (account) {
-      (async () => {
-        await requestFork();
-      })();
+  const stopPlayground = async () => { 
+    const result = await fetch(`/api/playground/stop?userAddress=${account}`, { method: "DELETE", body: playground.forkId });
+    console.log("End playground result", result);
+    if (result.status === 200) {
+      const data = await result.json();
+      if (data.success) {
+        setPlayground(undefined);
+        console.log("Successfully ended playground");
+      }
+      else {
+        console.log("Failed to end playground: ", data);
+        setError("Failed to end playground. Please try again.");
+      }
     }
-  }, [account]);
+  };
 
   const onConnect = async (wallet: string) => {
     setError("");
@@ -55,7 +82,7 @@ const Header = ({ tenderlyAccessKey }) => {
   async function connect() {
     try {
       await activate(injected);
-      // TODO: should update contract addresses & provider here for mainnet similar to "initializePlayground"
+      // TODO: should update contract addresses & provider here for mainnet
     } catch (ex) {
       console.log(ex);
     }
@@ -69,31 +96,18 @@ const Header = ({ tenderlyAccessKey }) => {
     }
   }
 
-  async function initializePlayground(playground) {
-    await preparePlayground(playground);
-    updateContractAddresses({
-      isPlayground: true,
-      poolFactory: playground.deployedContracts.poolFactoryInstance.address,
-      pool: playground.deployedContracts.poolInstance.address
-    });
-    updateProvider(playground.provider);
-    setPlayground(playground);
-  }
-
   let playgroundButtonTitle;
   let playgroundButtonAction;
   if (playground?.forkId) {
     playgroundButtonTitle = "Stop Playground";
     playgroundButtonAction = async () => {
-      await deletePlayground(playground.forkId, tenderlyAccessKey);
-      setPlayground(undefined);
+      await stopPlayground();
     };
   } else {
     playgroundButtonTitle = "Start Playground";
     playgroundButtonAction = async () => {
       setIsOpen(true);
-      const playground = await deployToFork(tenderlyAccessKey);
-      await initializePlayground(playground);
+      await startPlayground();
     };
   }
 
@@ -152,22 +166,21 @@ const Header = ({ tenderlyAccessKey }) => {
       {playgroundButtonTitle === "Start Playground" ? (
         <Tooltip
           content="Test app features in a sandbox, with a starting balance of 1 ETH."
-          placement="right"
-        >
-          <button
-            className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-            onClick={playgroundButtonAction}
-          >
-            <span>{playgroundButtonTitle}</span>
-          </button>
+          placement="right">
+            <button
+              disabled={!account}
+              className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+              onClick={playgroundButtonAction}>
+              <span>{playgroundButtonTitle}</span>
+            </button>
         </Tooltip>
       ) : (
-        <button
-          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          onClick={playgroundButtonAction}
-        >
-          <span>{playgroundButtonTitle}</span>
-        </button>
+            <button
+              disabled={!account}
+              className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+              onClick={playgroundButtonAction}>
+              <span>{playgroundButtonTitle}</span>
+            </button>
       )}
       <Account />
       <PlaygroundModePopUp
