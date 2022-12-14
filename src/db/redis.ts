@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 
+const MIN_AVAILABLE_PLAYGROUNDS = "minAvailablePlaygrounds";
 const AVAILABLE_PLAYGROUNDS = "availablePlaygrounds";
 const USED_PLAYGROUNDS = "usedPlaygrounds";
 
@@ -7,6 +8,14 @@ const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN
 });
+
+export const addMinAvailablePlaygrounds = async (minAvailablePlaygrounds) => {
+  return await redis.set(MIN_AVAILABLE_PLAYGROUNDS, minAvailablePlaygrounds);
+};
+
+export const getMinAvailablePlaygrounds = async (): Promise<number> => {
+  return await redis.scard(MIN_AVAILABLE_PLAYGROUNDS);
+};
 
 export const getAvailablePlaygroundCount = async (): Promise<number> => {
   return await redis.scard(AVAILABLE_PLAYGROUNDS);

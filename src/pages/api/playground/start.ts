@@ -6,12 +6,11 @@ import {
   addAvailablePlaygroundId,
   addUsedPlaygroundId,
   getAvailablePlaygroundCount,
+  getMinAvailablePlaygrounds,
   popRandomAvailablePlaygroundId,
   retrievePlaygroundDetails,
   saveAvailablePlaygroundDetails
 } from "src/db/redis";
-
-const MIN_AVAILABLE_PLAYGROUNDS = 2;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -26,11 +25,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         let availablePlaygroundCount: number =
           await getAvailablePlaygroundCount();
         console.log("availablePlaygroundCount: ", availablePlaygroundCount);
+        let minAvailablePlaygrounds: number =
+          await getMinAvailablePlaygrounds();
+          console.log("minAvailablePlaygrounds: ", minAvailablePlaygrounds);
 
         if (availablePlaygroundCount === 0) {
           console.log("we need to create a new playground and wait");
           await startNewPlayground();
-        } else if (availablePlaygroundCount - 1 < MIN_AVAILABLE_PLAYGROUNDS) {
+        } else if (availablePlaygroundCount - 1 < minAvailablePlaygrounds) {
           console.log("we need to create a new playground without waiting");
           startNewPlayground();
         } else {
