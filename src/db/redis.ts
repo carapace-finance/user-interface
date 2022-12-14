@@ -14,7 +14,11 @@ export const addMinAvailablePlaygrounds = async (minAvailablePlaygrounds) => {
 };
 
 export const getMinAvailablePlaygrounds = async (): Promise<number> => {
-  return await redis.scard(MIN_AVAILABLE_PLAYGROUNDS);
+  return await redis.get(MIN_AVAILABLE_PLAYGROUNDS);
+};
+
+export const setMinAvailablePlaygrounds = async (minAvailablePlaygrounds) => {
+  return await redis.set(MIN_AVAILABLE_PLAYGROUNDS, minAvailablePlaygrounds);
 };
 
 export const getAvailablePlaygroundCount = async (): Promise<number> => {
