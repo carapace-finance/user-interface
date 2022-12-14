@@ -21,6 +21,11 @@ module.exports = withMT({
       },
       fontFamily: {
         manrope: ["Manrope", "sans-serif"]
+      },
+      width:{
+        "600": "600px",
+        "400": "400px",
+        "550": "550px",
       }
     }
   },

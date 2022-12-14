@@ -13,10 +13,10 @@ export default function BuyProtectionCard() {
   const router = useRouter();
 
   return (
-    <div className="block py-10 px-6 bg-white max-w-sm rounded-2xl shadow-boxShadow">
-      <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-2 flex">
+    <div className="block py-10 px-6 bg-white rounded-2xl shadow-boxShadow w-400">
+      <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-2 flex items-center">
         Estimated Adjusted Yields
-        <div className="pl-2 items-center">
+        <div className="pl-2">
           <Tooltip content="test test" placement="top">
             <svg
               xmlns="http://www.w3.org/2000/svg"
