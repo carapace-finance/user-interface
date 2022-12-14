@@ -38,11 +38,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
 async function stopPlayground(playgroundId: string) {
   // step 1: retrieve the playground details from redis
-  const playgroundInfo = await retrievePlaygroundDetails(playgroundId);
+  let playgroundInfo = await retrievePlaygroundDetails(playgroundId);
+  let playgroundInfoString = playgroundInfo as Record<string, string>;
 
   // step 2: Revert the fork to the snapshot id
-  const forkProvider = new JsonRpcProvider(playgroundInfo.url);
-  await forkProvider.send("evm_revert", [playgroundInfo.snapshotId]);
+  const forkProvider = new JsonRpcProvider(playgroundInfoString.url);
+  await forkProvider.send("evm_revert", [playgroundInfoString.snapshotId]);
 
   // step 3: Remove the playground id from the used playgrounds set
   await removeUsedPlaygroundId(playgroundId);
@@ -50,5 +51,5 @@ async function stopPlayground(playgroundId: string) {
   // step 5: Add an id of the stopped playground to available playgrounds set
   await addAvailablePlaygroundId(playgroundId);
 
-  console.log("Successfully stopped a playground: ", playgroundInfo.forkId);
+  console.log("Successfully stopped a playground: ", playgroundInfoString.forkId);
 }
