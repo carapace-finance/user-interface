@@ -19,34 +19,62 @@ const Header = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
-  const { updateContractAddresses, updateProvider } =
+  const { updateContractAddresses, updateProvider, protectionPoolService } =
     useContext(ApplicationContext);
 
-  // inactivity timer
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     stopPlayground(playground?.forkId);
-  //   }, 1000 * 60 * 10);
-  //   return () => clearInterval(intervalId);
-  // }, []);
-
-  // this is to ensure that playground is stopped when user closes the tab
+  // useEffect is called when component is mounted and playground is undefined at that time.
+  // SO playgroundRef is used to store mutable playground object in a ref
+  // so that it can be accessed during cleanup in useEffect.
   const playgroundRef = useRef(playground);
-  useEffect(() => {
-    const cleanup = (e) => {
-      console.log("Cleanup...");
-      if (playgroundRef.current?.forkId) {
-        console.log("Stopping playground: ", playground?.forkId);
-        stopPlayground(playgroundRef.current.forkId);
-      }
-    };
 
+  const updatePlayground = (updatedPlayground) => {
+    setPlayground(updatedPlayground);
+    playgroundRef.current = updatedPlayground;
+  };
+
+  // playground idle timeout is 10 minutes
+  let idleTimeoutInSeconds = 1000 * 60 * 10;
+  let idleTimerId;
+
+  const cleanup = async () => {
+    console.log("Cleanup...");
+    const playgroundId = playgroundRef.current?.forkId;
+    if (playgroundId) {
+      console.log("Stopping playground: ", playgroundId);
+      await stopPlayground(playgroundId);
+    }
+  };
+  
+  // this is to ensure that playground is stopped when user closes the tab
+  useEffect(() => {
     window.addEventListener("beforeunload", cleanup);
     return () => {
       window.removeEventListener('beforeunload', cleanup);
     }
   }, []);
-  
+
+  // Setup inactivity timer
+  useEffect(() => {
+    if (protectionPoolService && playground?.forkId) {
+      console.log("Starting inactivity timer...");
+      idleTimerId = setInterval(() => {
+        // Check every minute for inactivity
+        const inactiveTimeInSeconds = (new Date().getTime() - protectionPoolService.getLastActionTimestamp());
+        console.log("Inactive time in seconds: ", inactiveTimeInSeconds);
+        if (inactiveTimeInSeconds > idleTimeoutInSeconds) { 
+          console.log("Stopping playground due to inactivity...");
+          cleanup();
+        }
+      }, 1000 * 60 * 1);
+
+      return () => {
+        if (idleTimerId) {
+          clearInterval(idleTimerId);
+        }
+      }
+    }
+  }, [playground?.forkId]);
+
   const startPlayground = async () => {
     const result = await fetch(`/api/playground/start?userAddress=${account}`);
     if (result.status === 200) {
@@ -61,8 +89,7 @@ const Header = () => {
           pool: playground.poolAddress
         });
         updateProvider(playground.provider);
-        setPlayground(playground);
-        playgroundRef.current = playground;
+        updatePlayground(playground);
 
         console.log("Successfully started a playground: ", playground);
       }
@@ -79,7 +106,7 @@ const Header = () => {
     if (result.status === 200) {
       const data = await result.json();
       if (data.success) {
-        setPlayground(undefined);
+        updatePlayground(undefined);
         console.log("Successfully ended playground");
       }
       else {
