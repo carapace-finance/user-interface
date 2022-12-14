@@ -139,20 +139,19 @@ const Header = ({ tenderlyAccessKey }) => {
       </Link>
       </div>
       <div className="mr-8">
+      {active && chainId === 1
+      ? null 
+      : active && chainId != 1
+      ? null
+      : !active || error
+      ? (
         <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         onClick={async () => await onConnect("metamask")}
-      >
-        <span>
-          {active && chainId === 1
-            ? "Ethereum"
-            : active && chainId != 1
-            ? "Not Ethereum"
-            : !active || error
-            ? "Connect Wallet"
-            : "Connect Wallet"}
-        </span>
-      </button>
+        >
+          <span>Connect Wallet</span>
+        </button>)
+      : ("")}
       {active ? (
         <button
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
@@ -169,7 +168,7 @@ const Header = ({ tenderlyAccessKey }) => {
           className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           onClick={playgroundButtonAction}>
             <Tooltip
-              content="Test app features in a sandbox, with a starting balance of 1 ETH."
+              content="Connect you wallet, and test app features in a sandbox."
               animate={{
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 },
@@ -186,7 +185,7 @@ const Header = ({ tenderlyAccessKey }) => {
               <span>{playgroundButtonTitle}</span>
             </button>
       )}
-      <Account />
+      {/* <Account /> */}
       <PlaygroundModePopUp
         open={isOpen}
         playground={playground}
