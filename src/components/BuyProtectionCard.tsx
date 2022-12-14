@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input, Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
-import BasicButton from "./BasicBlueButton";
+// import BasicButton from "./BasicBlueButton";
 
 export default function BuyProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -74,12 +74,12 @@ export default function BuyProtectionCard() {
           </div>
         </div>
       </div>
-      <div className="mb-12">
+      <div className="mb-4">
         <div>
           <div className="mb-4">
             <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-3">Protection Amount</h5>
             <div className="flex">
-              <div className="mr-3">
+              {/* <div className="mr-3">
                 <BasicButton
                 label="Full"
                 />
@@ -93,8 +93,8 @@ export default function BuyProtectionCard() {
                 <BasicButton
                 label="1/4"
                 />
-              </div>
-              {/* <Input
+              </div> */}
+              <Input
                   label="Protection Amount"
                   value={protectionAmount}
                   type="number"
@@ -102,7 +102,7 @@ export default function BuyProtectionCard() {
                     e.target.value ? setProtectionAmount(parseFloat(e.target.value)) : 0
                   }
                 />
-                <Input
+                {/* <Input
                   label="Protection Amount"
                   value={protectionAmount}
                   type="number"
@@ -124,7 +124,7 @@ export default function BuyProtectionCard() {
         <div className="mb-4">
           <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-3">Duration</h5>
           <div className="flex">
-          <div className="mr-3">
+          {/* <div className="mr-3">
             <BasicButton
             label="Full"
             />
@@ -133,8 +133,8 @@ export default function BuyProtectionCard() {
             <BasicButton
             label="90 days"
             />
-          </div>
-            {/* <Input
+          </div> */}
+            <Input
               label="Protection Duration (days)"
               value={protectionDurationInDays}
               type="number"
@@ -144,7 +144,7 @@ export default function BuyProtectionCard() {
                   : 0
               }
             />
-            <Input
+            {/* <Input
               label="Protection Duration (days)"
               value={protectionDurationInDays}
               type="number"
@@ -156,12 +156,8 @@ export default function BuyProtectionCard() {
             /> */}
           </div>
         </div>
-        <div>
-          <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-3">Premium Price</h5>
-          <p className="text-left text-base">1,024 USDCs</p>
-        </div>
-      </div>
-      {/* <div className="flex w-72 flex-col gap-4">
+        <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-3">Goldfinch Token ID</h5>
+        <div className="flex w-72 flex-col gap-4">
           <Input
             label="Goldfinch Token ID"
             value={tokenId}
@@ -170,10 +166,13 @@ export default function BuyProtectionCard() {
               e.target.value ? setTokenId(parseInt(e.target.value)) : 0
             }
           />
-        </div> */}
+        </div>
+      </div>
+      <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-3">Premium Price</h5>
+      <p className="text-left text-base">1,024 USDCs</p>
       <button
         type="button"
-        className="border border-black rounded-md px-14 py-4 mb-3 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+        className="border border-black rounded-md px-14 py-4 mb-3 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         disabled={
           protectionAmount === 0 ||
           protectionDurationInDays === 0 ||

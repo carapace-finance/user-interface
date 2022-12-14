@@ -149,7 +149,7 @@ const BuyProtectionPopUp = (props) => {
               numeral(protectionAmount).format(USDC_FORMAT) + " USDC"
             )}
             {renderFieldAndValue("Duration", protectionDurationInDays + " Days")}
-            {/* {renderFieldAndValue("Token Id", tokenId)} */}
+            {renderFieldAndValue("Token Id", tokenId)}
             {renderFieldAndValue(
               "Premium Price",
               numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
