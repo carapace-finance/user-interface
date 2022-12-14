@@ -25,8 +25,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         let availablePlaygroundCount: number =
           await getAvailablePlaygroundCount();
         console.log("availablePlaygroundCount: ", availablePlaygroundCount);
-        let minAvailablePlaygrounds: number =
-          await getMinAvailablePlaygrounds();
+        // let minAvailablePlaygrounds: number =
+        //   await getMinAvailablePlaygrounds();
+        let minAvailablePlaygrounds: number = 2;
           console.log("minAvailablePlaygrounds: ", minAvailablePlaygrounds);
 
         if (availablePlaygroundCount === 0) {
