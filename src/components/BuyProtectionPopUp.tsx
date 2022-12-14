@@ -18,6 +18,7 @@ import {
   USDC_FORMAT
 } from "@utils/usdc";
 import { formatAddress, getDaysInSeconds } from "@utils/utils";
+import { Tooltip } from "@material-tailwind/react";
 
 const BuyProtectionPopUp = (props) => {
   const {
@@ -108,7 +109,7 @@ const BuyProtectionPopUp = (props) => {
 
   return (
     <Dialog
-      maxWidth="lg"
+      className="top-32 inset-x-36"
       disableScrollLock
       open={open}
       onClose={onClose}
@@ -118,47 +119,102 @@ const BuyProtectionPopUp = (props) => {
         }
       }}
     >
-      <DialogTitle>
+      <DialogTitle className="mt-6">
         Buy Protection
-        <IconButton
-          onClick={onClose}
-          className="absolute top-0 right-0"
-          color="primary"
-          size="small"
-        >
-          X
-        </IconButton>
+        <div className="">
+          <IconButton
+            onClick={onClose}
+            className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
+            color="primary"
+            size="small"
+          >
+            <div className="text-black">
+             ×
+            </div>
+          </IconButton>
+        </div>
       </DialogTitle>
       <DialogContent>
         <div>
-          {renderFieldAndValue(
-            "Lending Pool",
-            formatAddress(lendingPoolAddress)
-          )}
-          {renderFieldAndValue(
-            "Protection Amount",
-            numeral(protectionAmount).format(USDC_FORMAT) + " USDC"
-          )}
-          {renderFieldAndValue("Duration", protectionDurationInDays + " Days")}
-          {renderFieldAndValue("Token Id", tokenId)}
-          {renderFieldAndValue(
-            "Premium Price",
-            numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
-          )}
+          <div>
+            <div>
+              {renderFieldAndValue(
+                "Lending Pool",
+                formatAddress(lendingPoolAddress)
+              )}
+            </div>
 
-          <Divider className="mb-2" />
-
-          <Typography className="flex justify-left mb-4" variant="subtitle2">
-            Estimated Stats
-          </Typography>
-          <Typography className="flex justify-left mb-2" variant="caption">
-            Expected Adjusted Yield: {adjustedYield}
-          </Typography>
-          <Typography className="flex justify-left mb-4" variant="caption">
-            Expected Network Fees: ${numeral(expectedNetworkFee).format("0.00")}
-          </Typography>
-
+            {renderFieldAndValue(
+              "Protection Amount",
+              numeral(protectionAmount).format(USDC_FORMAT) + " USDC"
+            )}
+            {renderFieldAndValue("Duration", protectionDurationInDays + " Days")}
+            {renderFieldAndValue("Token Id", tokenId)}
+            {renderFieldAndValue(
+              "Premium Price",
+              numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
+            )}
+          </div>
+          <Divider className="mb-4" />
+          <div className="mb-7">
+            <Typography className="flex justify-left mb-4 text-customGrey text-base font-bold" variant="subtitle2">
+              Estimated Stats
+            </Typography>
+            <Typography className="flex justify-between mb-2" variant="caption">
+              <div className="text-gray-500 text-sm flex items-center">
+                Expected Adjusted Yield:
+                  <div className="pl-2">
+                    <Tooltip content="test test" placement="top">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                        />
+                      </svg>
+                    </Tooltip>
+                  </div>
+              </div>
+              <div className="text-sm">
+                {adjustedYield}
+              </div>
+            </Typography>
+            <Typography className="flex justify-between mb-4" variant="caption">
+              <div className="text-gray-500 text-sm flex items-center">
+                Expected Network Fees:
+                  <div className="pl-2">
+                      <Tooltip content="test test" placement="top">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                          />
+                        </svg>
+                      </Tooltip>
+                    </div>
+              </div>
+              <div className="text-sm">
+                ${numeral(expectedNetworkFee).format("0.00")}
+              </div>
+            </Typography>
+          </div>
           <LoadingButton
+            className="mb-8 rounded-xl py-5 px-8 bg-customBlue hover:cursor-pointer"
             style={{ textTransform: "none" }}
             onClick={buyProtection}
             disabled={
@@ -172,9 +228,11 @@ const BuyProtectionPopUp = (props) => {
             loading={loading}
             variant="outlined"
           >
-            Confirm Protection Purchase
+            <div className="text-white text-base">
+              Confirm Protection Purchase
+            </div>
           </LoadingButton>
-          <div>
+          <div className="text-xs">
             By clicking &quot;Confirm Protection Purchase&quot;, you agree to
             Carapace&apos;s Terms of Service and acknowledge that you have read
             and understand the Carapace protocol disclaimer.
@@ -193,8 +251,10 @@ const BuyProtectionPopUp = (props) => {
 const renderFieldAndValue = (fieldLabel, fieldValue) => {
   return (
     <div>
-      <Typography className="flex justify-left" variant="subtitle2">
+      <Typography className="flex justify-left text-customGrey text-base font-bold mb-5" variant="subtitle2">
+        <div className="text-base">
         {fieldLabel}
+        </div>
       </Typography>
       <div className="flex justify-left mb-4">{fieldValue}</div>
     </div>
