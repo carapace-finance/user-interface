@@ -29,7 +29,14 @@ const SellProtection = () => {
             <th>Protocols</th>
             <th>
               Estimated APY
-              <Tooltip content="test test" placement="top">
+              <Tooltip 
+                animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 },
+                }}                
+                content="Estimated APY for protection sellers."
+                placement="top"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

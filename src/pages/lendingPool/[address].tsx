@@ -56,7 +56,14 @@ const LendingPool = () => {
         <h4>Protection Purchase Limit: {purchaseLimit}</h4>
         <h3>
           Leverage Ratio
-          <Tooltip content="test test" placement="top">
+          <Tooltip 
+              animate={{
+                mount: { scale: 1, y: 0 },
+                unmount: { scale: 0, y: 25 },
+              }}                
+              content="the total capital in the pool divided by the total protection amount."
+              placement="top"
+            >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

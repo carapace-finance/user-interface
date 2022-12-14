@@ -29,9 +29,16 @@ const BuyProtection = () => {
             <th className="pl-4 pt-9 pb-6">Lending Pool</th>
             <th className="pl-4 pt-9 pb-6">Protocol</th>
             <th className="pl-4 pt-9 pb-6">
-              Adjusted Yields
+              Estimated Adjusted Yields
               <div className="float-right">
-                <Tooltip content="test test" placement="top">
+                <Tooltip 
+                  animate={{
+                    mount: { scale: 1, y: 0 },
+                    unmount: { scale: 0, y: 25 },
+                  }}                
+                  content="Lending Pool APY - Premium."
+                  placement="top"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -52,7 +59,14 @@ const BuyProtection = () => {
             <th className="pl-4 pt-9 pb-6">
               Lending Pool APY
               <div className="float-right">
-              <Tooltip content="test test" placement="top">
+              <Tooltip 
+                animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 },
+                }}                
+                content="APY in an underlying lending protocol like Goldfinch."
+                placement="top"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

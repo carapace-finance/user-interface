@@ -110,8 +110,15 @@ const Dashboard = () => {
             <th>Lending Pool</th>
             <th>Protocol</th>
             <th>
-              Adjusted Yields
-              <Tooltip content="test test" placement="top">
+              Estimated Adjusted Yields
+              <Tooltip 
+                  animate={{
+                    mount: { scale: 1, y: 0 },
+                    unmount: { scale: 0, y: 25 },
+                  }}                
+                  content="Lending Pool APY - Premium."
+                  placement="top"
+                >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -134,7 +141,14 @@ const Dashboard = () => {
             <th>Time Until Expiration</th>
             <th>
               Claim
-              <Tooltip content="test test" placement="top">
+              <Tooltip 
+                  animate={{
+                    mount: { scale: 1, y: 0 },
+                    unmount: { scale: 0, y: 25 },
+                  }}                
+                  content="You can claim a payout when the underlying lending pool defaults."
+                  placement="top"
+                >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -187,7 +201,14 @@ const Dashboard = () => {
             <th>Protocols</th>
             <th>
               Estimated APY
-              <Tooltip content="test test" placement="top">
+              <Tooltip 
+                  animate={{
+                    mount: { scale: 1, y: 0 },
+                    unmount: { scale: 0, y: 25 },
+                  }}                
+                  content="Estimated APY for protection sellers."
+                  placement="top"
+                >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -210,7 +231,14 @@ const Dashboard = () => {
             <th>Requested Withdrawal</th>
             <th>
               Request Withdrawal
-              <Tooltip content="test test" placement="top">
+              <Tooltip 
+                  animate={{
+                    mount: { scale: 1, y: 0 },
+                    unmount: { scale: 0, y: 25 },
+                  }}                
+                  content="You can make a request to withdraw your capital in the next cycle."
+                  placement="top"
+                >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -229,7 +257,14 @@ const Dashboard = () => {
             </th>
             <th>
               Withdraw
-              <Tooltip content="test test" placement="top">
+              <Tooltip 
+                  animate={{
+                    mount: { scale: 1, y: 0 },
+                    unmount: { scale: 0, y: 25 },
+                  }}                
+                  content="You can withdraw the requested withdrawal amount."
+                  placement="top"
+                >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
