@@ -27,7 +27,7 @@ const PlaygroundModePopUp = (props) => {
           <li>The set up may take some time</li>
         </ul>
       </DialogContent>
-      {playground?.deployedContracts ? (
+      {playground?.poolFactoryAddress ? (
         <button
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           onClick={onClose}

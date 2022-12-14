@@ -83,7 +83,14 @@ const LendingPool = () => {
               <div className="text-left text-black text-2xl font-bold my-4 flex">
                 Leverage Ratio
                 <div className="pl-2 items-center">
-                  <Tooltip content="test test" placement="top">
+                  <Tooltip 
+                      animate={{
+                        mount: { scale: 1, y: 0 },
+                        unmount: { scale: 0, y: 25 },
+                      }}                
+                      content="the total capital in the pool divided by the total protection amount."
+                      placement="top"
+                    >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"

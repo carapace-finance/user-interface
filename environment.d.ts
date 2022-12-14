@@ -4,5 +4,7 @@ declare namespace NodeJS {
     NEXT_PUBLIC_TENDERLY_PROJECT: string;
     NEXT_PUBLIC_TENDERLY_USER: string;
     NEXT_PUBLIC_FIRST_POOL_SALT: string;
+    UPSTASH_REDIS_REST_URL: string;
+    UPSTASH_REDIS_REST_TOKEN: string;
   }
 }
