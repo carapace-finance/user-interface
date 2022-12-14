@@ -93,15 +93,14 @@ const BuyProtection = () => {
               <td className="pl-4 pt-9 pb-6">{lendingPool.CARATokenRewards}</td>
               <td className="pl-4 pt-9 pb-6">{lendingPool.premium}</td>
               <td className="pl-4 pt-9 pb-6">{lendingPool.timeLeft}</td>
-              {/* <td> */}
-                {/* buy protection リンク */}
-                {/* <Link
+              <td>
+                <Link
                   key={lendingPool.address}
                   href={`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`}
                 >
-                  Buy Protection
-                </Link> */}
-              {/* </td> */}
+                  Link
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>
