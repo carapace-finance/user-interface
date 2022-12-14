@@ -164,16 +164,20 @@ const Header = ({ tenderlyAccessKey }) => {
         ""
       )}
       {playgroundButtonTitle === "Start Playground" ? (
-        <Tooltip
-          content="Test app features in a sandbox, with a starting balance of 1 ETH."
-          placement="right">
-            <button
-              disabled={!account}
-              className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-              onClick={playgroundButtonAction}>
-              <span>{playgroundButtonTitle}</span>
-            </button>
-        </Tooltip>
+        <button
+          disabled={!account}
+          className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          onClick={playgroundButtonAction}>
+            <Tooltip
+              content="Test app features in a sandbox, with a starting balance of 1 ETH."
+              animate={{
+                mount: { scale: 1, y: 0 },
+                unmount: { scale: 0, y: 25 },
+              }}
+              placement="bottom">
+                <span>{playgroundButtonTitle}</span>
+            </Tooltip>
+        </button>
       ) : (
             <button
               disabled={!account}
