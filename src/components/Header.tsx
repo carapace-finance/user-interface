@@ -1,6 +1,6 @@
 import { Tooltip } from "@material-tailwind/react";
 import { useWeb3React } from "@web3-react/core";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,7 +13,7 @@ import { Playground } from "@utils/forked/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { JsonRpcProvider } from "@ethersproject/providers";
 
-const Header = ({ tenderlyAccessKey }) => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { active, activate, deactivate, chainId, account } = useWeb3React();
   const router = useRouter();
@@ -22,6 +22,31 @@ const Header = ({ tenderlyAccessKey }) => {
   const { updateContractAddresses, updateProvider } =
     useContext(ApplicationContext);
 
+  // inactivity timer
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     stopPlayground(playground?.forkId);
+  //   }, 1000 * 60 * 10);
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  // this is to ensure that playground is stopped when user closes the tab
+  const playgroundRef = useRef(playground);
+  useEffect(() => {
+    const cleanup = (e) => {
+      console.log("Cleanup...");
+      if (playgroundRef.current?.forkId) {
+        console.log("Stopping playground: ", playground?.forkId);
+        stopPlayground(playgroundRef.current.forkId);
+      }
+    };
+
+    window.addEventListener("beforeunload", cleanup);
+    return () => {
+      window.removeEventListener('beforeunload', cleanup);
+    }
+  }, []);
+  
   const startPlayground = async () => {
     const result = await fetch(`/api/playground/start?userAddress=${account}`);
     if (result.status === 200) {
@@ -37,6 +62,7 @@ const Header = ({ tenderlyAccessKey }) => {
         });
         updateProvider(playground.provider);
         setPlayground(playground);
+        playgroundRef.current = playground;
 
         console.log("Successfully started a playground: ", playground);
       }
@@ -47,8 +73,8 @@ const Header = ({ tenderlyAccessKey }) => {
     }
   };
 
-  const stopPlayground = async () => { 
-    const result = await fetch(`/api/playground/stop?userAddress=${account}`, { method: "DELETE", body: playground.forkId });
+  const stopPlayground = async (playgroundId) => { 
+    const result = await fetch(`/api/playground/stop?userAddress=${account}`, { method: "DELETE", body: playgroundId });
     console.log("End playground result", result);
     if (result.status === 200) {
       const data = await result.json();
@@ -101,7 +127,7 @@ const Header = ({ tenderlyAccessKey }) => {
   if (playground?.forkId) {
     playgroundButtonTitle = "Stop Playground";
     playgroundButtonAction = async () => {
-      await stopPlayground();
+      await stopPlayground(playground.forkId);
     };
   } else {
     playgroundButtonTitle = "Start Playground";
@@ -164,7 +190,7 @@ const Header = ({ tenderlyAccessKey }) => {
       )}
       {playgroundButtonTitle === "Start Playground" ? (
         <button
-          disabled={!account}
+          // disabled={!account}
           className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           onClick={playgroundButtonAction}>
             <Tooltip
@@ -179,7 +205,7 @@ const Header = ({ tenderlyAccessKey }) => {
         </button>
       ) : (
             <button
-              disabled={!account}
+              // disabled={!account}
               className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
               onClick={playgroundButtonAction}>
               <span>{playgroundButtonTitle}</span>

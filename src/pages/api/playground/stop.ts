@@ -51,5 +51,8 @@ async function stopPlayground(playgroundId: string) {
   // step 5: Add an id of the stopped playground to available playgrounds set
   await addAvailablePlaygroundId(playgroundId);
 
-  console.log("Successfully stopped a playground: ", playgroundInfoString.forkId);
+  console.log(
+    "Successfully stopped a playground: ",
+    playgroundInfoString.forkId
+  );
 }

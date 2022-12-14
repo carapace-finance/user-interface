@@ -14,7 +14,7 @@ import { UserContextProvider } from "@contexts/UserContextProvider";
 const Header = dynamic(() => import("@components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
 
-function App({ Component, pageProps, tenderlyAccessKey }) {
+function App({ Component, pageProps }) {
   return (
     <ThemeProvider>
       <CssBaseline />
@@ -24,7 +24,7 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
             <LendingPoolContextProvider>
               <BondContextProvider>
                 <UserContextProvider>
-                  <Header tenderlyAccessKey={tenderlyAccessKey} />
+                  <Header/>
                   <Component {...pageProps} />
                   <Footer />
                 </UserContextProvider>
@@ -36,11 +36,5 @@ function App({ Component, pageProps, tenderlyAccessKey }) {
     </ThemeProvider>
   );
 }
-
-App.getInitialProps = async () => {
-  return {
-    tenderlyAccessKey: process.env.TENDERLY_ACCESS_KEY // this value will be passed to the App component as props
-  };
-};
 
 export default App;
