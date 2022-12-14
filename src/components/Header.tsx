@@ -97,16 +97,16 @@ const Header = ({ tenderlyAccessKey }) => {
         </Link>
       </div>
       <div className="flex items-center">
-      <Link href="/buyProtection" className="hover:text-headerPageHover">
+      <Link href="/buyProtection" className="hover:text-customBlue">
         <h3>Buy Protection</h3>
       </Link>
       {/* <Link href="/lendWithProtection">
         <h3>Lend With Protection</h3>
       </Link> */}
-      <Link href="/sellProtection" className="ml-14 hover:text-headerPageHover">
+      <Link href="/sellProtection" className="ml-14 hover:text-customBlue">
         <h3>Sell Protection</h3>
       </Link>
-      <Link href="/dashboard"className="ml-14 hover:text-headerPageHover">
+      <Link href="/dashboard"className="ml-14 hover:text-customBlue">
         <h3>Dashboard</h3>
       </Link>
       </div>

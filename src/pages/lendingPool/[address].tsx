@@ -6,6 +6,8 @@ import BuyProtectionCard from "@components/BuyProtectionCard";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { formatAddress } from "@utils/utils";
+import TitleAndDescriptions from "@components/TitleAndDescriptions";
+import assets from "src/assets";
 
 const LendingPool = () => {
   const router = useRouter();
@@ -38,18 +40,32 @@ const LendingPool = () => {
 
   return (
     <div>
-      <div>
-        {name}
-        {formatAddress(router.query.address)}
+      <div className="flex">
+        <TitleAndDescriptions
+          title={name}
+          descriptions=""
+          buttonExist={false}
+        />
+        <div className="ml-3">
+          <div className="flex">
+            <Image src={protocol} width={40} height={40} alt="" />
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={`https://etherscan.io/address/${lendingPoolAddress}`}
+              className=""
+            >
+              <img
+            src={assets.footerLogo.src}
+            alt="carapace"
+            className="w-[180px]"
+          />
+            </a>
+          </div>
+        </div>
       </div>
-      <Image src={protocol} width={24} height={24} alt="" />
-      <a
-        target="_blank"
-        rel="noreferrer"
-        href={`https://etherscan.io/address/${lendingPoolAddress}`}
-      >
-        link
-      </a>
+
+      {/* グラフ */}
       <div>
         <h3>Protection Purchase Details</h3>
         <h4>Purchased Protection: {totalProtection}</h4>
@@ -76,6 +92,9 @@ const LendingPool = () => {
         <h4>Total Capital: {totalCapital}</h4>
         <h4>Purchased Protection: {totalProtection}</h4>
       </div>
+      {/* グラフ */}
+
+      {/* カード */}
       <BuyProtectionCard></BuyProtectionCard>
     </div>
   );

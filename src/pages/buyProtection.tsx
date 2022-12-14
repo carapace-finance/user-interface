@@ -1,6 +1,5 @@
 import { Tooltip } from "@material-tailwind/react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import Image from "next/image";
 const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
@@ -12,6 +11,9 @@ import { formatAddress } from "@utils/utils";
 
 const BuyProtection = () => {
   const { lendingPools } = useContext(LendingPoolContext);
+  const handleClick = (href: string) => {
+    window.location.href=href;
+  };
 
   return (
     <div className="mx-32">
@@ -77,31 +79,40 @@ const BuyProtection = () => {
         </thead>
         <tbody>
           {lendingPools.map((lendingPool) => (
-            <tr key={lendingPool.address}>
-              <td className="pl-4 pt-9 pb-6">{formatAddress(lendingPool.address)}</td>
-              <td className="pl-4 pt-9 pb-6">{lendingPool.name}</td>
-              <td className="pl-4 pt-9 pb-6">
-                <Image
-                  src={lendingPool.protocol}
-                  width={24}
-                  height={24}
-                  alt=""
-                />
-              </td>
-              <td className="pl-4 pt-9 pb-6">{lendingPool.adjustedYields}</td>
-              <td className="pl-4 pt-9 pb-6">{lendingPool.lendingPoolAPY}</td>
-              <td className="pl-4 pt-9 pb-6">{lendingPool.CARATokenRewards}</td>
-              <td className="pl-4 pt-9 pb-6">{lendingPool.premium}</td>
-              <td className="pl-4 pt-9 pb-6">{lendingPool.timeLeft}</td>
-              {/* <td> */}
-                {/* buy protection リンク */}
-                {/* <Link
-                  key={lendingPool.address}
-                  href={`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`}
-                >
-                  Buy Protection
-                </Link> */}
-              {/* </td> */}
+            <tr
+              key={lendingPool.address}
+              onClick={() => handleClick(`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`)}
+              className="hover:cursor-pointer"
+            >
+                  <td className="pl-4 pt-9 pb-6">
+                      {formatAddress(lendingPool.address)}
+                  </td>
+                  <td className="pl-4 pt-9 pb-6">
+                      {lendingPool.name}
+                   </td>
+                  <td className="pl-4 pt-9 pb-6">
+                    <Image
+                        src={lendingPool.protocol}
+                        width={24}
+                        height={24}
+                        alt=""
+                      />
+                  </td>
+                  <td className="pl-4 pt-9 pb-6">
+                      {lendingPool.adjustedYields}
+                  </td>
+                  <td className="pl-4 pt-9 pb-6">
+                      {lendingPool.lendingPoolAPY}
+                  </td>
+                  <td className="pl-4 pt-9 pb-6">
+                      {lendingPool.CARATokenRewards}
+                  </td>
+                  <td className="pl-4 pt-9 pb-6">
+                      {lendingPool.premium}
+                  </td>
+                  <td className="pl-4 pt-9 pb-6">
+                      {lendingPool.timeLeft}
+                  </td>
             </tr>
           ))}
         </tbody>

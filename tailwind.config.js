@@ -11,9 +11,10 @@ module.exports = withMT({
         textPinkHover: "#FF0C66",
         customDarkBlue: "#161C2E",
         headerBorder: "#B8B8B8",
-        headerPageHover: "#293C9A",
+        customBlue: "#293C9A",
         customGrey: "#6E7191",
         customDarkGrey: "#14142B",
+        customLightGrey: "#F6F6F6",
       },
       boxShadow: {
         boxShadow: '0px 0px 12px rgba(63, 125, 204, 0.12)',
