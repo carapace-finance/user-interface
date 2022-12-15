@@ -165,7 +165,7 @@ const BuyProtectionPopUp = (props) => {
             )}
           </div>
           <Divider className="mb-4" />
-          <div className="mb-7">
+          <div className="mb-8">
             <Typography className="flex justify-left mb-4 text-customGrey text-base font-bold" variant="subtitle2">
               Estimated Stats
             </Typography>
