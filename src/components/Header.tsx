@@ -56,20 +56,27 @@ const Header = () => {
   // Setup inactivity timer
   useEffect(() => {
     if (protectionPoolService && playground?.forkId) {
-      console.log("Starting inactivity timer...");
-      idleTimerId = setInterval(() => {
-        // Check every minute for inactivity
-        const inactiveTimeInMilliSeconds = (new Date().getTime() - protectionPoolService.getLastActionTimestamp());
-        console.log("Inactive time in milliseconds: ", inactiveTimeInMilliSeconds);
+      protectionPoolService.setLastActionTimestamp();
+      
+      const checkForInactivity = () => {
+        const lastActionTimestamp = protectionPoolService.getLastActionTimestamp();
+        console.log("Last action timestamp: ", lastActionTimestamp);
+        const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
+        console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
         if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
           console.log("Stopping playground due to inactivity...");
           cleanup();
         }
-      }, 1000 * 60 * 1);
+      };
+
+      // Check every minute for inactivity
+      idleTimerId = setInterval(checkForInactivity, 1000 * 60 * 1);
+      console.log("Started inactivity timer...");
 
       return () => {
         if (idleTimerId) {
           clearInterval(idleTimerId);
+          console.log("Cleared inactivity timer...");
         }
       }
     }

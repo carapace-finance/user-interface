@@ -52,7 +52,7 @@ export class ProtectionPoolService {
   }
 
   public async deposit(poolAddress: string, depositAmt: BigNumber) {
-    this.lastActionTimestamp = Date.now();
+    this.setLastActionTimestamp();
 
     const signer = this.provider.getSigner();
     const poolInstance = getPoolContract(poolAddress, signer);
@@ -69,7 +69,7 @@ export class ProtectionPoolService {
   }
 
   public async requestWithdrawal(poolAddress: string, usdcAmt: BigNumber) {
-    this.lastActionTimestamp = Date.now();
+    this.setLastActionTimestamp();
 
     const signer = this.provider.getSigner();
     const poolInstance = getPoolContract(poolAddress, signer);
@@ -86,7 +86,7 @@ export class ProtectionPoolService {
     poolAddress: string,
     purchaseParams: ProtectionPurchaseParams
   ) {
-    this.lastActionTimestamp = Date.now();
+    this.setLastActionTimestamp();
     const poolInstance = getPoolContract(
       poolAddress,
       this.provider.getSigner()
@@ -115,7 +115,7 @@ export class ProtectionPoolService {
    * @returns
    */
   public async withdraw(poolAddress: string, usdcAmt: BigNumber) {
-    this.lastActionTimestamp = Date.now();
+    this.setLastActionTimestamp();
 
     const signer = this.provider.getSigner();
     const poolInstance = getPoolContract(poolAddress, signer);
@@ -229,7 +229,10 @@ export class ProtectionPoolService {
 
   public setLastActionTimestamp(): number {
     this.lastActionTimestamp = Date.now();
-    console.log('setting up the last action timestamp... ==>', this.lastActionTimestamp);
+    console.log(
+      "setting up the last action timestamp... ==>",
+      this.lastActionTimestamp
+    );
     return this.lastActionTimestamp;
   }
 
