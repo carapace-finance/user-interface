@@ -30,19 +30,19 @@ const LendingPool = () => {
 
   let totalCapital;
   let totalProtection;
-  let purchaseLimit;
-  let purchaseProtectionPercentage = 0;
-  let capitalProtectionPercentage = 0;
+  let protectionPurchaseLimit;
+  let protectionPurchasePercentage = 0;
+  let leverageRatio = 0;
   protectionPools.map((protectionPool) => {
     if (protectionPool.address === protectionPoolAddress) {
       totalCapital = protectionPool.totalCapital;
       totalProtection = protectionPool.totalProtection;
-      purchaseLimit = protectionPool.protectionPurchaseLimit;
-      let totalProtectionNumber = totalProtection.replace(/\D/g,'');
-      let purchaseLimitNumber = purchaseLimit.replace(/\D/g,'');
+      protectionPurchaseLimit = protectionPool.protectionPurchaseLimit;
       let totalCapitalNumber = totalCapital.replace(/\D/g,'');
-      purchaseProtectionPercentage=(purchaseLimitNumber/totalProtectionNumber)*100;
-      capitalProtectionPercentage=(purchaseLimitNumber/totalCapitalNumber)*100;
+      let totalProtectionNumber = totalProtection.replace(/\D/g,'');
+      let protectionPurchaseLimitNumber = protectionPurchaseLimit.replace(/\D/g,'');
+      protectionPurchasePercentage=(totalProtectionNumber/protectionPurchaseLimitNumber)*100;
+      leverageRatio=(totalCapitalNumber/totalProtectionNumber)*100;
     }
   });
   return (
@@ -78,11 +78,11 @@ const LendingPool = () => {
               <div className="text-black text-2xl font-bold mb-4">Protection Purchase Details</div>
             </div>
             <div className="h-6 mb-2">
-              <BarChart filledPercentage={purchaseProtectionPercentage}/>
+              <BarChart filledPercentage={protectionPurchasePercentage}/>
             </div>
             <div className="flex justify-between">
               <div className="text-xs leading-4 pr-20">Purchased Protection: {totalProtection}</div>
-              <div className="text-xs leading-4">Protection Purchase Limit: {purchaseLimit}</div>
+              <div className="text-xs leading-4">Protection Purchase Limit: {protectionPurchaseLimit}</div>
             </div>
           </div>
           <div className="下段">
@@ -117,7 +117,7 @@ const LendingPool = () => {
               </div>
             </div>
             <div className="h-6 mb-2">
-              <BarChart filledPercentage={capitalProtectionPercentage}/>
+              <BarChart filledPercentage={leverageRatio}/>
             </div>
             <div className="flex justify-between">
               <div className="text-xs leading-4 pr-20">Total Capital: {totalCapital}</div>
