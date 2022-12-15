@@ -22,7 +22,7 @@ export default function BuyProtectionCard() {
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 },
               }}
-              content="Lending Pool APY - Premium."
+              content="Lending Pool APY % minus Premium %"
               placement="top"
               >
             <svg
@@ -172,14 +172,15 @@ export default function BuyProtectionCard() {
         </div>
         <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Goldfinch Token ID</h5>
         <div className="flex w-72 flex-col gap-4">
-          <Input
+          {/* <Input
             label="Goldfinch Token ID"
             value={tokenId}
             type="number"
             onChange={(e) =>
               e.target.value ? setTokenId(parseInt(e.target.value)) : 0
             }
-          />
+          /> */}
+          <p className="text-left text-base">{tokenId}</p>
         </div>
       </div>
       <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Premium Price</h5>
@@ -196,7 +197,7 @@ export default function BuyProtectionCard() {
       >
         <p className="text-lg h-6 inset-x-4">Preview</p>
       </button>
-      <p>time left: 2 days 12 hours 34 mins</p>
+      <p>Buy protection within: 2 days 12 hours 34 mins</p>
       <BuyProtectionPopUp
         open={isOpen}
         onClose={() => setIsOpen(false)}

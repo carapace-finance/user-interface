@@ -105,15 +105,16 @@ const Dashboard = () => {
     <div className="mx-32">
       <div className="h-5"></div>
       <TitleAndDescriptions title="Dashboard" buttonExist={false} />
-      <h3 className="text-left font-bold">Protection Purchases</h3>
+      <h3 className="text-left font-bold">Your Protection Purchases</h3>
       <div className="h-5"></div>
       <div className="rounded-2xl shadow-table p-8">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-sm font-bold py-4">
-              <th className="py-4">Address</th>
-              <th className="py-4">Lending Pool</th>
+              <th className="py-4">Name</th>
               <th className="py-4">Protocol</th>
+              <th className="py-4">Premium</th>
+              <th className="text-left py-4">Lending Pool APY</th>
               <th className="py-4">
                 <div className="flex flex-row justify-between mr-4">
                   Estimated Adjusted Yields
@@ -122,7 +123,7 @@ const Dashboard = () => {
                       mount: { scale: 1, y: 0 },
                       unmount: { scale: 0, y: 25 },
                     }}
-                    content="Lending Pool APY - Premium."
+                    content="Lending Pool APY % minus Premium %"
                     placement="top"
                   >
                     <svg
@@ -142,10 +143,8 @@ const Dashboard = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="text-left py-4">Lending Pool APY</th>
-              <th className="py-4">CARA Token Rewards</th>
-              <th className="py-4">Premium</th>
               <th className="py-4">Time Until Expiration</th>
+              <th className="py-4">Protection Amount</th>
               <th className="py-4" >
                 <div className="flex flex-row items-center justify-between">
                   Claim
@@ -180,7 +179,6 @@ const Dashboard = () => {
             {/*  TODO: use User.protectionPurchases */}
             {lendingPools.map((lendingPool) => (
               <tr key={lendingPool.address} className="text-left text-sm font-medium">
-                <td className="py-4">{formatAddress(lendingPool.address)}</td>
                 <td className="py-4">{lendingPool.name}</td>
                 <td className="py-4">
                   <Image
@@ -190,11 +188,11 @@ const Dashboard = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-4">{lendingPool.adjustedYields}</td>
-                <td >{lendingPool.lendingPoolAPY}</td>
-                <td className="py-4">{lendingPool.CARATokenRewards}</td>
                 <td className="py-4">{lendingPool.premium}</td>
+                <td >{lendingPool.lendingPoolAPY}</td>
+                <td className="py-4">{lendingPool.adjustedYields}</td>
                 <td className="py-4">{getTimeUntilExpiration(lendingPool)}</td>
+                <td className="py-4">{user.protectionAmount}</td>
                 <td className="py-4">
                   <button disabled>claim</button>
                 </td>
@@ -204,13 +202,13 @@ const Dashboard = () => {
         </table>
       </div>
       <div className="h-16"></div>
-      <h3 className="text-left font-bold">Deposits</h3>
+      <h3 className="text-left font-bold">Your Deposits</h3>
       <div className="h-5"></div>
       <div className="rounded-2xl shadow-table p-8">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-sm font-bold">
-              {/* <th>address</th> */}
+              <th>Name</th>
               <th className="py-4">Protocols</th>
               <th className="py-4">
                 <div className="flex flex-row justify-between pr-3">
@@ -306,7 +304,7 @@ const Dashboard = () => {
           <tbody>
             {protectionPools.map((protectionPool) => (
               <tr key={protectionPool.address} className="text-left text-sm font-medium">
-                {/* <td>{formatAddress(protectionPool.address)}</td> */}
+                <td>{protectionPool.name}</td>
                 <td className="py-4">
                   <Image
                     src={protectionPool.protocols}

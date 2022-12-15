@@ -31,6 +31,7 @@ const LendingPool = () => {
   let totalCapital;
   let totalProtection;
   let protectionPurchaseLimit;
+  let maxAvailableProtectionAmount;
   let protectionPurchasePercentage = 0;
   let leverageRatio = 0;
   protectionPools.map((protectionPool) => {
@@ -41,6 +42,7 @@ const LendingPool = () => {
       let totalCapitalNumber = totalCapital.replace(/\D/g,'');
       let totalProtectionNumber = totalProtection.replace(/\D/g,'');
       let protectionPurchaseLimitNumber = protectionPurchaseLimit.replace(/\D/g,'');
+      maxAvailableProtectionAmount = protectionPurchaseLimitNumber - totalProtectionNumber;
       protectionPurchasePercentage=(totalProtectionNumber/protectionPurchaseLimitNumber)*100;
       leverageRatio=(totalCapitalNumber/totalProtectionNumber)*100;
     }
@@ -73,6 +75,7 @@ const LendingPool = () => {
             <div className="text-left text-2xl">
               <div className="text-black text-2xl font-bold mb-4">Protection Purchase Details</div>
             </div>
+            <p className="text-left mb-2">The maximum protection amount you can buy: {maxAvailableProtectionAmount} USDC</p>
             <div className="h-6 mb-2">
               <BarChart filledPercentage={protectionPurchasePercentage}/>
             </div>
@@ -91,7 +94,7 @@ const LendingPool = () => {
                         mount: { scale: 1, y: 0 },
                         unmount: { scale: 0, y: 25 },
                       }}
-                      content="the total capital in the pool divided by the total protection amount."
+                      content="Percentage of capital that is available to cover potential payouts"
                       placement="top"
                     >
                     <svg
