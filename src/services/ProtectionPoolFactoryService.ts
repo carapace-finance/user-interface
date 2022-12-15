@@ -68,6 +68,8 @@ export class ProtectionPoolFactoryService {
                   ) + " USDC",
                 protectionPurchaseLimit:
                   numeral(purchaseLimit).format(USDC_FORMAT) + " USDC",
+                leverageRatioFloor: leverageRatioFloor.toString(),
+                leverageRatioCeiling: leverageRatioCeiling.toString(),
                 depositLimit:
                   numeral(convertUSDCToNumber(depositLimit)).format(
                     USDC_FORMAT
