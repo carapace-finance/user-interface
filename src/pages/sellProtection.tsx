@@ -9,6 +9,7 @@ const TitleAndDescriptions = dynamic(
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { useContext } from "react";
 import { formatAddress } from "@utils/utils";
+import assets from "src/assets";
 
 const SellProtection = () => {
   const { protectionPools } = useContext(ProtectionPoolContext);
@@ -78,12 +79,17 @@ const SellProtection = () => {
                 <td className="py-4">{protectionPool.totalCapital}</td>
                 <td className="py-4">{protectionPool.totalProtection}</td>
                 <td className="py-4">
-                  <Link
-                    key={protectionPool.address}
-                    href={"/protectionPool/" + protectionPool.address}
-                  >
-                    link
-                  </Link>
+                <Link
+                  key={protectionPool.address}
+                  href={"/protectionPool/" + protectionPool.address}
+                >
+                  <Image
+                    src={assets.grayVector.src}
+                    width={16}
+                    height={24}
+                    alt=""
+                  />
+                </Link>
                 </td>
               </tr>
             ))}

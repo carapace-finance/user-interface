@@ -5,7 +5,8 @@ import {
   DialogContent,
   DialogTitle,
   InputAdornment,
-  TextField
+  TextField,
+  Divider
 } from "@mui/material";
 import { IconButton, Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
@@ -93,86 +94,122 @@ const WithdrawalPopUp = (props) => {
 
   return (
     <Dialog
-      maxWidth="lg"
+      className="top-32 inset-x-36"
       disableScrollLock
       open={open}
       onClose={onClose}
       PaperProps={{
         style: {
-          borderRadius: "8px"
+          borderRadius: "10px"
         }
       }}
     >
-      <DialogTitle>
+      <DialogTitle className="mt-6">
         Withdraw
-        <MuiIconButton
-          onClick={onClose}
-          color="primary"
-          className="absolute top-0 right-0"
-          size="small"
-        >
-          X
-        </MuiIconButton>
+        <div>
+          <MuiIconButton
+            onClick={onClose}
+            color="primary"
+            className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
+            size="small"
+          >
+            <div className="text-black">
+              ×
+            </div>
+          </MuiIconButton>
+        </div>
       </DialogTitle>
+
+
       <DialogContent>
-        <div className="flex justify-left mb-4">
-          Protection Pool:{formatAddress(protectionPoolAddress)}
+        <div className="flex justify-left mb-3 text-base font-medium">
+          Protection Pool{formatAddress(protectionPoolAddress)}
         </div>
-        <h4>Withdraw Amount</h4>
-        <div className="flex justify-center">
-          <TextField
-            type="number"
-            placeholder={"0"}
-            variant="outlined"
-            size="medium"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">USDC</InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    disabled={!protectionPoolService}
-                    onClick={setMaxAmount}
-                    size="sm"
-                  >
-                    Max
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            value={amount}
-            onChange={(e) =>
-              e.target.value ? setAmount(parseFloat(e.target.value)) : 0
-            }
-          />
-        </div>
-        <p>
-          Withdrawable Amount:{" "}
-          {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}
-        </p>
-        <h4 className="flex justify-left mb-4">Estimated Stats</h4>
-        <p className="flex justify-left mb-4">
-          Expected Network Fees
-          <Tooltip content="test test" placement="right">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+
+        <div>
+          <h4 className="text-left text-base font-medium mb-3">Withdraw Amount</h4>
+
+          <div className="bg-customLightGrey rounded-2xl mb-4 border">
+            <div className="flex justify-center">
+              <TextField
+                type="number"
+                placeholder={"0"}
+                variant="outlined"
+                size="medium"
+                className="border-none w-full outline-none border-green-800"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start" className="flex">
+                      <p className="text-customLightBlue">($)</p>
+                      <p>USDC</p>
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end" className="">
+                      <IconButton
+                        disabled={!protectionPoolService}
+                        onClick={setMaxAmount}
+                        size="sm"
+                        className="py-1 px-5 bg-transparent text-customLightBlue border border-customLightBlue rounded-xl"
+                      >
+                        Max
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+                value={amount}
+                onChange={(e) =>
+                  e.target.value ? setAmount(parseFloat(e.target.value)) : 0
+                }
               />
-            </svg>
-          </Tooltip>
-        </p>
-        <p>$10.00</p>
+            </div>
+            <div className="text-right mr-5 mb-1">
+              <p>
+                Withdrawable Amount:{" "}
+                {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}
+              </p>
+            </div>
+            </div>
+        </div>
+
+
+        <Divider className="mb-4" />
+
+        <div>
+          <h4 className="flex justify-left mb-4 text-base font-medium">Estimated Stats</h4>
+
+          <div className="flex justify-between mb-2">
+            <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
+              Expected Network Fees
+              <div className="pl-2">
+                <Tooltip content="test test" placement="right">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                    />
+                  </svg>
+                </Tooltip>
+              </div>
+            </div>
+            <div>
+             <p className="text-sm">$10.00</p>
+            </div>
+          </div>
+        </div>
+
+
+
         <LoadingButton
+          className="mb-8 rounded-xl py-4 px-20 bg-customBlue hover:cursor-pointer"
           style={{
             textTransform: "none",
             marginTop: "1.5em",
@@ -189,14 +226,27 @@ const WithdrawalPopUp = (props) => {
           loading={loading}
           variant="outlined"
         >
-          Confirm Withdrawal
+          <div className="text-white text-base">
+            Confirm Withdrawal
+          </div>
         </LoadingButton>
-        <div>
-          By clicking &quot;Confirm Withdrawal&quot;, you agree to
-          Carapace&apos;s Terms of Service and acknowledge that you have read
-          and understand the Carapace protocol disclaimer.
+
+
+
+        <div className="text-xs">
+          <div className="flex">
+            <p>By clicking &quot;Confirm Withdrawal&quot;, you agree to Carapace&apos;s&nbsp;</p>
+            <p className="underline">Terms of Service&nbsp;</p>
+            <p>and</p>
+          </div>
+          <div className="flex">
+            <p>acknowledge that you have read and understand the&nbsp;</p>
+            <p className="underline">Carapace protocol disclaimer.</p>
+          </div>
+
         </div>
       </DialogContent>
+
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}
         message={successMessage}

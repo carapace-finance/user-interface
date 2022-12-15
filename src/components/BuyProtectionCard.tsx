@@ -17,11 +17,11 @@ export default function BuyProtectionCard() {
       <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-2 flex items-center">
         Estimated Adjusted Yields
         <div className="pl-2">
-          <Tooltip 
+          <Tooltip
               animate={{
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 },
-              }}                
+              }}
               content="Lending Pool APY - Premium."
               placement="top"
               >
@@ -50,11 +50,11 @@ export default function BuyProtectionCard() {
           <div>
             <h5 className="text-customGrey text-xs flex mb-2 ">
               Lending Pool APY
-              <Tooltip 
+              <Tooltip
                   animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0, y: 25 },
-                  }}                
+                  }}
                   content="APY in an underlying lending protocol like Goldfinch."
                   placement="top"
                 >

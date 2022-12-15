@@ -62,11 +62,7 @@ const LendingPool = () => {
               href={`https://etherscan.io/address/${lendingPoolAddress}`}
               className=""
             >
-              <img
-                src={assets.footerLogo.src}
-                alt="carapace"
-                className="w-[40px]"
-              />
+              <Image src={assets.grayVector} width={20} height={20} alt="" className="mr-6" />
             </a>
           </div>
         </div>
@@ -90,11 +86,11 @@ const LendingPool = () => {
               <div className="text-left text-black text-2xl font-bold my-4 flex">
                 Leverage Ratio
                 <div className="pl-2 items-center">
-                  <Tooltip 
+                  <Tooltip
                       animate={{
                         mount: { scale: 1, y: 0 },
                         unmount: { scale: 0, y: 25 },
-                      }}                
+                      }}
                       content="the total capital in the pool divided by the total protection amount."
                       placement="top"
                     >
