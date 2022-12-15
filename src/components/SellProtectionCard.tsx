@@ -74,7 +74,7 @@ export default function SellProtectionCard() {
           variant="outlined"
           size="medium"
           InputProps={{
-            inputProps: { min: "0" },
+            inputProps: { min: "0", max: "10000000" },
             startAdornment: (
               <InputAdornment position="start">USDC</InputAdornment>
             ),

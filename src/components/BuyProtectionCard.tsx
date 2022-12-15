@@ -113,6 +113,7 @@ export default function BuyProtectionCard() {
                   value={protectionAmount}
                   type="number"
                   min="0"
+                  maxLength={7}
                   onChange={(e) =>
                     setProtectionAmount(parseFloat(e.target.value))
                   }
@@ -122,6 +123,7 @@ export default function BuyProtectionCard() {
                   value={protectionAmount}
                   type="number"
                   min="0"
+                  maxLength={7}
                   onChange={(e) =>
                     setProtectionAmount(parseFloat(e.target.value))
                   }
@@ -131,6 +133,7 @@ export default function BuyProtectionCard() {
                   value={protectionAmount}
                   type="number"
                   min="0"
+                  maxLength={7}
                   onChange={(e) =>
                     setProtectionAmount(parseFloat(e.target.value))
                   }
@@ -156,6 +159,7 @@ export default function BuyProtectionCard() {
               value={protectionDurationInDays}
               type="number"
               min="0"
+              maxLength={7}
               onChange={(e) =>
                 setProtectionDurationInDays(parseInt(e.target.value))
               }
@@ -165,6 +169,7 @@ export default function BuyProtectionCard() {
               value={protectionDurationInDays}
               type="number"
               min="0"
+              maxLength={7}
               onChange={(e) =>
                 setProtectionDurationInDays(parseInt(e.target.value))
               }
@@ -178,6 +183,7 @@ export default function BuyProtectionCard() {
             value={tokenId}
             type="number"
             min="0"
+            maxLength={7}
             onChange={(e) =>
               setTokenId(parseInt(e.target.value))
             }
