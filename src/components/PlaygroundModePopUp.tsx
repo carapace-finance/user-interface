@@ -28,30 +28,29 @@ const PlaygroundModePopUp = (props) => {
         }
       }}
     >
-      <DialogTitle>Carapace Playground Mode</DialogTitle>
-      <DialogContent>
-        <span>Following are the things to take into consideration:</span>
+      <DialogContent className="px-8">
+      <h2 className="mt-4 mb-4">Carapace Playground Mode</h2>
+        <p>Following are the things to take into consideration:</p>
         <ul>
-          <li>You have 1 ETH and 5000 USDC to test</li>
           <li>
             You can test different features like deposit, withdrawal request,
             withdrawal, and buy protection
           </li>
           <li>The set up may take some time</li>
         </ul>
-      </DialogContent>
       {playground?.poolFactoryAddress ? (
         <button
-          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          className="border rounded-md px-4 py-4 m-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           onClick={onClose}
         >
           <span>Start Playing Around!</span>
         </button>
       ) : (
-        <button className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline">
+        <button className="border rounded-md px-4 py-4 m-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline">
           <span>Setting Up the Playground Mode...</span>
         </button>
       )}
+      </DialogContent>
     </Dialog>
   );
 };

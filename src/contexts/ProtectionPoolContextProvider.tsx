@@ -22,18 +22,6 @@ export const ProtectionPoolContextProvider = ({ children }) => {
       leverageRatioFloor: "500000", // get the actual leverageRatioFloor value by dividing this value by 10 ** USDC_NUM_OF_DECIMALS
       leverageRatioCeiling: "1000000", // get the actual leverageRatioCeiling value by dividing this value by 10 ** USDC_NUM_OF_DECIMALS
       depositLimit: "7,000,000 USDC" // totalProtection * leverageRatioCeiling
-    },
-    {
-      address: "0x1...",
-      name: "Goldfinch Protection Pool #2",
-      protocols: goldfinchLogo,
-      APY: "15 - 20%",
-      totalCapital: "4,500,000 USDC",
-      totalProtection: "7,000,000 USDC",
-      protectionPurchaseLimit: "9,000,000 USDC", // totalCapital / leverageRatioFloor
-      leverageRatioFloor: "500000", // get the actual leverageRatioFloor value by dividing this value by 10 ** USDC_NUM_OF_DECIMALS
-      leverageRatioCeiling: "1000000", // get the actual leverageRatioCeiling value by dividing this value by 10 ** USDC_NUM_OF_DECIMALS
-      depositLimit: "7,000,000 USDC" // totalProtection * leverageRatioCeiling
     }
   ];
 

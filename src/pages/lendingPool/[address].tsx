@@ -94,7 +94,7 @@ const LendingPool = () => {
                         mount: { scale: 1, y: 0 },
                         unmount: { scale: 0, y: 25 },
                       }}
-                      content="the total capital in the pool divided by the total protection amount."
+                      content="Percentage of capital that is available to cover potential payouts"
                       placement="top"
                     >
                     <svg

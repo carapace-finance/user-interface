@@ -123,7 +123,7 @@ const Dashboard = () => {
                       mount: { scale: 1, y: 0 },
                       unmount: { scale: 0, y: 25 },
                     }}
-                    content="Lending Pool APY - Premium."
+                    content="Lending Pool APY % minus Premium %"
                     placement="top"
                   >
                     <svg
@@ -144,6 +144,7 @@ const Dashboard = () => {
                 </div>
               </th>
               <th className="py-4">Time Until Expiration</th>
+              <th className="py-4">Protection Amount</th>
               <th className="py-4" >
                 <div className="flex flex-row items-center justify-between">
                   Claim
@@ -191,6 +192,7 @@ const Dashboard = () => {
                 <td >{lendingPool.lendingPoolAPY}</td>
                 <td className="py-4">{lendingPool.adjustedYields}</td>
                 <td className="py-4">{getTimeUntilExpiration(lendingPool)}</td>
+                <td className="py-4">{user.protectionAmount}</td>
                 <td className="py-4">
                   <button disabled>claim</button>
                 </td>

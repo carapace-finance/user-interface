@@ -70,7 +70,7 @@ const BuyProtection = () => {
                       mount: { scale: 1, y: 0 },
                       unmount: { scale: 0, y: 25 },
                     }}
-                    content="Lending Pool APY - Premium."
+                    content="Lending Pool APY % minus Premium %"
                     placement="top"
                   >
                     <svg
@@ -91,7 +91,7 @@ const BuyProtection = () => {
                 </div>
               </th>
               {/* <th className="py-4">CARA Token Rewards</th> */}
-              <th className="py-4">Time Left</th>
+              <th className="py-4">Buy Protection Within</th>
             </tr>
           </thead>
           <tbody>

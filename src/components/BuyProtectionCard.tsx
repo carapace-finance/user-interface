@@ -22,7 +22,7 @@ export default function BuyProtectionCard() {
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 },
               }}
-              content="Lending Pool APY - Premium."
+              content="Lending Pool APY % minus Premium %"
               placement="top"
               >
             <svg
@@ -197,7 +197,7 @@ export default function BuyProtectionCard() {
       >
         <p className="text-lg h-6 inset-x-4">Preview</p>
       </button>
-      <p>time left: 2 days 12 hours 34 mins</p>
+      <p>Buy protection within: 2 days 12 hours 34 mins</p>
       <BuyProtectionPopUp
         open={isOpen}
         onClose={() => setIsOpen(false)}
