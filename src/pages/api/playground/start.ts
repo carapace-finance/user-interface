@@ -9,26 +9,36 @@ import {
   getMinAvailablePlaygrounds,
   popRandomAvailablePlaygroundId,
   retrievePlaygroundDetails,
-  saveAvailablePlaygroundDetails
+  saveAvailablePlaygroundDetails,
+  setMinAvailablePlaygrounds
 } from "src/db/redis";
+
+const MIN_AVAILABLE_PLAYGROUNDS = 5;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const {
-      query: { userAddress },
+      query: { userAddress, ping },
       method
     } = req;
 
     switch (method) {
       case "GET":
       case "POST":
+        if (ping) {
+          return res.status(204).end();
+        }
         let availablePlaygroundCount: number =
           await getAvailablePlaygroundCount();
         console.log("availablePlaygroundCount: ", availablePlaygroundCount);
-        // let minAvailablePlaygrounds: number =
-        //   await getMinAvailablePlaygrounds();
-        let minAvailablePlaygrounds: number = 2;
-          console.log("minAvailablePlaygrounds: ", minAvailablePlaygrounds);
+        let minAvailablePlaygrounds: number =
+          await getMinAvailablePlaygrounds();
+        if (!minAvailablePlaygrounds) {
+          // set the default value, if not already set in redis persistence store
+          minAvailablePlaygrounds = MIN_AVAILABLE_PLAYGROUNDS;
+          setMinAvailablePlaygrounds(MIN_AVAILABLE_PLAYGROUNDS);
+        }
+        console.log("minAvailablePlaygrounds: ", minAvailablePlaygrounds);
 
         if (availablePlaygroundCount === 0) {
           console.log("we need to create a new playground and wait");

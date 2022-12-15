@@ -8,11 +8,13 @@ const TitleAndDescriptions = dynamic(
 import { useContext } from "react";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { formatAddress } from "@utils/utils";
+import { useRouter } from "next/router";
 
 const BuyProtection = () => {
+  const router = useRouter();
   const { lendingPools } = useContext(LendingPoolContext);
   const handleClick = (href: string) => {
-    window.location.href = href;
+    router.push(href);
   };
 
   return (

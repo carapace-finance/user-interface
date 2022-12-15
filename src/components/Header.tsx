@@ -1,6 +1,6 @@
 import { Tooltip } from "@material-tailwind/react";
 import { useWeb3React } from "@web3-react/core";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,14 +13,81 @@ import { Playground } from "@utils/forked/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { JsonRpcProvider } from "@ethersproject/providers";
 
-const Header = ({ tenderlyAccessKey }) => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { active, activate, deactivate, chainId, account } = useWeb3React();
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
-  const { updateContractAddresses, updateProvider } =
+  const { updateContractAddresses, updateProvider, protectionPoolService } =
     useContext(ApplicationContext);
+
+  // useEffect is called when component is mounted and playground is undefined at that time.
+  // SO playgroundRef is used to store mutable playground object in a ref
+  // so that it can be accessed during cleanup in useEffect.
+  const playgroundRef = useRef(playground);
+
+  const updatePlayground = (updatedPlayground) => {
+    setPlayground(updatedPlayground);
+    playgroundRef.current = updatedPlayground;
+  };
+
+  // playground idle timeout is 10 minutes
+  let idleTimeoutInMilliSeconds = 1000 * 60 * 10;
+  let idleTimerId;
+
+  const cleanup = async () => {
+    console.log("Cleanup...");
+    const playgroundId = playgroundRef.current?.forkId;
+    if (playgroundId) {
+      console.log("Stopping playground: ", playgroundId);
+      await stopPlayground(playgroundId);
+    }
+  };
+  
+  // this is to ensure that playground is stopped when user closes the tab
+  useEffect(() => {
+    // Vercel serverless functions are "cold/inactive" before first use and after some time of inactivity.
+    // and take a few seconds to start up: download dependencies, compile, execute etc.
+    // Ping start/stop api to "warm" them up for real use later
+    fetch(`/api/playground/start?ping=true`);
+    fetch(`/api/playground/stop?ping=true`);
+
+    window.addEventListener("beforeunload", cleanup);
+    return () => {
+      window.removeEventListener('beforeunload', cleanup);
+    }
+  }, []);
+
+  // Setup inactivity timer
+  useEffect(() => {
+    if (protectionPoolService && playground?.forkId) {
+      protectionPoolService.setLastActionTimestamp();
+      
+      const checkForInactivity = () => {
+        const lastActionTimestamp = protectionPoolService.getLastActionTimestamp();
+        console.log("Last action timestamp: ", lastActionTimestamp);
+        const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
+        console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
+        if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
+          console.log("Stopping playground due to inactivity...");
+          cleanup();
+        }
+      };
+
+      // Check every minute for inactivity
+      // TODO: need to figure out why lastActionTimestamp is not getting updated
+      // idleTimerId = setInterval(checkForInactivity, 1000 * 60 * 1);
+      // console.log("Started inactivity timer...");
+
+      return () => {
+        if (idleTimerId) {
+          clearInterval(idleTimerId);
+          console.log("Cleared inactivity timer...");
+        }
+      }
+    }
+  }, [playground?.forkId]);
 
   const startPlayground = async () => {
     const result = await fetch(`/api/playground/start?userAddress=${account}`);
@@ -36,7 +103,7 @@ const Header = ({ tenderlyAccessKey }) => {
           pool: playground.poolAddress
         });
         updateProvider(playground.provider);
-        setPlayground(playground);
+        updatePlayground(playground);
 
         console.log("Successfully started a playground: ", playground);
       }
@@ -47,13 +114,13 @@ const Header = ({ tenderlyAccessKey }) => {
     }
   };
 
-  const stopPlayground = async () => { 
-    const result = await fetch(`/api/playground/stop?userAddress=${account}`, { method: "DELETE", body: playground.forkId });
+  const stopPlayground = async (playgroundId) => { 
+    const result = await fetch(`/api/playground/stop?userAddress=${account}`, { method: "DELETE", body: playgroundId });
     console.log("End playground result", result);
     if (result.status === 200) {
       const data = await result.json();
       if (data.success) {
-        setPlayground(undefined);
+        updatePlayground(undefined);
         console.log("Successfully ended playground");
       }
       else {
@@ -101,7 +168,7 @@ const Header = ({ tenderlyAccessKey }) => {
   if (playground?.forkId) {
     playgroundButtonTitle = "Stop Playground";
     playgroundButtonAction = async () => {
-      await stopPlayground();
+      await stopPlayground(playground.forkId);
     };
   } else {
     playgroundButtonTitle = "Start Playground";
@@ -139,7 +206,7 @@ const Header = ({ tenderlyAccessKey }) => {
       </Link>
       </div>
       <div className="mr-8">
-      {active && chainId === 1
+      {/* {active && chainId === 1
       ? null 
       : active && chainId != 1
       ? null
@@ -161,14 +228,14 @@ const Header = ({ tenderlyAccessKey }) => {
         </button>
       ) : (
         ""
-      )}
+      )} */}
       {playgroundButtonTitle === "Start Playground" ? (
         <button
-          disabled={!account}
+          // disabled={!account}
           className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           onClick={playgroundButtonAction}>
             <Tooltip
-              content="Connect you wallet, and test app features in a sandbox."
+              content="Test our app features in a sandbox!"
               animate={{
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 },
@@ -179,7 +246,7 @@ const Header = ({ tenderlyAccessKey }) => {
         </button>
       ) : (
             <button
-              disabled={!account}
+              // disabled={!account}
               className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
               onClick={playgroundButtonAction}>
               <span>{playgroundButtonTitle}</span>

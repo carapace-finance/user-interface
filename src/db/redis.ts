@@ -10,15 +10,19 @@ const redis = new Redis({
 });
 
 export const addMinAvailablePlaygrounds = async (minAvailablePlaygrounds) => {
-  return await redis.set(MIN_AVAILABLE_PLAYGROUNDS, minAvailablePlaygrounds);
+  return redis.set(MIN_AVAILABLE_PLAYGROUNDS, minAvailablePlaygrounds);
 };
 
 export const getMinAvailablePlaygrounds = async (): Promise<number> => {
-  return await redis.scard(MIN_AVAILABLE_PLAYGROUNDS);
+  return redis.get(MIN_AVAILABLE_PLAYGROUNDS);
+};
+
+export const setMinAvailablePlaygrounds = async (minAvailablePlaygrounds) => {
+  return redis.set(MIN_AVAILABLE_PLAYGROUNDS, minAvailablePlaygrounds);
 };
 
 export const getAvailablePlaygroundCount = async (): Promise<number> => {
-  return await redis.scard(AVAILABLE_PLAYGROUNDS);
+  return redis.scard(AVAILABLE_PLAYGROUNDS);
 };
 
 /**
@@ -26,7 +30,7 @@ export const getAvailablePlaygroundCount = async (): Promise<number> => {
  * @returns playground id in redis store
  */
 export const popRandomAvailablePlaygroundId = async (): Promise<string> => {
-  return await redis.spop(AVAILABLE_PLAYGROUNDS);
+  return redis.spop(AVAILABLE_PLAYGROUNDS);
 };
 
 /**
@@ -34,7 +38,7 @@ export const popRandomAvailablePlaygroundId = async (): Promise<string> => {
  * @returns playground id in redis store
  */
 export const removeUsedPlaygroundId = async (playgroundId: string) => {
-  return await redis.srem(USED_PLAYGROUNDS, playgroundId);
+  return redis.srem(USED_PLAYGROUNDS, playgroundId);
 };
 
 /**
@@ -42,7 +46,7 @@ export const removeUsedPlaygroundId = async (playgroundId: string) => {
  * @param playgroundIdToUse playground id in redis store
  */
 export const addUsedPlaygroundId = async (playgroundIdToUse: string) => {
-  return await redis.sadd(USED_PLAYGROUNDS, `${playgroundIdToUse}`);
+  return redis.sadd(USED_PLAYGROUNDS, `${playgroundIdToUse}`);
 };
 
 /**
@@ -50,7 +54,7 @@ export const addUsedPlaygroundId = async (playgroundIdToUse: string) => {
  * @param playgroundIdToUse playground id in redis store
  */
 export const addAvailablePlaygroundId = async (playgroundId: string) => {
-  return await redis.sadd(AVAILABLE_PLAYGROUNDS, `${playgroundId}`);
+  return redis.sadd(AVAILABLE_PLAYGROUNDS, `${playgroundId}`);
 };
 
 /**
@@ -59,11 +63,11 @@ export const addAvailablePlaygroundId = async (playgroundId: string) => {
  * @returns Playground details
  */
 export const retrievePlaygroundDetails = async (playgroundId: string) => {
-  return await redis.hgetall(`${AVAILABLE_PLAYGROUNDS}:${playgroundId}`);
+  return redis.hgetall(`${AVAILABLE_PLAYGROUNDS}:${playgroundId}`);
 };
 
 export const saveAvailablePlaygroundDetails = async (playgroundInfo) => {
-  return await redis.hset(
+  return redis.hset(
     `${AVAILABLE_PLAYGROUNDS}:${playgroundInfo.forkId}`,
     playgroundInfo
   );

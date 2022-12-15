@@ -19,6 +19,8 @@ import numeral from "numeral";
 
 export class ProtectionPoolService {
   private protectionPurchaseByLendingPool: Map<string, BigNumber>;
+  private lastActionTimestamp: number;
+
   constructor(
     public readonly provider: JsonRpcProvider,
     public readonly isPlayground: boolean
@@ -50,6 +52,8 @@ export class ProtectionPoolService {
   }
 
   public async deposit(poolAddress: string, depositAmt: BigNumber) {
+    this.setLastActionTimestamp();
+
     const signer = this.provider.getSigner();
     const poolInstance = getPoolContract(poolAddress, signer);
     if (this.isPlayground) {
@@ -65,6 +69,8 @@ export class ProtectionPoolService {
   }
 
   public async requestWithdrawal(poolAddress: string, usdcAmt: BigNumber) {
+    this.setLastActionTimestamp();
+
     const signer = this.provider.getSigner();
     const poolInstance = getPoolContract(poolAddress, signer);
     const sTokenAmt = await poolInstance.convertToSToken(usdcAmt);
@@ -80,6 +86,7 @@ export class ProtectionPoolService {
     poolAddress: string,
     purchaseParams: ProtectionPurchaseParams
   ) {
+    this.setLastActionTimestamp();
     const poolInstance = getPoolContract(
       poolAddress,
       this.provider.getSigner()
@@ -108,6 +115,8 @@ export class ProtectionPoolService {
    * @returns
    */
   public async withdraw(poolAddress: string, usdcAmt: BigNumber) {
+    this.setLastActionTimestamp();
+
     const signer = this.provider.getSigner();
     const poolInstance = getPoolContract(poolAddress, signer);
     const sTokenAmt = await poolInstance.convertToSToken(usdcAmt);
@@ -216,5 +225,18 @@ export class ProtectionPoolService {
     poolAddress: string
   ): Promise<ProtectionPurchase[]> {
     return Promise.resolve([]);
+  }
+
+  public setLastActionTimestamp(): number {
+    this.lastActionTimestamp = Date.now();
+    console.log(
+      "setting up the last action timestamp... ==>",
+      this.lastActionTimestamp
+    );
+    return this.lastActionTimestamp;
+  }
+
+  public getLastActionTimestamp(): number {
+    return this.lastActionTimestamp || 0;
   }
 }

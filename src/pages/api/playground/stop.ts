@@ -10,11 +10,16 @@ import {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const {
-      query: { userAddress },
+      query: { userAddress, ping },
       method
     } = req;
 
     switch (method) {
+      case "GET":
+        if (ping) {
+          return res.status(204).end();
+        }
+        break;
       case "DELETE":
       case "POST":
         const playgroundId = req.body;
@@ -25,7 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
         break;
       default:
-        res.setHeader("Allow", ["DELETE", "POST"]);
+        res.setHeader("Allow", ["DELETE", "POST", "GET"]);
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (e) {
@@ -51,5 +56,8 @@ async function stopPlayground(playgroundId: string) {
   // step 5: Add an id of the stopped playground to available playgrounds set
   await addAvailablePlaygroundId(playgroundId);
 
-  console.log("Successfully stopped a playground: ", playgroundInfoString.forkId);
+  console.log(
+    "Successfully stopped a playground: ",
+    playgroundInfoString.forkId
+  );
 }

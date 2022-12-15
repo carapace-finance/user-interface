@@ -6,7 +6,6 @@ import BuyProtectionCard from "@components/BuyProtectionCard";
 import BarChart from "@components/BarChart";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
-import { formatAddress } from "@utils/utils";
 import TitleAndDescriptions from "@components/TitleAndDescriptions";
 import assets from "src/assets";
 
@@ -19,6 +18,7 @@ const LendingPool = () => {
   let protocol;
   let lendingPoolAddress;
   let protectionPoolAddress;
+  
   lendingPools.map((lendingPool) => {
     if (lendingPool.address === router.query.address) {
       name = lendingPool.name;
