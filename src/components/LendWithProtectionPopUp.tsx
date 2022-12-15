@@ -85,6 +85,7 @@ const LendWithProtectionPopUp = (props) => {
                   placeholder={"0.0"}
                   variant="outlined"
                   InputProps={{
+                    inputProps: { min: "0" },
                     endAdornment: (
                       <InputAdornment position="end">USDC</InputAdornment>
                     )

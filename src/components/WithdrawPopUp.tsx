@@ -126,6 +126,7 @@ const WithdrawalPopUp = (props) => {
             variant="outlined"
             size="medium"
             InputProps={{
+              inputProps: { min: "0" },
               startAdornment: (
                 <InputAdornment position="start">USDC</InputAdornment>
               ),

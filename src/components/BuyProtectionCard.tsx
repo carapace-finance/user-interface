@@ -112,6 +112,7 @@ export default function BuyProtectionCard() {
                   label="Protection Amount"
                   value={protectionAmount}
                   type="number"
+                  min="0"
                   onChange={(e) =>
                     e.target.value ? setProtectionAmount(parseFloat(e.target.value)) : 0
                   }
@@ -120,6 +121,7 @@ export default function BuyProtectionCard() {
                   label="Protection Amount"
                   value={protectionAmount}
                   type="number"
+                  min="0"
                   onChange={(e) =>
                     e.target.value ? setProtectionAmount(parseFloat(e.target.value)) : 0
                   }
@@ -128,6 +130,7 @@ export default function BuyProtectionCard() {
                   label="Protection Amount"
                   value={protectionAmount}
                   type="number"
+                  min="0"
                   onChange={(e) =>
                     e.target.value ? setProtectionAmount(parseFloat(e.target.value)) : 0
                   }
@@ -152,6 +155,7 @@ export default function BuyProtectionCard() {
               label="Protection Duration (days)"
               value={protectionDurationInDays}
               type="number"
+              min="0"
               onChange={(e) =>
                 e.target.value
                   ? setProtectionDurationInDays(parseInt(e.target.value))
@@ -162,6 +166,7 @@ export default function BuyProtectionCard() {
               label="Protection Duration (days)"
               value={protectionDurationInDays}
               type="number"
+              min="0"
               onChange={(e) =>
                 e.target.value
                   ? setProtectionDurationInDays(parseInt(e.target.value))
@@ -176,6 +181,7 @@ export default function BuyProtectionCard() {
             label="Goldfinch Token ID"
             value={tokenId}
             type="number"
+            min="0"
             onChange={(e) =>
               e.target.value ? setTokenId(parseInt(e.target.value)) : 0
             }
