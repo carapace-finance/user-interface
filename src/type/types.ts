@@ -46,6 +46,8 @@ export interface ProtectionPool {
   totalCapital: string;
   totalProtection: string;
   protectionPurchaseLimit: string;
+  leverageRatioFloor: string;
+  leverageRatioCeiling: string;
   depositLimit: string;
 }
 
