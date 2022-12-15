@@ -111,11 +111,11 @@ const Dashboard = () => {
             <th>Protocol</th>
             <th>
               Estimated Adjusted Yields
-              <Tooltip 
+              <Tooltip
                   animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0, y: 25 },
-                  }}                
+                  }}
                   content="Lending Pool APY - Premium."
                   placement="top"
                 >
@@ -141,11 +141,11 @@ const Dashboard = () => {
             <th>Time Until Expiration</th>
             <th>
               Claim
-              <Tooltip 
+              <Tooltip
                   animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0, y: 25 },
-                  }}                
+                  }}
                   content="You can claim a payout when the underlying lending pool defaults."
                   placement="top"
                 >
@@ -201,11 +201,11 @@ const Dashboard = () => {
             <th>Protocols</th>
             <th>
               Estimated APY
-              <Tooltip 
+              <Tooltip
                   animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0, y: 25 },
-                  }}                
+                  }}
                   content="Estimated APY for protection sellers."
                   placement="top"
                 >
@@ -231,11 +231,11 @@ const Dashboard = () => {
             <th>Requested Withdrawal</th>
             <th>
               Request Withdrawal
-              <Tooltip 
+              <Tooltip
                   animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0, y: 25 },
-                  }}                
+                  }}
                   content="You can make a request to withdraw your capital in the next cycle."
                   placement="top"
                 >
@@ -257,11 +257,11 @@ const Dashboard = () => {
             </th>
             <th>
               Withdraw
-              <Tooltip 
+              <Tooltip
                   animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0, y: 25 },
-                  }}                
+                  }}
                   content="You can withdraw the requested withdrawal amount."
                   placement="top"
                 >

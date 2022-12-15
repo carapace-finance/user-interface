@@ -24,20 +24,20 @@ const BuyProtection = () => {
         button="Learn about buying protection"
       />
       <div className=" mb-6 text-left text-black text-2xl font-bold">All Lending Pools</div>
-      <table className="table-auto rounded-2xl shadow-boxShadow px-8 w-full text-center">
+      <table className="table-auto rounded-2xl shadow-boxShadow px-8 w-full text-left">
         <thead>
           <tr className="text-sm font-bold gap-4 px-4">
-            <th className="pl-4 pt-9 pb-6">address</th>
+            <th className="pl-10 pt-9 pb-6">address</th>
             <th className="pl-4 pt-9 pb-6">Lending Pool</th>
             <th className="pl-4 pt-9 pb-6">Protocol</th>
             <th className="pl-4 pt-9 pb-6">
               Estimated Adjusted Yields
               <div className="float-right">
-                <Tooltip 
+                <Tooltip
                   animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0, y: 25 },
-                  }}                
+                  }}
                   content="Lending Pool APY - Premium."
                   placement="top"
                 >
@@ -47,7 +47,7 @@ const BuyProtection = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-6 h-6"
+                    className="w-6 h-6 text-customGrey"
                   >
                     <path
                       strokeLinecap="round"
@@ -61,11 +61,11 @@ const BuyProtection = () => {
             <th className="pl-4 pt-9 pb-6">
               Lending Pool APY
               <div className="float-right">
-              <Tooltip 
+              <Tooltip
                 animate={{
                   mount: { scale: 1, y: 0 },
                   unmount: { scale: 0, y: 25 },
-                }}                
+                }}
                 content="APY in an underlying lending protocol like Goldfinch."
                 placement="top"
               >
@@ -75,7 +75,7 @@ const BuyProtection = () => {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-6 h-6"
+                  className="w-6 h-6 text-customGrey"
                 >
                   <path
                     strokeLinecap="round"
@@ -98,13 +98,13 @@ const BuyProtection = () => {
               onClick={() => handleClick(`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`)}
               className="hover:cursor-pointer"
             >
-                  <td className="pl-4 pt-9 pb-6">
+                  <td className="pl-10 pt-6 pb-6">
                       {formatAddress(lendingPool.address)}
                   </td>
-                  <td className="pl-4 pt-9 pb-6">
+                  <td className="pl-4 pt-6 pb-6">
                       {lendingPool.name}
                    </td>
-                  <td className="pl-4 pt-9 pb-6">
+                  <td className="pl-4 pt-6 pb-6">
                     <Image
                         src={lendingPool.protocol}
                         width={24}
@@ -112,19 +112,19 @@ const BuyProtection = () => {
                         alt=""
                       />
                   </td>
-                  <td className="pl-4 pt-9 pb-6">
+                  <td className="pl-4 pt-6 pb-6">
                       {lendingPool.adjustedYields}
                   </td>
-                  <td className="pl-4 pt-9 pb-6">
+                  <td className="pl-4 pt-6 pb-6">
                       {lendingPool.lendingPoolAPY}
                   </td>
-                  <td className="pl-4 pt-9 pb-6">
+                  <td className="pl-4 pt-6 pb-6">
                       {lendingPool.CARATokenRewards}
                   </td>
-                  <td className="pl-4 pt-9 pb-6">
+                  <td className="pl-4 pt-6 pb-6">
                       {lendingPool.premium}
                   </td>
-                  <td className="pl-4 pt-9 pb-6">
+                  <td className="pl-4 pt-6 pb-6">
                       {lendingPool.timeLeft}
                   </td>
             </tr>
