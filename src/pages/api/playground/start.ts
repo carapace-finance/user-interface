@@ -75,7 +75,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-async function startNewPlayground() {
+export const startNewPlayground = async () => {
   // step 1: create and deploy smart contracts to a fork
   const playground: Playground = await deployToFork(
     process.env.TENDERLY_ACCESS_KEY
@@ -103,4 +103,4 @@ async function startNewPlayground() {
   await addAvailablePlaygroundId(playground.forkId);
 
   console.log("Successfully started a playground: ", playground.forkId);
-}
+};
