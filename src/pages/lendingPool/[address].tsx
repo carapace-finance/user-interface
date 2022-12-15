@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import BuyProtectionCard from "@components/BuyProtectionCard";
+import BarChart from "@components/BarChart";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { formatAddress } from "@utils/utils";
@@ -30,14 +31,20 @@ const LendingPool = () => {
   let totalCapital;
   let totalProtection;
   let purchaseLimit;
+  let purchaseProtectionPercentage = 0;
+  let capitalProtectionPercentage = 0;
   protectionPools.map((protectionPool) => {
     if (protectionPool.address === protectionPoolAddress) {
       totalCapital = protectionPool.totalCapital;
       totalProtection = protectionPool.totalProtection;
       purchaseLimit = protectionPool.protectionPurchaseLimit;
+      let totalProtectionNumber = totalProtection.replace(/\D/g,'');
+      let purchaseLimitNumber = purchaseLimit.replace(/\D/g,'');
+      let totalCapitalNumber = totalCapital.replace(/\D/g,'');
+      purchaseProtectionPercentage=(purchaseLimitNumber/totalProtectionNumber)*100;
+      capitalProtectionPercentage=(purchaseLimitNumber/totalCapitalNumber)*100;
     }
   });
-
   return (
     <div className="mx-32">
       <div className="flex">
@@ -68,10 +75,10 @@ const LendingPool = () => {
         <div className="rounded-2xl shadow-boxShadow py-6 px-5 h-64 w-600">
           <div className="">
             <div className="text-left text-2xl">
-              <div className=" text-black text-2xl font-bold mb-4">Protection Purchase Details</div>
+              <div className="text-black text-2xl font-bold mb-4">Protection Purchase Details</div>
             </div>
-            <div className="h-6 bg-gray-500 mb-2">
-              グラフが入ります
+            <div className="h-6 mb-2">
+              <BarChart filledPercentage={purchaseProtectionPercentage}/>
             </div>
             <div className="flex justify-between">
               <div className="text-xs leading-4 pr-20">Purchased Protection: {totalProtection}</div>
@@ -109,8 +116,8 @@ const LendingPool = () => {
                 </div>
               </div>
             </div>
-            <div className="h-6 bg-gray-500 mb-2">
-              グラフが入ります
+            <div className="h-6 mb-2">
+              <BarChart filledPercentage={capitalProtectionPercentage}/>
             </div>
             <div className="flex justify-between">
               <div className="text-xs leading-4 pr-20">Total Capital: {totalCapital}</div>

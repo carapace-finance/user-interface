@@ -15,6 +15,7 @@ module.exports = withMT({
         customGrey: "#6E7191",
         customDarkGrey: "#14142B",
         customLightGrey: "#F6F6F6",
+        customGraphGrey: "#B8B8B8",
       },
       boxShadow: {
         boxShadow: '0px 0px 12px rgba(63, 125, 204, 0.12)',
