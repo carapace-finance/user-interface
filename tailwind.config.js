@@ -13,6 +13,9 @@ module.exports = withMT({
       },
       fontFamily: {
         manrope: ["Manrope", "sans-serif"]
+      },
+      boxShadow: {
+        'table': '0px 0px 6px 6px rgba(63,125,204, 0.08)',
       }
     }
   },

@@ -100,185 +100,199 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
+    <div className="px-2.5">
+      <div className="h-5"></div>
       <TitleAndDescriptions title="Dashboard" buttonExist={false} />
-      <h3 className="text-left">Protection Purchases</h3>
-      <table className="table-auto w-full">
-        <thead>
-          <tr>
-            <th>address</th>
-            <th>Lending Pool</th>
-            <th>Protocol</th>
-            <th>
-              Adjusted Yields
-              <Tooltip content="test test" placement="top">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </th>
-            <th>Lending Pool APY</th>
-            <th>CARA Token Rewards</th>
-            <th>Premium</th>
-            <th>Time Until Expiration</th>
-            <th>
-              Claim
-              <Tooltip content="test test" placement="top">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {/*  TODO: use User.protectionPurchases */}
-          {lendingPools.map((lendingPool) => (
-            <tr key={lendingPool.address}>
-              <td>{formatAddress(lendingPool.address)}</td>
-              <td>{lendingPool.name}</td>
-              <td>
-                <Image
-                  src={lendingPool.protocol}
-                  width={24}
-                  height={24}
-                  alt=""
-                />
-              </td>
-              <td>{lendingPool.adjustedYields}</td>
-              <td>{lendingPool.lendingPoolAPY}</td>
-              <td>{lendingPool.CARATokenRewards}</td>
-              <td>{lendingPool.premium}</td>
-              <td>{getTimeUntilExpiration(lendingPool)}</td>
-              <td>
-                <button disabled>claim</button>
-              </td>
+      <div className="h-10"></div>
+      <h3 className="text-left font-bold">Protection Purchases</h3>
+      <div className="h-5"></div>
+      <div className="rounded-2xl shadow-table p-8">
+        <table className="table-fixed w-full">
+          <thead>
+            <tr className="text-left text-sm font-bold">
+              <th >Address</th>
+              <th >Lending Pool</th>
+              <th>Protocol</th>
+              <th className="flex flex-row justify-between mr-3">
+                Adjusted Yields
+                <Tooltip content="test test" placement="top">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="#6E7191"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                    />
+                  </svg>
+                </Tooltip>
+              </th>
+              <th className="text-left">Lending Pool APY</th>
+              <th>CARA Token Rewards</th>
+              <th>Premium</th>
+              <th>Time Until Expiration</th>
+              <th className="flex flex-row justify-between" >
+                Claim
+                <Tooltip content="test test" placement="top">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="#6E7191"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                    />
+                  </svg>
+                </Tooltip>
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <h3 className="text-left">Deposits</h3>
-      <table className="table-auto w-full">
-        <thead>
-          <tr>
-            <th>address</th>
-            <th>Protocols</th>
-            <th>
-              Estimated APY
-              <Tooltip content="test test" placement="top">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+          </thead>
+          <tbody>
+            {/*  TODO: use User.protectionPurchases */}
+            {lendingPools.map((lendingPool) => (
+              <tr key={lendingPool.address} className="text-left text-sm font-medium">
+                <td className="pt-2">{formatAddress(lendingPool.address)}</td>
+                <td >{lendingPool.name}</td>
+                <td>
+                  <Image
+                    src={lendingPool.protocol}
+                    width={24}
+                    height={24}
+                    alt=""
                   />
-                </svg>
-              </Tooltip>
-            </th>
-            <th>Total Capital</th>
-            <th>Total Protection</th>
-            <th>Deposited Amount</th>
-            <th>Requested Withdrawal</th>
-            <th>
-              Request Withdrawal
-              <Tooltip content="test test" placement="top">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </th>
-            <th>
-              Withdraw
-              <Tooltip content="test test" placement="top">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {protectionPools.map((protectionPool) => (
-            <tr key={protectionPool.address}>
-              <td>{formatAddress(protectionPool.address)}</td>
-              <td>
-                <Image
-                  src={protectionPool.protocols}
-                  width={24}
-                  height={24}
-                  alt=""
-                />
-              </td>
-              <td>{protectionPool.APY}</td>
-              <td>{protectionPool.totalCapital} USDC</td>
-              <td>{protectionPool.totalProtection} USDC</td>
-              <td>{user.sTokenUnderlyingAmount} USDC</td>
-              <td>{user.requestedWithdrawalAmount} USDC</td>
-              <td>
-                <button onClick={() => setIsWithdrawalRequestOpen(true)}>
-                  request withdrawal
-                </button>
-              </td>
-              <td>
-                <button onClick={() => setIsWithdrawOpen(true)}>
-                  withdraw
-                </button>
-              </td>
+                </td>
+                <td>{lendingPool.adjustedYields}</td>
+                <td >{lendingPool.lendingPoolAPY}</td>
+                <td>{lendingPool.CARATokenRewards}</td>
+                <td>{lendingPool.premium}</td>
+                <td>{getTimeUntilExpiration(lendingPool)}</td>
+                <td>
+                  <button disabled>claim</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="h-10"></div>
+      <h3 className="text-left font-bold">Deposits</h3>
+      <div className="h-5"></div>
+      <div className="rounded-2xl shadow-table p-8">
+
+        <table className="table-fixed w-full">
+          <thead>
+            <tr className="text-left text-sm font-bold">
+              {/* <th>address</th> */}
+              <th>Protocols</th>
+              <th className="flex flex-row justify-between pr-3">
+                Estimated APY
+                <Tooltip content="test test" placement="top">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="#6E7191"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                    />
+                  </svg>
+                </Tooltip>
+              </th>
+              <th>Total Capital</th>
+              <th>Total Protection</th>
+              <th>Deposited Amount</th>
+              <th>Requested Withdrawal</th>
+              <th >
+                {/* the div needs to be there otherwise there is a bug */}
+                <div className="flex flex-row justify-between pr-3">
+                  Request Withdrawal
+                  <Tooltip content="test test" placement="top">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
+              <th className="flex flex-row justify-between pr-3">
+                Withdraw
+                <Tooltip content="test test" placement="top">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="#6E7191"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                    />
+                  </svg>
+                </Tooltip>
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {protectionPools.map((protectionPool) => (
+              <tr key={protectionPool.address} className="text-left text-sm font-medium">
+                {/* <td>{formatAddress(protectionPool.address)}</td> */}
+                <td>
+                  <Image
+                    src={protectionPool.protocols}
+                    width={24}
+                    height={24}
+                    alt=""
+                  />
+                </td>
+                <td>{protectionPool.APY}</td>
+                <td>{protectionPool.totalCapital} USDC</td>
+                <td>{protectionPool.totalProtection} USDC</td>
+                <td>{user.sTokenUnderlyingAmount} USDC</td>
+                <td>{user.requestedWithdrawalAmount} USDC</td>
+                <td>
+                  <button onClick={() => setIsWithdrawalRequestOpen(true)}>
+                    request withdrawal
+                  </button>
+                </td>
+                <td>
+                  <button onClick={() => setIsWithdrawOpen(true)}>
+                    withdraw
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <WithdrawalRequestPopUp
         open={isWithdrawalRequestOpen}
         onClose={() => setIsWithdrawalRequestOpen(false)}
