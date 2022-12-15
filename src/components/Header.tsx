@@ -192,7 +192,7 @@ const Header = () => {
       </Link>
       </div>
       <div className="mr-8">
-      {active && chainId === 1
+      {/* {active && chainId === 1
       ? null 
       : active && chainId != 1
       ? null
@@ -214,14 +214,14 @@ const Header = () => {
         </button>
       ) : (
         ""
-      )}
+      )} */}
       {playgroundButtonTitle === "Start Playground" ? (
         <button
           // disabled={!account}
           className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           onClick={playgroundButtonAction}>
             <Tooltip
-              content="Connect you wallet, and test app features in a sandbox."
+              content="Test our app features in a sandbox!"
               animate={{
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 },
