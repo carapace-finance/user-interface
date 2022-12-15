@@ -10,6 +10,10 @@ import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { formatAddress } from "@utils/utils";
 import TitleAndDescriptions from "@components/TitleAndDescriptions";
 import assets from "src/assets";
+import {Chart, ArcElement, Legend} from 'chart.js'
+Chart.register(ArcElement);
+Chart.register(Legend);
+import { Doughnut } from 'react-chartjs-2';
 
 const ProtectionPool = () => {
   const router = useRouter();
@@ -35,11 +39,26 @@ const ProtectionPool = () => {
       depositPercentage=(totalCapitalNumber/depositLimitNumber)*100;
     }
   });
-
   const underlyingLendingPools = lendingPools.filter(
     (lendingPool) => lendingPool.protectionPoolAddress === protectionPoolAddress
   );
-
+  const plugins = [{
+    id:'title',
+    beforeDraw: (chart: any) => {
+        const width = chart.width;
+        const height = chart.height;
+        const ctx = chart.ctx;
+        ctx.restore();
+        const fontSize = (height / 200).toFixed(2);
+        ctx.font = fontSize + "em sans-serif";
+        ctx.textBaseline = "top";
+        const text = totalCapital;
+        const textX = Math.round((width - ctx.measureText(text).width) / 2);
+        const textY = height / 2.25;
+        ctx.fillText(text, textX, textY);
+        ctx.save();
+    }
+  }];
   return (
    <div className="mx-32">
       <div className="flex">
@@ -67,7 +86,7 @@ const ProtectionPool = () => {
         </div>
       </div>
       <div className="flex justify-between">
-        <div className="rounded-2xl shadow-boxShadow py-6 px-5 h-64 w-600">
+        <div className="rounded-2xl shadow-boxShadow py-6 px-5 h-full w-600">
           <div className="">
             <div className="text-left text-2xl">
               <div className="text-black text-2xl font-bold mb-4">Current Capital in the Pool</div>
@@ -83,48 +102,40 @@ const ProtectionPool = () => {
           <div className="下段">
             <div >
               <div className="text-left text-black text-2xl font-bold my-4 flex">
-                Leverage Ratio
-                <div className="pl-2 items-center">
-                  <Tooltip 
-                      animate={{
-                        mount: { scale: 1, y: 0 },
-                        unmount: { scale: 0, y: 25 },
-                      }}                
-                      content="the total capital in the pool divided by the total protection amount."
-                      placement="top"
-                    >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
-                  </Tooltip>
-                </div>
+                Protection Purchase Till Date
               </div>
             </div>
-            <div className="h-6 mb-2">
-              {/* <BarChart filledPercentage={capitalProtectionPercentage}/> */}
-            </div>
-            <div className="flex justify-between">
-            <h2>Protection Purchases Till Date</h2>
-              {underlyingLendingPools.map((lendingPool) => {
-                return (
-                  <div key={lendingPool.address}>
-                    {formatAddress(lendingPool.address)} :{" "}
-                    {lendingPool.protectionPurchase}
-                  </div>
-                );
-              })}
-              <div>Total Protection: {totalProtection}</div>
+            <div className="h-[500px] w-full flex">
+              <Doughnut 
+              className="mx-auto"
+              plugins = {plugins}
+              options={{
+                cutout:"70%",
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: 'bottom',
+                  },
+                },
+                elements:{
+                  arc:{
+                    borderAlign: "center",
+                    borderWidth: 0
+                  }
+                }
+              }}
+              data={{
+                labels: underlyingLendingPools.map((lendingPool) => {
+                  const total = underlyingLendingPools.map(lendingPool =>Number(lendingPool.protectionPurchase.replace(/\D/g,''))).reduce((accumulator, currentValue) => accumulator + currentValue)
+                  return `${lendingPool.name} ${Math.round(Number(lendingPool.protectionPurchase.replace(/\D/g,'')) / total* 100) }%`
+                }),
+                datasets:[
+                  {
+                    backgroundColor: ['hsl(0, 0%, 60%)', 'hsl(0, 0%, 35%)'],
+                    data:underlyingLendingPools.map((lendingPool) => Number(lendingPool.protectionPurchase.replace(/\D/g,'')))
+                  }
+                ]
+              }} />
             </div>
           </div>
         </div>
