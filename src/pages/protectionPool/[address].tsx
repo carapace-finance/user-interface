@@ -114,6 +114,7 @@ const ProtectionPool = () => {
                   legend: {
                     display: true,
                     position: 'bottom',
+                    onClick:()=>{}
                   },
                 },
                 elements:{
@@ -138,45 +139,52 @@ const ProtectionPool = () => {
             </div>
           </div>
         </div>
+        <SellProtectionCard></SellProtectionCard>
       </div>
-      <SellProtectionCard></SellProtectionCard>
-
-      <h2>Underlying Protected Lending Pools</h2>
-      <table className="table-auto w-full">
-        <thead>
-          <tr>
-            <th>address</th>
-            <th>Lending Pool</th>
-            <th>Protocol</th>
-            <th>Lending Pool APY</th>
-          </tr>
-        </thead>
-        <tbody>
-          {underlyingLendingPools.map((lendingPool) => (
-            <tr key={lendingPool.address}>
-              <td>{formatAddress(lendingPool.address)}</td>
-              <td>{lendingPool.name}</td>
-              <td>
-                <Image
-                  src={lendingPool.protocol}
-                  width={24}
-                  height={24}
-                  alt=""
-                />
-              </td>
-              <td>{lendingPool.lendingPoolAPY}</td>
-              <td>
-                <Link
-                  key={lendingPool.address}
-                  href={`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`}
-                >
-                  link
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="mt-10">
+        <h2 className="text-left flex items-center">Underlying Protected Lending Pools</h2>
+        <div className="block py-10 px-6 bg-white rounded-2xl shadow-boxShadow w-full">
+          <table className="table-auto w-full text-left">
+            <thead>
+              <tr>
+                <th>Adress</th>
+                <th>Lending Pool</th>
+                <th>Protocol</th>
+                <th>APY</th>
+                <th>Payment Term</th>
+                <th>Opening Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {underlyingLendingPools.map((lendingPool) => (
+                <tr key={lendingPool.address}>
+                  <td>{formatAddress(lendingPool.address)}</td>
+                  <td>{lendingPool.name}</td>
+                  <td>
+                    <Image
+                      src={lendingPool.protocol}
+                      width={24}
+                      height={24}
+                      alt=""
+                    />
+                  </td>
+                  <td>{lendingPool.lendingPoolAPY}</td>
+                  <td>{"TERM"}</td>
+                  <td>{"DATE"}</td>
+                  <td>
+                    <Link
+                      key={lendingPool.address}
+                      href={`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`}
+                    >
+                      link
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
