@@ -13,6 +13,7 @@ export const ProtectionPoolContextProvider = ({ children }) => {
   const defaultProtectionPools: ProtectionPool[] = [
     {
       address: "0x0...",
+      name: "Goldfinch Protection Pool #1",
       protocols: goldfinchLogo,
       APY: "15 - 20%",
       totalCapital: "4,500,000 USDC",
@@ -24,6 +25,7 @@ export const ProtectionPoolContextProvider = ({ children }) => {
     },
     {
       address: "0x1...",
+      name: "Goldfinch Protection Pool #2",
       protocols: goldfinchLogo,
       APY: "15 - 20%",
       totalCapital: "4,500,000 USDC",

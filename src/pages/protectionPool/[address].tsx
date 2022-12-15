@@ -146,8 +146,7 @@ const ProtectionPool = () => {
           <table className="table-auto w-full text-left">
             <thead>
               <tr>
-                <th>Adress</th>
-                <th>Lending Pool</th>
+                <th>Name</th>
                 <th>Protocol</th>
                 <th>APY</th>
                 <th>Payment Term</th>
@@ -157,7 +156,6 @@ const ProtectionPool = () => {
             <tbody>
               {underlyingLendingPools.map((lendingPool) => (
                 <tr key={lendingPool.address}>
-                  <td>{formatAddress(lendingPool.address)}</td>
                   <td>{lendingPool.name}</td>
                   <td>
                     <Image
