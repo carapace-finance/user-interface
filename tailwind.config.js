@@ -12,6 +12,7 @@ module.exports = withMT({
         customDarkBlue: "#161C2E",
         headerBorder: "#B8B8B8",
         customBlue: "#293C9A",
+        customLightBlue: "#2B69F5",
         customGrey: "#6E7191",
         customDarkGrey: "#14142B",
         customLightGrey: "#F6F6F6",
