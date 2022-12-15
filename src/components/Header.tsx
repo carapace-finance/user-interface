@@ -59,8 +59,8 @@ const Header = () => {
       console.log("Starting inactivity timer...");
       idleTimerId = setInterval(() => {
         // Check every minute for inactivity
-        console.log("Inactive time in seconds: ", inactiveTimeInSeconds);
         const inactiveTimeInMilliSeconds = (new Date().getTime() - protectionPoolService.getLastActionTimestamp());
+        console.log("Inactive time in milliseconds: ", inactiveTimeInMilliSeconds);
         if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
           console.log("Stopping playground due to inactivity...");
           cleanup();
