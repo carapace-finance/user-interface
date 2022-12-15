@@ -33,9 +33,9 @@ const BuyProtection = () => {
               <th className="py-3">Lending Pool</th>
               <th className="py-3">Protocol</th>
               <th className="py-3">
-              <div className="flex flex-row justify-between mr-3">
-                Estimated Adjusted Yields
-                {/* <div className="float-right"> */}
+                <div className="flex flex-row justify-between mr-3">
+                  Estimated Adjusted Yields
+                  {/* <div className="float-right"> */}
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
@@ -62,9 +62,9 @@ const BuyProtection = () => {
                 </div>
               </th>
               <th className="py-3">
-              <div className="flex flex-row justify-between mr-3">
-                Lending Pool APY
-                {/* <div className="float-right"> */}
+                <div className="flex flex-row justify-between mr-3">
+                  Lending Pool APY
+                  {/* <div className="float-right"> */}
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },

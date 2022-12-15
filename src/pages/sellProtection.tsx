@@ -16,7 +16,6 @@ const SellProtection = () => {
   return (
     <div className="mx-32">
       <div className="h-5"></div>
-
       <TitleAndDescriptions
         title="Sell Protection"
         descriptions="Earn yields by depositing capital to diversified protection pools you think are safe."
