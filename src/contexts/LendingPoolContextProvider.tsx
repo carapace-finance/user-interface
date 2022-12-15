@@ -17,7 +17,7 @@ export const LendingPoolContextProvider = ({ children }) => {
   const defaultLendingPools: LendingPool[] = [
     {
       address: "0x00...",
-      name: "Almavest Basket #6",
+      name: "Lend East #1: Emerging Asia Fintech Pool",
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",
       lendingPoolAPY: "17%",
@@ -29,6 +29,18 @@ export const LendingPoolContextProvider = ({ children }) => {
     },
     {
       address: "0x01...",
+      name: "Cauris Fund #2: Africa Innovation Pool",
+      protocol: goldfinchLogo,
+      adjustedYields: "7 - 10%",
+      lendingPoolAPY: "17%",
+      CARATokenRewards: "~3.5%",
+      premium: "4 - 7%",
+      timeLeft: "7 Days 8 Hours 2 Mins",
+      protectionPoolAddress: "0x0...",
+      protectionPurchase: "21,000 USDC"
+    },
+    {
+      address: "0x02...",
       name: "Almavest Basket #6",
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",

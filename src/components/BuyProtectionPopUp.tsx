@@ -19,6 +19,7 @@ import {
 } from "@utils/usdc";
 import { formatAddress, getDaysInSeconds } from "@utils/utils";
 import { Tooltip } from "@material-tailwind/react";
+import assets from "src/assets";
 
 const BuyProtectionPopUp = (props) => {
   const {
@@ -121,7 +122,7 @@ const BuyProtectionPopUp = (props) => {
     >
       <DialogTitle className="mt-6">
         Buy Protection
-        <div className="">
+        <div>
           <IconButton
             onClick={onClose}
             className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
@@ -137,13 +138,21 @@ const BuyProtectionPopUp = (props) => {
       <DialogContent>
         <div>
           <div>
-            <div>
+            <div className="flex">
               {renderFieldAndValue(
                 "Lending Pool",
                 formatAddress(lendingPoolAddress)
               )}
+              <div className="ml-2 mt-1">
+              <img
+                src={assets.goldfinch.src}
+                alt="carapace"
+                height="16"
+                width="16"
+                className=""
+              />
+              </div>
             </div>
-
             {renderFieldAndValue(
               "Protection Amount",
               numeral(protectionAmount).format(USDC_FORMAT) + " USDC"
@@ -156,7 +165,7 @@ const BuyProtectionPopUp = (props) => {
             )}
           </div>
           <Divider className="mb-4" />
-          <div className="mb-7">
+          <div className="mb-8">
             <Typography className="flex justify-left mb-4 text-customGrey text-base font-bold" variant="subtitle2">
               Estimated Stats
             </Typography>
@@ -233,9 +242,14 @@ const BuyProtectionPopUp = (props) => {
             </div>
           </LoadingButton>
           <div className="text-xs">
-            By clicking &quot;Confirm Protection Purchase&quot;, you agree to
-            Carapace&apos;s Terms of Service and acknowledge that you have read
-            and understand the Carapace protocol disclaimer.
+            <div className="flex">
+            <p>By clicking &quot;Confirm Protection Purchase&quot;, you agree toCarapace&apos;s&nbsp; </p>
+            <p className="underline">Terms of Service</p>
+            </div>
+            <div className="flex">
+              <p>and acknowledge that you have read and understand the&nbsp; </p>
+              <p className="underline">Carapace protocol disclaimer.</p>
+            </div>
           </div>
         </div>
       </DialogContent>

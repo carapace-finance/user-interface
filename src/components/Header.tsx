@@ -193,13 +193,13 @@ const Header = () => {
       </div>
       <div className="flex items-center">
       <Link href="/buyProtection" className="hover:text-customBlue">
-        <h3>Buy Protection</h3>
+        <h3>Protect</h3>
       </Link>
       {/* <Link href="/lendWithProtection">
         <h3>Lend With Protection</h3>
       </Link> */}
       <Link href="/sellProtection" className="ml-14 hover:text-customBlue">
-        <h3>Sell Protection</h3>
+        <h3>Earn</h3>
       </Link>
       <Link href="/dashboard"className="ml-14 hover:text-customBlue">
         <h3>Dashboard</h3>
