@@ -110,12 +110,12 @@ const Dashboard = () => {
       <div className="rounded-2xl shadow-table p-8">
         <table className="table-fixed w-full">
           <thead>
-            <tr className="text-left text-sm font-bold py-3">
-              <th className="py-3">Address</th>
-              <th className="py-3">Lending Pool</th>
-              <th className="py-3">Protocol</th>
-              <th className="py-3">
-                <div className="flex flex-row justify-between mr-3">
+            <tr className="text-left text-sm font-bold py-4">
+              <th className="py-4">Address</th>
+              <th className="py-4">Lending Pool</th>
+              <th className="py-4">Protocol</th>
+              <th className="py-4">
+                <div className="flex flex-row justify-between mr-4">
                   Estimated Adjusted Yields
                   <Tooltip
                     animate={{
@@ -142,11 +142,11 @@ const Dashboard = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="text-left py-3">Lending Pool APY</th>
-              <th className="py-3">CARA Token Rewards</th>
-              <th className="py-3">Premium</th>
-              <th className="py-3 bg-blue-100">Time Until Expiration</th>
-              <th className="py-3" >
+              <th className="text-left py-4">Lending Pool APY</th>
+              <th className="py-4">CARA Token Rewards</th>
+              <th className="py-4">Premium</th>
+              <th className="py-4">Time Until Expiration</th>
+              <th className="py-4" >
                 <div className="flex flex-row items-center justify-between">
                   Claim
                   <Tooltip
@@ -180,9 +180,9 @@ const Dashboard = () => {
             {/*  TODO: use User.protectionPurchases */}
             {lendingPools.map((lendingPool) => (
               <tr key={lendingPool.address} className="text-left text-sm font-medium">
-                <td className="py-3">{formatAddress(lendingPool.address)}</td>
-                <td className="py-3">{lendingPool.name}</td>
-                <td className="py-3">
+                <td className="py-4">{formatAddress(lendingPool.address)}</td>
+                <td className="py-4">{lendingPool.name}</td>
+                <td className="py-4">
                   <Image
                     src={lendingPool.protocol}
                     width={24}
@@ -190,12 +190,12 @@ const Dashboard = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-3">{lendingPool.adjustedYields}</td>
+                <td className="py-4">{lendingPool.adjustedYields}</td>
                 <td >{lendingPool.lendingPoolAPY}</td>
-                <td className="py-3">{lendingPool.CARATokenRewards}</td>
-                <td className="py-3">{lendingPool.premium}</td>
-                <td className="py-3">{getTimeUntilExpiration(lendingPool)}</td>
-                <td className="py-3">
+                <td className="py-4">{lendingPool.CARATokenRewards}</td>
+                <td className="py-4">{lendingPool.premium}</td>
+                <td className="py-4">{getTimeUntilExpiration(lendingPool)}</td>
+                <td className="py-4">
                   <button disabled>claim</button>
                 </td>
               </tr>
@@ -211,8 +211,8 @@ const Dashboard = () => {
           <thead>
             <tr className="text-left text-sm font-bold">
               {/* <th>address</th> */}
-              <th className="py-3">Protocols</th>
-              <th className="py-3">
+              <th className="py-4">Protocols</th>
+              <th className="py-4">
                 <div className="flex flex-row justify-between pr-3">
                   Estimated APY
                   <Tooltip
@@ -240,11 +240,11 @@ const Dashboard = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-3">Total Capital</th>
-              <th className="py-3">Total Protection</th>
-              <th className="py-3">Deposited Amount</th>
-              <th className="py-3">Requested Withdrawal</th>
-              <th className="py-3">
+              <th className="py-4">Total Capital</th>
+              <th className="py-4">Total Protection</th>
+              <th className="py-4">Deposited Amount</th>
+              <th className="py-4">Requested Withdrawal</th>
+              <th className="py-4">
                 {/* the div needs to be there otherwise there is a bug with styling */}
                 <div className="flex flex-row justify-between pr-3">
                   Request Withdrawal
@@ -273,7 +273,7 @@ const Dashboard = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-3">
+              <th className="py-4">
                 <div className="flex flex-row justify-between pr-3">
                   Withdraw
                   <Tooltip
@@ -307,7 +307,7 @@ const Dashboard = () => {
             {protectionPools.map((protectionPool) => (
               <tr key={protectionPool.address} className="text-left text-sm font-medium">
                 {/* <td>{formatAddress(protectionPool.address)}</td> */}
-                <td className="py-3">
+                <td className="py-4">
                   <Image
                     src={protectionPool.protocols}
                     width={24}
@@ -315,17 +315,17 @@ const Dashboard = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-3">{protectionPool.APY}</td>
-                <td className="py-3">{protectionPool.totalCapital} </td>
-                <td className="py-3">{protectionPool.totalProtection} </td>
-                <td className="py-3">{user.sTokenUnderlyingAmount}</td>
-                <td className="py-3">{user.requestedWithdrawalAmount}</td>
-                <td className="py-3">
+                <td className="py-4">{protectionPool.APY}</td>
+                <td className="py-4">{protectionPool.totalCapital} </td>
+                <td className="py-4">{protectionPool.totalProtection} </td>
+                <td className="py-4">{user.sTokenUnderlyingAmount}</td>
+                <td className="py-4">{user.requestedWithdrawalAmount}</td>
+                <td className="py-4">
                   <button onClick={() => setIsWithdrawalRequestOpen(true)}>
                     request withdrawal
                   </button>
                 </td>
-                <td className="py-3">
+                <td className="py-4">
                   <button onClick={() => setIsWithdrawOpen(true)}>
                     withdraw
                   </button>

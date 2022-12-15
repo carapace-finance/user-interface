@@ -28,12 +28,12 @@ const BuyProtection = () => {
       <div className="rounded-2xl shadow-table p-8">
         <table className="table-fixed w-full">
           <thead>
-            <tr className="text-left text-sm font-bold py-3">
-              <th className="py-3">Address</th>
-              <th className="py-3">Lending Pool</th>
-              <th className="py-3">Protocol</th>
-              <th className="py-3">
-                <div className="flex flex-row justify-between mr-3">
+            <tr className="text-left text-sm font-bold py-4">
+              <th className="py-4">Address</th>
+              <th className="py-4">Lending Pool</th>
+              <th className="py-4">Protocol</th>
+              <th className="py-4">
+                <div className="flex flex-row justify-between mr-4">
                   Estimated Adjusted Yields
                   {/* <div className="float-right"> */}
                   <Tooltip
@@ -61,8 +61,8 @@ const BuyProtection = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-3">
-                <div className="flex flex-row justify-between mr-3">
+              <th className="py-4">
+                <div className="flex flex-row justify-between mr-4">
                   Lending Pool APY
                   {/* <div className="float-right"> */}
                   <Tooltip
@@ -90,9 +90,9 @@ const BuyProtection = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-3">CARA Token Rewards</th>
-              <th className="py-3">Premium</th>
-              <th className="py-3">Time Left</th>
+              <th className="py-4">CARA Token Rewards</th>
+              <th className="py-4">Premium</th>
+              <th className="py-4">Time Left</th>
             </tr>
           </thead>
           <tbody>
@@ -102,13 +102,13 @@ const BuyProtection = () => {
                 onClick={() => handleClick(`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`)}
                 className="text-left text-sm font-medium hover:cursor-pointer"
               >
-                <td className="py-3">
+                <td className="py-4">
                   {formatAddress(lendingPool.address)}
                 </td>
-                <td className="py-3">
+                <td className="py-4">
                   {lendingPool.name}
                 </td>
-                <td className="py-3">
+                <td className="py-4">
                   <Image
                     src={lendingPool.protocol}
                     width={24}
@@ -116,19 +116,19 @@ const BuyProtection = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-3">
+                <td className="py-4">
                   {lendingPool.adjustedYields}
                 </td>
-                <td className="py-3">
+                <td className="py-4">
                   {lendingPool.lendingPoolAPY}
                 </td>
-                <td className="py-3">
+                <td className="py-4">
                   {lendingPool.CARATokenRewards}
                 </td>
-                <td className="py-3">
+                <td className="py-4">
                   {lendingPool.premium}
                 </td>
-                <td className="py-3">
+                <td className="py-4">
                   {lendingPool.timeLeft}
                 </td>
               </tr>

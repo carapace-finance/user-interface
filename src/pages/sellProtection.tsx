@@ -27,11 +27,11 @@ const SellProtection = () => {
       <div className="rounded-2xl shadow-table p-8">
         <table className="table-fixed w-full">
           <thead>
-            <tr className="text-left text-sm font-bold py-3">
-              <th className="py-3">Address</th>
-              <th className="py-3">Protocols</th>
-              <th className="py-3">
-                <div className="flex flex-row justify-between mr-3">
+            <tr className="text-left text-sm font-bold py-4">
+              <th className="py-4">Address</th>
+              <th className="py-4">Protocols</th>
+              <th className="py-4">
+                <div className="flex flex-row justify-between mr-4">
                   Estimated APY
                   <Tooltip
                     animate={{
@@ -58,15 +58,15 @@ const SellProtection = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-3">Total Capital</th>
-              <th className="py-3">Total Protection</th>
+              <th className="py-4">Total Capital</th>
+              <th className="py-4">Total Protection</th>
             </tr>
           </thead>
           <tbody>
             {protectionPools.map((protectionPool) => (
               <tr key={protectionPool.address} className="text-left text-sm font-medium">
-                <td className="py-3">{formatAddress(protectionPool.address)}</td>
-                <td className="py-3">
+                <td className="py-4">{formatAddress(protectionPool.address)}</td>
+                <td className="py-4">
                   <Image
                     src={protectionPool.protocols}
                     width={24}
@@ -74,10 +74,10 @@ const SellProtection = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-3">{protectionPool.APY}</td>
-                <td className="py-3">{protectionPool.totalCapital}</td>
-                <td className="py-3">{protectionPool.totalProtection}</td>
-                <td className="py-3">
+                <td className="py-4">{protectionPool.APY}</td>
+                <td className="py-4">{protectionPool.totalCapital}</td>
+                <td className="py-4">{protectionPool.totalProtection}</td>
+                <td className="py-4">
                   <Link
                     key={protectionPool.address}
                     href={"/protectionPool/" + protectionPool.address}

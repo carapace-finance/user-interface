@@ -115,7 +115,7 @@ const WithdrawalPopUp = (props) => {
         </MuiIconButton>
       </DialogTitle>
       <DialogContent>
-        <div className="flex justify-left mb-3">
+        <div className="flex justify-left mb-4">
           Protection Pool:{formatAddress(protectionPoolAddress)}
         </div>
         <h4>Withdraw Amount</h4>

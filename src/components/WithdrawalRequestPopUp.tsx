@@ -117,10 +117,10 @@ const WithdrawalRequestPopUp = (props) => {
         </MuiIconButton>
       </DialogTitle>
       <DialogContent>
-        <div className="flex justify-left mb-3">
+        <div className="flex justify-left mb-4">
           Protection Pool:{formatAddress(protectionPoolAddress)}
         </div>
-        <div className="flex justify-left mb-3">Request Amount</div>
+        <div className="flex justify-left mb-4">Request Amount</div>
         <div className="flex justify-center">
           <TextField
             type="number"
