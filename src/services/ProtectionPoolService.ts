@@ -227,6 +227,12 @@ export class ProtectionPoolService {
     return Promise.resolve([]);
   }
 
+  public setLastActionTimestamp(): number {
+    this.lastActionTimestamp = Date.now();
+    console.log('setting up the last action timestamp... ==>', this.lastActionTimestamp);
+    return this.lastActionTimestamp;
+  }
+
   public getLastActionTimestamp(): number {
     return this.lastActionTimestamp || 0;
   }
