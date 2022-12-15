@@ -3,12 +3,25 @@ import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 const PlaygroundModePopUp = (props) => {
   const { open, onClose, playground } = props;
 
+  const handleClose = (
+    event: {},
+    reason: "backdropClick" | "escapeKeyDown"
+  ) => {
+    if (reason === "backdropClick") {
+      console.log(reason);
+    } else if (reason === "escapeKeyDown") {
+      console.log(reason);
+    } else {
+      return onClose;
+    }
+  };
+
   return (
     <Dialog
       maxWidth="lg"
       disableScrollLock
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       PaperProps={{
         style: {
           borderRadius: "8px"
