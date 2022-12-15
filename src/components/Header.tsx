@@ -47,6 +47,12 @@ const Header = () => {
   
   // this is to ensure that playground is stopped when user closes the tab
   useEffect(() => {
+    // Vercel serverless functions are "cold/inactive" before first use and after some time of inactivity.
+    // and take a few seconds to start up: download dependencies, compile, execute etc.
+    // Ping start/stop api to "warm" them up for real use later
+    fetch(`/api/playground/start?ping=true`);
+    fetch(`/api/playground/stop?ping=true`);
+
     window.addEventListener("beforeunload", cleanup);
     return () => {
       window.removeEventListener('beforeunload', cleanup);

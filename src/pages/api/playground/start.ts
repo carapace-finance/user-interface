@@ -18,13 +18,16 @@ const MIN_AVAILABLE_PLAYGROUNDS = 5;
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const {
-      query: { userAddress },
+      query: { userAddress, ping },
       method
     } = req;
 
     switch (method) {
       case "GET":
       case "POST":
+        if (ping) {
+          return res.status(204).end();
+        }
         let availablePlaygroundCount: number =
           await getAvailablePlaygroundCount();
         console.log("availablePlaygroundCount: ", availablePlaygroundCount);
