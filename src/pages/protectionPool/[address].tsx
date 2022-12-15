@@ -62,7 +62,7 @@ const ProtectionPool = () => {
    <div className="mx-32">
       <div className="flex">
         <TitleAndDescriptions
-          title={`Protection Pool ${formatAddress(router.query.address)}`}
+          title={`Goldfinch Protection Pool #1 ${formatAddress(router.query.address)}`}
           descriptions=""
           buttonExist={false}
         />

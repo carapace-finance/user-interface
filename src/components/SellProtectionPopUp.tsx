@@ -105,7 +105,7 @@ const SellProtectionPopUp = (props) => {
           <div>
             <div className="flex">
               {renderFieldAndValue(
-                "Protection Pool #1",
+                "Goldfinch Protection Pool #1",
                 formatAddress(protectionPoolAddress)
               )}
               <div className="ml-2 mt-1">
