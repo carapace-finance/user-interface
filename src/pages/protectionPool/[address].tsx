@@ -75,11 +75,7 @@ const ProtectionPool = () => {
               href={`https://etherscan.io/address/${protectionPoolAddress}`}
               className=""
             >
-              <img
-                src={assets.footerLogo.src}
-                alt="carapace"
-                className="w-[40px]"
-              />
+              <Image src={assets.grayVector} width={18} height={18} alt="" className="mr-6" />
             </a>
           </div>
         </div>
@@ -98,14 +94,14 @@ const ProtectionPool = () => {
               <div className="text-xs leading-4">Deposit Limit: {depositLimit}</div>
             </div>
           </div>
-          <div className="下段">
+          <div>
             <div >
               <div className="text-left text-black text-2xl font-bold my-4 flex">
                 Protection Purchase Till Date
               </div>
             </div>
             <div className="h-[500px] w-full flex">
-              <Doughnut 
+              <Doughnut
               className="mx-auto"
               plugins = {plugins}
               options={{
