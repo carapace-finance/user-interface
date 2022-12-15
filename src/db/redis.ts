@@ -1,4 +1,5 @@
 import { Redis } from "@upstash/redis";
+import { PlaygroundInfo } from "@utils/forked/types";
 
 const MIN_AVAILABLE_PLAYGROUNDS = "minAvailablePlaygrounds";
 const AVAILABLE_PLAYGROUNDS = "availablePlaygrounds";
@@ -71,4 +72,14 @@ export const saveAvailablePlaygroundDetails = async (playgroundInfo) => {
     `${AVAILABLE_PLAYGROUNDS}:${playgroundInfo.forkId}`,
     playgroundInfo
   );
+};
+
+export const getUsedPlaygrounds = async (): Promise<string[]> => {
+  return redis.smembers(USED_PLAYGROUNDS);
+};
+
+export const deleteAvailablePlaygroundDetails = async (
+  playgroundId: string
+) => {
+  return redis.del(`${AVAILABLE_PLAYGROUNDS}:${playgroundId}`);
 };

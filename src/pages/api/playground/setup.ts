@@ -4,7 +4,9 @@ import { preparePlayground } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
 import {
   getAvailablePlaygroundCount,
-  getMinAvailablePlaygrounds
+  getUsedPlaygrounds,
+  deleteAvailablePlaygroundDetails,
+  removeUsedPlaygroundId
 } from "src/db/redis";
 import { startNewPlayground } from "./start";
 
@@ -28,6 +30,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             await startNewPlayground();
           }
         }
+        res.status(200).json({
+          success: true
+        });
+        break;
+      case "DELETE":
+        console.log("Cleaning up playgrounds");
+        const usedPlaygrounds = await getUsedPlaygrounds();
+        usedPlaygrounds.forEach(async (playgroundId) => {
+          deleteAvailablePlaygroundDetails(playgroundId);
+          removeUsedPlaygroundId(playgroundId);
+        });
         res.status(200).json({
           success: true
         });
