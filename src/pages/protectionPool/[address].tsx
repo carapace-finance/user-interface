@@ -25,6 +25,7 @@ const ProtectionPool = () => {
   let totalCapital;
   let totalProtection;
   let depositLimit;
+  let maxAvailableDepositAmount;
   let depositPercentage = 0;
   protectionPools.map((protectionPool) => {
     if (protectionPool.address === router.query.address) {
@@ -35,6 +36,7 @@ const ProtectionPool = () => {
       depositLimit = protectionPool.depositLimit;
       let totalCapitalNumber = totalCapital.replace(/\D/g,'');
       let depositLimitNumber = depositLimit.replace(/\D/g,'');
+      maxAvailableDepositAmount = depositLimitNumber - totalCapitalNumber;
       depositPercentage=(totalCapitalNumber/depositLimitNumber)*100;
     }
   });
@@ -86,6 +88,7 @@ const ProtectionPool = () => {
             <div className="text-left text-2xl">
               <div className="text-black text-2xl font-bold mb-4">Current Capital in the Pool</div>
             </div>
+            <p className="text-left mb-2">The maximum amount you can deposit: {maxAvailableDepositAmount} USDC</p>
             <div className="h-6 mb-2">
               <BarChart filledPercentage={depositPercentage}/>
             </div>
