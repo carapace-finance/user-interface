@@ -114,7 +114,7 @@ export default function BuyProtectionCard() {
                   type="number"
                   min="0"
                   onChange={(e) =>
-                    e.target.value ? setProtectionAmount(parseFloat(e.target.value)) : 0
+                    setProtectionAmount(parseFloat(e.target.value))
                   }
                 />
                 {/* <Input
@@ -123,7 +123,7 @@ export default function BuyProtectionCard() {
                   type="number"
                   min="0"
                   onChange={(e) =>
-                    e.target.value ? setProtectionAmount(parseFloat(e.target.value)) : 0
+                    setProtectionAmount(parseFloat(e.target.value))
                   }
                 />
                 <Input
@@ -132,7 +132,7 @@ export default function BuyProtectionCard() {
                   type="number"
                   min="0"
                   onChange={(e) =>
-                    e.target.value ? setProtectionAmount(parseFloat(e.target.value)) : 0
+                    setProtectionAmount(parseFloat(e.target.value))
                   }
                 /> */}
             </div>
@@ -157,9 +157,7 @@ export default function BuyProtectionCard() {
               type="number"
               min="0"
               onChange={(e) =>
-                e.target.value
-                  ? setProtectionDurationInDays(parseInt(e.target.value))
-                  : 0
+                setProtectionDurationInDays(parseInt(e.target.value))
               }
             />
             {/* <Input
@@ -168,9 +166,7 @@ export default function BuyProtectionCard() {
               type="number"
               min="0"
               onChange={(e) =>
-                e.target.value
-                  ? setProtectionDurationInDays(parseInt(e.target.value))
-                  : 0
+                setProtectionDurationInDays(parseInt(e.target.value))
               }
             /> */}
           </div>
@@ -183,7 +179,7 @@ export default function BuyProtectionCard() {
             type="number"
             min="0"
             onChange={(e) =>
-              e.target.value ? setTokenId(parseInt(e.target.value)) : 0
+              setTokenId(parseInt(e.target.value))
             }
           />
         </div>

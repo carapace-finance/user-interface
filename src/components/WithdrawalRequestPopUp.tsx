@@ -146,7 +146,7 @@ const WithdrawalRequestPopUp = (props) => {
             }}
             value={amount}
             onChange={(e) =>
-              e.target.value ? setAmount(parseFloat(e.target.value)) : 0
+              setAmount(parseFloat(e.target.value))
             }
           />
         </div>

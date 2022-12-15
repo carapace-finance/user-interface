@@ -92,7 +92,7 @@ export default function SellProtectionCard() {
           }}
           value={amount}
           onChange={(e) =>
-            e.target.value ? setAmount(parseFloat(e.target.value)) : 0
+            setAmount(parseFloat(e.target.value))
           }
         />
         <p>Balance: {numeral(usdcBalance).format(USDC_FORMAT)} USDC</p>
