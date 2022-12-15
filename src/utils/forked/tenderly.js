@@ -55,7 +55,7 @@ export const deployToFork = async (tenderlyAccessKey) => {
     provider: forkProvider,
     deployedContracts
   };
-  window.playground = playground;
+
   return playground;
 };
 

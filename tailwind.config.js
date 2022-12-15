@@ -9,13 +9,27 @@ module.exports = withMT({
         buttonPink: "#FF5896",
         buttonPinkHover: "#FF2576",
         textPinkHover: "#FF0C66",
-        customDarkBlue: "#161C2E"
+        customDarkBlue: "#161C2E",
+        headerBorder: "#B8B8B8",
+        customBlue: "#293C9A",
+        customGrey: "#6E7191",
+        customDarkGrey: "#14142B",
+        customLightGrey: "#F6F6F6",
+        customGraphGrey: "#B8B8B8",
+      },
+      boxShadow: {
+        boxShadow: '0px 0px 12px rgba(63, 125, 204, 0.12)',
       },
       fontFamily: {
         manrope: ["Manrope", "sans-serif"]
       },
       boxShadow: {
         'table': '0px 0px 6px 6px rgba(63,125,204, 0.08)',
+      },
+      width:{
+        "600": "600px",
+        "400": "400px",
+        "550": "550px",
       }
     }
   },

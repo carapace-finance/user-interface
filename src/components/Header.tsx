@@ -9,19 +9,59 @@ import assets from "../assets";
 
 import Account from "@components/Account";
 import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
-import { deployToFork } from "@utils/forked/tenderly";
-import { preparePlayground, deletePlayground } from "@utils/forked/playground";
 import { Playground } from "@utils/forked/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import { JsonRpcProvider } from "@ethersproject/providers";
 
 const Header = ({ tenderlyAccessKey }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { active, activate, deactivate } = useWeb3React();
+  const { active, activate, deactivate, chainId, account } = useWeb3React();
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
   const { updateContractAddresses, updateProvider } =
     useContext(ApplicationContext);
+
+  const startPlayground = async () => {
+    const result = await fetch(`/api/playground/start?userAddress=${account}`);
+    if (result.status === 200) {
+      const data = await result.json();
+      if (data.success) {
+        const playground = data.playground;
+        playground.provider = new JsonRpcProvider(playground.url);
+        
+        updateContractAddresses({
+          isPlayground: true,
+          poolFactory: playground.poolFactoryAddress,
+          pool: playground.poolAddress
+        });
+        updateProvider(playground.provider);
+        setPlayground(playground);
+
+        console.log("Successfully started a playground: ", playground);
+      }
+    }
+    else { 
+      console.log("Failed to start playground: ", await result.json());
+      setError("Failed to start playground. Please try again.");
+    }
+  };
+
+  const stopPlayground = async () => { 
+    const result = await fetch(`/api/playground/stop?userAddress=${account}`, { method: "DELETE", body: playground.forkId });
+    console.log("End playground result", result);
+    if (result.status === 200) {
+      const data = await result.json();
+      if (data.success) {
+        setPlayground(undefined);
+        console.log("Successfully ended playground");
+      }
+      else {
+        console.log("Failed to end playground: ", data);
+        setError("Failed to end playground. Please try again.");
+      }
+    }
+  };
 
   const onConnect = async (wallet: string) => {
     setError("");
@@ -31,6 +71,7 @@ const Header = ({ tenderlyAccessKey }) => {
           await connect();
           router.push("/");
         } catch (e) {
+          setError("Failed to connect to Metamask. Please try again.");
           console.log("Error", e);
         }
         break;
@@ -41,7 +82,7 @@ const Header = ({ tenderlyAccessKey }) => {
   async function connect() {
     try {
       await activate(injected);
-      // TODO: should update contract addresses & provider here for mainnet similar to "initializePlayground"
+      // TODO: should update contract addresses & provider here for mainnet
     } catch (ex) {
       console.log(ex);
     }
@@ -55,71 +96,62 @@ const Header = ({ tenderlyAccessKey }) => {
     }
   }
 
-  async function initializePlayground(playground) {
-    await preparePlayground(playground);
-    updateContractAddresses({
-      isPlayground: true,
-      poolFactory: playground.deployedContracts.poolFactoryInstance.address,
-      pool: playground.deployedContracts.poolInstance.address
-    });
-    updateProvider(playground.provider);
-    setPlayground(playground);
-  }
-
   let playgroundButtonTitle;
   let playgroundButtonAction;
   if (playground?.forkId) {
     playgroundButtonTitle = "Stop Playground";
     playgroundButtonAction = async () => {
-      await deletePlayground(playground.forkId, tenderlyAccessKey);
-      setPlayground(undefined);
+      await stopPlayground();
     };
   } else {
     playgroundButtonTitle = "Start Playground";
     playgroundButtonAction = async () => {
       setIsOpen(true);
-      const playground = await deployToFork(tenderlyAccessKey);
-      await initializePlayground(playground);
+      await startPlayground();
     };
   }
 
   return (
-    <div className="flex justify-between items-center">
-      <Link href="/">
-        <Image
-          src={assets.headerLogo.src}
-          alt=""
-          height="32"
-          width="136"
-          unoptimized
-        />
-      </Link>
-      <Link href="/buyProtection">
+    <div className="flex justify-between items-center top-0 h-16 border-b border-headerBorder mb-10">
+      <div className="-my-3 ml-8">
+        <Link href="/">
+          <Image
+            src={assets.headerLogo.src}
+            alt=""
+            height="36"
+            width="128"
+            unoptimized
+          />
+        </Link>
+      </div>
+      <div className="flex items-center">
+      <Link href="/buyProtection" className="hover:text-customBlue">
         <h3>Buy Protection</h3>
       </Link>
       {/* <Link href="/lendWithProtection">
         <h3>Lend With Protection</h3>
       </Link> */}
-      <Link href="/sellProtection">
+      <Link href="/sellProtection" className="ml-14 hover:text-customBlue">
         <h3>Sell Protection</h3>
       </Link>
-      <Link href="/dashboard">
+      <Link href="/dashboard"className="ml-14 hover:text-customBlue">
         <h3>Dashboard</h3>
       </Link>
-      {/* <button
+      </div>
+      <div className="mr-8">
+      {active && chainId === 1
+      ? null 
+      : active && chainId != 1
+      ? null
+      : !active || error
+      ? (
+        <button
         className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         onClick={async () => await onConnect("metamask")}
-      >
-        <span>
-          {active && chainId === 1
-            ? "Ethereum"
-            : active && chainId != 1
-            ? "Not Ethereum"
-            : !active || error
-            ? "Connect Wallet"
-            : "Connect Wallet"}
-        </span>
-      </button> */}
+        >
+          <span>Connect Wallet</span>
+        </button>)
+      : ("")}
       {active ? (
         <button
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
@@ -131,31 +163,35 @@ const Header = ({ tenderlyAccessKey }) => {
         ""
       )}
       {playgroundButtonTitle === "Start Playground" ? (
-        <Tooltip
-          content="Test app features in a sandbox, with a starting balance of 1 ETH."
-          placement="right"
-        >
-          <button
-            className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-            onClick={playgroundButtonAction}
-          >
-            <span>{playgroundButtonTitle}</span>
-          </button>
-        </Tooltip>
-      ) : (
         <button
-          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          onClick={playgroundButtonAction}
-        >
-          <span>{playgroundButtonTitle}</span>
+          disabled={!account}
+          className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          onClick={playgroundButtonAction}>
+            <Tooltip
+              content="Connect you wallet, and test app features in a sandbox."
+              animate={{
+                mount: { scale: 1, y: 0 },
+                unmount: { scale: 0, y: 25 },
+              }}
+              placement="bottom">
+                <span>{playgroundButtonTitle}</span>
+            </Tooltip>
         </button>
+      ) : (
+            <button
+              disabled={!account}
+              className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+              onClick={playgroundButtonAction}>
+              <span>{playgroundButtonTitle}</span>
+            </button>
       )}
-      <Account />
+      {/* <Account /> */}
       <PlaygroundModePopUp
         open={isOpen}
         playground={playground}
         onClose={() => setIsOpen(false)}
       ></PlaygroundModePopUp>
+      </div>
     </div>
   );
 };

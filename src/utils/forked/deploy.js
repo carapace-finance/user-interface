@@ -267,7 +267,6 @@ const deployContracts = async (forkProvider) => {
       "sToken1",
       "ST1"
     );
-    console.log("Pool creation tx ==> ", tx);
 
     poolInstance = await getPoolInstanceFromTx(tx);
 
@@ -282,26 +281,27 @@ async function getReferenceLendingPoolsInstanceFromTx(forkProvider, tx) {
 
   try {
     receipt = await tx.wait();
-    console.log("receipt ==>", receipt);
+    const referenceLendingPoolsCreatedEvent = receipt.events.find(
+      (eventInfo) => eventInfo.event === "ReferenceLendingPoolsCreated"
+    );
+
+    const newReferenceLendingPoolsInstance = new Contract(
+      referenceLendingPoolsCreatedEvent.args.referenceLendingPools,
+      referenceLendingPoolsAbi,
+      deployer
+    );
+    console.log(
+      "ReferenceLendingPools instance created at: ",
+      newReferenceLendingPoolsInstance.address
+    );
+
+    return newReferenceLendingPoolsInstance;
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Failed to retrieve reference lending pool from creation tx: ",
+      error
+    );
   }
-
-  const referenceLendingPoolsCreatedEvent = receipt.events.find(
-    (eventInfo) => eventInfo.event === "ReferenceLendingPoolsCreated"
-  );
-
-  const newReferenceLendingPoolsInstance = new Contract(
-    referenceLendingPoolsCreatedEvent.args.referenceLendingPools,
-    referenceLendingPoolsAbi,
-    deployer
-  );
-  console.log(
-    "ReferenceLendingPools instance created at: ",
-    newReferenceLendingPoolsInstance.address
-  );
-
-  return newReferenceLendingPoolsInstance;
 }
 
 async function getPoolInstanceFromTx(tx) {
