@@ -76,8 +76,9 @@ const Header = () => {
       };
 
       // Check every minute for inactivity
-      idleTimerId = setInterval(checkForInactivity, 1000 * 60 * 1);
-      console.log("Started inactivity timer...");
+      // TODO: need to figure out why lastActionTimestamp is not getting updated
+      // idleTimerId = setInterval(checkForInactivity, 1000 * 60 * 1);
+      // console.log("Started inactivity timer...");
 
       return () => {
         if (idleTimerId) {
