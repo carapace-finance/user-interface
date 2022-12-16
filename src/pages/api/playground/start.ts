@@ -99,7 +99,9 @@ async function startNewPlayground() {
       playground.deployedContracts.poolFactoryInstance.address,
     poolAddress: playground.deployedContracts.poolInstance.address,
     poolCycleManagerAddress:
-      playground.deployedContracts.poolCycleManagerInstance.address
+      playground.deployedContracts.poolCycleManagerInstance.address,
+    premiumCalculatorAddress:
+      playground.deployedContracts.premiumCalculatorInstance.address
   });
 
   // step 5: store the id of the new playground to retrieve it later

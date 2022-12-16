@@ -8,6 +8,7 @@ export interface ContractAddresses {
   isPlayground: boolean;
   poolFactory: string;
   pool: string;
+  premiumCalculator: string;
 }
 
 export type ApplicationContextType = {

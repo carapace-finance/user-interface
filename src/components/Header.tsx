@@ -12,6 +12,7 @@ import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
 import { Playground } from "@utils/forked/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { JsonRpcProvider } from "@ethersproject/providers";
+import ErrorPopup from "./ErrorPopup";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,38 +48,44 @@ const Header = () => {
   
   // this is to ensure that playground is stopped when user closes the tab
   useEffect(() => {
-    // Vercel serverless functions are "cold/inactive" before first use and after some time of inactivity.
-    // and take a few seconds to start up: download dependencies, compile, execute etc.
-    // Ping start/stop api to "warm" them up for real use later
-    fetch(`/api/playground/start?ping=true`);
-    fetch(`/api/playground/stop?ping=true`);
-
     window.addEventListener("beforeunload", cleanup);
     return () => {
       window.removeEventListener('beforeunload', cleanup);
     }
   }, []);
 
+  const pingStartAndStopApi = () => { 
+    // Vercel serverless functions are "cold/inactive" before first use and after some time of inactivity.
+    // and take a few seconds to start up: download dependencies, compile, execute etc.
+    // Ping start/stop api to "warm" them up for real use later
+    fetch(`/api/playground/start?ping=true`);
+    fetch(`/api/playground/stop?ping=true`);
+  };
+
+  const checkForInactivityAndPingStartStopApis = () => {
+    if (protectionPoolService && playground?.forkId) {
+      const lastActionTimestamp = protectionPoolService.getLastActionTimestamp();
+      console.log("Last action timestamp: ", lastActionTimestamp);
+      const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
+      console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
+      if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
+        console.log("Stopping playground due to inactivity...");
+        cleanup();
+      }
+
+      pingStartAndStopApi();
+    }
+  };
+  
   // Setup inactivity timer
   useEffect(() => {
     if (protectionPoolService && playground?.forkId) {
+      pingStartAndStopApi();
       protectionPoolService.setLastActionTimestamp();
-      
-      const checkForInactivity = () => {
-        const lastActionTimestamp = protectionPoolService.getLastActionTimestamp();
-        console.log("Last action timestamp: ", lastActionTimestamp);
-        const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
-        console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
-        if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
-          console.log("Stopping playground due to inactivity...");
-          cleanup();
-        }
-      };
 
       // Check every minute for inactivity
-      // TODO: need to figure out why lastActionTimestamp is not getting updated
-      // idleTimerId = setInterval(checkForInactivity, 1000 * 60 * 1);
-      // console.log("Started inactivity timer...");
+      idleTimerId = setInterval(checkForInactivityAndPingStartStopApis, 1000 * 60 * 1);
+      console.log("Started inactivity timer...");
 
       return () => {
         if (idleTimerId) {
@@ -88,6 +95,15 @@ const Header = () => {
       }
     }
   }, [playground?.forkId]);
+
+  const onError = (message, e) => {
+    if (e) {
+      console.log(message, e);
+    }
+
+    setError(message);
+    setIsOpen(false);
+  }
 
   const startPlayground = async () => {
     const result = await fetch(`/api/playground/start?userAddress=${account}`);
@@ -100,7 +116,8 @@ const Header = () => {
         updateContractAddresses({
           isPlayground: true,
           poolFactory: playground.poolFactoryAddress,
-          pool: playground.poolAddress
+          pool: playground.poolAddress,
+          premiumCalculator: playground.premiumCalculatorAddress,
         });
         updateProvider(playground.provider);
         updatePlayground(playground);
@@ -108,9 +125,8 @@ const Header = () => {
         console.log("Successfully started a playground: ", playground);
       }
     }
-    else { 
-      console.log("Failed to start playground: ", await result.json());
-      setError("Failed to start playground. Please try again.");
+    else {
+      onError("Failed to start playground. Please try again.", await result.json());
     }
   };
 
@@ -124,8 +140,7 @@ const Header = () => {
         console.log("Successfully ended playground");
       }
       else {
-        console.log("Failed to end playground: ", data);
-        setError("Failed to end playground. Please try again.");
+        onError("Failed to stop playground. Please try again.", data);
       }
     }
   };
@@ -257,7 +272,8 @@ const Header = () => {
         open={isOpen}
         playground={playground}
         onClose={() => setIsOpen(false)}
-      ></PlaygroundModePopUp>
+        ></PlaygroundModePopUp>
+        <ErrorPopup error={error} handleCloseError={() => setError("")} />
       </div>
     </div>
   );

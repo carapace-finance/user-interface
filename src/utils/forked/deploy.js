@@ -43,10 +43,15 @@ let referenceLendingPoolsImplementation;
 let defaultStateManagerInstance;
 
 const GOLDFINCH_LENDING_POOLS = [
-  "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
+  // "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
   "0xd09a57127bc40d680be7cb061c2a6629fe71abef",
   "0x418749e294cabce5a714efccc22a8aade6f9db57" // https://app.goldfinch.finance/pools/0x418749e294cabce5a714efccc22a8aade6f9db57
 ];
+const _lendingProtocols = GOLDFINCH_LENDING_POOLS.map(() => 0); // 0 = Goldfinch
+const _purchaseLimitInDays = hexValue(90);
+const _purchaseLimitsInDays = GOLDFINCH_LENDING_POOLS.map(
+  () => _purchaseLimitInDays
+);
 
 function getLinkedBytecode(contractArtifact, libRefs) {
   const libs = libRefs.map((libRef) => {
@@ -151,13 +156,6 @@ const deployContracts = async (forkProvider) => {
     );
 
     // Create an instance of the ReferenceLendingPools
-    const _lendingProtocols = [0, 0, 0]; // 0 = Goldfinch
-    const _purchaseLimitInDays = hexValue(90);
-    const _purchaseLimitsInDays = [
-      _purchaseLimitInDays,
-      _purchaseLimitInDays,
-      _purchaseLimitInDays
-    ];
     console.log(
       "referenceLendingPoolsFactoryInstance.address ==>",
       referenceLendingPoolsFactoryInstance.address
@@ -270,7 +268,12 @@ const deployContracts = async (forkProvider) => {
 
     poolInstance = await getPoolInstanceFromTx(tx);
 
-    return { poolCycleManagerInstance, poolFactoryInstance, poolInstance };
+    return {
+      poolCycleManagerInstance,
+      poolFactoryInstance,
+      poolInstance,
+      premiumCalculatorInstance
+    };
   } catch (e) {
     console.log(e);
   }

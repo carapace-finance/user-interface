@@ -28,6 +28,7 @@ const BuyProtectionPopUp = (props) => {
     protectionAmount,
     protectionDurationInDays,
     tokenId,
+    premiumAmount,
     lendingPoolAddress,
     protectionPoolAddress
   } = props;
@@ -36,7 +37,6 @@ const BuyProtectionPopUp = (props) => {
   const [loading, setLoading] = useState(false);
   const [adjustedYield, setAdjustedYield] = useState("10 - 17%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
-  const [premiumAmount, setPremiumAmount] = useState(0);
   const { protectionPoolService } = useContext(ApplicationContext);
 
   const reset = () => {
@@ -44,26 +44,6 @@ const BuyProtectionPopUp = (props) => {
     setError("");
     setLoading(false);
   };
-
-  const protectionPurchaseParams = {
-    lendingPoolAddress: lendingPoolAddress,
-    nftLpTokenId: tokenId,
-    protectionAmount: convertNumberToUSDC(protectionAmount),
-    protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
-  };
-
-  useEffect(() => {
-    reset();
-    if (protectionPoolService && protectionPoolAddress) {
-      console.log("Protection Purchase Params: ", protectionPurchaseParams);
-      protectionPoolService
-        .calculatePremiumPrice(protectionPoolAddress, protectionPurchaseParams)
-        .then((premiumPrice) => {
-          console.log("Premium Price: ", premiumPrice);
-          setPremiumAmount(convertUSDCToNumber(premiumPrice));
-        });
-    }
-  }, [open]);
 
   const onError = (e) => {
     if (e) {
@@ -80,6 +60,12 @@ const BuyProtectionPopUp = (props) => {
     setError("");
 
     try {
+      const protectionPurchaseParams = {
+        lendingPoolAddress: lendingPoolAddress,
+        nftLpTokenId: tokenId,
+        protectionAmount: convertNumberToUSDC(protectionAmount),
+        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
+      };
       const tx = await protectionPoolService.buyProtection(
         protectionPoolAddress,
         protectionPurchaseParams

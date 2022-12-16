@@ -1,16 +1,45 @@
-import { useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Input, Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
 // import BasicButton from "./BasicBlueButton";
+import numeral from "numeral";
+import { convertNumberToUSDC, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import { getDaysInSeconds } from "@utils/utils";
 
 export default function BuyProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
   const [protectionAmount, setProtectionAmount] = useState(0);
   const [protectionDurationInDays, setProtectionDurationInDays] = useState(50);
   const [tokenId, setTokenId] = useState(590);
+  const [premiumPrice, setPremiumPrice] = useState(1024);
+  const [calculatingPremiumPrice, setCalculatingPremiumPrice] = useState(false);
 
+  const { contractAddresses, protectionPoolService } =
+    useContext(ApplicationContext);
+  
   const router = useRouter();
+
+  useEffect(() => { 
+    if (protectionPoolService && contractAddresses.premiumCalculator && protectionAmount > 0 && protectionDurationInDays > 0) {
+      setCalculatingPremiumPrice(true);
+      const protectionPurchaseParams = {
+        lendingPoolAddress: router.query.address as string,
+        nftLpTokenId: tokenId,
+        protectionAmount: convertNumberToUSDC(protectionAmount),
+        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
+      };
+      console.log("Calculating premium price for Protection purchase params: ", protectionPurchaseParams);
+      protectionPoolService
+        .calculatePremiumPrice(router.query.protectionPoolAddress as string, contractAddresses.premiumCalculator, protectionPurchaseParams)
+        .then((price) => {
+          console.log("Setting premium price: ", price);
+          setPremiumPrice(convertUSDCToNumber(price));
+          setCalculatingPremiumPrice(false);
+        });
+    }
+  }, [protectionPoolService, protectionAmount, protectionDurationInDays, tokenId]);
 
   return (
     <div className="block py-10 px-6 bg-white rounded-2xl shadow-boxShadow w-400">
@@ -184,14 +213,16 @@ export default function BuyProtectionCard() {
         </div>
       </div>
       <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Premium Price</h5>
-      <p className="text-left text-base">1,024 USDCs</p>
+      <p className="text-left text-base">{calculatingPremiumPrice ? "Calculating Premium Price..." : numeral(premiumPrice).format(USDC_FORMAT) + " USDC"}</p>
       <button
         type="button"
         className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         disabled={
           protectionAmount === 0 ||
           protectionDurationInDays === 0 ||
-          tokenId === 0
+          tokenId === 0 ||
+          premiumPrice === 0 ||
+          calculatingPremiumPrice
         }
         onClick={() => setIsOpen(true)}
       >
@@ -204,6 +235,7 @@ export default function BuyProtectionCard() {
         protectionAmount={protectionAmount}
         protectionDurationInDays={protectionDurationInDays}
         tokenId={tokenId}
+        premiumAmount={premiumPrice}
         lendingPoolAddress={router.query.address}
         protectionPoolAddress={router.query.protectionPoolAddress}
       ></BuyProtectionPopUp>
