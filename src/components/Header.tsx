@@ -48,38 +48,44 @@ const Header = () => {
   
   // this is to ensure that playground is stopped when user closes the tab
   useEffect(() => {
-    // Vercel serverless functions are "cold/inactive" before first use and after some time of inactivity.
-    // and take a few seconds to start up: download dependencies, compile, execute etc.
-    // Ping start/stop api to "warm" them up for real use later
-    fetch(`/api/playground/start?ping=true`);
-    fetch(`/api/playground/stop?ping=true`);
-
     window.addEventListener("beforeunload", cleanup);
     return () => {
       window.removeEventListener('beforeunload', cleanup);
     }
   }, []);
 
+  const pingStartAndStopApi = () => { 
+    // Vercel serverless functions are "cold/inactive" before first use and after some time of inactivity.
+    // and take a few seconds to start up: download dependencies, compile, execute etc.
+    // Ping start/stop api to "warm" them up for real use later
+    fetch(`/api/playground/start?ping=true`);
+    fetch(`/api/playground/stop?ping=true`);
+  };
+
+  const checkForInactivityAndPingStartStopApis = () => {
+    if (protectionPoolService && playground?.forkId) {
+      const lastActionTimestamp = protectionPoolService.getLastActionTimestamp();
+      console.log("Last action timestamp: ", lastActionTimestamp);
+      const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
+      console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
+      if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
+        console.log("Stopping playground due to inactivity...");
+        cleanup();
+      }
+
+      pingStartAndStopApi();
+    }
+  };
+  
   // Setup inactivity timer
   useEffect(() => {
     if (protectionPoolService && playground?.forkId) {
+      pingStartAndStopApi();
       protectionPoolService.setLastActionTimestamp();
-      
-      const checkForInactivity = () => {
-        const lastActionTimestamp = protectionPoolService.getLastActionTimestamp();
-        console.log("Last action timestamp: ", lastActionTimestamp);
-        const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
-        console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
-        if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
-          console.log("Stopping playground due to inactivity...");
-          cleanup();
-        }
-      };
 
       // Check every minute for inactivity
-      // TODO: need to figure out why lastActionTimestamp is not getting updated
-      // idleTimerId = setInterval(checkForInactivity, 1000 * 60 * 1);
-      // console.log("Started inactivity timer...");
+      idleTimerId = setInterval(checkForInactivityAndPingStartStopApis, 1000 * 60 * 1);
+      console.log("Started inactivity timer...");
 
       return () => {
         if (idleTimerId) {
