@@ -86,9 +86,9 @@ const LendingPool = () => {
           </div>
           <div>
             <div >
-              <div className="text-left text-black text-2xl font-bold my-4 flex">
+              <div className="text-left text-black text-2xl font-bold my-4 flex items-center">
                 Leverage Ratio
-                <div className="pl-2 items-center">
+                <div className="pl-2">
                   <Tooltip
                       animate={{
                         mount: { scale: 1, y: 0 },
