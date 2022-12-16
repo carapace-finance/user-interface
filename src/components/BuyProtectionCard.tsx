@@ -1,4 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Input, Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
@@ -7,11 +8,17 @@ import numeral from "numeral";
 import { convertNumberToUSDC, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { getDaysInSeconds } from "@utils/utils";
+import { BuyProtectionInputs } from "@type/types"
 
 export default function BuyProtectionCard() {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors }
+  } = useForm<BuyProtectionInputs>({ defaultValues: { protectionAmount: 0, protectionDurationInDays: 50 } });
+
   const [isOpen, setIsOpen] = useState(false);
-  const [protectionAmount, setProtectionAmount] = useState(0);
-  const [protectionDurationInDays, setProtectionDurationInDays] = useState(50);
   const [tokenId, setTokenId] = useState(590);
   const [premiumPrice, setPremiumPrice] = useState(1024);
   const [calculatingPremiumPrice, setCalculatingPremiumPrice] = useState(false);
@@ -21,14 +28,14 @@ export default function BuyProtectionCard() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    if (protectionPoolService && contractAddresses.premiumCalculator && protectionAmount > 0 && protectionDurationInDays > 0) {
+  useEffect(() => { 
+    if (protectionPoolService && contractAddresses.premiumCalculator && getValues("protectionAmount") > 0 && getValues("protectionDurationInDays") > 0) {
       setCalculatingPremiumPrice(true);
       const protectionPurchaseParams = {
         lendingPoolAddress: router.query.address as string,
         nftLpTokenId: tokenId,
-        protectionAmount: convertNumberToUSDC(protectionAmount),
-        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
+        protectionAmount: convertNumberToUSDC(getValues("protectionAmount")),
+        protectionDurationInSeconds: getDaysInSeconds(getValues("protectionDurationInDays"))
       };
       console.log("Calculating premium price for Protection purchase params: ", protectionPurchaseParams);
       protectionPoolService
@@ -39,7 +46,11 @@ export default function BuyProtectionCard() {
           setCalculatingPremiumPrice(false);
         });
     }
-  }, [protectionPoolService, protectionAmount, protectionDurationInDays, tokenId]);
+  }, [protectionPoolService, getValues("protectionAmount"), getValues("protectionDurationInDays"), tokenId]);
+
+  const onSubmit = () => {
+    setIsOpen(true);
+  }; // your form submit function which will invoke after successful validation
 
   return (
     <div className="block py-10 px-6 bg-white rounded-2xl shadow-boxShadow  shadow-table w-400 mr-32">
@@ -117,11 +128,12 @@ export default function BuyProtectionCard() {
           </div>
         </div>
       </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">
         <div>
           <div className="mb-4">
             <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Protection Amount</h5>
-            <div className="flex">
+            <div>
               {/* <div className="mr-4">
                 <BasicButton
                 label="Full"
@@ -137,14 +149,14 @@ export default function BuyProtectionCard() {
                 label="1/4"
                 />
               </div> */}
-              <Input
-                  label="Protection Amount"
-                  value={protectionAmount}
-                  type="number"
-                  onChange={(e) =>
-                    e.target.value ? setProtectionAmount(parseFloat(e.target.value)) : 0
-                  }
-                />
+              <input 
+                className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
+                type="number"
+                {...register("protectionAmount", { min: 0, max: 10000000, required: true })} 
+              />
+              {errors.protectionAmount && (
+                <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the protection amount must be in between 0 and the available protection purchase amount</h5>
+              )}
                 {/* <Input
                   label="Protection Amount"
                   value={protectionAmount}
@@ -165,8 +177,8 @@ export default function BuyProtectionCard() {
           </div>
         </div>
         <div className="mb-4">
-          <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Duration</h5>
-          <div className="flex">
+          <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Protection Duration (days)</h5>
+          <div>
           {/* <div className="mr-4">
             <BasicButton
             label="Full"
@@ -177,16 +189,14 @@ export default function BuyProtectionCard() {
             label="90 days"
             />
           </div> */}
-            <Input
-              label="Protection Duration (days)"
-              value={protectionDurationInDays}
+            <input 
+              className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
               type="number"
-              onChange={(e) =>
-                e.target.value
-                  ? setProtectionDurationInDays(parseInt(e.target.value))
-                  : 0
-              }
+              {...register("protectionDurationInDays", { min: 0, max: 180, required: true })} 
             />
+            {errors.protectionDurationInDays && (
+              <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the protection duration must be in between 0 day and the next cycle end(180 days the longest)</h5>
+            )}
             {/* <Input
               label="Protection Duration (days)"
               value={protectionDurationInDays}
@@ -214,26 +224,25 @@ export default function BuyProtectionCard() {
       </div>
       <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Premium Price</h5>
       <p className="text-left text-base">{calculatingPremiumPrice ? "Calculating Premium Price..." : numeral(premiumPrice).format(USDC_FORMAT) + " USDC"}</p>
-      <button
-        type="button"
+      <input 
+        type="submit" 
+        value="Preview"
         className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         disabled={
-          protectionAmount === 0 ||
-          protectionDurationInDays === 0 ||
+          getValues("protectionAmount") === 0 ||
+          getValues("protectionDurationInDays") === 0 ||
           tokenId === 0 ||
           premiumPrice === 0 ||
           calculatingPremiumPrice
         }
-        onClick={() => setIsOpen(true)}
-      >
-        <p className="text-lg h-6 inset-x-4">Preview</p>
-      </button>
+      />
+      </form>
       <p>Buy protection within: 2 days 12 hours 34 mins</p>
       <BuyProtectionPopUp
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        protectionAmount={protectionAmount}
-        protectionDurationInDays={protectionDurationInDays}
+        protectionAmount={getValues("protectionAmount")}
+        protectionDurationInDays={getValues("protectionDurationInDays")}
         tokenId={tokenId}
         premiumAmount={premiumPrice}
         lendingPoolAddress={router.query.address}
