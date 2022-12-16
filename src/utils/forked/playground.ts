@@ -5,15 +5,26 @@ import {
   formatUSDC,
   parseUSDC
 } from "@utils/usdc";
-import { getDaysInSeconds } from "@utils/utils";
-import {
-  deleteFork,
-  fillEther,
-  moveForwardTime,
-  sendTransaction
-} from "./tenderly";
+import { formatAddress, getDaysInSeconds } from "@utils/utils";
+import { deleteFork, fillEther, moveForwardTime } from "./tenderly";
 import { Playground } from "./types";
 import { payToLendingPoolAddress } from "./goldfinch";
+import {
+  GOLDFINCH_LENDING_POOLS,
+  PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS
+} from "./deploy";
+
+export function getLendingPoolName(lendingPoolAddress: string): string {
+  const lendingPoolDetails =
+    PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS[
+      lendingPoolAddress.toLowerCase()
+    ];
+
+  return (
+    lendingPoolDetails?.name ||
+    `Goldfinch Lending Pool - ${formatAddress(lendingPoolAddress)}`
+  );
+}
 
 export async function preparePlayground(playground: Playground) {
   const { poolCycleManagerInstance, poolFactoryInstance, poolInstance } =
@@ -59,20 +70,15 @@ export async function preparePlayground(playground: Playground) {
 
   console.log("********** Pool Phase: OpenToBuyers **********");
 
-  const lendingPoolAddress = "0xd09a57127bc40d680be7cb061c2a6629fe71abef";
+  const lendingPoolAddress = GOLDFINCH_LENDING_POOLS[0];
 
   // buy protection 1
-  await transferApproveAndBuyProtection(
-    playground.provider,
-    poolInstance,
-    user,
-    {
-      lendingPoolAddress: lendingPoolAddress,
-      nftLpTokenId: 590,
-      protectionAmount: parseUSDC("150000"),
-      protectionDurationInSeconds: getDaysInSeconds(30)
-    }
-  );
+  await transferApproveAndBuyProtection(playground.provider, poolInstance, {
+    lendingPoolAddress: lendingPoolAddress,
+    nftLpTokenId: 590,
+    protectionAmount: parseUSDC("150000"),
+    protectionDurationInSeconds: getDaysInSeconds(30)
+  });
 
   console.log(
     "Pool leverage ratio: ",
@@ -196,14 +202,28 @@ export async function transferApproveAndDeposit(
 export async function transferApproveAndBuyProtection(
   provider,
   poolInstance,
-  buyer,
   purchaseParams
 ) {
+  // Update purchase params based on lending pool details
+  const lendingPoolDetails =
+    PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS[
+      purchaseParams.lendingPoolAddress.toLowerCase()
+    ];
+  const buyer = provider.getSigner(lendingPoolDetails.lendingPosition.owner);
+  await fillEther(await buyer.getAddress(), provider);
+  console.log("Buyer eth balance: ", formatEther(await buyer.getBalance()));
+  purchaseParams.nftLpTokenId = lendingPoolDetails.lendingPosition.tokenId;
+
   const usdcContract = getUsdcContract(buyer);
 
   console.log(
     "Total protection before buyProtection: ",
     formatUSDC(await poolInstance.totalProtection())
+  );
+
+  console.log(
+    "Using Lending pool position: ",
+    lendingPoolDetails.lendingPosition
   );
 
   const buyerAddress = await buyer.getAddress();
@@ -218,7 +238,7 @@ export async function transferApproveAndBuyProtection(
   console.log("Purchasing a protection using params: ", purchaseParams);
 
   return await poolInstance.connect(buyer).buyProtection(purchaseParams, {
-    gasPrice: "259000000000",
+    gasPrice: "25900000000",
     gasLimit: "210000000"
   });
 }

@@ -36,7 +36,7 @@ const SellProtection = () => {
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-sm font-bold py-4">
-              <th className="py-8 pl-8">Address</th>
+              <th className="py-8 pl-8">Name</th>
               <th className="py-4">Protocols</th>
               <th className="py-4">
                 <div className="flex flex-row justify-start mr-4">
@@ -80,7 +80,7 @@ const SellProtection = () => {
 
                 className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50"
               >
-                <td className="py-4 pl-8">{formatAddress(protectionPool.address)}</td>
+                <td className="py-4 pl-8">{protectionPool.name}</td>
                 <td className="py-4">
                   <Image
                     src={protectionPool.protocols}

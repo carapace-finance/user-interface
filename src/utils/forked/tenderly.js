@@ -1,13 +1,13 @@
 import { Signer } from "@ethersproject/abstract-signer";
 import { hexValue } from "@ethersproject/bytes";
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { parseEther } from "@ethersproject/units";
+import { parseEther, formatEther } from "@ethersproject/units";
 import { deployContracts } from "./deploy";
 
 export const fillEther = async (walletAddress, provider) => {
   const params = [
     [walletAddress],
-    hexValue(parseEther("1")) // hex encoded wei amount
+    hexValue(parseEther("10")) // hex encoded wei amount
   ];
   await provider.send("tenderly_addBalance", params);
 };
