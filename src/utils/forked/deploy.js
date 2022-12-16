@@ -268,7 +268,12 @@ const deployContracts = async (forkProvider) => {
 
     poolInstance = await getPoolInstanceFromTx(tx);
 
-    return { poolCycleManagerInstance, poolFactoryInstance, poolInstance };
+    return {
+      poolCycleManagerInstance,
+      poolFactoryInstance,
+      poolInstance,
+      premiumCalculatorInstance
+    };
   } catch (e) {
     console.log(e);
   }

@@ -5,6 +5,7 @@ import poolAbi from "../contracts/forked/abi/Pool.json";
 import poolCycleManagerAbi from "../contracts/forked/abi/PoolCycleManager.json";
 import referenceLendingPoolsAbi from "../contracts/forked/abi/ReferenceLendingPools.json";
 import tranchedPoolAbi from "../contracts/forked/abi/ITranchedPool.json";
+import premiumCalculatorAbi from "../contracts/forked/abi/PremiumCalculator.json";
 
 export const getPoolFactoryContract = (address: string, signer: Signer) => {
   return new Contract(address, poolFactoryAbi, signer);
@@ -30,4 +31,11 @@ export const getPoolCycleManagerContract = (
   signer: Signer
 ) => {
   return new Contract(address, poolCycleManagerAbi, signer);
+};
+
+export const getPremiumCalculatorContract = (
+  address: string,
+  signer: Signer
+) => {
+  return new Contract(address, premiumCalculatorAbi, signer);
 };

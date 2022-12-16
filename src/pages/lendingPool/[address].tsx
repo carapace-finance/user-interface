@@ -3,9 +3,9 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import BuyProtectionCard from "@components/BuyProtectionCard";
+import BarChart from "@components/BarChart";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
-import { formatAddress } from "@utils/utils";
 import TitleAndDescriptions from "@components/TitleAndDescriptions";
 import assets from "src/assets";
 
@@ -18,6 +18,7 @@ const LendingPool = () => {
   let protocol;
   let lendingPoolAddress;
   let protectionPoolAddress;
+  
   lendingPools.map((lendingPool) => {
     if (lendingPool.address === router.query.address) {
       name = lendingPool.name;
@@ -29,15 +30,23 @@ const LendingPool = () => {
 
   let totalCapital;
   let totalProtection;
-  let purchaseLimit;
+  let protectionPurchaseLimit;
+  let maxAvailableProtectionAmount;
+  let protectionPurchasePercentage = 0;
+  let leverageRatio = 0;
   protectionPools.map((protectionPool) => {
     if (protectionPool.address === protectionPoolAddress) {
       totalCapital = protectionPool.totalCapital;
       totalProtection = protectionPool.totalProtection;
-      purchaseLimit = protectionPool.protectionPurchaseLimit;
+      protectionPurchaseLimit = protectionPool.protectionPurchaseLimit;
+      let totalCapitalNumber = totalCapital.replace(/\D/g,'');
+      let totalProtectionNumber = totalProtection.replace(/\D/g,'');
+      let protectionPurchaseLimitNumber = protectionPurchaseLimit.replace(/\D/g,'');
+      maxAvailableProtectionAmount = protectionPurchaseLimitNumber - totalProtectionNumber;
+      protectionPurchasePercentage=(totalProtectionNumber/protectionPurchaseLimitNumber)*100;
+      leverageRatio=(totalCapitalNumber/totalProtectionNumber)*100;
     }
   });
-
   return (
     <div className="mx-32">
       <div className="flex">
@@ -55,11 +64,7 @@ const LendingPool = () => {
               href={`https://etherscan.io/address/${lendingPoolAddress}`}
               className=""
             >
-              <img
-                src={assets.footerLogo.src}
-                alt="carapace"
-                className="w-[40px]"
-              />
+              <Image src={assets.grayVector} width={20} height={20} alt="" className="mr-6" />
             </a>
           </div>
         </div>
@@ -68,14 +73,15 @@ const LendingPool = () => {
         <div className="rounded-2xl shadow-boxShadow py-6 px-5 h-64 w-600">
           <div className="">
             <div className="text-left text-2xl">
-              <div className=" text-black text-2xl font-bold mb-4">Protection Purchase Details</div>
+              <div className="text-black text-2xl font-bold mb-4">Protection Purchase Details</div>
             </div>
-            <div className="h-6 bg-gray-500 mb-2">
-              グラフが入ります
+            <p className="text-left mb-2">The maximum protection amount you can buy: {maxAvailableProtectionAmount} USDC</p>
+            <div className="h-6 mb-2">
+              <BarChart filledPercentage={protectionPurchasePercentage}/>
             </div>
             <div className="flex justify-between">
               <div className="text-xs leading-4 pr-20">Purchased Protection: {totalProtection}</div>
-              <div className="text-xs leading-4">Protection Purchase Limit: {purchaseLimit}</div>
+              <div className="text-xs leading-4">Protection Purchase Limit: {protectionPurchaseLimit}</div>
             </div>
           </div>
           <div className="下段">
@@ -83,12 +89,12 @@ const LendingPool = () => {
               <div className="text-left text-black text-2xl font-bold my-4 flex">
                 Leverage Ratio
                 <div className="pl-2 items-center">
-                  <Tooltip 
+                  <Tooltip
                       animate={{
                         mount: { scale: 1, y: 0 },
                         unmount: { scale: 0, y: 25 },
-                      }}                
-                      content="the total capital in the pool divided by the total protection amount."
+                      }}
+                      content="Percentage of capital that is available to cover potential payouts"
                       placement="top"
                     >
                     <svg
@@ -109,8 +115,8 @@ const LendingPool = () => {
                 </div>
               </div>
             </div>
-            <div className="h-6 bg-gray-500 mb-2">
-              グラフが入ります
+            <div className="h-6 mb-2">
+              <BarChart filledPercentage={leverageRatio}/>
             </div>
             <div className="flex justify-between">
               <div className="text-xs leading-4 pr-20">Total Capital: {totalCapital}</div>

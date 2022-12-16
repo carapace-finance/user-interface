@@ -1,28 +1,57 @@
-import { useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Input, Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
 // import BasicButton from "./BasicBlueButton";
+import numeral from "numeral";
+import { convertNumberToUSDC, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import { getDaysInSeconds } from "@utils/utils";
 
 export default function BuyProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
   const [protectionAmount, setProtectionAmount] = useState(0);
   const [protectionDurationInDays, setProtectionDurationInDays] = useState(50);
   const [tokenId, setTokenId] = useState(590);
+  const [premiumPrice, setPremiumPrice] = useState(1024);
+  const [calculatingPremiumPrice, setCalculatingPremiumPrice] = useState(false);
 
+  const { contractAddresses, protectionPoolService } =
+    useContext(ApplicationContext);
+  
   const router = useRouter();
+
+  useEffect(() => { 
+    if (protectionPoolService && contractAddresses.premiumCalculator && protectionAmount > 0 && protectionDurationInDays > 0) {
+      setCalculatingPremiumPrice(true);
+      const protectionPurchaseParams = {
+        lendingPoolAddress: router.query.address as string,
+        nftLpTokenId: tokenId,
+        protectionAmount: convertNumberToUSDC(protectionAmount),
+        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
+      };
+      console.log("Calculating premium price for Protection purchase params: ", protectionPurchaseParams);
+      protectionPoolService
+        .calculatePremiumPrice(router.query.protectionPoolAddress as string, contractAddresses.premiumCalculator, protectionPurchaseParams)
+        .then((price) => {
+          console.log("Setting premium price: ", price);
+          setPremiumPrice(convertUSDCToNumber(price));
+          setCalculatingPremiumPrice(false);
+        });
+    }
+  }, [protectionPoolService, protectionAmount, protectionDurationInDays, tokenId]);
 
   return (
     <div className="block py-10 px-6 bg-white rounded-2xl shadow-boxShadow w-400">
       <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-2 flex items-center">
         Estimated Adjusted Yields
         <div className="pl-2">
-          <Tooltip 
+          <Tooltip
               animate={{
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 },
-              }}                
-              content="Lending Pool APY - Premium."
+              }}
+              content="Lending Pool APY % minus Premium %"
               placement="top"
               >
             <svg
@@ -46,15 +75,15 @@ export default function BuyProtectionCard() {
        <h1 className="text-customDarkGrey text-4xl mb-4 text-left">7 - 10%</h1>
       </div>
       <div className="my-4">
-        <div className="flex mb-2.5">
+        <div className="flex mb-4">
           <div>
-            <h5 className="text-customGrey text-xs flex mb-1.5 ">
+            <h5 className="text-customGrey text-xs flex mb-2 ">
               Lending Pool APY
-              <Tooltip 
+              <Tooltip
                   animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0, y: 25 },
-                  }}                
+                  }}
                   content="APY in an underlying lending protocol like Goldfinch."
                   placement="top"
                 >
@@ -77,13 +106,13 @@ export default function BuyProtectionCard() {
             <p className="text-left text-xl">17%</p>
           </div>
           <div className="ml-14">
-            <h5 className="text-customGrey text-left text-xs mb-1.5">Premium</h5>
+            <h5 className="text-customGrey text-left text-xs mb-2">Premium</h5>
             <p className="text-left text-xl">7% - 10%</p>
           </div>
         </div>
         <div className="flex">
           <div>
-            <h5 className="text-customGrey text-xs mb-1.5">CARA Token Rewards</h5>
+            <h5 className="text-customGrey text-xs mb-2">CARA Token Rewards</h5>
             <p className="text-left text-xl">~3.5%</p>
           </div>
         </div>
@@ -91,19 +120,19 @@ export default function BuyProtectionCard() {
       <div className="mb-4">
         <div>
           <div className="mb-4">
-            <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-3">Protection Amount</h5>
+            <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Protection Amount</h5>
             <div className="flex">
-              {/* <div className="mr-3">
+              {/* <div className="mr-4">
                 <BasicButton
                 label="Full"
                 />
               </div>
-              <div className="mr-3">
+              <div className="mr-4">
                 <BasicButton
                 label="1/2"
                 />
               </div>
-              <div className="mr-3">
+              <div className="mr-4">
                 <BasicButton
                 label="1/4"
                 />
@@ -136,14 +165,14 @@ export default function BuyProtectionCard() {
           </div>
         </div>
         <div className="mb-4">
-          <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-3">Duration</h5>
+          <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Duration</h5>
           <div className="flex">
-          {/* <div className="mr-3">
+          {/* <div className="mr-4">
             <BasicButton
             label="Full"
             />
           </div>
-          <div className="mr-3">
+          <div className="mr-4">
             <BasicButton
             label="90 days"
             />
@@ -170,39 +199,43 @@ export default function BuyProtectionCard() {
             /> */}
           </div>
         </div>
-        <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-3">Goldfinch Token ID</h5>
+        <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Goldfinch Token ID</h5>
         <div className="flex w-72 flex-col gap-4">
-          <Input
+          {/* <Input
             label="Goldfinch Token ID"
             value={tokenId}
             type="number"
             onChange={(e) =>
               e.target.value ? setTokenId(parseInt(e.target.value)) : 0
             }
-          />
+          /> */}
+          <p className="text-left text-base">{tokenId}</p>
         </div>
       </div>
-      <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-3">Premium Price</h5>
-      <p className="text-left text-base">1,024 USDCs</p>
+      <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Premium Price</h5>
+      <p className="text-left text-base">{calculatingPremiumPrice ? "Calculating Premium Price..." : numeral(premiumPrice).format(USDC_FORMAT) + " USDC"}</p>
       <button
         type="button"
-        className="border border-black rounded-md px-14 py-4 mb-3 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+        className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         disabled={
           protectionAmount === 0 ||
           protectionDurationInDays === 0 ||
-          tokenId === 0
+          tokenId === 0 ||
+          premiumPrice === 0 ||
+          calculatingPremiumPrice
         }
         onClick={() => setIsOpen(true)}
       >
         <p className="text-lg h-6 inset-x-4">Preview</p>
       </button>
-      <p>time left: 2 days 12 hours 34 mins</p>
+      <p>Buy protection within: 2 days 12 hours 34 mins</p>
       <BuyProtectionPopUp
         open={isOpen}
         onClose={() => setIsOpen(false)}
         protectionAmount={protectionAmount}
         protectionDurationInDays={protectionDurationInDays}
         tokenId={tokenId}
+        premiumAmount={premiumPrice}
         lendingPoolAddress={router.query.address}
         protectionPoolAddress={router.query.protectionPoolAddress}
       ></BuyProtectionPopUp>

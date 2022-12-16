@@ -12,6 +12,7 @@ import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
 import { Playground } from "@utils/forked/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { JsonRpcProvider } from "@ethersproject/providers";
+import ErrorPopup from "./ErrorPopup";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +34,7 @@ const Header = () => {
   };
 
   // playground idle timeout is 10 minutes
-  let idleTimeoutInSeconds = 1000 * 60 * 10;
+  let idleTimeoutInMilliSeconds = 1000 * 60 * 10;
   let idleTimerId;
 
   const cleanup = async () => {
@@ -53,27 +54,56 @@ const Header = () => {
     }
   }, []);
 
+  const pingStartAndStopApi = () => { 
+    // Vercel serverless functions are "cold/inactive" before first use and after some time of inactivity.
+    // and take a few seconds to start up: download dependencies, compile, execute etc.
+    // Ping start/stop api to "warm" them up for real use later
+    fetch(`/api/playground/start?ping=true`);
+    fetch(`/api/playground/stop?ping=true`);
+  };
+
+  const checkForInactivityAndPingStartStopApis = () => {
+    if (protectionPoolService && playground?.forkId) {
+      const lastActionTimestamp = protectionPoolService.getLastActionTimestamp();
+      console.log("Last action timestamp: ", lastActionTimestamp);
+      const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
+      console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
+      if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
+        console.log("Stopping playground due to inactivity...");
+        cleanup();
+      }
+
+      pingStartAndStopApi();
+    }
+  };
+  
   // Setup inactivity timer
   useEffect(() => {
     if (protectionPoolService && playground?.forkId) {
-      console.log("Starting inactivity timer...");
-      idleTimerId = setInterval(() => {
-        // Check every minute for inactivity
-        const inactiveTimeInSeconds = (new Date().getTime() - protectionPoolService.getLastActionTimestamp());
-        console.log("Inactive time in seconds: ", inactiveTimeInSeconds);
-        if (inactiveTimeInSeconds > idleTimeoutInSeconds) { 
-          console.log("Stopping playground due to inactivity...");
-          cleanup();
-        }
-      }, 1000 * 60 * 1);
+      pingStartAndStopApi();
+      protectionPoolService.setLastActionTimestamp();
+
+      // Check every minute for inactivity
+      idleTimerId = setInterval(checkForInactivityAndPingStartStopApis, 1000 * 60 * 1);
+      console.log("Started inactivity timer...");
 
       return () => {
         if (idleTimerId) {
           clearInterval(idleTimerId);
+          console.log("Cleared inactivity timer...");
         }
       }
     }
   }, [playground?.forkId]);
+
+  const onError = (message, e) => {
+    if (e) {
+      console.log(message, e);
+    }
+
+    setError(message);
+    setIsOpen(false);
+  }
 
   const startPlayground = async () => {
     const result = await fetch(`/api/playground/start?userAddress=${account}`);
@@ -86,7 +116,8 @@ const Header = () => {
         updateContractAddresses({
           isPlayground: true,
           poolFactory: playground.poolFactoryAddress,
-          pool: playground.poolAddress
+          pool: playground.poolAddress,
+          premiumCalculator: playground.premiumCalculatorAddress,
         });
         updateProvider(playground.provider);
         updatePlayground(playground);
@@ -94,9 +125,8 @@ const Header = () => {
         console.log("Successfully started a playground: ", playground);
       }
     }
-    else { 
-      console.log("Failed to start playground: ", await result.json());
-      setError("Failed to start playground. Please try again.");
+    else {
+      onError("Failed to start playground. Please try again.", await result.json());
     }
   };
 
@@ -110,8 +140,7 @@ const Header = () => {
         console.log("Successfully ended playground");
       }
       else {
-        console.log("Failed to end playground: ", data);
-        setError("Failed to end playground. Please try again.");
+        onError("Failed to stop playground. Please try again.", data);
       }
     }
   };
@@ -179,20 +208,20 @@ const Header = () => {
       </div>
       <div className="flex items-center">
       <Link href="/buyProtection" className="hover:text-customBlue">
-        <h3>Buy Protection</h3>
+        <h3>Protect</h3>
       </Link>
       {/* <Link href="/lendWithProtection">
         <h3>Lend With Protection</h3>
       </Link> */}
       <Link href="/sellProtection" className="ml-14 hover:text-customBlue">
-        <h3>Sell Protection</h3>
+        <h3>Earn</h3>
       </Link>
       <Link href="/dashboard"className="ml-14 hover:text-customBlue">
         <h3>Dashboard</h3>
       </Link>
       </div>
       <div className="mr-8">
-      {active && chainId === 1
+      {/* {active && chainId === 1
       ? null 
       : active && chainId != 1
       ? null
@@ -214,14 +243,14 @@ const Header = () => {
         </button>
       ) : (
         ""
-      )}
+      )} */}
       {playgroundButtonTitle === "Start Playground" ? (
         <button
           // disabled={!account}
           className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           onClick={playgroundButtonAction}>
             <Tooltip
-              content="Connect you wallet, and test app features in a sandbox."
+              content="Test our app features in a sandbox!"
               animate={{
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 },
@@ -243,7 +272,8 @@ const Header = () => {
         open={isOpen}
         playground={playground}
         onClose={() => setIsOpen(false)}
-      ></PlaygroundModePopUp>
+        ></PlaygroundModePopUp>
+        <ErrorPopup error={error} handleCloseError={() => setError("")} />
       </div>
     </div>
   );

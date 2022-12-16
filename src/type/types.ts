@@ -8,6 +8,7 @@ export interface ContractAddresses {
   isPlayground: boolean;
   poolFactory: string;
   pool: string;
+  premiumCalculator: string;
 }
 
 export type ApplicationContextType = {
@@ -41,11 +42,14 @@ export type UserContextType = {
 
 export interface ProtectionPool {
   address: string;
-  APY: string;
+  name: string;
   protocols: string;
+  APY: string;
   totalCapital: string;
   totalProtection: string;
   protectionPurchaseLimit: string;
+  leverageRatioFloor: string;
+  leverageRatioCeiling: string;
   depositLimit: string;
 }
 

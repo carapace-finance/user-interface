@@ -18,13 +18,16 @@ const MIN_AVAILABLE_PLAYGROUNDS = 5;
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const {
-      query: { userAddress },
+      query: { userAddress, ping },
       method
     } = req;
 
     switch (method) {
       case "GET":
       case "POST":
+        if (ping) {
+          return res.status(204).end();
+        }
         let availablePlaygroundCount: number =
           await getAvailablePlaygroundCount();
         console.log("availablePlaygroundCount: ", availablePlaygroundCount);
@@ -96,7 +99,9 @@ export const startNewPlayground = async () => {
       playground.deployedContracts.poolFactoryInstance.address,
     poolAddress: playground.deployedContracts.poolInstance.address,
     poolCycleManagerAddress:
-      playground.deployedContracts.poolCycleManagerInstance.address
+      playground.deployedContracts.poolCycleManagerInstance.address,
+    premiumCalculatorAddress:
+      playground.deployedContracts.premiumCalculatorInstance.address
   });
 
   // step 5: store the id of the new playground to retrieve it later

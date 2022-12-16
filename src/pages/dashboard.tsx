@@ -1,3 +1,5 @@
+// github does not show third commit
+
 import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
@@ -100,220 +102,237 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
+    <div className="mx-32">
+      <div className="h-5"></div>
       <TitleAndDescriptions title="Dashboard" buttonExist={false} />
-      <h3 className="text-left">Protection Purchases</h3>
-      <table className="table-auto w-full">
-        <thead>
-          <tr>
-            <th>address</th>
-            <th>Lending Pool</th>
-            <th>Protocol</th>
-            <th>
-              Estimated Adjusted Yields
-              <Tooltip 
-                  animate={{
-                    mount: { scale: 1, y: 0 },
-                    unmount: { scale: 0, y: 25 },
-                  }}                
-                  content="Lending Pool APY - Premium."
-                  placement="top"
-                >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </th>
-            <th>Lending Pool APY</th>
-            <th>CARA Token Rewards</th>
-            <th>Premium</th>
-            <th>Time Until Expiration</th>
-            <th>
-              Claim
-              <Tooltip 
-                  animate={{
-                    mount: { scale: 1, y: 0 },
-                    unmount: { scale: 0, y: 25 },
-                  }}                
-                  content="You can claim a payout when the underlying lending pool defaults."
-                  placement="top"
-                >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {/*  TODO: use User.protectionPurchases */}
-          {lendingPools.map((lendingPool) => (
-            <tr key={lendingPool.address}>
-              <td>{formatAddress(lendingPool.address)}</td>
-              <td>{lendingPool.name}</td>
-              <td>
-                <Image
-                  src={lendingPool.protocol}
-                  width={24}
-                  height={24}
-                  alt=""
-                />
-              </td>
-              <td>{lendingPool.adjustedYields}</td>
-              <td>{lendingPool.lendingPoolAPY}</td>
-              <td>{lendingPool.CARATokenRewards}</td>
-              <td>{lendingPool.premium}</td>
-              <td>{getTimeUntilExpiration(lendingPool)}</td>
-              <td>
-                <button disabled>claim</button>
-              </td>
+      <h3 className="text-left font-bold">Your Protection Purchases</h3>
+      <div className="h-5"></div>
+      <div className="rounded-2xl shadow-table p-8">
+        <table className="table-fixed w-full">
+          <thead>
+            <tr className="text-left text-sm font-bold py-4">
+              <th className="py-4">Name</th>
+              <th className="py-4">Protocol</th>
+              <th className="py-4">Premium</th>
+              <th className="text-left py-4">Lending Pool APY</th>
+              <th className="py-4">
+                <div className="flex flex-row justify-between mr-4">
+                  Estimated Adjusted Yields
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 },
+                    }}
+                    content="Lending Pool APY % minus Premium %"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
+              <th className="py-4">Time Until Expiration</th>
+              <th className="py-4">Protection Amount</th>
+              <th className="py-4" >
+                <div className="flex flex-row items-center justify-between">
+                  Claim
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 },
+                    }}
+                    content="You can claim a payout when the underlying lending pool defaults."
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <h3 className="text-left">Deposits</h3>
-      <table className="table-auto w-full">
-        <thead>
-          <tr>
-            <th>address</th>
-            <th>Protocols</th>
-            <th>
-              Estimated APY
-              <Tooltip 
-                  animate={{
-                    mount: { scale: 1, y: 0 },
-                    unmount: { scale: 0, y: 25 },
-                  }}                
-                  content="Estimated APY for protection sellers."
-                  placement="top"
-                >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+          </thead>
+          <tbody>
+            {/*  TODO: use User.protectionPurchases */}
+            {lendingPools.map((lendingPool) => (
+              <tr key={lendingPool.address} className="text-left text-sm font-medium">
+                <td className="py-4">{lendingPool.name}</td>
+                <td className="py-4">
+                  <Image
+                    src={lendingPool.protocol}
+                    width={24}
+                    height={24}
+                    alt=""
                   />
-                </svg>
-              </Tooltip>
-            </th>
-            <th>Total Capital</th>
-            <th>Total Protection</th>
-            <th>Deposited Amount</th>
-            <th>Requested Withdrawal</th>
-            <th>
-              Request Withdrawal
-              <Tooltip 
-                  animate={{
-                    mount: { scale: 1, y: 0 },
-                    unmount: { scale: 0, y: 25 },
-                  }}                
-                  content="You can make a request to withdraw your capital in the next cycle."
-                  placement="top"
-                >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </th>
-            <th>
-              Withdraw
-              <Tooltip 
-                  animate={{
-                    mount: { scale: 1, y: 0 },
-                    unmount: { scale: 0, y: 25 },
-                  }}                
-                  content="You can withdraw the requested withdrawal amount."
-                  placement="top"
-                >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {protectionPools.map((protectionPool) => (
-            <tr key={protectionPool.address}>
-              <td>{formatAddress(protectionPool.address)}</td>
-              <td>
-                <Image
-                  src={protectionPool.protocols}
-                  width={24}
-                  height={24}
-                  alt=""
-                />
-              </td>
-              <td>{protectionPool.APY}</td>
-              <td>{protectionPool.totalCapital} USDC</td>
-              <td>{protectionPool.totalProtection} USDC</td>
-              <td>{user.sTokenUnderlyingAmount} USDC</td>
-              <td>{user.requestedWithdrawalAmount} USDC</td>
-              <td>
-                <button onClick={() => setIsWithdrawalRequestOpen(true)}>
-                  request withdrawal
-                </button>
-              </td>
-              <td>
-                <button onClick={() => setIsWithdrawOpen(true)}>
-                  withdraw
-                </button>
-              </td>
+                </td>
+                <td className="py-4">{lendingPool.premium}</td>
+                <td >{lendingPool.lendingPoolAPY}</td>
+                <td className="py-4">{lendingPool.adjustedYields}</td>
+                <td className="py-4">{getTimeUntilExpiration(lendingPool)}</td>
+                <td className="py-4">{user.protectionAmount}</td>
+                <td className="py-4">
+                  <button disabled>claim</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="h-16"></div>
+      <h3 className="text-left font-bold">Your Deposits</h3>
+      <div className="h-5"></div>
+      <div className="rounded-2xl shadow-table p-8">
+        <table className="table-fixed w-full">
+          <thead>
+            <tr className="text-left text-sm font-bold">
+              <th>Name</th>
+              <th className="py-4">Protocols</th>
+              <th className="py-4">
+                <div className="flex flex-row justify-between pr-3">
+                  Estimated APY
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 },
+                    }}
+                    content="Estimated APY for protection sellers."
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
+              <th className="py-4">Total Capital</th>
+              <th className="py-4">Total Protection</th>
+              <th className="py-4">Deposited Amount</th>
+              <th className="py-4">Requested Withdrawal</th>
+              <th className="py-4">
+                {/* the div needs to be there otherwise there is a bug with styling */}
+                <div className="flex flex-row justify-between pr-3">
+                  Request Withdrawal
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 },
+                    }}
+                    content="You can make a request to withdraw your capital in the next cycle."
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
+              <th className="py-4">
+                <div className="flex flex-row justify-between pr-3">
+                  Withdraw
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 },
+                    }}
+                    content="You can withdraw the requested withdrawal amount."
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {protectionPools.map((protectionPool) => (
+              <tr key={protectionPool.address} className="text-left text-sm font-medium">
+                <td>{protectionPool.name}</td>
+                <td className="py-4">
+                  <Image
+                    src={protectionPool.protocols}
+                    width={24}
+                    height={24}
+                    alt=""
+                  />
+                </td>
+                <td className="py-4">{protectionPool.APY}</td>
+                <td className="py-4">{protectionPool.totalCapital} </td>
+                <td className="py-4">{protectionPool.totalProtection} </td>
+                <td className="py-4">{user.sTokenUnderlyingAmount}</td>
+                <td className="py-4">{user.requestedWithdrawalAmount}</td>
+                <td className="py-4">
+                  <button onClick={() => setIsWithdrawalRequestOpen(true)}>
+                    request withdrawal
+                  </button>
+                </td>
+                <td className="py-4">
+                  <button onClick={() => setIsWithdrawOpen(true)}>
+                    withdraw
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <WithdrawalRequestPopUp
         open={isWithdrawalRequestOpen}
         onClose={() => setIsWithdrawalRequestOpen(false)}
