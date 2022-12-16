@@ -18,10 +18,10 @@ export default function BuyProtectionCard() {
 
   const { contractAddresses, protectionPoolService } =
     useContext(ApplicationContext);
-  
+
   const router = useRouter();
 
-  useEffect(() => { 
+  useEffect(() => {
     if (protectionPoolService && contractAddresses.premiumCalculator && protectionAmount > 0 && protectionDurationInDays > 0) {
       setCalculatingPremiumPrice(true);
       const protectionPurchaseParams = {

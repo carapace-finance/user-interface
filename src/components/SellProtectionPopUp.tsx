@@ -86,35 +86,32 @@ const SellProtectionPopUp = (props) => {
         }
       }}
     >
+      <IconButton
+        onClick={onClose}
+        className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
+        color="primary"
+        size="small"
+      >
+        <div className="text-black">
+          ×
+        </div>
+      </IconButton>
       <DialogTitle className="mt-6">
         Deposit
-        <div>
-          <IconButton
-            onClick={onClose}
-            className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
-            color="primary"
-            size="small"
-          >
-            <div className="text-black">
-              ×
-            </div>
-          </IconButton>
-        </div>
       </DialogTitle>
       <DialogContent>
           <div>
-            <div className="flex">
+            <div className="flex justify-start">
               {renderFieldAndValue(
                 "Name",
                 "Goldfinch Protection Pool #1"
               )}
-              <div className="ml-2 mt-1">
+              <div className="-ml-40 mt-1">
                 <img
                   src={assets.goldfinch.src}
                   alt="carapace"
                   height="16"
                   width="16"
-                  className=""
                 />
               </div>
             </div>
@@ -123,12 +120,12 @@ const SellProtectionPopUp = (props) => {
               numeral(amount).format(USDC_FORMAT) + " USDC"
             )}
           </div>
-          <Divider className="mb-4" />
-          <div>
-            <Typography className="flex justify-left mb-4 text-gray-900 text-base font-medium" variant="subtitle2">
+          <Divider/>
+          <div className="mb-8 pt-4">
+            <Typography className="flex justify-left pb-5 text-gray-900 text-base font-medium" variant="subtitle2">
               Estimated Stats
             </Typography>
-            <Typography className="flex justify-between mb-2" variant="caption">
+            <Typography className="flex justify-between pb-3" variant="caption">
               <div className="text-gray-500 text-sm flex items-center">
                 Expected APY:
                 <div className="pl-2">
@@ -183,8 +180,7 @@ const SellProtectionPopUp = (props) => {
           </div>
           <div>
             <LoadingButton
-              className="mb-8 rounded-xl py-4 px-20 bg-customBlue hover:cursor-pointer"
-              style={{ textTransform: "none" }}
+              style={{ textTransform: "none",backgroundColor:"#293C9A", padding: "20px 80px", borderRadius: "16px", marginBottom:"20px",cursor:"pointer" }}
               onClick={sellProtection}
               disabled={!protectionPoolService || !protectionPoolAddress || !amount}
               loading={loading}
@@ -208,24 +204,7 @@ const SellProtectionPopUp = (props) => {
               </div>
             </div>
           </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
       </DialogContent>
-
-
-
-
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}
         message={successMessage}

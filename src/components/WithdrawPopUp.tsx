@@ -21,6 +21,13 @@ import {
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import numeral from "numeral";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles(() => ({
+  noBorder: {
+    border: "none"
+  }
+}));
 
 const WithdrawalPopUp = (props) => {
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -30,6 +37,8 @@ const WithdrawalPopUp = (props) => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
+
+  const classes = useStyles();
 
   const resetInputs = () => {
     setAmount(0);
@@ -104,23 +113,19 @@ const WithdrawalPopUp = (props) => {
         }
       }}
     >
+      <MuiIconButton
+        onClick={onClose}
+        color="primary"
+        className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
+        size="small"
+      >
+        <div className="text-black">
+          ×
+        </div>
+      </MuiIconButton>
       <DialogTitle className="mt-6">
         Withdraw
-        <div>
-          <MuiIconButton
-            onClick={onClose}
-            color="primary"
-            className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
-            size="small"
-          >
-            <div className="text-black">
-              ×
-            </div>
-          </MuiIconButton>
-        </div>
       </DialogTitle>
-
-
       <DialogContent>
         <div className="flex justify-left mb-3 text-base font-medium">
           Protection Pool{formatAddress(protectionPoolAddress)}
@@ -136,11 +141,12 @@ const WithdrawalPopUp = (props) => {
                 placeholder={"0"}
                 variant="outlined"
                 size="medium"
-                className="border-none w-full outline-none border-green-800"
+                className="border-none w-full outline-none h-12"
                 InputProps={{
+                  classes: { notchedOutline: classes.noBorder },
                   startAdornment: (
                     <InputAdornment position="start" className="flex">
-                      <p className="text-customLightBlue">($)</p>
+                      <p className="text-customLightBlue pl-6">($)</p>
                       <p>USDC</p>
                     </InputAdornment>
                   ),
@@ -171,13 +177,9 @@ const WithdrawalPopUp = (props) => {
             </div>
             </div>
         </div>
-
-
-        <Divider className="mb-4" />
-
-        <div>
+        <Divider/>
+        <div className="pt-4">
           <h4 className="flex justify-left mb-4 text-base font-medium">Estimated Stats</h4>
-
           <div className="flex justify-between mb-2">
             <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
               Expected Network Fees
@@ -205,16 +207,8 @@ const WithdrawalPopUp = (props) => {
             </div>
           </div>
         </div>
-
-
-
         <LoadingButton
-          className="mb-8 rounded-xl py-4 px-20 bg-customBlue hover:cursor-pointer"
-          style={{
-            textTransform: "none",
-            marginTop: "1.5em",
-            marginBottom: "1.5em"
-          }}
+          style={{ textTransform: "none",backgroundColor:"#293C9A", padding: "16px 60px", borderRadius: "16px", marginBottom:"20px",cursor:"pointer" }}
           disabled={
             !protectionPoolService ||
             !protectionPoolAddress ||
