@@ -107,7 +107,7 @@ export default function SellProtectionCard() {
         <p>Balance: {numeral(usdcBalance).format(USDC_FORMAT)} USDC</p>
         <button
           type="button"
-          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          className="border border-customDarkGrey text-customDarkGrey rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
           // disabled={!amount || amount > usdcBalance} // todo: enable the button for styling
           onClick={() => setIsOpen(true)}
         >

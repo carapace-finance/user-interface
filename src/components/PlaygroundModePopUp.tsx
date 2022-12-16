@@ -42,7 +42,7 @@ const PlaygroundModePopUp = (props) => {
             </ul>
             {playground?.poolFactoryAddress ? (
             <button
-              className="border rounded-full border-gray-400  w-full px-4 py-4 mt-8 mb-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+              className="border rounded-full border-customDarkGrey text-customDarkGrey w-full px-4 py-4 mt-8 mb-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
               onClick={onClose}
             >
               <span>Start Playing Around!</span>

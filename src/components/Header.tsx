@@ -195,14 +195,14 @@ const Header = () => {
 
   return (
     <div className="top-0 h-16 border-b border-headerBorder mb-10">
-      <div className="flex justify-between items-center mx-32">
-        <div className="-my-3 ml-8">
+      <div className="flex justify-between items-center">
+        <div className="-my-3 ml-12">
           <Link href="/">
             <Image
               src={assets.headerLogo.src}
               alt=""
               height="36"
-              width="128"
+              width="168"
               unoptimized
             />
           </Link>
@@ -214,14 +214,14 @@ const Header = () => {
         {/* <Link href="/lendWithProtection">
           <h3>Lend With Protection</h3>
         </Link> */}
-        <Link href="/sellProtection" className="ml-14 hover:text-customBlue">
+        <Link href="/sellProtection" className="ml-16 hover:text-customBlue">
           <h3>Earn</h3>
         </Link>
-        <Link href="/dashboard"className="ml-14 hover:text-customBlue">
+        <Link href="/dashboard"className="ml-16 hover:text-customBlue">
           <h3>Dashboard</h3>
         </Link>
         </div>
-        <div className="mr-8">
+        <div className="mr-12">
         {/* {active && chainId === 1
         ? null
         : active && chainId != 1
@@ -248,7 +248,7 @@ const Header = () => {
         {playgroundButtonTitle === "Start Playground" ? (
           <button
             // disabled={!account}
-            className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
             onClick={playgroundButtonAction}>
               <Tooltip
                 content="Test our app features in a sandbox!"
@@ -263,7 +263,7 @@ const Header = () => {
         ) : (
               <button
                 // disabled={!account}
-                className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+                className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
                 onClick={playgroundButtonAction}>
                 <span>{playgroundButtonTitle}</span>
               </button>

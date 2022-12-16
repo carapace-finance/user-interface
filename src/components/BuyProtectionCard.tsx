@@ -227,7 +227,7 @@ export default function BuyProtectionCard() {
       <input
         type="submit"
         value="Preview"
-        className="border border-black rounded-md px-16 py-5 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+        className="border border-customDarkGrey text-customDarkGrey rounded-md px-16 py-5 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
         disabled={
           getValues("protectionAmount") === 0 ||
           getValues("protectionDurationInDays") === 0 ||

@@ -194,7 +194,7 @@ const Dashboard = () => {
                 <td className="py-4">{getTimeUntilExpiration(lendingPool)}</td>
                 <td className="py-4">{user.protectionAmount}</td>
                 <td className="py-4">
-                  <button disabled className="border border-headerBorder rounded-md text-headerBorder px-5 py-1">claim</button>
+                  <button disabled className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50">claim</button>
                 </td>
               </tr>
             ))}
@@ -319,12 +319,12 @@ const Dashboard = () => {
                 <td className="py-4">{user.sTokenUnderlyingAmount}</td>
                 <td className="py-4">{user.requestedWithdrawalAmount}</td>
                 <td className="py-4">
-                  <button onClick={() => setIsWithdrawalRequestOpen(true)} className="border border-headerBorder rounded-md text-headerBorder px-5 py-1">
+                  <button onClick={() => setIsWithdrawalRequestOpen(true)} className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50">
                     Request
                   </button>
                 </td>
                 <td className="py-4">
-                  <button onClick={() => setIsWithdrawOpen(true)} className="border border-headerBorder rounded-md text-headerBorder px-5 py-1">
+                  <button onClick={() => setIsWithdrawOpen(true)} className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50">
                     Withdraw
                   </button>
                 </td>

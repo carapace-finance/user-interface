@@ -151,11 +151,11 @@ const ProtectionPool = () => {
       <div className="mt-10">
         <h3 className="text-left font-bold">Underlying Protected Lending Pools</h3>
         <div className="h-5"></div>
-        <div className="rounded-2xl shadow-table p-8">
+        <div className="rounded-2xl shadow-table">
           <table className="table-fixed w-full">
             <thead >
               <tr className="text-left text-sm font-bold py-4">
-                <th className="py-4">Name</th>
+                <th className="py-4 pl-8">Name</th>
                 <th className="py-4">Protocol</th>
                 <th className="py-4">APY</th>
                 <th className="py-4">Payment Term</th>
@@ -167,8 +167,8 @@ const ProtectionPool = () => {
                 <tr
                   key={lendingPool.address}
                   onClick={() => handleClick(`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`)}
-                  className="text-left text-sm font-medium hover:cursor-pointer">
-                  <td className="py-4">{lendingPool.name}</td>
+                  className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8">
+                  <td className="py-4 pl-8">{lendingPool.name}</td>
                   <td className="py-4">
                     <Image
                       src={lendingPool.protocol}
