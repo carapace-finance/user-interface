@@ -5,7 +5,7 @@ import {
   InputAdornment,
   TextField,
   IconButton as MuiIconButton,
-  Divider
+  Divider,
 } from "@mui/material";
 import { IconButton, Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
@@ -22,6 +22,13 @@ import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { LoadingButton } from "@mui/lab";
 import numeral from "numeral";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles(() => ({
+  noBorder: {
+    border: "none"
+  }
+}));
 
 const WithdrawalRequestPopUp = (props) => {
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -31,6 +38,8 @@ const WithdrawalRequestPopUp = (props) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const classes = useStyles();
 
   const reset = () => {
     setAmount(0);
@@ -106,20 +115,18 @@ const WithdrawalRequestPopUp = (props) => {
         }
       }}
     >
+      <MuiIconButton
+        onClick={onClose}
+        color="primary"
+        className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
+        size="small"
+      >
+        <div className="text-black">
+          ×
+        </div>
+      </MuiIconButton>
       <DialogTitle className="mt-6">
         Withdrawal Request
-        <div>
-          <MuiIconButton
-            onClick={onClose}
-            color="primary"
-            className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
-            size="small"
-          >
-            <div className="text-black">
-              x
-            </div>
-          </MuiIconButton>
-        </div>
       </DialogTitle>
       <DialogContent>
         <div className="flex justify-left mb-3 text-base font-medium">
@@ -134,11 +141,12 @@ const WithdrawalRequestPopUp = (props) => {
                 placeholder={"0.0"}
                 variant="outlined"
                 size="medium"
-                className="border-none w-full outline-none"
+                className="border-none w-full outline-none h-12"
                 InputProps={{
+                  classes: { notchedOutline: classes.noBorder },
                   startAdornment: (
-                    <InputAdornment position="start" className="flex">
-                      <p className="text-customLightBlue">($)</p>
+                    <InputAdornment position="start" className="flex ">
+                      <p className="text-customLightBlue pl-6">($)</p>
                       <p>USDC</p>
                     </InputAdornment>
                   ),
@@ -148,7 +156,7 @@ const WithdrawalRequestPopUp = (props) => {
                         disabled={!protectionPoolService}
                         onClick={setMaxAmount}
                         size="sm"
-                        className="py-1 px-5 bg-transparent text-customLightBlue border border-customLightBlue rounded-xl"
+                        className="py-1 px-5 bg-transparent items-start text-customLightBlue border border-customLightBlue rounded-xl"
                       >
                         Max
                       </IconButton>
@@ -169,8 +177,8 @@ const WithdrawalRequestPopUp = (props) => {
             </div>
           </div>
         </div>
-        <Divider className="mb-4" />
-        <div>
+        <Divider/>
+        <div className="pt-4">
           <h4 className="flex justify-left mb-4 text-base font-medium">Estimated Stats</h4>
           <div className="flex justify-between mb-2">
             <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
@@ -200,12 +208,7 @@ const WithdrawalRequestPopUp = (props) => {
           </div>
         </div>
         <LoadingButton
-          className="mb-8 rounded-xl py-4 px-20 bg-customBlue hover:cursor-pointer"
-          style={{
-            textTransform: "none",
-            marginTop: "1.5em",
-            marginBottom: "1.5em"
-          }}
+          style={{ textTransform: "none",backgroundColor:"#293C9A", padding: "16px 40px", borderRadius: "16px", marginBottom:"20px",cursor:"pointer" }}
           onClick={requestedWithdrawal}
           disabled={
             !protectionPoolService ||

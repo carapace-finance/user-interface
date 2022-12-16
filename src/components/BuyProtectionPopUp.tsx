@@ -106,20 +106,19 @@ const BuyProtectionPopUp = (props) => {
         }
       }}
     >
+
+      <IconButton
+        onClick={onClose}
+        className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
+        color="primary"
+        size="small"
+      >
+        <div className="text-black">
+        ×
+        </div>
+      </IconButton>
       <DialogTitle className="mt-6">
         Buy Protection
-        <div>
-          <IconButton
-            onClick={onClose}
-            className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
-            color="primary"
-            size="small"
-          >
-            <div className="text-black">
-             ×
-            </div>
-          </IconButton>
-        </div>
       </DialogTitle>
       <DialogContent>
         <div>
@@ -135,7 +134,6 @@ const BuyProtectionPopUp = (props) => {
                 alt="carapace"
                 height="16"
                 width="16"
-                className=""
               />
               </div>
             </div>
@@ -152,10 +150,10 @@ const BuyProtectionPopUp = (props) => {
           </div>
           <Divider className="mb-4" />
           <div className="mb-8">
-            <Typography className="flex justify-left mb-4 text-customGrey text-base font-bold" variant="subtitle2">
+            <Typography className="flex justify-left pb-5 text-customGrey text-base font-bold" variant="subtitle2">
               Estimated Stats
             </Typography>
-            <Typography className="flex justify-between mb-2" variant="caption">
+            <Typography className="flex justify-between pb-3" variant="caption">
               <div className="text-gray-500 text-sm flex items-center">
                 Expected Adjusted Yield:
                   <div className="pl-2">
@@ -209,8 +207,7 @@ const BuyProtectionPopUp = (props) => {
             </Typography>
           </div>
           <LoadingButton
-            className="mb-8 rounded-xl py-5 px-8 bg-customBlue hover:cursor-pointer"
-            style={{ textTransform: "none" }}
+            style={{ textTransform: "none",backgroundColor:"#293C9A", padding: "20px 33px", borderRadius: "16px", marginBottom:"20px",cursor:"pointer" }}
             onClick={buyProtection}
             disabled={
               !protectionPoolService ||
