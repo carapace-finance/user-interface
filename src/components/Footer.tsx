@@ -56,7 +56,6 @@ const Footer = () => {
           ))}
         </div>
       </div>
-      <div className="h-[60px] lg:h-[339px]"></div>
     </section>
   );
 };

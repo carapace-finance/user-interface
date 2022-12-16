@@ -45,7 +45,7 @@ const Header = () => {
       await stopPlayground(playgroundId);
     }
   };
-  
+
   // this is to ensure that playground is stopped when user closes the tab
   useEffect(() => {
     window.addEventListener("beforeunload", cleanup);
@@ -54,7 +54,7 @@ const Header = () => {
     }
   }, []);
 
-  const pingStartAndStopApi = () => { 
+  const pingStartAndStopApi = () => {
     // Vercel serverless functions are "cold/inactive" before first use and after some time of inactivity.
     // and take a few seconds to start up: download dependencies, compile, execute etc.
     // Ping start/stop api to "warm" them up for real use later
@@ -68,7 +68,7 @@ const Header = () => {
       console.log("Last action timestamp: ", lastActionTimestamp);
       const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
       console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
-      if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
+      if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) {
         console.log("Stopping playground due to inactivity...");
         cleanup();
       }
@@ -76,7 +76,7 @@ const Header = () => {
       pingStartAndStopApi();
     }
   };
-  
+
   // Setup inactivity timer
   useEffect(() => {
     if (protectionPoolService && playground?.forkId) {
@@ -112,7 +112,7 @@ const Header = () => {
       if (data.success) {
         const playground = data.playground;
         playground.provider = new JsonRpcProvider(playground.url);
-        
+
         updateContractAddresses({
           isPlayground: true,
           poolFactory: playground.poolFactoryAddress,
@@ -130,7 +130,7 @@ const Header = () => {
     }
   };
 
-  const stopPlayground = async (playgroundId) => { 
+  const stopPlayground = async (playgroundId) => {
     const result = await fetch(`/api/playground/stop?userAddress=${account}`, { method: "DELETE", body: playgroundId });
     console.log("End playground result", result);
     if (result.status === 200) {
@@ -194,86 +194,88 @@ const Header = () => {
   }
 
   return (
-    <div className="flex justify-between items-center top-0 h-16 border-b border-headerBorder mb-10">
-      <div className="-my-3 ml-8">
-        <Link href="/">
-          <Image
-            src={assets.headerLogo.src}
-            alt=""
-            height="36"
-            width="128"
-            unoptimized
-          />
+    <div className="top-0 h-16 border-b border-headerBorder mb-10">
+      <div className="flex justify-between items-center mx-32">
+        <div className="-my-3 ml-8">
+          <Link href="/">
+            <Image
+              src={assets.headerLogo.src}
+              alt=""
+              height="36"
+              width="128"
+              unoptimized
+            />
+          </Link>
+        </div>
+        <div className="flex items-center">
+        <Link href="/buyProtection" className="hover:text-customBlue">
+          <h3>Protect</h3>
         </Link>
-      </div>
-      <div className="flex items-center">
-      <Link href="/buyProtection" className="hover:text-customBlue">
-        <h3>Protect</h3>
-      </Link>
-      {/* <Link href="/lendWithProtection">
-        <h3>Lend With Protection</h3>
-      </Link> */}
-      <Link href="/sellProtection" className="ml-14 hover:text-customBlue">
-        <h3>Earn</h3>
-      </Link>
-      <Link href="/dashboard"className="ml-14 hover:text-customBlue">
-        <h3>Dashboard</h3>
-      </Link>
-      </div>
-      <div className="mr-8">
-      {/* {active && chainId === 1
-      ? null 
-      : active && chainId != 1
-      ? null
-      : !active || error
-      ? (
-        <button
-        className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={async () => await onConnect("metamask")}
-        >
-          <span>Connect Wallet</span>
-        </button>)
-      : ("")}
-      {active ? (
-        <button
+        {/* <Link href="/lendWithProtection">
+          <h3>Lend With Protection</h3>
+        </Link> */}
+        <Link href="/sellProtection" className="ml-14 hover:text-customBlue">
+          <h3>Earn</h3>
+        </Link>
+        <Link href="/dashboard"className="ml-14 hover:text-customBlue">
+          <h3>Dashboard</h3>
+        </Link>
+        </div>
+        <div className="mr-8">
+        {/* {active && chainId === 1
+        ? null
+        : active && chainId != 1
+        ? null
+        : !active || error
+        ? (
+          <button
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          onClick={() => disconnect()}
-        >
-          <span>{"Disconnect"}</span>
-        </button>
-      ) : (
-        ""
-      )} */}
-      {playgroundButtonTitle === "Start Playground" ? (
-        <button
-          // disabled={!account}
-          className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          onClick={playgroundButtonAction}>
-            <Tooltip
-              content="Test our app features in a sandbox!"
-              animate={{
-                mount: { scale: 1, y: 0 },
-                unmount: { scale: 0, y: 25 },
-              }}
-              placement="bottom">
+          onClick={async () => await onConnect("metamask")}
+          >
+            <span>Connect Wallet</span>
+          </button>)
+        : ("")}
+        {active ? (
+          <button
+            className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            onClick={() => disconnect()}
+          >
+            <span>{"Disconnect"}</span>
+          </button>
+        ) : (
+          ""
+        )} */}
+        {playgroundButtonTitle === "Start Playground" ? (
+          <button
+            // disabled={!account}
+            className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            onClick={playgroundButtonAction}>
+              <Tooltip
+                content="Test our app features in a sandbox!"
+                animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 },
+                }}
+                placement="bottom">
+                  <span>{playgroundButtonTitle}</span>
+              </Tooltip>
+          </button>
+        ) : (
+              <button
+                // disabled={!account}
+                className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+                onClick={playgroundButtonAction}>
                 <span>{playgroundButtonTitle}</span>
-            </Tooltip>
-        </button>
-      ) : (
-            <button
-              // disabled={!account}
-              className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-              onClick={playgroundButtonAction}>
-              <span>{playgroundButtonTitle}</span>
-            </button>
-      )}
-      {/* <Account /> */}
-      <PlaygroundModePopUp
-        open={isOpen}
-        playground={playground}
-        onClose={() => setIsOpen(false)}
-        ></PlaygroundModePopUp>
-        <ErrorPopup error={error} handleCloseError={() => setError("")} />
+              </button>
+        )}
+        {/* <Account /> */}
+        <PlaygroundModePopUp
+          open={isOpen}
+          playground={playground}
+          onClose={() => setIsOpen(false)}
+          ></PlaygroundModePopUp>
+          <ErrorPopup error={error} handleCloseError={() => setError("")} />
+        </div>
       </div>
     </div>
   );

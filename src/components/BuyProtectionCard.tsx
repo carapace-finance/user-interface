@@ -28,7 +28,7 @@ export default function BuyProtectionCard() {
 
   const router = useRouter();
 
-  useEffect(() => { 
+  useEffect(() => {
     if (protectionPoolService && contractAddresses.premiumCalculator && getValues("protectionAmount") > 0 && getValues("protectionDurationInDays") > 0) {
       setCalculatingPremiumPrice(true);
       const protectionPurchaseParams = {
@@ -53,8 +53,8 @@ export default function BuyProtectionCard() {
   }; // your form submit function which will invoke after successful validation
 
   return (
-    <div className="block py-10 px-6 bg-white rounded-2xl shadow-boxShadow  shadow-table w-400 mr-32">
-      <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-2 flex items-center">
+    <div className="block py-10 px-6 bg-white rounded-2xl shadow-boxShadow  shadow-table w-450 mr-32">
+      <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
         Estimated Adjusted Yields
         <div className="pl-2">
           <Tooltip
@@ -88,7 +88,7 @@ export default function BuyProtectionCard() {
       <div className="my-4">
         <div className="flex mb-4">
           <div>
-            <h5 className="text-customGrey text-xs flex mb-2 ">
+            <h5 className="text-customGrey text-base flex mb-2 ">
               Lending Pool APY
               <Tooltip
                   animate={{
@@ -117,13 +117,13 @@ export default function BuyProtectionCard() {
             <p className="text-left text-xl">17%</p>
           </div>
           <div className="ml-14">
-            <h5 className="text-customGrey text-left text-xs mb-2">Premium</h5>
+            <h5 className="text-customGrey text-left text-base mb-2">Premium</h5>
             <p className="text-left text-xl">7% - 10%</p>
           </div>
         </div>
         <div className="flex">
           <div>
-            <h5 className="text-customGrey text-xs mb-2">CARA Token Rewards</h5>
+            <h5 className="text-customGrey text-base mb-2">CARA Token Rewards</h5>
             <p className="text-left text-xl">~3.5%</p>
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function BuyProtectionCard() {
       <div className="mb-4">
         <div>
           <div className="mb-4">
-            <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Protection Amount</h5>
+            <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">Protection Amount</h5>
             <div>
               {/* <div className="mr-4">
                 <BasicButton
@@ -149,13 +149,13 @@ export default function BuyProtectionCard() {
                 label="1/4"
                 />
               </div> */}
-              <input 
+              <input
                 className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
                 type="number"
-                {...register("protectionAmount", { min: 0, max: 10000000, required: true })} 
+                {...register("protectionAmount", { min: 0, max: 10000000, required: true })}
               />
               {errors.protectionAmount && (
-                <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the protection amount must be in between 0 and the available protection purchase amount</h5>
+                <h5 className="block text-left text-buttonPink text-xl leading-tight font-normal mb-4">the protection amount must be in between 0 and the available protection purchase amount</h5>
               )}
                 {/* <Input
                   label="Protection Amount"
@@ -177,7 +177,7 @@ export default function BuyProtectionCard() {
           </div>
         </div>
         <div className="mb-4">
-          <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Protection Duration (days)</h5>
+          <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">Protection Duration (days)</h5>
           <div>
           {/* <div className="mr-4">
             <BasicButton
@@ -189,13 +189,13 @@ export default function BuyProtectionCard() {
             label="90 days"
             />
           </div> */}
-            <input 
+            <input
               className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
               type="number"
-              {...register("protectionDurationInDays", { min: 0, max: 180, required: true })} 
+              {...register("protectionDurationInDays", { min: 0, max: 180, required: true })}
             />
             {errors.protectionDurationInDays && (
-              <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the protection duration must be in between 0 day and the next cycle end(180 days the longest)</h5>
+              <h5 className="block text-left text-buttonPink text-xl leading-tight font-normal mb-4">the protection duration must be in between 0 day and the next cycle end(180 days the longest)</h5>
             )}
             {/* <Input
               label="Protection Duration (days)"
@@ -209,7 +209,7 @@ export default function BuyProtectionCard() {
             /> */}
           </div>
         </div>
-        <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Goldfinch Token ID</h5>
+        <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">Goldfinch Token ID</h5>
         <div className="flex w-72 flex-col gap-4">
           {/* <Input
             label="Goldfinch Token ID"
@@ -219,15 +219,15 @@ export default function BuyProtectionCard() {
               e.target.value ? setTokenId(parseInt(e.target.value)) : 0
             }
           /> */}
-          <p className="text-left text-base">{tokenId}</p>
+          <p className="text-left text-xl">{tokenId}</p>
         </div>
       </div>
-      <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Premium Price</h5>
-      <p className="text-left text-base">{calculatingPremiumPrice ? "Calculating Premium Price..." : numeral(premiumPrice).format(USDC_FORMAT) + " USDC"}</p>
-      <input 
-        type="submit" 
+      <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">Premium Price</h5>
+      <p className="text-left text-xl">{calculatingPremiumPrice ? "Calculating Premium Price..." : numeral(premiumPrice).format(USDC_FORMAT) + " USDC"}</p>
+      <input
+        type="submit"
         value="Preview"
-        className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+        className="border border-black rounded-md px-16 py-5 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         disabled={
           getValues("protectionAmount") === 0 ||
           getValues("protectionDurationInDays") === 0 ||

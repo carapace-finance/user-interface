@@ -143,10 +143,10 @@ const Dashboard = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">Time Until Expiration</th>
+              <th className="py-4">Protection expires in</th>
               <th className="py-4">Protection Amount</th>
               <th className="py-4" >
-                <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-row items-center">
                   Claim
                   <Tooltip
                     animate={{
@@ -162,7 +162,7 @@ const Dashboard = () => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="#6E7191"
-                      className="w-5 h-5"
+                      className="w-5 h-5 ml-4"
                     >
                       <path
                         strokeLinecap="round"
@@ -194,7 +194,7 @@ const Dashboard = () => {
                 <td className="py-4">{getTimeUntilExpiration(lendingPool)}</td>
                 <td className="py-4">{user.protectionAmount}</td>
                 <td className="py-4">
-                  <button disabled>claim</button>
+                  <button disabled className="border border-headerBorder rounded-md text-headerBorder px-5 py-1">claim</button>
                 </td>
               </tr>
             ))}
@@ -244,7 +244,7 @@ const Dashboard = () => {
               <th className="py-4">Requested Withdrawal</th>
               <th className="py-4">
                 {/* the div needs to be there otherwise there is a bug with styling */}
-                <div className="flex flex-row justify-between pr-3">
+                <div className="flex flex-row pr-3 items-center">
                   Request Withdrawal
                   <Tooltip
                     animate={{
@@ -260,7 +260,7 @@ const Dashboard = () => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="#6E7191"
-                      className="w-5 h-5"
+                      className="w-5 h-5 "
                     >
                       <path
                         strokeLinecap="round"
@@ -272,7 +272,7 @@ const Dashboard = () => {
                 </div>
               </th>
               <th className="py-4">
-                <div className="flex flex-row justify-between pr-3">
+                <div className="flex flex-row pr-3 items-center">
                   Withdraw
                   <Tooltip
                     animate={{
@@ -288,7 +288,7 @@ const Dashboard = () => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="#6E7191"
-                      className="w-5 h-5"
+                      className="w-5 h-5 ml-4"
                     >
                       <path
                         strokeLinecap="round"
@@ -319,13 +319,13 @@ const Dashboard = () => {
                 <td className="py-4">{user.sTokenUnderlyingAmount}</td>
                 <td className="py-4">{user.requestedWithdrawalAmount}</td>
                 <td className="py-4">
-                  <button onClick={() => setIsWithdrawalRequestOpen(true)}>
-                    request withdrawal
+                  <button onClick={() => setIsWithdrawalRequestOpen(true)} className="border border-headerBorder rounded-md text-headerBorder px-5 py-1">
+                    Request
                   </button>
                 </td>
                 <td className="py-4">
-                  <button onClick={() => setIsWithdrawOpen(true)}>
-                    withdraw
+                  <button onClick={() => setIsWithdrawOpen(true)} className="border border-headerBorder rounded-md text-headerBorder px-5 py-1">
+                    Withdraw
                   </button>
                 </td>
               </tr>
