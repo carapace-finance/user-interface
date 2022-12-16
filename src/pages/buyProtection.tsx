@@ -27,16 +27,19 @@ const BuyProtection = () => {
       />
       <h3 className="text-left font-bold">All Lending Pools</h3>
       <div className="h-5"></div>
-      <div className="rounded-2xl shadow-table p-8">
-        <table className="table-fixed w-full">
+      <div className="rounded-2xl shadow-table">
+        <div className="h-4"></div>
+        <table className="table-fixed w-full ">
           <thead>
             <tr className="text-left text-sm font-bold py-4">
-              <th className="py-4">Lending Pool</th>
+              <th className="py-4 pl-8">Lending Pool</th>
               <th className="py-4">Protocol</th>
               <th className="py-4">Premium</th>
               <th className="py-4">
-                <div className="flex flex-row justify-between mr-4">
-                  Lending Pool APY
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">
+                    Lending Pool APY
+                  </p>
                   {/* <div className="float-right"> */}
                   <Tooltip
                     animate={{
@@ -64,8 +67,10 @@ const BuyProtection = () => {
                 </div>
               </th>
               <th className="py-4">
-                <div className="flex flex-row justify-between mr-4">
-                  Estimated Adjusted Yields
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">
+                    Estimated Adjusted Yields
+                  </p>
                   {/* <div className="float-right"> */}
                   <Tooltip
                     animate={{
@@ -101,9 +106,9 @@ const BuyProtection = () => {
               <tr
                 key={lendingPool.address}
                 onClick={() => handleClick(`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`)}
-                className="text-left text-sm font-medium hover:cursor-pointer"
+                className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
               >
-                <td className="py-4">
+                <td className="py-4 pl-8">
                   {lendingPool.name}
                 </td>
                 <td className="py-4">
@@ -126,7 +131,7 @@ const BuyProtection = () => {
                 {/* <td className="py-4">
                   {lendingPool.CARATokenRewards}
                 </td> */}
-                <td className="py-4">
+                <td className="py-6">
                   {lendingPool.timeLeft}
                 </td>
               </tr>

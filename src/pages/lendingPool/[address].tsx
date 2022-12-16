@@ -69,7 +69,7 @@ const LendingPool = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between">
+      <div className="flex justify-between mx-20">
         <div className="rounded-2xl shadow-boxShadow py-6 px-5 h-80 w-600 shadow-table p-20">
           <div className="">
             <div className="text-left text-2xl">
