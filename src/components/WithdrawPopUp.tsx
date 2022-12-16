@@ -216,7 +216,7 @@ const WithdrawalPopUp = (props) => {
         />
         <div className="flex"></div>
           <LoadingButton loading={loading}></LoadingButton>
-        <div className="text-xs">
+        <div className="text-sm">
           <div className="flex">
             <p>By clicking &quot;Confirm Withdrawal&quot;, you agree to Carapace&apos;s&nbsp;</p>
             <p className="underline">Terms of Service&nbsp;</p>

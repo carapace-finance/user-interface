@@ -192,7 +192,7 @@ const SellProtectionPopUp = (props) => {
             </LoadingButton>
           </div>
           <div>
-            <div className="text-xs">
+            <div className="text-sm">
               <div className="flex">
                 <p>By clicking &quot;Confirm Deposit&quot;, you agree to Carapace&apos;s&nbsp;</p>
                 <p className="underline">Terms of Service&nbsp;</p>

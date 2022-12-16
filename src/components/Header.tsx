@@ -194,7 +194,7 @@ const Header = () => {
   }
 
   return (
-    <div className="flex justify-between items-center top-0 h-16 border-b border-headerBorder mb-10">
+    <div className="flex justify-between items-center top-0 h-16 shadow-md mb-10">
       <div className="-my-3 ml-8">
         <Link href="/">
           <Image
