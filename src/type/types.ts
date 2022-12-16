@@ -123,3 +123,6 @@ export interface WithdrawalRequestInput {
   amount: number;
 }
 
+export interface WithdrawalInput {
+  amount: number;
+}
