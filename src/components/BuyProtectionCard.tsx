@@ -42,7 +42,7 @@ export default function BuyProtectionCard() {
   }, [protectionPoolService, protectionAmount, protectionDurationInDays, tokenId]);
 
   return (
-    <div className="block py-10 px-6 bg-white rounded-2xl shadow-boxShadow w-400">
+    <div className="block py-10 px-6 bg-white rounded-2xl shadow-boxShadow  shadow-table w-400 mr-32">
       <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-2 flex items-center">
         Estimated Adjusted Yields
         <div className="pl-2">
