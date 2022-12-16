@@ -109,3 +109,8 @@ export interface deployedContracts {
   poolFactoryInstance: Contract;
   poolInstance: Contract;
 }
+
+export interface BuyProtectionInputs {
+  protectionAmount: number;
+  protectionDurationInDays: number;
+}
