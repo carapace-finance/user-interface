@@ -34,25 +34,27 @@ export default function SellProtectionCard() {
   }, [isOpen]);
 
   return (
-    <div className="flex justify-center">
-      <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
-        <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">
-          Estimated APY
+    <div className="flex justify-center ">
+      <div className="rounded-2xl shadow-table p-8 bg-white max-w-sm">
+        <div className="flex flex-row items-center">
+          <h5 className="text-left text-gray-700 text-base mr-1">
+            Estimated APY
+          </h5>
           <Tooltip
-              animate={{
-                mount: { scale: 1, y: 0 },
-                unmount: { scale: 0, y: 25 },
-              }}
-              content="Estimated APY for protection sellers."
-              placement="top"
-            >
+            animate={{
+              mount: { scale: 1, y: 0 },
+              unmount: { scale: 0, y: 25 },
+            }}
+            content="Estimated APY for protection sellers."
+            placement="top"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
+              stroke="#6E7191"
+              className="w-4 h-4"
             >
               <path
                 strokeLinecap="round"
@@ -61,13 +63,21 @@ export default function SellProtectionCard() {
               />
             </svg>
           </Tooltip>
-        </h5>
-        <p className="text-gray-700 text-base mb-4">18 - 25%</p>
-        <h5>Interest from Premium</h5>
-        <p>10 - 15%</p>
-        <h5>CARA Token Rewards</h5>
-        <p>8 - 10%</p>
-        <div>Deposit Amount</div>
+        </div>
+        <p className="text-left text-3xl mb-4">18 - 25%</p>
+        <div className="h-1 border-b border-headerBorder"></div>
+        <div className="h-5"></div>
+        <div className="flex flex-row justify-start">
+          <div className="flex-col mr-3">
+            <p className="text-left text-gray-700 text-xs">Interest from Premium</p>
+            <p className="text-left text-xl">10 - 15%</p>
+          </div>
+          <div className="flex-col">
+            <p className="text-left text-gray-700 text-xs">CARA Token Rewards</p>
+            <p className="text-left text-xl">8 - 10%</p>
+          </div>
+        </div>
+        <div className="text-left text-gray-700 text-base mt-5">Deposit Amount</div>
         <TextField
           type="number"
           placeholder={"0.0"}
