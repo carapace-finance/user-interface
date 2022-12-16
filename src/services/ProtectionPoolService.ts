@@ -3,6 +3,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 
 import {
   getPoolContract,
+  getPremiumCalculatorContract,
   getReferenceLendingPoolsContract
 } from "@contracts/contractService";
 import {
@@ -16,6 +17,11 @@ import {
 } from "@type/types";
 import { convertUSDCToNumber, parseUSDC, USDC_FORMAT } from "@utils/usdc";
 import numeral from "numeral";
+import {
+  scale18DecimalsAmtToUsdcDecimals,
+  scaleUsdcAmtTo18Decimals
+} from "@utils/utils";
+import { formatEther } from "@ethersproject/units";
 
 export class ProtectionPoolService {
   private protectionPurchaseByLendingPool: Map<string, BigNumber>;
@@ -216,9 +222,42 @@ export class ProtectionPoolService {
 
   public async calculatePremiumPrice(
     poolAddress: string,
+    premiumCalculatorAddress: string,
     purchaseParams: ProtectionPurchaseParams
   ): Promise<BigNumber> {
-    return Promise.resolve(parseUSDC("1024"));
+    console.log("calculatePremiumPrice: ", purchaseParams);
+    const user = this.provider.getSigner();
+    const pool = getPoolContract(poolAddress, user);
+    const poolInfo = await pool.getPoolInfo();
+    const referenceLendingPools = getReferenceLendingPoolsContract(
+      poolInfo.referenceLendingPools,
+      user
+    );
+    const premiumCalculator = getPremiumCalculatorContract(
+      premiumCalculatorAddress,
+      user
+    );
+    const buyerApy: BigNumber =
+      await referenceLendingPools.calculateProtectionBuyerAPR(
+        purchaseParams.lendingPoolAddress
+      );
+    console.log("buyerApy: ", formatEther(buyerApy));
+
+    return premiumCalculator
+      .calculatePremium(
+        purchaseParams.protectionDurationInSeconds,
+        scaleUsdcAmtTo18Decimals(purchaseParams.protectionAmount),
+        buyerApy,
+        await pool.calculateLeverageRatio(),
+        await pool.totalSTokenUnderlying(),
+        poolInfo.params
+      )
+      .then((result) => {
+        console.log("calculatePremiumPrice result: ", result);
+        return scale18DecimalsAmtToUsdcDecimals(result[0]);
+      });
+
+    // return Promise.resolve(parseUSDC("1024"));
   }
 
   public async getProtectionPurchases(

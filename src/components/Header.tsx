@@ -12,6 +12,7 @@ import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
 import { Playground } from "@utils/forked/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { JsonRpcProvider } from "@ethersproject/providers";
+import ErrorPopup from "./ErrorPopup";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -89,6 +90,15 @@ const Header = () => {
     }
   }, [playground?.forkId]);
 
+  const onError = (message, e) => {
+    if (e) {
+      console.log(message, e);
+    }
+
+    setError(message);
+    setIsOpen(false);
+  }
+
   const startPlayground = async () => {
     const result = await fetch(`/api/playground/start?userAddress=${account}`);
     if (result.status === 200) {
@@ -100,7 +110,8 @@ const Header = () => {
         updateContractAddresses({
           isPlayground: true,
           poolFactory: playground.poolFactoryAddress,
-          pool: playground.poolAddress
+          pool: playground.poolAddress,
+          premiumCalculator: playground.premiumCalculatorAddress,
         });
         updateProvider(playground.provider);
         updatePlayground(playground);
@@ -108,9 +119,8 @@ const Header = () => {
         console.log("Successfully started a playground: ", playground);
       }
     }
-    else { 
-      console.log("Failed to start playground: ", await result.json());
-      setError("Failed to start playground. Please try again.");
+    else {
+      onError("Failed to start playground. Please try again.", await result.json());
     }
   };
 
@@ -124,8 +134,7 @@ const Header = () => {
         console.log("Successfully ended playground");
       }
       else {
-        console.log("Failed to end playground: ", data);
-        setError("Failed to end playground. Please try again.");
+        onError("Failed to stop playground. Please try again.", data);
       }
     }
   };
@@ -257,7 +266,8 @@ const Header = () => {
         open={isOpen}
         playground={playground}
         onClose={() => setIsOpen(false)}
-      ></PlaygroundModePopUp>
+        ></PlaygroundModePopUp>
+        <ErrorPopup error={error} handleCloseError={() => setError("")} />
       </div>
     </div>
   );

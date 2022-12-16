@@ -4,6 +4,7 @@ export interface DeployedContracts {
   poolCycleManagerInstance: any;
   poolFactoryInstance: any;
   poolInstance: any;
+  premiumCalculatorInstance: any;
 }
 
 export interface Playground {
