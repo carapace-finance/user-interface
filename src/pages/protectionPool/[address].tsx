@@ -87,7 +87,7 @@ const ProtectionPool = () => {
         </div>
       </div>
       <div className="flex justify-between">
-        <div className="rounded-2xl shadow-table p-8 h-full w-600">
+        <div className="rounded-2xl shadow-table p-8 h-full w-700">
           <div className="">
             <div className="text-left text-2xl">
               <div className="text-black text-2xl font-bold mb-4">Current Capital in the Pool</div>
@@ -138,7 +138,7 @@ const ProtectionPool = () => {
                   }),
                   datasets: [
                     {
-                      backgroundColor: ['hsl(0, 0%, 60%)', 'hsl(0, 0%, 35%)'],
+                      backgroundColor: ['hsl(0, 0%, 85%)', 'hsl(0, 0%, %)', 'hsl(0, 0%, 35%)',],
                       data: underlyingLendingPools.map((lendingPool) => Number(lendingPool.protectionPurchase.replace(/\D/g, '')))
                     }
                   ]
