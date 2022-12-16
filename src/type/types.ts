@@ -118,3 +118,8 @@ export interface BuyProtectionInputs {
 export interface SellProtectionInput {
   depositAmount: number;
 }
+
+export interface WithdrawalRequestInput {
+  amount: number;
+}
+

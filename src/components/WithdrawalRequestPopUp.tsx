@@ -2,13 +2,12 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  InputAdornment,
-  TextField,
   IconButton as MuiIconButton,
   Divider,
 } from "@mui/material";
-import { IconButton, Tooltip } from "@material-tailwind/react";
+import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import {
@@ -22,18 +21,26 @@ import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { LoadingButton } from "@mui/lab";
 import numeral from "numeral";
+import { WithdrawalRequestInput } from "@type/types"
 
 const WithdrawalRequestPopUp = (props) => {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors }
+  } = useForm<WithdrawalRequestInput>({ defaultValues: { amount: 0 } });
+
   const { protectionPoolService } = useContext(ApplicationContext);
   const { open, onClose, protectionPoolAddress } = props;
-  const [amount, setAmount] = useState(0);
   const [requestableAmount, setRequestableAmount] = useState(0);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const reset = () => {
-    setAmount(0);
+    setValue("amount", 0);
     setRequestableAmount(0);
     setSuccessMessage("");
     setError("");
@@ -54,8 +61,12 @@ const WithdrawalRequestPopUp = (props) => {
   }, [open]);
 
   const setMaxAmount = async () => {
-    setAmount(requestableAmount);
+    setValue("amount", requestableAmount);
   };
+
+  const onSubmit = () => {
+    requestedWithdrawal();
+  }; // your form submit function which will invoke after successful validation
 
   const onError = (e) => {
     if (e) {
@@ -72,7 +83,7 @@ const WithdrawalRequestPopUp = (props) => {
     try {
       const tx = await protectionPoolService.requestWithdrawal(
         protectionPoolAddress,
-        convertNumberToUSDC(amount)
+        convertNumberToUSDC(getValues("amount"))
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {
@@ -80,7 +91,7 @@ const WithdrawalRequestPopUp = (props) => {
         console.log("The requestWithdrawal transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
-          `You successfully requested to withdraw ${amount} USDC from the protection pool!`
+          `You successfully requested to withdraw ${getValues("amount")} USDC from the protection pool!`
         );
         setTimeout(() => {
           reset();
@@ -119,6 +130,7 @@ const WithdrawalRequestPopUp = (props) => {
       <DialogTitle className="mt-6">
         Withdrawal Request
       </DialogTitle>
+      <form onSubmit={handleSubmit(onSubmit)}>
       <DialogContent>
         <div className="flex justify-left mb-3 text-base font-medium">
           Protection Pool{formatAddress(protectionPoolAddress)}
@@ -126,13 +138,16 @@ const WithdrawalRequestPopUp = (props) => {
         <div>
           <h4 className="text-left text-base font-medium mb-3">Request Amount</h4>
           <div className="rounded-2xl mb-4">
-            <div className="flex justify-center">
-              <TextField
+            <div>
+              <input 
+                className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
                 type="number"
-                placeholder={"0.0"}
-                variant="outlined"
-                size="medium"
-                className="border-none w-full outline-none h-12"
+                {...register("amount", { min: 0, max: requestableAmount, required: true })} 
+              />
+              {errors.amount && (
+                <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the withdrawal request amount must be in between 0 and your deposited amount</h5>
+              )}
+              {/* <TextField
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start" className="flex ">
@@ -153,11 +168,7 @@ const WithdrawalRequestPopUp = (props) => {
                     </InputAdornment>
                   )
                 }}
-                value={amount}
-                onChange={(e) =>
-                  e.target.value ? setAmount(parseFloat(e.target.value)) : 0
-                }
-              />
+              /> */}
             </div>
           </div>
           <div className="text-right mr-5 mb-1">
@@ -195,22 +206,17 @@ const WithdrawalRequestPopUp = (props) => {
             </div>
           </div>
         </div>
-        <LoadingButton
-          style={{ textTransform: "none",backgroundColor:"#293C9A", padding: "16px 40px", borderRadius: "16px", marginBottom:"20px",cursor:"pointer" }}
-          onClick={requestedWithdrawal}
+        <input 
+          className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          type="submit" 
+          value="Confirm Withdrawal Request"
           disabled={
             !protectionPoolService ||
-            !protectionPoolAddress ||
-            !amount ||
-            amount > requestableAmount
+            !protectionPoolAddress
           }
-          loading={loading}
-          variant="outlined"
-        >
-          <div className="text-white text-base">
-           Confirm Withdrawal Request
-          </div>
-        </LoadingButton>
+        />
+        <div className="flex"></div>
+          <LoadingButton loading={loading}></LoadingButton>
         <div className="text-xs">
           <div className="flex">
             <p>By clicking &quot;Confirm Withdrawal Request&quot;, you agree to Carapace&apos;s &nbsp;</p>
@@ -222,6 +228,7 @@ const WithdrawalRequestPopUp = (props) => {
           </div>
         </div>
       </DialogContent>
+      </form>
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}
         message={successMessage}
