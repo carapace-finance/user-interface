@@ -136,7 +136,7 @@ export default function BuyProtectionCard() {
               <input 
                 className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
                 type="number"
-                {...register("protectionAmount", { min: 0, max: 10000000, required: true })} 
+                {...register("protectionAmount", { min: 1, max: 10000000, required: true })} // todo: add the leverage ratio limit to max
               />
               {errors.protectionAmount && (
                 <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the protection amount must be in between 0 and the available protection purchase amount</h5>
@@ -166,7 +166,7 @@ export default function BuyProtectionCard() {
             <input 
               className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
               type="number"
-              {...register("protectionDurationInDays", { min: 0, max: 180, required: true })} 
+              {...register("protectionDurationInDays", { min: 1, max: 180, required: true })} 
             />
             {errors.protectionDurationInDays && (
               <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the protection duration must be in between 0 day and the next cycle end(180 days the longest)</h5>
@@ -203,9 +203,6 @@ export default function BuyProtectionCard() {
         value="Preview"
         className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
         disabled={
-          getValues("protectionAmount") === 0 ||
-          getValues("protectionDurationInDays") === 0 ||
-          tokenId === 0 ||
           premiumPrice === 0 ||
           calculatingPremiumPrice
         }

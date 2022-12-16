@@ -142,7 +142,7 @@ const WithdrawalRequestPopUp = (props) => {
               <input 
                 className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
                 type="number"
-                {...register("amount", { min: 0, max: requestableAmount, required: true })} 
+                {...register("amount", { min: 1, max: requestableAmount, required: true })} 
               />
               {errors.amount && (
                 <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the withdrawal request amount must be in between 0 and your deposited amount</h5>

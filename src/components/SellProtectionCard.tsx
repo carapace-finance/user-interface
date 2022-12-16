@@ -94,7 +94,7 @@ export default function SellProtectionCard() {
         <input 
           className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
           type="number"
-          {...register("depositAmount", { min: 0, max: usdcBalance && 10000000, required: true })} 
+          {...register("depositAmount", { min: 1, max: usdcBalance, required: true })} 
         />
         {errors.depositAmount && (
           <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the deposit amount must be in between 0 and the deposit amount available if you have enough balance</h5>
@@ -122,7 +122,7 @@ export default function SellProtectionCard() {
           className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           type="submit" 
           value="Preview"
-          disabled={!getValues("depositAmount") || getValues("depositAmount") > usdcBalance}
+          // disabled={} // todo: add the leverage ratio limit
         />
         </form>
         <SellProtectionPopUp
