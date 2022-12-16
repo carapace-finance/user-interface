@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
-// import BasicButton from "./BasicBlueButton";
 import numeral from "numeral";
 import { convertNumberToUSDC, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
@@ -134,21 +133,6 @@ export default function BuyProtectionCard() {
           <div className="mb-4">
             <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Protection Amount</h5>
             <div>
-              {/* <div className="mr-4">
-                <BasicButton
-                label="Full"
-                />
-              </div>
-              <div className="mr-4">
-                <BasicButton
-                label="1/2"
-                />
-              </div>
-              <div className="mr-4">
-                <BasicButton
-                label="1/4"
-                />
-              </div> */}
               <input 
                 className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
                 type="number"
@@ -179,16 +163,6 @@ export default function BuyProtectionCard() {
         <div className="mb-4">
           <h5 className="text-left text-customGrey text-base leading-tight font-normal mb-4">Protection Duration (days)</h5>
           <div>
-          {/* <div className="mr-4">
-            <BasicButton
-            label="Full"
-            />
-          </div>
-          <div className="mr-4">
-            <BasicButton
-            label="90 days"
-            />
-          </div> */}
             <input 
               className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
               type="number"
