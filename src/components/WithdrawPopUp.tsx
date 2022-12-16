@@ -21,13 +21,6 @@ import {
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import numeral from "numeral";
-import { makeStyles } from "@mui/styles";
-
-const useStyles = makeStyles(() => ({
-  noBorder: {
-    border: "none"
-  }
-}));
 
 const WithdrawalPopUp = (props) => {
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -37,8 +30,6 @@ const WithdrawalPopUp = (props) => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
-
-  const classes = useStyles();
 
   const resetInputs = () => {
     setAmount(0);
@@ -133,9 +124,8 @@ const WithdrawalPopUp = (props) => {
 
         <div>
           <h4 className="text-left text-base font-medium mb-3">Withdraw Amount</h4>
-
-          <div className="bg-customLightGrey rounded-2xl mb-4 border">
-            <div className="flex justify-center">
+          <div className="rounded-2xl mb-4">
+            <div className="flex justify-center mb-4">
               <TextField
                 type="number"
                 placeholder={"0"}
@@ -143,7 +133,6 @@ const WithdrawalPopUp = (props) => {
                 size="medium"
                 className="border-none w-full outline-none h-12"
                 InputProps={{
-                  classes: { notchedOutline: classes.noBorder },
                   startAdornment: (
                     <InputAdornment position="start" className="flex">
                       <p className="text-customLightBlue pl-6">($)</p>
@@ -170,10 +159,8 @@ const WithdrawalPopUp = (props) => {
               />
             </div>
             <div className="text-right mr-5 mb-1">
-              <p>
-                Withdrawable Amount:{" "}
-                {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}
-              </p>
+              Withdrawable Amount:
+              {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}
             </div>
             </div>
         </div>

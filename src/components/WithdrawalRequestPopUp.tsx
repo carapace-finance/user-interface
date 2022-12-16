@@ -22,13 +22,6 @@ import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { LoadingButton } from "@mui/lab";
 import numeral from "numeral";
-import { makeStyles } from "@mui/styles";
-
-const useStyles = makeStyles(() => ({
-  noBorder: {
-    border: "none"
-  }
-}));
 
 const WithdrawalRequestPopUp = (props) => {
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -38,8 +31,6 @@ const WithdrawalRequestPopUp = (props) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const classes = useStyles();
 
   const reset = () => {
     setAmount(0);
@@ -134,7 +125,7 @@ const WithdrawalRequestPopUp = (props) => {
         </div>
         <div>
           <h4 className="text-left text-base font-medium mb-3">Request Amount</h4>
-          <div className="bg-customLightGrey rounded-2xl mb-4 border">
+          <div className="rounded-2xl mb-4">
             <div className="flex justify-center">
               <TextField
                 type="number"
@@ -143,7 +134,6 @@ const WithdrawalRequestPopUp = (props) => {
                 size="medium"
                 className="border-none w-full outline-none h-12"
                 InputProps={{
-                  classes: { notchedOutline: classes.noBorder },
                   startAdornment: (
                     <InputAdornment position="start" className="flex ">
                       <p className="text-customLightBlue pl-6">($)</p>
@@ -169,12 +159,10 @@ const WithdrawalRequestPopUp = (props) => {
                 }
               />
             </div>
-            <div className="text-right mr-5 mb-1">
-              <p>
-                Requestable Amount:{" "}
-                {numeral(requestableAmount).format(USDC_FORMAT) + " USDC"}
-              </p>
-            </div>
+          </div>
+          <div className="text-right mr-5 mb-1">
+            Requestable Amount:
+            {numeral(requestableAmount).format(USDC_FORMAT) + " USDC"}
           </div>
         </div>
         <Divider/>
