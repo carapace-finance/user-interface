@@ -1,16 +1,24 @@
 import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
-import { InputAdornment, TextField } from "@mui/material";
-import { IconButton, Tooltip } from "@material-tailwind/react";
+import { Tooltip } from "@material-tailwind/react";
 import { getUsdcBalance, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
 import numeral from "numeral";
+import { SellProtectionInput } from "@type/types"
 
 export default function SellProtectionCard() {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors }
+  } = useForm<SellProtectionInput>({ defaultValues: { depositAmount: 0 } });
+
   const [isOpen, setIsOpen] = useState(false);
-  const [amount, setAmount] = useState(0);
   const [usdcBalance, setUsdcBalance] = useState(0);
   const router = useRouter();
   const { protectionPoolService, provider } = useContext(ApplicationContext);
@@ -18,7 +26,7 @@ export default function SellProtectionCard() {
   const protectionPoolAddress = router.query.address;
 
   const setMaxAmount = async () => {
-    setAmount(usdcBalance);
+    setValue("depositAmount", usdcBalance);
   };
 
   useEffect(() => {
@@ -32,6 +40,10 @@ export default function SellProtectionCard() {
       }
     })();
   }, [isOpen]);
+
+  const onSubmit = () => {
+    setIsOpen(true);
+  }; // your form submit function which will invoke after successful validation
 
   return (
     <div className="flex justify-center ">
@@ -77,12 +89,17 @@ export default function SellProtectionCard() {
             <p className="text-left text-xl">8 - 10%</p>
           </div>
         </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
         <div className="text-left text-gray-700 text-base mt-5">Deposit Amount</div>
-        <TextField
+        <input 
+          className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
           type="number"
-          placeholder={"0.0"}
-          variant="outlined"
-          size="medium"
+          {...register("depositAmount", { min: 0, max: usdcBalance && 10000000, required: true })} 
+        />
+        {errors.depositAmount && (
+          <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the deposit amount must be in between 0 and the deposit amount available if you have enough balance</h5>
+        )}
+        {/* <TextField
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">USDC</InputAdornment>
@@ -99,24 +116,19 @@ export default function SellProtectionCard() {
               </InputAdornment>
             )
           }}
-          value={amount}
-          onChange={(e) =>
-            e.target.value ? setAmount(parseFloat(e.target.value)) : 0
-          }
-        />
+        /> */}
         <p>Balance: {numeral(usdcBalance).format(USDC_FORMAT)} USDC</p>
-        <button
-          type="button"
-          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          // disabled={!amount || amount > usdcBalance} // todo: enable the button for styling
-          onClick={() => setIsOpen(true)}
-        >
-          Preview
-        </button>
+        <input 
+          className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          type="submit" 
+          value="Preview"
+          disabled={!getValues("depositAmount") || getValues("depositAmount") > usdcBalance}
+        />
+        </form>
         <SellProtectionPopUp
           open={isOpen}
           onClose={() => setIsOpen(false)}
-          amount={amount}
+          amount={getValues("depositAmount")}
           protectionPoolAddress={protectionPoolAddress}
         ></SellProtectionPopUp>
       </div>

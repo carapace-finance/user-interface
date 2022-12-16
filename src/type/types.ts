@@ -114,3 +114,7 @@ export interface BuyProtectionInputs {
   protectionAmount: number;
   protectionDurationInDays: number;
 }
+
+export interface SellProtectionInput {
+  depositAmount: number;
+}

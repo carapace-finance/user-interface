@@ -1,6 +1,6 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Input, Tooltip } from "@material-tailwind/react";
+import { Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
 // import BasicButton from "./BasicBlueButton";
