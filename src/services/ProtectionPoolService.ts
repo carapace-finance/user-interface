@@ -8,7 +8,8 @@ import {
 } from "@contracts/contractService";
 import {
   transferApproveAndDeposit,
-  transferApproveAndBuyProtection
+  transferApproveAndBuyProtection,
+  getLendingPoolName
 } from "@utils/forked/playground";
 import {
   LendingPool,
@@ -83,7 +84,7 @@ export class ProtectionPoolService {
 
     console.log("Requesting to withdraw sTokenAmt: ", sTokenAmt.toString());
     return await poolInstance.requestWithdrawal(sTokenAmt, {
-      gasPrice: "259000000000",
+      gasPrice: "25900000000",
       gasLimit: "210000000"
     });
   }
@@ -99,14 +100,9 @@ export class ProtectionPoolService {
     );
 
     if (this.isPlayground) {
-      // buyer with lending position in goldfinch
-      const buyer = this.provider.getSigner(
-        "0x008c84421da5527f462886cec43d2717b686a7e4"
-      );
       return await transferApproveAndBuyProtection(
         this.provider,
         poolInstance,
-        buyer,
         purchaseParams
       );
     } else {
@@ -129,7 +125,7 @@ export class ProtectionPoolService {
 
     console.log("Withdrawing sTokenAmt: ", sTokenAmt.toString());
     return await poolInstance.withdraw(sTokenAmt, signer.getAddress(), {
-      gasPrice: "259000000000",
+      gasPrice: "25900000000",
       gasLimit: "210000000"
     });
   }
@@ -202,7 +198,7 @@ export class ProtectionPoolService {
 
           return {
             address: lendingPool,
-            name: "Lend East #1: Emerging Asia Fintech Pool",
+            name: getLendingPoolName(lendingPool),
             protocol: "goldfinch",
             adjustedYields: "7 - 10%",
             lendingPoolAPY: "17%",
@@ -256,8 +252,6 @@ export class ProtectionPoolService {
         console.log("calculatePremiumPrice result: ", result);
         return scale18DecimalsAmtToUsdcDecimals(result[0]);
       });
-
-    // return Promise.resolve(parseUSDC("1024"));
   }
 
   public async getProtectionPurchases(

@@ -20,7 +20,7 @@ const Header = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
-  const { updateContractAddresses, updateProvider, protectionPoolService } =
+  const { updateProviderAndContractAddresses, protectionPoolService } =
     useContext(ApplicationContext);
 
   // useEffect is called when component is mounted and playground is undefined at that time.
@@ -113,13 +113,12 @@ const Header = () => {
         const playground = data.playground;
         playground.provider = new JsonRpcProvider(playground.url);
 
-        updateContractAddresses({
+        updateProviderAndContractAddresses(playground.provider, {
           isPlayground: true,
           poolFactory: playground.poolFactoryAddress,
           pool: playground.poolAddress,
           premiumCalculator: playground.premiumCalculatorAddress,
         });
-        updateProvider(playground.provider);
         updatePlayground(playground);
 
         console.log("Successfully started a playground: ", playground);
@@ -136,7 +135,14 @@ const Header = () => {
     if (result.status === 200) {
       const data = await result.json();
       if (data.success) {
+        updateProviderAndContractAddresses(undefined, {
+          isPlayground: true,
+          poolFactory: undefined,
+          pool: undefined,
+          premiumCalculator: undefined
+        });
         updatePlayground(undefined);
+        
         console.log("Successfully ended playground");
       }
       else {

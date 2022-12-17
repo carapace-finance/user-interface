@@ -76,6 +76,10 @@ export const LendingPoolContextProvider = ({ children }) => {
         setLendingPools(allLendingPools);
       });
     }
+    else {
+      setLendingPools(defaultLendingPools);
+    }
+
   }, [protectionPools]);
 
   return (
