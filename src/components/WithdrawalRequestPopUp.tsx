@@ -130,8 +130,11 @@ const WithdrawalRequestPopUp = (props) => {
       <DialogTitle className="mt-6">Withdrawal Request</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
-          <div className="flex justify-left mb-3 text-base font-medium">
-            Protection Pool{formatAddress(protectionPoolAddress)}
+          <h4 className="text-left text-base font-medium mb-3">
+            Protection Pool
+          </h4>
+          <div className="flex justify-left mb-3 text-base">
+            {protectionPoolAddress}
           </div>
           <div>
             <h4 className="text-left text-base font-medium mb-3">

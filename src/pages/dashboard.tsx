@@ -309,6 +309,7 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
+            {/* todo: list up the protection pools the user has interacted with */}
             {protectionPools.map((protectionPool) => (
               <tr
                 key={protectionPool.address}

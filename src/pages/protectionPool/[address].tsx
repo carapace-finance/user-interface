@@ -70,9 +70,7 @@ const ProtectionPool = () => {
     <div className="mx-32">
       <div className="flex">
         <TitleAndDescriptions
-          title={`Goldfinch Protection Pool #1 ${formatAddress(
-            router.query.address
-          )}`}
+          title={`Goldfinch Protection Pool #1`}
           descriptions=""
           buttonExist={false}
         />
@@ -204,12 +202,12 @@ const ProtectionPool = () => {
         <div className="rounded-2xl shadow-table">
           <table className="table-fixed w-full">
             <thead>
-              <tr className="text-left text-sm font-bold py-4">
-                <th className="py-4 pl-8">Name</th>
-                <th className="py-4">Protocol</th>
-                <th className="py-4">APY</th>
-                <th className="py-4">Payment Term</th>
-                <th className="py-4">Opening Date</th>
+              <tr className="text-left text-sm font-bold">
+                <th className="py-8 pl-8">Name</th>
+                <th className="py-8">Protocol</th>
+                <th className="py-8">APY</th>
+                <th className="py-8">Payment Term</th>
+                <th className="py-8">Opening Date</th>
               </tr>
             </thead>
             <tbody>
@@ -223,8 +221,8 @@ const ProtectionPool = () => {
                   }
                   className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
                 >
-                  <td className="py-4 pl-8">{lendingPool.name}</td>
-                  <td className="py-4">
+                  <td className="py-8 pl-8">{lendingPool.name}</td>
+                  <td className="py-8">
                     <Image
                       src={lendingPool.protocol}
                       width={24}
@@ -232,9 +230,9 @@ const ProtectionPool = () => {
                       alt=""
                     />
                   </td>
-                  <td className="py-4">{lendingPool.lendingPoolAPY}</td>
-                  <td className="py-4">{"TERM"}</td>
-                  <td className="py-4">{"DATE"}</td>
+                  <td className="py-8">{lendingPool.lendingPoolAPY}</td>
+                  <td className="py-8">{"TERM"}</td>
+                  <td className="py-8">{"DATE"}</td>
                 </tr>
               ))}
             </tbody>

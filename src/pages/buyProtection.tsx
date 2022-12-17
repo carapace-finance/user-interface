@@ -30,11 +30,11 @@ const BuyProtection = () => {
         <div className="h-4"></div>
         <table className="table-fixed w-full ">
           <thead>
-            <tr className="text-left text-sm font-bold py-4">
-              <th className="py-4 pl-8">Lending Pool</th>
-              <th className="py-4">Protocol</th>
-              <th className="py-4">Premium</th>
-              <th className="py-4">
+            <tr className="text-left text-sm font-bold">
+              <th className="py-8 pl-8">Lending Pool</th>
+              <th className="py-8">Protocol</th>
+              <th className="py-8">Premium</th>
+              <th className="py-8">
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Lending Pool APY</p>
                   {/* <div className="float-right"> */}
@@ -63,7 +63,7 @@ const BuyProtection = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">
+              <th className="py-8">
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Estimated Adjusted Yields</p>
                   {/* <div className="float-right"> */}
@@ -92,8 +92,8 @@ const BuyProtection = () => {
                   </Tooltip>
                 </div>
               </th>
-              {/* <th className="py-4">CARA Token Rewards</th> */}
-              <th className="py-4">Buy Protection Within</th>
+              {/* <th className="py-8">CARA Token Rewards</th> */}
+              <th className="py-8">Buy Protection Within</th>
             </tr>
           </thead>
           <tbody>
@@ -107,8 +107,8 @@ const BuyProtection = () => {
                 }
                 className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
               >
-                <td className="py-4 pl-8">{lendingPool.name}</td>
-                <td className="py-4">
+                <td className="py-8 pl-8">{lendingPool.name}</td>
+                <td className="py-8">
                   <Image
                     src={lendingPool.protocol}
                     width={24}
@@ -116,10 +116,10 @@ const BuyProtection = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-4">{lendingPool.premium}</td>
-                <td className="py-4">{lendingPool.lendingPoolAPY}</td>
-                <td className="py-4">{lendingPool.adjustedYields}</td>
-                {/* <td className="py-4">
+                <td className="py-8">{lendingPool.premium}</td>
+                <td className="py-8">{lendingPool.lendingPoolAPY}</td>
+                <td className="py-8">{lendingPool.adjustedYields}</td>
+                {/* <td className="py-8">
                   {lendingPool.CARATokenRewards}
                 </td> */}
                 <td className="py-6">{lendingPool.timeLeft}</td>
