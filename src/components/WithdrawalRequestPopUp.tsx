@@ -216,7 +216,7 @@ const WithdrawalRequestPopUp = (props) => {
             </div>
           </div>
           <input
-            className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
             type="submit"
             value="Confirm Withdrawal Request"
             disabled={!protectionPoolService || !protectionPoolAddress}

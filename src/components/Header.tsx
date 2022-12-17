@@ -262,7 +262,7 @@ const Header = () => {
         {playgroundButtonTitle === "Start Playground" ? (
           <button
             // disabled={!account}
-            className="border rounded-md border-black px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
+            className="text-white bg-customBlue rounded-md px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
             onClick={playgroundButtonAction}
           >
             <Tooltip
