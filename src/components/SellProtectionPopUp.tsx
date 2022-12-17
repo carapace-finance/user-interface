@@ -53,7 +53,7 @@ const SellProtectionPopUp = (props) => {
     try {
       const tx = await protectionPoolService.deposit(
         protectionPoolAddress,
-        convertNumberToUSDC(amount)
+        convertNumberToUSDC(parseFloat(amount))
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {

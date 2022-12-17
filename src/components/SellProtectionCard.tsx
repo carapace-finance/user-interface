@@ -16,7 +16,7 @@ export default function SellProtectionCard() {
     getValues,
     setValue,
     formState: { errors }
-  } = useForm<SellProtectionInput>({ defaultValues: { depositAmount: 0 } });
+  } = useForm<SellProtectionInput>({ defaultValues: { depositAmount: "0" } });
 
   const [isOpen, setIsOpen] = useState(false);
   const [usdcBalance, setUsdcBalance] = useState(0);
@@ -26,7 +26,7 @@ export default function SellProtectionCard() {
   const protectionPoolAddress = router.query.address;
 
   const setMaxAmount = async () => {
-    setValue("depositAmount", usdcBalance);
+    setValue("depositAmount", usdcBalance.toString())
   };
 
   useEffect(() => {

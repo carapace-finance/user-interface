@@ -15,7 +15,7 @@ export default function BuyProtectionCard() {
     handleSubmit,
     getValues,
     formState: { errors }
-  } = useForm<BuyProtectionInputs>({ defaultValues: { protectionAmount: 0, protectionDurationInDays: 50 } });
+  } = useForm<BuyProtectionInputs>({ defaultValues: { protectionAmount: "0", protectionDurationInDays: "50" } });
 
   const [isOpen, setIsOpen] = useState(false);
   const [tokenId, setTokenId] = useState(590);
@@ -28,12 +28,12 @@ export default function BuyProtectionCard() {
   const router = useRouter();
 
   useEffect(() => { 
-    if (protectionPoolService && contractAddresses.premiumCalculator && getValues("protectionAmount") > 0 && getValues("protectionDurationInDays") > 0) {
+    if (protectionPoolService && contractAddresses.premiumCalculator && parseFloat(getValues("protectionAmount")) > 0 && parseFloat(getValues("protectionDurationInDays")) > 0) {
       setCalculatingPremiumPrice(true);
       const protectionPurchaseParams = {
         lendingPoolAddress: router.query.address as string,
         nftLpTokenId: tokenId,
-        protectionAmount: convertNumberToUSDC(getValues("protectionAmount")),
+        protectionAmount: convertNumberToUSDC(parseFloat(getValues("protectionAmount"))),
         protectionDurationInSeconds: getDaysInSeconds(getValues("protectionDurationInDays"))
       };
       console.log("Calculating premium price for Protection purchase params: ", protectionPurchaseParams);

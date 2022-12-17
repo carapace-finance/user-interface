@@ -29,7 +29,7 @@ const WithdrawalPopUp = (props) => {
     getValues,
     setValue,
     formState: { errors }
-  } = useForm<WithdrawalInput>({ defaultValues: { amount: 0 } });
+  } = useForm<WithdrawalInput>({ defaultValues: { amount: "0" } });
 
   const { protectionPoolService } = useContext(ApplicationContext);
   const { open, onClose, protectionPoolAddress } = props;
@@ -39,7 +39,7 @@ const WithdrawalPopUp = (props) => {
   const [error, setError] = useState("");
 
   const resetInputs = () => {
-    setValue("amount", 0);
+    setValue("amount", "0");
     setWithdrawableAmount(0);
     setSuccessMessage("");
     setError("");
@@ -60,7 +60,7 @@ const WithdrawalPopUp = (props) => {
   }, [open]);
 
   const setMaxAmount = async () => {
-    setValue("amount", withdrawableAmount);
+    setValue("amount", withdrawableAmount.toString());
   };
 
   const onSubmit = () => {
@@ -81,7 +81,7 @@ const WithdrawalPopUp = (props) => {
     try {
       const tx = await protectionPoolService.withdraw(
         protectionPoolAddress,
-        convertNumberToUSDC(getValues("amount"))
+        convertNumberToUSDC(parseFloat(getValues("amount")))
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {

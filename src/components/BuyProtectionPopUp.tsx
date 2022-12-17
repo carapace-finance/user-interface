@@ -63,7 +63,7 @@ const BuyProtectionPopUp = (props) => {
       const protectionPurchaseParams = {
         lendingPoolAddress: lendingPoolAddress,
         nftLpTokenId: tokenId,
-        protectionAmount: convertNumberToUSDC(protectionAmount),
+        protectionAmount: convertNumberToUSDC(parseFloat(protectionAmount)),
         protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
       };
       const tx = await protectionPoolService.buyProtection(
