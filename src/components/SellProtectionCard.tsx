@@ -46,8 +46,8 @@ export default function SellProtectionCard() {
   }; // your form submit function which will invoke after successful validation
 
   return (
-    <div className="flex justify-center ">
-      <div className="rounded-2xl shadow-table p-8 bg-white max-w-sm">
+    <div className="flex justify-center">
+      <div className="rounded-2xl shadow-table p-8 bg-white max-w-sm w-450">
         <div className="flex flex-row items-center">
           <h5 className="text-left text-gray-700 text-base mr-1">
             Estimated APY
