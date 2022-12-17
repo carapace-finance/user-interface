@@ -76,7 +76,7 @@ const SellProtectionPopUp = (props) => {
 
   return (
     <Dialog
-      className="top-32 inset-x-36"
+      className="inset-x-36"
       disableScrollLock
       open={open}
       onClose={onClose}
@@ -95,7 +95,7 @@ const SellProtectionPopUp = (props) => {
         <div className="text-black">×</div>
       </IconButton>
       <DialogTitle className="mt-6">Deposit</DialogTitle>
-      <DialogContent>
+      <DialogContent className="mb-4">
         <div>
           <div className="flex justify-start">
             {renderFieldAndValue("Name", "Goldfinch Protection Pool #1")}
@@ -173,25 +173,17 @@ const SellProtectionPopUp = (props) => {
           </Typography>
         </div>
         <div>
-          <LoadingButton
-            className="cursor-pointer disabled:opacity-50 disabled:cursor-none"
-            style={{
-              textTransform: "none",
-              backgroundColor: "#293C9A",
-              padding: "20px 80px",
-              borderRadius: "16px",
-              marginBottom: "20px",
-              cursor: "pointer"
-            }}
+          <button
+            className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
             onClick={sellProtection}
             disabled={
               !protectionPoolService || !protectionPoolAddress || !amount
             }
-            loading={loading}
-            variant="outlined"
           >
-            <div className="text-white text-base">Confirm Deposit</div>
-          </LoadingButton>
+            Confirm Deposit
+          </button>
+          <div className="flex"></div>
+          <LoadingButton loading={loading}></LoadingButton>
         </div>
         <div>
           <div className="text-sm">

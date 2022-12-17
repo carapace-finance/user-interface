@@ -97,7 +97,7 @@ const BuyProtectionPopUp = (props) => {
 
   return (
     <Dialog
-      className="top-32 inset-x-36"
+      className="inset-x-36"
       disableScrollLock
       open={open}
       onClose={onClose}
@@ -116,7 +116,7 @@ const BuyProtectionPopUp = (props) => {
         <div className="text-black">×</div>
       </IconButton>
       <DialogTitle className="mt-6">Buy Protection</DialogTitle>
-      <DialogContent>
+      <DialogContent className="mb-4">
         <div>
           <div>
             <div className="flex">
@@ -208,16 +208,8 @@ const BuyProtectionPopUp = (props) => {
               </div>
             </Typography>
           </div>
-          <LoadingButton
-            className="cursor-pointer disabled:opacity-50 disabled:cursor-none"
-            style={{
-              textTransform: "none",
-              backgroundColor: "#293C9A",
-              padding: "20px 33px",
-              borderRadius: "16px",
-              marginBottom: "20px",
-              cursor: "pointer"
-            }}
+          <button
+            className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
             onClick={buyProtection}
             disabled={
               !protectionPoolService ||
@@ -228,13 +220,11 @@ const BuyProtectionPopUp = (props) => {
               !tokenId ||
               !lendingPoolAddress
             }
-            loading={loading}
-            variant="outlined"
           >
-            <div className="text-white text-base">
-              Confirm Protection Purchase
-            </div>
-          </LoadingButton>
+            Confirm Protection Purchase
+          </button>
+          <div className="flex"></div>
+          <LoadingButton loading={loading}></LoadingButton>
           <div className="text-sm">
             <div className="flex">
               <p>
