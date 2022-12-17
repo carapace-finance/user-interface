@@ -216,13 +216,16 @@ const WithdrawalRequestPopUp = (props) => {
             </div>
           </div>
           <input
-            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-none"
             type="submit"
             value="Confirm Withdrawal Request"
             disabled={!protectionPoolService || !protectionPoolAddress}
           />
           <div className="flex"></div>
-          <LoadingButton loading={loading}></LoadingButton>
+          <LoadingButton
+            className="disabled:cursor-none"
+            loading={loading}
+          ></LoadingButton>
           <div className="text-sm">
             <div className="flex">
               <p>

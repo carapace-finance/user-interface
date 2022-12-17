@@ -174,6 +174,7 @@ const SellProtectionPopUp = (props) => {
         </div>
         <div>
           <LoadingButton
+            className="cursor-pointer disabled:opacity-50 disabled:cursor-none"
             style={{
               textTransform: "none",
               backgroundColor: "#293C9A",
