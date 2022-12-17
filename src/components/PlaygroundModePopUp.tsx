@@ -62,7 +62,10 @@ const PlaygroundModePopUp = (props) => {
                 <span>Start Playing Around!</span>
               </button>
             ) : (
-              <button className="border rounded-full border-gray-400  w-full px-4 py-4 mt-8 mb-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline">
+              <button
+                className="border rounded-full border-gray-400  w-full px-4 py-4 mt-8 mb-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+                disabled
+              >
                 <span>Setting Up the Playground Mode...</span>
               </button>
             )}
