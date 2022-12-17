@@ -28,20 +28,27 @@ export const ProtectionPoolContextProvider = ({ children }) => {
   const [protectionPools, setProtectionPools] = useState<ProtectionPool[]>(
     defaultProtectionPools
   );
+  const [isDefaultData, setIsDefaultData] = useState(true);
 
   useEffect(() => {
-    if (!protectionPoolFactoryService) return;
-    protectionPoolFactoryService
-      .getProtectionPools()
-      .then((protectionPools) => {
-        console.log("Retrieved Protection Pools in context: ", protectionPools);
-        setProtectionPools(protectionPools);
-      });
+    if (protectionPoolFactoryService) {
+      protectionPoolFactoryService
+        .getProtectionPools()
+        .then((protectionPools) => {
+          console.log("Retrieved Protection Pools in context: ", protectionPools);
+          setProtectionPools(protectionPools);
+          setIsDefaultData(false);
+        });
+    }
+    else {
+      setProtectionPools(defaultProtectionPools);
+      setIsDefaultData(true);
+    }
   }, [protectionPoolFactoryService]);
 
   return (
     <ProtectionPoolContext.Provider
-      value={{ protectionPools, setProtectionPools }}
+      value={{ isDefaultData, protectionPools, setProtectionPools }}
     >
       {children}
     </ProtectionPoolContext.Provider>

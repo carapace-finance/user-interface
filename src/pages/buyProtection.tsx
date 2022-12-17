@@ -7,7 +7,6 @@ const TitleAndDescriptions = dynamic(
 );
 import { useContext } from "react";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
-import { formatAddress } from "@utils/utils";
 import { useRouter } from "next/router";
 
 const BuyProtection = () => {

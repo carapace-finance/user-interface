@@ -14,13 +14,16 @@ export interface ContractAddresses {
 export type ApplicationContextType = {
   provider: JsonRpcProvider;
   contractAddresses: ContractAddresses;
-  updateContractAddresses: (newContractAddresses: ContractAddresses) => void;
-  updateProvider: (newProvider: JsonRpcProvider) => void;
+  updateProviderAndContractAddresses: (
+    newProvider: JsonRpcProvider,
+    newContractAddresses: ContractAddresses
+  ) => void;
   protectionPoolService: ProtectionPoolService;
   protectionPoolFactoryService: ProtectionPoolFactoryService;
 };
 
 export type ProtectionPoolContextType = {
+  isDefaultData: boolean;
   protectionPools: ProtectionPool[];
   setProtectionPools: (protectionPools: ProtectionPool[]) => void;
 };

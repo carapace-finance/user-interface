@@ -16,7 +16,7 @@ export default function BuyProtectionCard() {
     handleSubmit,
     getValues,
     formState: { errors }
-  } = useForm<BuyProtectionInputs>({ defaultValues: { protectionAmount: 0, protectionDurationInDays: 50 } });
+  } = useForm<BuyProtectionInputs>({ defaultValues: { protectionAmount: 1000, protectionDurationInDays: 50 } });
 
   const [isOpen, setIsOpen] = useState(false);
   const [tokenId, setTokenId] = useState(590);
