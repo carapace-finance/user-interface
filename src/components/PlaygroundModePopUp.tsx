@@ -1,8 +1,14 @@
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
+import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
+import { Dialog, DialogContent } from "@mui/material";
+import { useContext } from "react";
 
 const PlaygroundModePopUp = (props) => {
   const { open, onClose, playground } = props;
 
+  const { lendingPools } = useContext(LendingPoolContext);
+  const { isDefaultData, protectionPools } = useContext(ProtectionPoolContext);
+  
   const handleClose = (
     event: {},
     reason: "backdropClick" | "escapeKeyDown"
@@ -40,7 +46,7 @@ const PlaygroundModePopUp = (props) => {
               </li>
               <li>The set up may take some time</li>
             </ul>
-            {playground?.poolFactoryAddress ? (
+            {(!isDefaultData && protectionPools?.length > 0 && lendingPools?.length > 0) ? (
             <button
               className="border rounded-full border-customDarkGrey text-customDarkGrey w-full px-4 py-4 mt-8 mb-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
               onClick={onClose}

@@ -8,7 +8,6 @@ const TitleAndDescriptions = dynamic(
 );
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { useContext } from "react";
-import { formatAddress } from "@utils/utils";
 import { useRouter } from "next/router";
 
 const SellProtection = () => {
