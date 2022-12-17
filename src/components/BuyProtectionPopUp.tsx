@@ -222,7 +222,7 @@ const BuyProtectionPopUp = (props) => {
               !protectionPoolService ||
               !protectionPoolAddress ||
               !protectionAmount ||
-              !calculatingPremiumPrice ||
+              calculatingPremiumPrice ||
               !protectionDurationInDays ||
               !tokenId ||
               !lendingPoolAddress
