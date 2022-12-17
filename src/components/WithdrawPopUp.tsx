@@ -4,12 +4,11 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  InputAdornment,
-  TextField,
   Divider
 } from "@mui/material";
-import { IconButton, Tooltip } from "@material-tailwind/react";
+import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import {
@@ -21,18 +20,26 @@ import {
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import numeral from "numeral";
+import { WithdrawalInput } from "@type/types"
 
 const WithdrawalPopUp = (props) => {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors }
+  } = useForm<WithdrawalInput>({ defaultValues: { amount: "0" } });
+
   const { protectionPoolService } = useContext(ApplicationContext);
   const { open, onClose, protectionPoolAddress } = props;
-  const [amount, setAmount] = useState(0);
   const [withdrawableAmount, setWithdrawableAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
 
   const resetInputs = () => {
-    setAmount(0);
+    setValue("amount", "0");
     setWithdrawableAmount(0);
     setSuccessMessage("");
     setError("");
@@ -53,8 +60,12 @@ const WithdrawalPopUp = (props) => {
   }, [open]);
 
   const setMaxAmount = async () => {
-    setAmount(withdrawableAmount);
+    setValue("amount", withdrawableAmount.toString());
   };
+
+  const onSubmit = () => {
+    withdraw();
+  }; // your form submit function which will invoke after successful validation
 
   const onError = (e) => {
     if (e) {
@@ -70,7 +81,7 @@ const WithdrawalPopUp = (props) => {
     try {
       const tx = await protectionPoolService.withdraw(
         protectionPoolAddress,
-        convertNumberToUSDC(amount)
+        convertNumberToUSDC(parseFloat(getValues("amount")))
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {
@@ -78,7 +89,7 @@ const WithdrawalPopUp = (props) => {
         console.log("The withdrawal transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
-          `You successfully withdrew ${amount} USDC from the protection pool!`
+          `You successfully withdrew ${getValues("amount")} USDC from the protection pool!`
         );
         setTimeout(() => {
           resetInputs();
@@ -117,6 +128,7 @@ const WithdrawalPopUp = (props) => {
       <DialogTitle className="mt-6">
         Withdraw
       </DialogTitle>
+      <form onSubmit={handleSubmit(onSubmit)}>
       <DialogContent>
         <div className="flex justify-left mb-3 text-base font-medium">
           Protection Pool{formatAddress(protectionPoolAddress)}
@@ -125,13 +137,16 @@ const WithdrawalPopUp = (props) => {
         <div>
           <h4 className="text-left text-base font-medium mb-3">Withdraw Amount</h4>
           <div className="rounded-2xl mb-4">
-            <div className="flex justify-center mb-4">
-              <TextField
+            <div>
+              <input 
+                className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
                 type="number"
-                placeholder={"0"}
-                variant="outlined"
-                size="medium"
-                className="border-none w-full outline-none h-12"
+                {...register("amount", { min: 1, max: withdrawableAmount, required: true })} 
+              />
+              {errors.amount && (
+                <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the withdrawal amount must be in between 0 and your requested amount</h5>
+              )}
+              {/* <TextField
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start" className="flex">
@@ -152,11 +167,7 @@ const WithdrawalPopUp = (props) => {
                     </InputAdornment>
                   )
                 }}
-                value={amount}
-                onChange={(e) =>
-                  e.target.value ? setAmount(parseFloat(e.target.value)) : 0
-                }
-              />
+              /> */}
             </div>
             <div className="text-right mr-5 mb-1">
               Withdrawable Amount:
@@ -194,27 +205,18 @@ const WithdrawalPopUp = (props) => {
             </div>
           </div>
         </div>
-        <LoadingButton
-          style={{ textTransform: "none",backgroundColor:"#293C9A", padding: "16px 60px", borderRadius: "16px", marginBottom:"20px",cursor:"pointer" }}
+        <input 
+          className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          type="submit" 
+          value="Confirm Withdraw"
           disabled={
             !protectionPoolService ||
-            !protectionPoolAddress ||
-            !amount ||
-            amount === 0 ||
-            amount > withdrawableAmount
+            !protectionPoolAddress
           }
-          onClick={withdraw}
-          loading={loading}
-          variant="outlined"
-        >
-          <div className="text-white text-base">
-            Confirm Withdrawal
-          </div>
-        </LoadingButton>
-
-
-
-        <div className="text-xs">
+        />
+        <div className="flex"></div>
+          <LoadingButton loading={loading}></LoadingButton>
+        <div className="text-sm">
           <div className="flex">
             <p>By clicking &quot;Confirm Withdrawal&quot;, you agree to Carapace&apos;s&nbsp;</p>
             <p className="underline">Terms of Service&nbsp;</p>
@@ -224,10 +226,9 @@ const WithdrawalPopUp = (props) => {
             <p>acknowledge that you have read and understand the&nbsp;</p>
             <p className="underline">Carapace protocol disclaimer.</p>
           </div>
-
         </div>
       </DialogContent>
-
+      </form>
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}
         message={successMessage}

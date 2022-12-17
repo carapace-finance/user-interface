@@ -114,6 +114,18 @@ export interface deployedContracts {
 }
 
 export interface BuyProtectionInputs {
-  protectionAmount: number;
-  protectionDurationInDays: number;
+  protectionAmount: string;
+  protectionDurationInDays: string;
+}
+
+export interface SellProtectionInput {
+  depositAmount: string;
+}
+
+export interface WithdrawalRequestInput {
+  amount: string;
+}
+
+export interface WithdrawalInput {
+  amount: string;
 }

@@ -1,9 +1,8 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Input, Tooltip } from "@material-tailwind/react";
+import { Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
-// import BasicButton from "./BasicBlueButton";
 import numeral from "numeral";
 import { convertNumberToUSDC, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
@@ -16,8 +15,7 @@ export default function BuyProtectionCard() {
     handleSubmit,
     getValues,
     formState: { errors }
-  } = useForm<BuyProtectionInputs>({ defaultValues: { protectionAmount: 1000, protectionDurationInDays: 50 } });
-
+  } = useForm<BuyProtectionInputs>({ defaultValues: { protectionAmount: "0", protectionDurationInDays: "50" } });
   const [isOpen, setIsOpen] = useState(false);
   const [tokenId, setTokenId] = useState(590);
   const [premiumPrice, setPremiumPrice] = useState(1024);
@@ -28,13 +26,13 @@ export default function BuyProtectionCard() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    if (protectionPoolService && contractAddresses.premiumCalculator && getValues("protectionAmount") > 0 && getValues("protectionDurationInDays") > 0) {
+  useEffect(() => { 
+    if (protectionPoolService && contractAddresses.premiumCalculator && parseFloat(getValues("protectionAmount")) > 0 && parseFloat(getValues("protectionDurationInDays")) > 0) {
       setCalculatingPremiumPrice(true);
       const protectionPurchaseParams = {
         lendingPoolAddress: router.query.address as string,
         nftLpTokenId: tokenId,
-        protectionAmount: convertNumberToUSDC(getValues("protectionAmount")),
+        protectionAmount: convertNumberToUSDC(parseFloat(getValues("protectionAmount"))),
         protectionDurationInSeconds: getDaysInSeconds(getValues("protectionDurationInDays"))
       };
       console.log("Calculating premium price for Protection purchase params: ", protectionPurchaseParams);
@@ -134,25 +132,10 @@ export default function BuyProtectionCard() {
           <div className="mb-4">
             <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">Protection Amount</h5>
             <div>
-              {/* <div className="mr-4">
-                <BasicButton
-                label="Full"
-                />
-              </div>
-              <div className="mr-4">
-                <BasicButton
-                label="1/2"
-                />
-              </div>
-              <div className="mr-4">
-                <BasicButton
-                label="1/4"
-                />
-              </div> */}
-              <input
+              <input 
                 className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
                 type="number"
-                {...register("protectionAmount", { min: 0, max: 10000000, required: true })}
+                {...register("protectionAmount", { min: 1, max: 10000000, required: true })} // todo: add the leverage ratio limit to max
               />
               {errors.protectionAmount && (
                 <h5 className="block text-left text-buttonPink text-xl leading-tight font-normal mb-4">the protection amount must be in between 0 and the available protection purchase amount</h5>
@@ -179,20 +162,10 @@ export default function BuyProtectionCard() {
         <div className="mb-4">
           <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">Protection Duration (days)</h5>
           <div>
-          {/* <div className="mr-4">
-            <BasicButton
-            label="Full"
-            />
-          </div>
-          <div className="mr-4">
-            <BasicButton
-            label="90 days"
-            />
-          </div> */}
-            <input
+            <input 
               className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
               type="number"
-              {...register("protectionDurationInDays", { min: 0, max: 180, required: true })}
+              {...register("protectionDurationInDays", { min: 1, max: 180, required: true })} 
             />
             {errors.protectionDurationInDays && (
               <h5 className="block text-left text-buttonPink text-xl leading-tight font-normal mb-4">the protection duration must be in between 0 day and the next cycle end(180 days the longest)</h5>
@@ -229,9 +202,6 @@ export default function BuyProtectionCard() {
         value="Preview"
         className="border border-customDarkGrey text-customDarkGrey rounded-md px-16 py-5 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
         disabled={
-          getValues("protectionAmount") === 0 ||
-          getValues("protectionDurationInDays") === 0 ||
-          tokenId === 0 ||
           premiumPrice === 0 ||
           calculatingPremiumPrice
         }

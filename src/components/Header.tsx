@@ -200,19 +200,17 @@ const Header = () => {
   }
 
   return (
-    <div className="top-0 h-16 border-b border-headerBorder mb-10">
-      <div className="flex justify-between items-center">
-        <div className="-my-3 ml-12">
-          <Link href="/">
-            <Image
-              src={assets.headerLogo.src}
-              alt=""
-              height="36"
-              width="168"
-              unoptimized
-            />
-          </Link>
-        </div>
+    <div className="flex justify-between items-center top-0 h-16 shadow-md mb-10">
+      <div className="-my-3 ml-8">
+        <Link href="/">
+          <Image
+            src={assets.headerLogo.src}
+            alt=""
+            height="36"
+            width="168"
+            unoptimized
+          />
+        </Link>
         <div className="flex items-center">
         <Link href="/buyProtection" className="hover:text-customBlue">
           <h3>Protect</h3>

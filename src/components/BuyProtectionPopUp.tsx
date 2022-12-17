@@ -63,7 +63,7 @@ const BuyProtectionPopUp = (props) => {
       const protectionPurchaseParams = {
         lendingPoolAddress: lendingPoolAddress,
         nftLpTokenId: tokenId,
-        protectionAmount: convertNumberToUSDC(protectionAmount),
+        protectionAmount: convertNumberToUSDC(parseFloat(protectionAmount)),
         protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
       };
       const tx = await protectionPoolService.buyProtection(
@@ -224,7 +224,7 @@ const BuyProtectionPopUp = (props) => {
               Confirm Protection Purchase
             </div>
           </LoadingButton>
-          <div className="text-xs">
+          <div className="text-sm">
             <div className="flex">
             <p>By clicking &quot;Confirm Protection Purchase&quot;, you agree toCarapace&apos;s&nbsp; </p>
             <p className="underline">Terms of Service</p>
