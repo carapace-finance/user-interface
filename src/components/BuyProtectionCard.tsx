@@ -3,11 +3,9 @@ import { useForm } from "react-hook-form";
 import { Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
-import numeral from "numeral";
 import {
   convertNumberToUSDC,
-  convertUSDCToNumber,
-  USDC_FORMAT
+  convertUSDCToNumber
 } from "@utils/usdc";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { getDaysInSeconds } from "@utils/utils";
@@ -246,19 +244,11 @@ export default function BuyProtectionCard() {
             <p className="text-left text-xl">{tokenId}</p>
           </div>
         </div>
-        <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">
-          Premium Price
-        </h5>
-        <p className="text-left text-xl">
-          {calculatingPremiumPrice
-            ? "Calculating Premium Price..."
-            : numeral(premiumPrice).format(USDC_FORMAT) + " USDC"}
-        </p>
         <input
           type="submit"
           value="Preview"
           className="border border-customDarkGrey text-customDarkGrey rounded-md px-16 py-5 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
-          disabled={premiumPrice === 0 || calculatingPremiumPrice}
+          disabled={premiumPrice === 0}
         />
       </form>
       <p>Buy protection within: 2 days 12 hours 34 mins</p>
@@ -269,6 +259,7 @@ export default function BuyProtectionCard() {
         protectionDurationInDays={getValues("protectionDurationInDays")}
         tokenId={tokenId}
         premiumAmount={premiumPrice}
+        calculatingPremiumPrice={calculatingPremiumPrice}
         lendingPoolAddress={router.query.address}
         protectionPoolAddress={router.query.protectionPoolAddress}
       ></BuyProtectionPopUp>

@@ -29,6 +29,7 @@ const BuyProtectionPopUp = (props) => {
     protectionDurationInDays,
     tokenId,
     premiumAmount,
+    calculatingPremiumPrice,
     lendingPoolAddress,
     protectionPoolAddress
   } = props;
@@ -143,7 +144,9 @@ const BuyProtectionPopUp = (props) => {
             {renderFieldAndValue("Token Id", tokenId)}
             {renderFieldAndValue(
               "Premium Price",
-              numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
+              calculatingPremiumPrice
+                ? "Calculating Premium Price..."
+                : numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
             )}
           </div>
           <Divider className="mb-4" />
@@ -219,6 +222,7 @@ const BuyProtectionPopUp = (props) => {
               !protectionPoolService ||
               !protectionPoolAddress ||
               !protectionAmount ||
+              !calculatingPremiumPrice ||
               !protectionDurationInDays ||
               !tokenId ||
               !lendingPoolAddress
