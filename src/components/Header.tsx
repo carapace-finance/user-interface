@@ -50,8 +50,8 @@ const Header = () => {
   useEffect(() => {
     window.addEventListener("beforeunload", cleanup);
     return () => {
-      window.removeEventListener('beforeunload', cleanup);
-    }
+      window.removeEventListener("beforeunload", cleanup);
+    };
   }, []);
 
   const pingStartAndStopApi = () => {
@@ -64,10 +64,14 @@ const Header = () => {
 
   const checkForInactivityAndPingStartStopApis = () => {
     if (protectionPoolService && playground?.forkId) {
-      const lastActionTimestamp = protectionPoolService.getLastActionTimestamp();
+      const lastActionTimestamp =
+        protectionPoolService.getLastActionTimestamp();
       console.log("Last action timestamp: ", lastActionTimestamp);
-      const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
-      console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
+      const inactiveTimeInMilliSeconds = Date.now() - lastActionTimestamp;
+      console.log(
+        "Inactive time in seconds: ",
+        inactiveTimeInMilliSeconds / 1000
+      );
       if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) {
         console.log("Stopping playground due to inactivity...");
         cleanup();
@@ -84,7 +88,10 @@ const Header = () => {
       protectionPoolService.setLastActionTimestamp();
 
       // Check every minute for inactivity
-      idleTimerId = setInterval(checkForInactivityAndPingStartStopApis, 1000 * 60 * 1);
+      idleTimerId = setInterval(
+        checkForInactivityAndPingStartStopApis,
+        1000 * 60 * 1
+      );
       console.log("Started inactivity timer...");
 
       return () => {
@@ -92,7 +99,7 @@ const Header = () => {
           clearInterval(idleTimerId);
           console.log("Cleared inactivity timer...");
         }
-      }
+      };
     }
   }, [playground?.forkId]);
 
@@ -103,7 +110,7 @@ const Header = () => {
 
     setError(message);
     setIsOpen(false);
-  }
+  };
 
   const startPlayground = async () => {
     const result = await fetch(`/api/playground/start?userAddress=${account}`);
@@ -117,20 +124,25 @@ const Header = () => {
           isPlayground: true,
           poolFactory: playground.poolFactoryAddress,
           pool: playground.poolAddress,
-          premiumCalculator: playground.premiumCalculatorAddress,
+          premiumCalculator: playground.premiumCalculatorAddress
         });
         updatePlayground(playground);
 
         console.log("Successfully started a playground: ", playground);
       }
-    }
-    else {
-      onError("Failed to start playground. Please try again.", await result.json());
+    } else {
+      onError(
+        "Failed to start playground. Please try again.",
+        await result.json()
+      );
     }
   };
 
   const stopPlayground = async (playgroundId) => {
-    const result = await fetch(`/api/playground/stop?userAddress=${account}`, { method: "DELETE", body: playgroundId });
+    const result = await fetch(`/api/playground/stop?userAddress=${account}`, {
+      method: "DELETE",
+      body: playgroundId
+    });
     console.log("End playground result", result);
     if (result.status === 200) {
       const data = await result.json();
@@ -142,10 +154,9 @@ const Header = () => {
           premiumCalculator: undefined
         });
         updatePlayground(undefined);
-        
+
         console.log("Successfully ended playground");
-      }
-      else {
+      } else {
         onError("Failed to stop playground. Please try again.", data);
       }
     }
@@ -201,17 +212,16 @@ const Header = () => {
 
   return (
     <div className="flex justify-between items-center top-0 h-16 shadow-md mb-10">
-      <div className="-my-3 ml-8">
-        <Link href="/">
-          <Image
-            src={assets.headerLogo.src}
-            alt=""
-            height="36"
-            width="168"
-            unoptimized
-          />
-        </Link>
-        <div className="flex items-center">
+      <Link className="ml-12" href="/">
+        <Image
+          src={assets.headerLogo.src}
+          alt=""
+          height="36"
+          width="160"
+          unoptimized
+        />
+      </Link>
+      <div className="flex items-center">
         <Link href="/buyProtection" className="hover:text-customBlue">
           <h3>Protect</h3>
         </Link>
@@ -221,11 +231,11 @@ const Header = () => {
         <Link href="/sellProtection" className="ml-16 hover:text-customBlue">
           <h3>Earn</h3>
         </Link>
-        <Link href="/dashboard"className="ml-16 hover:text-customBlue">
+        <Link href="/dashboard" className="ml-16 hover:text-customBlue">
           <h3>Dashboard</h3>
         </Link>
-        </div>
-        <div className="mr-12">
+      </div>
+      <div className="mr-12">
         {/* {active && chainId === 1
         ? null
         : active && chainId != 1
@@ -252,35 +262,37 @@ const Header = () => {
         {playgroundButtonTitle === "Start Playground" ? (
           <button
             // disabled={!account}
-            className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
-            onClick={playgroundButtonAction}>
-              <Tooltip
-                content="Test our app features in a sandbox!"
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 25 },
-                }}
-                placement="bottom">
-                  <span>{playgroundButtonTitle}</span>
-              </Tooltip>
+            className="border rounded-md border-black px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
+            onClick={playgroundButtonAction}
+          >
+            <Tooltip
+              content="Test our app features in a sandbox!"
+              animate={{
+                mount: { scale: 1, y: 0 },
+                unmount: { scale: 0, y: 25 }
+              }}
+              placement="bottom"
+            >
+              <span>{playgroundButtonTitle}</span>
+            </Tooltip>
           </button>
         ) : (
-              <button
-                // disabled={!account}
-                className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
-                onClick={playgroundButtonAction}>
-                <span>{playgroundButtonTitle}</span>
-              </button>
+          <button
+            // disabled={!account}
+            className="border rounded-md px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
+            onClick={playgroundButtonAction}
+          >
+            <span>{playgroundButtonTitle}</span>
+          </button>
         )}
         {/* <Account /> */}
-        <PlaygroundModePopUp
-          open={isOpen}
-          playground={playground}
-          onClose={() => setIsOpen(false)}
-          ></PlaygroundModePopUp>
-          <ErrorPopup error={error} handleCloseError={() => setError("")} />
-        </div>
       </div>
+      <PlaygroundModePopUp
+        open={isOpen}
+        playground={playground}
+        onClose={() => setIsOpen(false)}
+      ></PlaygroundModePopUp>
+      <ErrorPopup error={error} handleCloseError={() => setError("")} />
     </div>
   );
 };

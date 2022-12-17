@@ -18,7 +18,6 @@ const SellProtection = () => {
     router.push(href);
   };
 
-
   return (
     <div className="mx-32">
       <div className="h-5"></div>
@@ -28,24 +27,21 @@ const SellProtection = () => {
         buttonExist={true}
         button="Learn about selling protection"
       />
-      <h3 className="text-left font-bold">All Protection Pools</h3>
-      <div className="h-5"></div>
+      <h3 className="text-left font-bold mb-8">All Protection Pools</h3>
       <div className="rounded-2xl shadow-table">
-        <div className="h-4"></div>
+        <div className="h-8"></div>
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-sm font-bold py-4">
-              <th className="py-8 pl-8">Name</th>
+              <th className="py-4 pl-8">Name</th>
               <th className="py-4">Protocols</th>
               <th className="py-4">
                 <div className="flex flex-row justify-start mr-4">
-                  <p className="mr-4">
-                    Estimated APY
-                  </p>
+                  <p className="mr-4">Estimated APY</p>
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 },
+                      unmount: { scale: 0, y: 25 }
                     }}
                     content="Estimated APY for protection sellers."
                     placement="top"
@@ -75,8 +71,9 @@ const SellProtection = () => {
             {protectionPools.map((protectionPool) => (
               <tr
                 key={protectionPool.address}
-                onClick={() => handleClick(`/protectionPool/${protectionPool.address}`)}
-
+                onClick={() =>
+                  handleClick(`/protectionPool/${protectionPool.address}`)
+                }
                 className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50"
               >
                 <td className="py-4 pl-8">{protectionPool.name}</td>

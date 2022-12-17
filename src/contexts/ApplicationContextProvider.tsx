@@ -12,9 +12,13 @@ export const ApplicationContextProvider = ({ children }) => {
   const [contractAddresses, setContractAddresses] = useState(null);
   const [provider, setProvider] = useState(null);
   const [protectionPoolService, setProtectionPoolService] = useState(null);
-  const [protectionPoolFactoryService, setProtectionPoolFactoryService] = useState(null);
+  const [protectionPoolFactoryService, setProtectionPoolFactoryService] =
+    useState(null);
 
-  const updateProviderAndContractAddresses = (provider: JsonRpcProvider, newContractAddresses: ContractAddresses) => {
+  const updateProviderAndContractAddresses = (
+    provider: JsonRpcProvider,
+    newContractAddresses: ContractAddresses
+  ) => {
     console.log("Updating provider & contract addresses");
     setProvider(provider);
     setContractAddresses(newContractAddresses);
@@ -23,10 +27,17 @@ export const ApplicationContextProvider = ({ children }) => {
   useEffect(() => {
     if (provider && contractAddresses?.poolFactory) {
       console.log("Updating protection pool & factory service");
-      setProtectionPoolService(new ProtectionPoolService(provider, contractAddresses.isPlayground));
-      setProtectionPoolFactoryService(new ProtectionPoolFactoryService(provider, contractAddresses.isPlayground, contractAddresses.poolFactory));
-    }
-    else {
+      setProtectionPoolService(
+        new ProtectionPoolService(provider, contractAddresses.isPlayground)
+      );
+      setProtectionPoolFactoryService(
+        new ProtectionPoolFactoryService(
+          provider,
+          contractAddresses.isPlayground,
+          contractAddresses.poolFactory
+        )
+      );
+    } else {
       setProtectionPoolService(null);
       setProtectionPoolFactoryService(null);
     }

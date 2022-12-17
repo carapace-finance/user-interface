@@ -35,12 +35,14 @@ export const ProtectionPoolContextProvider = ({ children }) => {
       protectionPoolFactoryService
         .getProtectionPools()
         .then((protectionPools) => {
-          console.log("Retrieved Protection Pools in context: ", protectionPools);
+          console.log(
+            "Retrieved Protection Pools in context: ",
+            protectionPools
+          );
           setProtectionPools(protectionPools);
           setIsDefaultData(false);
         });
-    }
-    else {
+    } else {
       setProtectionPools(defaultProtectionPools);
       setIsDefaultData(true);
     }

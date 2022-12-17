@@ -20,8 +20,8 @@ export const UserContextProvider = ({ children }) => {
   const { protectionPoolService } = useContext(ApplicationContext);
   const [user, setUser] = useState<User>(defaultUser);
 
-  useEffect(() => { 
-    if (!protectionPoolService) { 
+  useEffect(() => {
+    if (!protectionPoolService) {
       setUser({
         ...user,
         sTokenUnderlyingAmount: "0",
@@ -29,7 +29,6 @@ export const UserContextProvider = ({ children }) => {
       });
     }
   }, [protectionPoolService]);
-
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

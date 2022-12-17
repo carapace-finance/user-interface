@@ -24,7 +24,7 @@ function App({ Component, pageProps }) {
             <LendingPoolContextProvider>
               <BondContextProvider>
                 <UserContextProvider>
-                  <Header/>
+                  <Header />
                   <Component {...pageProps} />
                   <Footer />
                 </UserContextProvider>

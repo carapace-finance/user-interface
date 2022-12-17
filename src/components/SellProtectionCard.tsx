@@ -7,7 +7,7 @@ import { getUsdcBalance, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
 import numeral from "numeral";
-import { SellProtectionInput } from "@type/types"
+import { SellProtectionInput } from "@type/types";
 
 export default function SellProtectionCard() {
   const {
@@ -26,7 +26,7 @@ export default function SellProtectionCard() {
   const protectionPoolAddress = router.query.address;
 
   const setMaxAmount = async () => {
-    setValue("depositAmount", usdcBalance.toString())
+    setValue("depositAmount", usdcBalance.toString());
   };
 
   useEffect(() => {
@@ -46,16 +46,14 @@ export default function SellProtectionCard() {
   }; // your form submit function which will invoke after successful validation
 
   return (
-    <div className="flex justify-center">
-      <div className="rounded-2xl shadow-table p-8 bg-white max-w-sm w-450">
-        <div className="flex flex-row items-center">
-          <h5 className="text-left text-gray-700 text-base mr-1">
-            Estimated APY
-          </h5>
+    <div className="block py-10 px-8 bg-white rounded-2xl shadow-boxShadow  shadow-table w-450 mr-32">
+      <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
+        Estimated APY
+        <div className="pl-2">
           <Tooltip
             animate={{
               mount: { scale: 1, y: 0 },
-              unmount: { scale: 0, y: 25 },
+              unmount: { scale: 0, y: 25 }
             }}
             content="Estimated APY for protection sellers."
             placement="top"
@@ -65,8 +63,8 @@ export default function SellProtectionCard() {
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
-              stroke="#6E7191"
-              className="w-4 h-4"
+              stroke="currentColor"
+              className="w-6 h-6"
             >
               <path
                 strokeLinecap="round"
@@ -76,28 +74,46 @@ export default function SellProtectionCard() {
             </svg>
           </Tooltip>
         </div>
-        <p className="text-left text-3xl mb-4">18 - 25%</p>
-        <div className="h-1 border-b border-headerBorder"></div>
-        <div className="h-5"></div>
-        <div className="flex flex-row justify-start">
-          <div className="flex-col mr-3">
-            <p className="text-left text-gray-700 text-xs">Interest from Premium</p>
+      </h5>
+      <div className="py-2 border-b border-gray-300">
+        <h1 className="text-customDarkGrey text-4xl mb-4 text-left">
+          18 - 25%
+        </h1>
+      </div>
+      <div className="my-4">
+        <div className="flex mb-4">
+          <div>
+            <h5 className="text-customGrey text-base flex mb-2 ">
+              Interest from Premium
+            </h5>
             <p className="text-left text-xl">10 - 15%</p>
           </div>
-          <div className="flex-col">
-            <p className="text-left text-gray-700 text-xs">CARA Token Rewards</p>
+          <div className="ml-14">
+            <h5 className="text-customGrey text-left text-base mb-2">
+              CARA Token Rewards
+            </h5>
             <p className="text-left text-xl">8 - 10%</p>
           </div>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="text-left text-gray-700 text-base mt-5">Deposit Amount</div>
-        <input 
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
+          Deposit Amount
+        </h5>
+        <input
           className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
           type="number"
-          {...register("depositAmount", { min: 1, max: usdcBalance, required: true })} 
+          {...register("depositAmount", {
+            min: 1,
+            max: usdcBalance,
+            required: true
+          })}
         />
         {errors.depositAmount && (
-          <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the deposit amount must be in between 0 and the deposit amount available if you have enough balance</h5>
+          <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">
+            the deposit amount must be in between 0 and the deposit amount
+            available if you have enough balance
+          </h5>
         )}
         {/* <TextField
           InputProps={{
@@ -117,21 +133,22 @@ export default function SellProtectionCard() {
             )
           }}
         /> */}
-        <p>Balance: {numeral(usdcBalance).format(USDC_FORMAT)} USDC</p>
-        <input 
-          className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          type="submit" 
+        <p className="text-right">
+          USDC Balance: {numeral(usdcBalance).format(USDC_FORMAT)}
+        </p>
+        <input
+          className="border border-black rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          type="submit"
           value="Preview"
           // disabled={} // todo: add the leverage ratio limit
         />
-        </form>
-        <SellProtectionPopUp
-          open={isOpen}
-          onClose={() => setIsOpen(false)}
-          amount={getValues("depositAmount")}
-          protectionPoolAddress={protectionPoolAddress}
-        ></SellProtectionPopUp>
-      </div>
+      </form>
+      <SellProtectionPopUp
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        amount={getValues("depositAmount")}
+        protectionPoolAddress={protectionPoolAddress}
+      ></SellProtectionPopUp>
     </div>
   );
 }

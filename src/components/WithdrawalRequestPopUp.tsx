@@ -3,7 +3,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton as MuiIconButton,
-  Divider,
+  Divider
 } from "@mui/material";
 import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
@@ -21,7 +21,7 @@ import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { LoadingButton } from "@mui/lab";
 import numeral from "numeral";
-import { WithdrawalRequestInput } from "@type/types"
+import { WithdrawalRequestInput } from "@type/types";
 
 const WithdrawalRequestPopUp = (props) => {
   const {
@@ -91,7 +91,9 @@ const WithdrawalRequestPopUp = (props) => {
         console.log("The requestWithdrawal transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
-          `You successfully requested to withdraw ${getValues("amount")} USDC from the protection pool!`
+          `You successfully requested to withdraw ${getValues(
+            "amount"
+          )} USDC from the protection pool!`
         );
         setTimeout(() => {
           reset();
@@ -120,34 +122,39 @@ const WithdrawalRequestPopUp = (props) => {
       <MuiIconButton
         onClick={onClose}
         color="primary"
-        className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
+        className="absolute top-4 right-4 flex items-center w-6 h-6"
         size="small"
       >
-        <div className="text-black">
-          ×
-        </div>
+        <div className="text-black">×</div>
       </MuiIconButton>
-      <DialogTitle className="mt-6">
-        Withdrawal Request
-      </DialogTitle>
+      <DialogTitle className="mt-6">Withdrawal Request</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
-      <DialogContent>
-        <div className="flex justify-left mb-3 text-base font-medium">
-          Protection Pool{formatAddress(protectionPoolAddress)}
-        </div>
-        <div>
-          <h4 className="text-left text-base font-medium mb-3">Request Amount</h4>
-          <div className="rounded-2xl mb-4">
-            <div>
-              <input 
-                className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
-                type="number"
-                {...register("amount", { min: 1, max: requestableAmount, required: true })} 
-              />
-              {errors.amount && (
-                <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">the withdrawal request amount must be in between 0 and your deposited amount</h5>
-              )}
-              {/* <TextField
+        <DialogContent>
+          <div className="flex justify-left mb-3 text-base font-medium">
+            Protection Pool{formatAddress(protectionPoolAddress)}
+          </div>
+          <div>
+            <h4 className="text-left text-base font-medium mb-3">
+              Request Amount
+            </h4>
+            <div className="rounded-2xl mb-4">
+              <div>
+                <input
+                  className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
+                  type="number"
+                  {...register("amount", {
+                    min: 1,
+                    max: requestableAmount,
+                    required: true
+                  })}
+                />
+                {errors.amount && (
+                  <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">
+                    the withdrawal request amount must be in between 0 and your
+                    deposited amount
+                  </h5>
+                )}
+                {/* <TextField
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start" className="flex ">
@@ -169,65 +176,67 @@ const WithdrawalRequestPopUp = (props) => {
                   )
                 }}
               /> */}
-            </div>
-          </div>
-          <div className="text-right mr-5 mb-1">
-            Requestable Amount:
-            {numeral(requestableAmount).format(USDC_FORMAT) + " USDC"}
-          </div>
-        </div>
-        <Divider/>
-        <div className="pt-4">
-          <h4 className="flex justify-left mb-4 text-base font-medium">Estimated Stats</h4>
-          <div className="flex justify-between mb-2">
-            <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
-              Expected Network Fees
-              <div className="pl-2">
-                <Tooltip content="test test" placement="right">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-4 h-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                    />
-                  </svg>
-                </Tooltip>
               </div>
             </div>
-            <div>
-             <p className="text-sm">$10.00</p>
+            <div className="text-right mr-5 pb-4">
+              Requestable Amount:
+              {numeral(requestableAmount).format(USDC_FORMAT) + " USDC"}
             </div>
           </div>
-        </div>
-        <input 
-          className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          type="submit" 
-          value="Confirm Withdrawal Request"
-          disabled={
-            !protectionPoolService ||
-            !protectionPoolAddress
-          }
-        />
-        <div className="flex"></div>
+          <Divider />
+          <div className="pt-4">
+            <h4 className="flex justify-left mb-4 text-base font-medium">
+              Estimated Stats
+            </h4>
+            <div className="flex justify-between mb-2">
+              <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
+                Expected Network Fees
+                <div className="pl-2">
+                  <Tooltip content="test test" placement="right">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm">$10.00</p>
+              </div>
+            </div>
+          </div>
+          <input
+            className="border border-black rounded-md px-14 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            type="submit"
+            value="Confirm Withdrawal Request"
+            disabled={!protectionPoolService || !protectionPoolAddress}
+          />
+          <div className="flex"></div>
           <LoadingButton loading={loading}></LoadingButton>
-        <div className="text-sm">
-          <div className="flex">
-            <p>By clicking &quot;Confirm Withdrawal Request&quot;, you agree to Carapace&apos;s &nbsp;</p>
-            <p className="underline">Terms of Service</p>
+          <div className="text-sm">
+            <div className="flex">
+              <p>
+                By clicking &quot;Confirm Withdrawal Request&quot;, you agree to
+                Carapace&apos;s &nbsp;
+              </p>
+              <p className="underline">Terms of Service</p>
+            </div>
+            <div className="flex">
+              <p>and acknowledge that you have read and understand the&nbsp;</p>
+              <p className="underline">Carapace protocol disclaimer.</p>
+            </div>
           </div>
-          <div className="flex">
-            <p>and acknowledge that you have read and understand the&nbsp;</p>
-            <p className="underline">Carapace protocol disclaimer.</p>
-          </div>
-        </div>
-      </DialogContent>
+        </DialogContent>
       </form>
       <SuccessPopup
         handleClose={() => setSuccessMessage("")}

@@ -8,13 +8,13 @@ const Footer = () => {
     <section className="pb-16" id="footer">
       <div className="h-[61px] lg:h-[100px]"></div>
       <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start">
-        <div className="flex flex-col w-[338px] lg:w-[278px] mr-0 lg:mr-[152px] items-center lg:items-start">
+        <div className="flex flex-col w-[338px] lg:w-[270px] mr-0 lg:mr-[152px] items-center lg:items-start">
           <img
             src={assets.footerLogo.src}
             alt="carapace"
-            className="w-[180px]"
+            className="w-[120px]"
           />
-          <p className="font-manrope font-normal text-[22px] sm:text-xl leading-[27px] text-center lg:text-left tracking-[0.01em] text-black opacity-40 mb-0 mt-12">
+          <p className="font-manrope font-normal text-[22px] sm:text-xl leading-[27px] text-center lg:text-left tracking-[0.01em] text-black opacity-40 mb-0 mt-8">
             Accelerating the world&apos;s transition to decentralized finance by
             re-imagining how we manage credit.
           </p>
@@ -24,21 +24,21 @@ const Footer = () => {
           {footerLinks.map((footerlink, index) => (
             <div
               key={footerlink.title}
-              className={`flex flex-col my-4 sm:first:my-4 first:mt-[30px] items-center lg:items-start`}
+              className={`flex flex-col sm:first:my-0 first:mt-[30px] items-center lg:items-start`}
             >
               <hr
                 className={`w-[260px] lg:hidden ${
                   index !== 0 ? "opacity-30" : "opacity-0"
                 }`}
               />
-              <h4 className="font-semibold text-[22px] sm:text-[20px] text-black mt-8 md:mt-14">
+              <h4 className="text-[22px] sm:text-[20px] text-black">
                 {footerlink.title}
               </h4>
-              <ul className="list-none mt-6 md:mt-14">
+              <ul className="list-none mt-6 md:mt-8">
                 {footerlink.links.map((link, index) => (
                   <li
                     key={link.name}
-                    className={`list-none font-manrope font-normal text-[20px] sm:text-[22px] leading-[30px] text-center lg:text-left cursor-pointer ${
+                    className={`list-none font-manrope font-normal text-[16px] sm:text-[22px] leading-[30px] text-center lg:text-left cursor-pointer ${
                       index !== footerlink.links.length - 1 ? "mb-4" : "mb-0"
                     }`}
                   >
