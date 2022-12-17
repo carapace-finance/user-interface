@@ -194,7 +194,7 @@ const ProtectionPool = () => {
         </div>
         <SellProtectionCard></SellProtectionCard>
       </div>
-      <div className="mt-10">
+      <div className="mt-16">
         <h3 className="text-left font-bold">
           Underlying Protected Lending Pools
         </h3>

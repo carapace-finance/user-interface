@@ -18,7 +18,6 @@ const LendingPool = () => {
   let protocol;
   let lendingPoolAddress;
   let protectionPoolAddress;
-
   lendingPools.map((lendingPool) => {
     if (lendingPool.address === router.query.address) {
       name = lendingPool.name;
@@ -52,6 +51,7 @@ const LendingPool = () => {
       leverageRatio = (totalCapitalNumber / totalProtectionNumber) * 100;
     }
   });
+
   return (
     <div className="mx-32">
       <div className="flex">
@@ -86,7 +86,7 @@ const LendingPool = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between mx-20">
+      <div className="flex justify-between">
         <div className="rounded-2xl shadow-boxShadow py-12 px-8 h-80 w-600 shadow-table">
           <div className="text-left text-2xl">
             <div className="text-black text-2xl font-bold mb-4">
