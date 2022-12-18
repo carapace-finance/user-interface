@@ -8,11 +8,15 @@ const TitleAndDescriptions = dynamic(
 );
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { useContext } from "react";
-import { formatAddress } from "@utils/utils";
-import assets from "src/assets";
+import { useRouter } from "next/router";
 
 const SellProtection = () => {
+  const router = useRouter();
+
   const { protectionPools } = useContext(ProtectionPoolContext);
+  const handleClick = (href: string) => {
+    router.push(href);
+  };
 
   return (
     <div className="mx-32">
@@ -23,21 +27,20 @@ const SellProtection = () => {
         buttonExist={true}
         button="Learn about selling protection"
       />
-      <h3 className="text-left font-bold">All Protection Pools</h3>
-      <div className="h-5"></div>
-      <div className="rounded-2xl shadow-table p-8">
+      <h3 className="text-left font-bold mb-8">All Protection Pools</h3>
+      <div className="rounded-2xl shadow-table">
         <table className="table-fixed w-full">
           <thead>
-            <tr className="text-left text-sm font-bold py-4">
-              <th className="py-4">Address</th>
-              <th className="py-4">Protocols</th>
-              <th className="py-4">
-                <div className="flex flex-row justify-between mr-4">
-                  Estimated APY
+            <tr className="text-left text-sm font-bold">
+              <th className="py-8 pl-8">Name</th>
+              <th className="py-8">Protocols</th>
+              <th className="py-8">
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Estimated APY</p>
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 },
+                      unmount: { scale: 0, y: 25 }
                     }}
                     content="Estimated APY for protection sellers."
                     placement="top"
@@ -59,15 +62,21 @@ const SellProtection = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">Total Capital</th>
-              <th className="py-4">Total Protection</th>
+              <th className="py-8">Total Capital</th>
+              <th className="py-8">Total Protection</th>
             </tr>
           </thead>
           <tbody>
             {protectionPools.map((protectionPool) => (
-              <tr key={protectionPool.address} className="text-left text-sm font-medium">
-                <td className="py-4">{formatAddress(protectionPool.address)}</td>
-                <td className="py-4">
+              <tr
+                key={protectionPool.address}
+                onClick={() =>
+                  handleClick(`/protectionPool/${protectionPool.address}`)
+                }
+                className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50"
+              >
+                <td className="py-8 pl-8">{protectionPool.name}</td>
+                <td className="py-8">
                   <Image
                     src={protectionPool.protocols}
                     width={24}
@@ -75,22 +84,9 @@ const SellProtection = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-4">{protectionPool.APY}</td>
-                <td className="py-4">{protectionPool.totalCapital}</td>
-                <td className="py-4">{protectionPool.totalProtection}</td>
-                <td className="py-4">
-                <Link
-                  key={protectionPool.address}
-                  href={"/protectionPool/" + protectionPool.address}
-                >
-                  <Image
-                    src={assets.grayVector.src}
-                    width={16}
-                    height={24}
-                    alt=""
-                  />
-                </Link>
-                </td>
+                <td className="py-8">{protectionPool.APY}</td>
+                <td className="py-8">{protectionPool.totalCapital}</td>
+                <td className="py-8">{protectionPool.totalProtection}</td>
               </tr>
             ))}
           </tbody>

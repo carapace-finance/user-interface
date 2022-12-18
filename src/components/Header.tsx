@@ -20,7 +20,7 @@ const Header = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [playground, setPlayground] = useState<Playground>();
-  const { updateContractAddresses, updateProvider, protectionPoolService } =
+  const { updateProviderAndContractAddresses, protectionPoolService } =
     useContext(ApplicationContext);
 
   // useEffect is called when component is mounted and playground is undefined at that time.
@@ -45,16 +45,16 @@ const Header = () => {
       await stopPlayground(playgroundId);
     }
   };
-  
+
   // this is to ensure that playground is stopped when user closes the tab
   useEffect(() => {
     window.addEventListener("beforeunload", cleanup);
     return () => {
-      window.removeEventListener('beforeunload', cleanup);
-    }
+      window.removeEventListener("beforeunload", cleanup);
+    };
   }, []);
 
-  const pingStartAndStopApi = () => { 
+  const pingStartAndStopApi = () => {
     // Vercel serverless functions are "cold/inactive" before first use and after some time of inactivity.
     // and take a few seconds to start up: download dependencies, compile, execute etc.
     // Ping start/stop api to "warm" them up for real use later
@@ -64,11 +64,15 @@ const Header = () => {
 
   const checkForInactivityAndPingStartStopApis = () => {
     if (protectionPoolService && playground?.forkId) {
-      const lastActionTimestamp = protectionPoolService.getLastActionTimestamp();
+      const lastActionTimestamp =
+        protectionPoolService.getLastActionTimestamp();
       console.log("Last action timestamp: ", lastActionTimestamp);
-      const inactiveTimeInMilliSeconds = (Date.now() - lastActionTimestamp);
-      console.log("Inactive time in seconds: ", inactiveTimeInMilliSeconds/1000);
-      if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) { 
+      const inactiveTimeInMilliSeconds = Date.now() - lastActionTimestamp;
+      console.log(
+        "Inactive time in seconds: ",
+        inactiveTimeInMilliSeconds / 1000
+      );
+      if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) {
         console.log("Stopping playground due to inactivity...");
         cleanup();
       }
@@ -76,7 +80,7 @@ const Header = () => {
       pingStartAndStopApi();
     }
   };
-  
+
   // Setup inactivity timer
   useEffect(() => {
     if (protectionPoolService && playground?.forkId) {
@@ -84,7 +88,10 @@ const Header = () => {
       protectionPoolService.setLastActionTimestamp();
 
       // Check every minute for inactivity
-      idleTimerId = setInterval(checkForInactivityAndPingStartStopApis, 1000 * 60 * 1);
+      idleTimerId = setInterval(
+        checkForInactivityAndPingStartStopApis,
+        1000 * 60 * 1
+      );
       console.log("Started inactivity timer...");
 
       return () => {
@@ -92,7 +99,7 @@ const Header = () => {
           clearInterval(idleTimerId);
           console.log("Cleared inactivity timer...");
         }
-      }
+      };
     }
   }, [playground?.forkId]);
 
@@ -103,7 +110,7 @@ const Header = () => {
 
     setError(message);
     setIsOpen(false);
-  }
+  };
 
   const startPlayground = async () => {
     const result = await fetch(`/api/playground/start?userAddress=${account}`);
@@ -112,34 +119,44 @@ const Header = () => {
       if (data.success) {
         const playground = data.playground;
         playground.provider = new JsonRpcProvider(playground.url);
-        
-        updateContractAddresses({
+
+        updateProviderAndContractAddresses(playground.provider, {
           isPlayground: true,
           poolFactory: playground.poolFactoryAddress,
           pool: playground.poolAddress,
-          premiumCalculator: playground.premiumCalculatorAddress,
+          premiumCalculator: playground.premiumCalculatorAddress
         });
-        updateProvider(playground.provider);
         updatePlayground(playground);
 
         console.log("Successfully started a playground: ", playground);
       }
-    }
-    else {
-      onError("Failed to start playground. Please try again.", await result.json());
+    } else {
+      onError(
+        "Failed to start playground. Please try again.",
+        await result.json()
+      );
     }
   };
 
-  const stopPlayground = async (playgroundId) => { 
-    const result = await fetch(`/api/playground/stop?userAddress=${account}`, { method: "DELETE", body: playgroundId });
+  const stopPlayground = async (playgroundId) => {
+    const result = await fetch(`/api/playground/stop?userAddress=${account}`, {
+      method: "DELETE",
+      body: playgroundId
+    });
     console.log("End playground result", result);
     if (result.status === 200) {
       const data = await result.json();
       if (data.success) {
+        updateProviderAndContractAddresses(undefined, {
+          isPlayground: true,
+          poolFactory: undefined,
+          pool: undefined,
+          premiumCalculator: undefined
+        });
         updatePlayground(undefined);
+
         console.log("Successfully ended playground");
-      }
-      else {
+      } else {
         onError("Failed to stop playground. Please try again.", data);
       }
     }
@@ -194,87 +211,88 @@ const Header = () => {
   }
 
   return (
-    <div className="flex justify-between items-center top-0 h-16 border-b border-headerBorder mb-10">
-      <div className="-my-3 ml-8">
-        <Link href="/">
-          <Image
-            src={assets.headerLogo.src}
-            alt=""
-            height="36"
-            width="128"
-            unoptimized
-          />
+    <div className="flex justify-between items-center top-0 h-16 shadow-md mb-10">
+      <Link className="ml-12" href="/">
+        <Image
+          src={assets.headerLogo.src}
+          alt=""
+          height="36"
+          width="160"
+          unoptimized
+        />
+      </Link>
+      <div className="flex items-center">
+        <Link href="/buyProtection" className="hover:text-customBlue">
+          <h3>Protect</h3>
+        </Link>
+        {/* <Link href="/lendWithProtection">
+          <h3>Lend With Protection</h3>
+        </Link> */}
+        <Link href="/sellProtection" className="ml-16 hover:text-customBlue">
+          <h3>Earn</h3>
+        </Link>
+        <Link href="/dashboard" className="ml-16 hover:text-customBlue">
+          <h3>Dashboard</h3>
         </Link>
       </div>
-      <div className="flex items-center">
-      <Link href="/buyProtection" className="hover:text-customBlue">
-        <h3>Protect</h3>
-      </Link>
-      {/* <Link href="/lendWithProtection">
-        <h3>Lend With Protection</h3>
-      </Link> */}
-      <Link href="/sellProtection" className="ml-14 hover:text-customBlue">
-        <h3>Earn</h3>
-      </Link>
-      <Link href="/dashboard"className="ml-14 hover:text-customBlue">
-        <h3>Dashboard</h3>
-      </Link>
-      </div>
-      <div className="mr-8">
-      {/* {active && chainId === 1
-      ? null 
-      : active && chainId != 1
-      ? null
-      : !active || error
-      ? (
-        <button
-        className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-        onClick={async () => await onConnect("metamask")}
-        >
-          <span>Connect Wallet</span>
-        </button>)
-      : ("")}
-      {active ? (
-        <button
+      <div className="mr-12">
+        {/* {active && chainId === 1
+        ? null
+        : active && chainId != 1
+        ? null
+        : !active || error
+        ? (
+          <button
           className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          onClick={() => disconnect()}
-        >
-          <span>{"Disconnect"}</span>
-        </button>
-      ) : (
-        ""
-      )} */}
-      {playgroundButtonTitle === "Start Playground" ? (
-        <button
-          // disabled={!account}
-          className="border rounded-md border-black px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          onClick={playgroundButtonAction}>
+          onClick={async () => await onConnect("metamask")}
+          >
+            <span>Connect Wallet</span>
+          </button>)
+        : ("")}
+        {active ? (
+          <button
+            className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            onClick={() => disconnect()}
+          >
+            <span>{"Disconnect"}</span>
+          </button>
+        ) : (
+          ""
+        )} */}
+        {playgroundButtonTitle === "Start Playground" ? (
+          <button
+            // disabled={!account}
+            className="text-white bg-customBlue rounded-md px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            onClick={playgroundButtonAction}
+          >
             <Tooltip
               content="Test our app features in a sandbox!"
               animate={{
                 mount: { scale: 1, y: 0 },
-                unmount: { scale: 0, y: 25 },
+                unmount: { scale: 0, y: 25 }
               }}
-              placement="bottom">
-                <span>{playgroundButtonTitle}</span>
-            </Tooltip>
-        </button>
-      ) : (
-            <button
-              // disabled={!account}
-              className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-              onClick={playgroundButtonAction}>
+              placement="bottom"
+            >
               <span>{playgroundButtonTitle}</span>
-            </button>
-      )}
-      {/* <Account /> */}
+            </Tooltip>
+          </button>
+        ) : (
+          <button
+            // disabled={!account}
+            className="border rounded-md px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
+            onClick={playgroundButtonAction}
+          >
+            <span>{playgroundButtonTitle}</span>
+          </button>
+        )}
+        {/* <Account /> */}
+      </div>
       <PlaygroundModePopUp
         open={isOpen}
         playground={playground}
         onClose={() => setIsOpen(false)}
-        ></PlaygroundModePopUp>
-        <ErrorPopup error={error} handleCloseError={() => setError("")} />
-      </div>
+      ></PlaygroundModePopUp>
+      <ErrorPopup error={error} handleCloseError={() => setError("")} />
     </div>
   );
 };

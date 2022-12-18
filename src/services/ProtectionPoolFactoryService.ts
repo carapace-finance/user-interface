@@ -56,6 +56,7 @@ export class ProtectionPoolFactoryService {
             return [
               {
                 address: poolAddress,
+                name: "Goldfinch Protection Pool #1",
                 protocols: goldfinchLogo,
                 APY: "8 - 15%",
                 totalCapital:

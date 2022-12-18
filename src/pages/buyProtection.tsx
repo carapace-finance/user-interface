@@ -7,7 +7,6 @@ const TitleAndDescriptions = dynamic(
 );
 import { useContext } from "react";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
-import { formatAddress } from "@utils/utils";
 import { useRouter } from "next/router";
 
 const BuyProtection = () => {
@@ -27,21 +26,22 @@ const BuyProtection = () => {
       />
       <h3 className="text-left font-bold">All Lending Pools</h3>
       <div className="h-5"></div>
-      <div className="rounded-2xl shadow-table p-8">
-        <table className="table-fixed w-full">
+      <div className="rounded-2xl shadow-table">
+        <div className="h-4"></div>
+        <table className="table-fixed w-full ">
           <thead>
-            <tr className="text-left text-sm font-bold py-4">
-              <th className="py-4">Lending Pool</th>
-              <th className="py-4">Protocol</th>
-              <th className="py-4">Premium</th>
-              <th className="py-4">
-                <div className="flex flex-row justify-between mr-4">
-                  Lending Pool APY
+            <tr className="text-left text-sm font-bold">
+              <th className="py-8 pl-8">Lending Pool</th>
+              <th className="py-8">Protocol</th>
+              <th className="py-8">Premium</th>
+              <th className="py-8">
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Lending Pool APY</p>
                   {/* <div className="float-right"> */}
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 },
+                      unmount: { scale: 0, y: 25 }
                     }}
                     content="APY in an underlying lending protocol like Goldfinch."
                     placement="top"
@@ -63,14 +63,14 @@ const BuyProtection = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">
-                <div className="flex flex-row justify-between mr-4">
-                  Estimated Adjusted Yields
+              <th className="py-8">
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Estimated Adjusted Yields</p>
                   {/* <div className="float-right"> */}
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 },
+                      unmount: { scale: 0, y: 25 }
                     }}
                     content="Lending Pool APY % minus Premium %"
                     placement="top"
@@ -92,21 +92,23 @@ const BuyProtection = () => {
                   </Tooltip>
                 </div>
               </th>
-              {/* <th className="py-4">CARA Token Rewards</th> */}
-              <th className="py-4">Buy Protection Within</th>
+              {/* <th className="py-8">CARA Token Rewards</th> */}
+              <th className="py-8">Buy Protection Within</th>
             </tr>
           </thead>
           <tbody>
             {lendingPools.map((lendingPool) => (
               <tr
                 key={lendingPool.address}
-                onClick={() => handleClick(`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`)}
-                className="text-left text-sm font-medium hover:cursor-pointer"
+                onClick={() =>
+                  handleClick(
+                    `/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`
+                  )
+                }
+                className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
               >
-                <td className="py-4">
-                  {lendingPool.name}
-                </td>
-                <td className="py-4">
+                <td className="py-8 pl-8">{lendingPool.name}</td>
+                <td className="py-8">
                   <Image
                     src={lendingPool.protocol}
                     width={24}
@@ -114,21 +116,13 @@ const BuyProtection = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-4">
-                  {lendingPool.premium}
-                </td>
-                <td className="py-4">
-                  {lendingPool.lendingPoolAPY}
-                </td>
-                <td className="py-4">
-                  {lendingPool.adjustedYields}
-                </td>
-                {/* <td className="py-4">
+                <td className="py-8">{lendingPool.premium}</td>
+                <td className="py-8">{lendingPool.lendingPoolAPY}</td>
+                <td className="py-8">{lendingPool.adjustedYields}</td>
+                {/* <td className="py-8">
                   {lendingPool.CARATokenRewards}
                 </td> */}
-                <td className="py-4">
-                  {lendingPool.timeLeft}
-                </td>
+                <td className="py-6">{lendingPool.timeLeft}</td>
               </tr>
             ))}
           </tbody>

@@ -110,7 +110,7 @@ const Dashboard = () => {
       <div className="rounded-2xl shadow-table p-8">
         <table className="table-fixed w-full">
           <thead>
-            <tr className="text-left text-sm font-bold py-4">
+            <tr className="text-left text-ms font-bold">
               <th className="py-4">Name</th>
               <th className="py-4">Protocol</th>
               <th className="py-4">Premium</th>
@@ -121,7 +121,7 @@ const Dashboard = () => {
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 },
+                      unmount: { scale: 0, y: 25 }
                     }}
                     content="Lending Pool APY % minus Premium %"
                     placement="top"
@@ -143,15 +143,15 @@ const Dashboard = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">Time Until Expiration</th>
+              <th className="py-4">Protection expires in</th>
               <th className="py-4">Protection Amount</th>
-              <th className="py-4" >
-                <div className="flex flex-row items-center justify-between">
+              <th className="py-4">
+                <div className="flex flex-row items-center">
                   Claim
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 },
+                      unmount: { scale: 0, y: 25 }
                     }}
                     content="You can claim a payout when the underlying lending pool defaults."
                     placement="top"
@@ -162,7 +162,7 @@ const Dashboard = () => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="#6E7191"
-                      className="w-5 h-5"
+                      className="w-5 h-5 ml-4"
                     >
                       <path
                         strokeLinecap="round"
@@ -178,7 +178,10 @@ const Dashboard = () => {
           <tbody>
             {/*  TODO: use User.protectionPurchases */}
             {lendingPools.map((lendingPool) => (
-              <tr key={lendingPool.address} className="text-left text-sm font-medium">
+              <tr
+                key={lendingPool.address}
+                className="text-left text-ms font-medium"
+              >
                 <td className="py-4">{lendingPool.name}</td>
                 <td className="py-4">
                   <Image
@@ -189,12 +192,17 @@ const Dashboard = () => {
                   />
                 </td>
                 <td className="py-4">{lendingPool.premium}</td>
-                <td >{lendingPool.lendingPoolAPY}</td>
+                <td>{lendingPool.lendingPoolAPY}</td>
                 <td className="py-4">{lendingPool.adjustedYields}</td>
                 <td className="py-4">{getTimeUntilExpiration(lendingPool)}</td>
                 <td className="py-4">{user.protectionAmount}</td>
                 <td className="py-4">
-                  <button disabled>claim</button>
+                  <button
+                    disabled
+                    className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
+                  >
+                    claim
+                  </button>
                 </td>
               </tr>
             ))}
@@ -202,13 +210,12 @@ const Dashboard = () => {
         </table>
       </div>
       <div className="h-16"></div>
-      <h3 className="text-left font-bold">Your Deposits</h3>
-      <div className="h-5"></div>
+      <h3 className="text-left font-bold mb-8">Your Deposits</h3>
       <div className="rounded-2xl shadow-table p-8">
         <table className="table-fixed w-full">
           <thead>
-            <tr className="text-left text-sm font-bold">
-              <th>Name</th>
+            <tr className="text-left text-ms font-bold">
+              <th className="py-4">Name</th>
               <th className="py-4">Protocols</th>
               <th className="py-4">
                 <div className="flex flex-row justify-between pr-3">
@@ -216,7 +223,7 @@ const Dashboard = () => {
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 },
+                      unmount: { scale: 0, y: 25 }
                     }}
                     content="Estimated APY for protection sellers."
                     placement="top"
@@ -244,12 +251,12 @@ const Dashboard = () => {
               <th className="py-4">Requested Withdrawal</th>
               <th className="py-4">
                 {/* the div needs to be there otherwise there is a bug with styling */}
-                <div className="flex flex-row justify-between pr-3">
+                <div className="flex flex-row pr-3 items-center">
                   Request Withdrawal
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 },
+                      unmount: { scale: 0, y: 25 }
                     }}
                     content="You can make a request to withdraw your capital in the next cycle."
                     placement="top"
@@ -260,7 +267,7 @@ const Dashboard = () => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="#6E7191"
-                      className="w-5 h-5"
+                      className="w-5 h-5 "
                     >
                       <path
                         strokeLinecap="round"
@@ -272,12 +279,12 @@ const Dashboard = () => {
                 </div>
               </th>
               <th className="py-4">
-                <div className="flex flex-row justify-between pr-3">
+                <div className="flex flex-row pr-3 items-center">
                   Withdraw
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 },
+                      unmount: { scale: 0, y: 25 }
                     }}
                     content="You can withdraw the requested withdrawal amount."
                     placement="top"
@@ -288,7 +295,7 @@ const Dashboard = () => {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="#6E7191"
-                      className="w-5 h-5"
+                      className="w-5 h-5 ml-4"
                     >
                       <path
                         strokeLinecap="round"
@@ -302,8 +309,12 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
+            {/* todo: list up the protection pools the user has interacted with */}
             {protectionPools.map((protectionPool) => (
-              <tr key={protectionPool.address} className="text-left text-sm font-medium">
+              <tr
+                key={protectionPool.address}
+                className="text-left text-ms font-medium"
+              >
                 <td>{protectionPool.name}</td>
                 <td className="py-4">
                   <Image
@@ -319,13 +330,19 @@ const Dashboard = () => {
                 <td className="py-4">{user.sTokenUnderlyingAmount}</td>
                 <td className="py-4">{user.requestedWithdrawalAmount}</td>
                 <td className="py-4">
-                  <button onClick={() => setIsWithdrawalRequestOpen(true)}>
-                    request withdrawal
+                  <button
+                    onClick={() => setIsWithdrawalRequestOpen(true)}
+                    className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
+                  >
+                    Request
                   </button>
                 </td>
                 <td className="py-4">
-                  <button onClick={() => setIsWithdrawOpen(true)}>
-                    withdraw
+                  <button
+                    onClick={() => setIsWithdrawOpen(true)}
+                    className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
+                  >
+                    Withdraw
                   </button>
                 </td>
               </tr>

@@ -1,6 +1,7 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useContext, useEffect } from "react";
 import { User, UserContextType } from "@type/types";
 import { BigNumber } from "ethers";
+import { ApplicationContext } from "./ApplicationContextProvider";
 
 export const UserContext = createContext<UserContextType | null>(null);
 
@@ -16,7 +17,18 @@ export const UserContextProvider = ({ children }) => {
     protectionPurchases: []
   };
 
+  const { protectionPoolService } = useContext(ApplicationContext);
   const [user, setUser] = useState<User>(defaultUser);
+
+  useEffect(() => {
+    if (!protectionPoolService) {
+      setUser({
+        ...user,
+        sTokenUnderlyingAmount: "0",
+        requestedWithdrawalAmount: "0"
+      });
+    }
+  }, [protectionPoolService]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
