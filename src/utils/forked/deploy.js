@@ -60,7 +60,7 @@ export const PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS = {
 
   // https://app.goldfinch.finance/pools/0xd09a57127bc40d680be7cb061c2a6629fe71abef
   // Name: Cauris Fund #2: Africa Innovation Pool
-  // next repayment date: Dec 21, 2023
+  // Next repayment date: 21 of every month
   // lending positions:
   // 590: 0x008c84421da5527f462886cec43d2717b686a7e4  420,000.000000
   "0xd09a57127bc40d680be7cb061c2a6629fe71abef": {
@@ -72,12 +72,13 @@ export const PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS = {
   },
 
   // https://app.goldfinch.finance/pools/0x89d7c618a4eef3065da8ad684859a547548e6169
+  // Next repayment date: 22 of every month
   // lending positions:
   // 717: 0x3371E5ff5aE3f1979074bE4c5828E71dF51d299c  808,000.000000
   "0x89d7c618a4eef3065da8ad684859a547548e6169": {
     name: "Asset-Backed Pool via Addem Capital",
     lendingPosition: {
-      tokenId: 707,
+      tokenId: 717,
       owner: "0x3371E5ff5aE3f1979074bE4c5828E71dF51d299c"
     }
   }
