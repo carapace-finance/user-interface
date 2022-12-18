@@ -103,7 +103,7 @@ const Header = () => {
         }
       };
     }
-  }, [playground?.forkId]);
+  }, [protectionPoolService, playground?.forkId]);
 
   const onError = (message, e) => {
     if (e) {
