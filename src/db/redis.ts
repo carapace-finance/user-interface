@@ -42,6 +42,10 @@ export const removeUsedPlaygroundId = async (playgroundId: string) => {
   return redis.srem(USED_PLAYGROUNDS, playgroundId);
 };
 
+export const removeAvailablePlaygroundId = async (playgroundId: string) => {
+  return redis.srem(AVAILABLE_PLAYGROUNDS, playgroundId);
+};
+
 /**
  * Adds playground id to the used playgrounds set in redis persistence store
  * @param playgroundIdToUse playground id in redis store
@@ -76,6 +80,10 @@ export const saveAvailablePlaygroundDetails = async (playgroundInfo) => {
 
 export const getUsedPlaygrounds = async (): Promise<string[]> => {
   return redis.smembers(USED_PLAYGROUNDS);
+};
+
+export const getAvailablePlaygrounds = async (): Promise<string[]> => {
+  return redis.smembers(AVAILABLE_PLAYGROUNDS);
 };
 
 export const deleteAvailablePlaygroundDetails = async (

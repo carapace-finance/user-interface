@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { deployToFork } from "@utils/forked/tenderly";
-import { preparePlayground } from "@utils/forked/playground";
-import { Playground } from "@utils/forked/types";
 import {
   getAvailablePlaygroundCount,
   getUsedPlaygrounds,
   deleteAvailablePlaygroundDetails,
-  removeUsedPlaygroundId
+  removeUsedPlaygroundId,
+  getAvailablePlaygrounds,
+  removeAvailablePlaygroundId
 } from "src/db/redis";
 import { startNewPlayground } from "./start";
 
@@ -37,10 +36,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       case "DELETE":
         console.log("Cleaning up playgrounds");
         const usedPlaygrounds = await getUsedPlaygrounds();
-        usedPlaygrounds.forEach(async (playgroundId) => {
-          deleteAvailablePlaygroundDetails(playgroundId);
-          removeUsedPlaygroundId(playgroundId);
-        });
+        const availablePlaygrounds = await getAvailablePlaygrounds();
+
+        usedPlaygrounds
+          .concat(availablePlaygrounds)
+          .forEach(async (playgroundId) => {
+            deleteAvailablePlaygroundDetails(playgroundId);
+            removeUsedPlaygroundId(playgroundId);
+            removeAvailablePlaygroundId(playgroundId);
+          });
+
         res.status(200).json({
           success: true
         });
@@ -50,7 +55,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (e) {
-    console.error("Failed to start playground", e);
+    console.error("Failed to setup playground", e);
     return res.status(500).json({
       success: false
     });
