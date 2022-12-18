@@ -14,7 +14,6 @@ import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import {
   convertNumberToUSDC,
-  convertUSDCToNumber,
   USDC_FORMAT
 } from "@utils/usdc";
 import { formatAddress, getDaysInSeconds } from "@utils/utils";
@@ -45,6 +44,8 @@ const BuyProtectionPopUp = (props) => {
     setError("");
     setLoading(false);
   };
+
+  useEffect(reset, [open]);
 
   const onError = (e) => {
     if (e) {
@@ -145,7 +146,7 @@ const BuyProtectionPopUp = (props) => {
             {renderFieldAndValue(
               "Premium Price",
               calculatingPremiumPrice
-                ? "Calculating Premium Price..."
+                ? (<div>Calculating Premium Price...<LoadingButton loading={calculatingPremiumPrice}></LoadingButton></div>)
                 : numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
             )}
           </div>
@@ -212,6 +213,7 @@ const BuyProtectionPopUp = (props) => {
             className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
             onClick={buyProtection}
             disabled={
+              loading ||
               !protectionPoolService ||
               !protectionPoolAddress ||
               !protectionAmount ||

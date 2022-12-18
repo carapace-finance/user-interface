@@ -10,6 +10,7 @@ import {
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { getDaysInSeconds } from "@utils/utils";
 import { BuyProtectionInputs } from "@type/types";
+import { isAddress } from "ethers/lib/utils";
 
 export default function BuyProtectionCard() {
   const {
@@ -29,23 +30,29 @@ export default function BuyProtectionCard() {
     useContext(ApplicationContext);
 
   const router = useRouter();
-
+  const protectionPoolAddress = router.query.protectionPoolAddress as string;
+  const lendingPoolAddress = router.query.address as string;
+  
   useEffect(() => {
+    const protectionAmount = parseFloat(getValues("protectionAmount"));
+    const protectionDurationInDays = parseFloat(getValues("protectionDurationInDays"));
+
     if (
       protectionPoolService &&
-      contractAddresses.premiumCalculator &&
-      parseFloat(getValues("protectionAmount")) > 0 &&
-      parseFloat(getValues("protectionDurationInDays")) > 0
+      isAddress(contractAddresses?.premiumCalculator) &&
+      isAddress(protectionPoolAddress) &&
+      protectionAmount > 0 &&
+      protectionDurationInDays > 0
     ) {
       setCalculatingPremiumPrice(true);
       const protectionPurchaseParams = {
         lendingPoolAddress: router.query.address as string,
         nftLpTokenId: tokenId,
         protectionAmount: convertNumberToUSDC(
-          parseFloat(getValues("protectionAmount"))
+          protectionAmount
         ),
         protectionDurationInSeconds: getDaysInSeconds(
-          getValues("protectionDurationInDays")
+          protectionDurationInDays
         )
       };
       console.log(
@@ -66,6 +73,7 @@ export default function BuyProtectionCard() {
     }
   }, [
     protectionPoolService,
+    contractAddresses,
     getValues("protectionAmount"),
     getValues("protectionDurationInDays"),
     tokenId
@@ -247,7 +255,7 @@ export default function BuyProtectionCard() {
         <input
           type="submit"
           value="Preview"
-          className="border border-customDarkGrey text-customDarkGrey rounded-md px-16 py-5 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
+          className="cursor-pointer border border-customDarkGrey text-customDarkGrey rounded-md px-16 py-5 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
           disabled={premiumPrice === 0}
         />
       </form>
