@@ -7,7 +7,7 @@ import {
   getReferenceLendingPoolsContract
 } from "@contracts/contractService";
 import {
-  transferApproveAndDeposit,
+  approveAndDeposit,
   transferApproveAndBuyProtection,
   getLendingPoolName
 } from "@utils/forked/playground";
@@ -64,12 +64,7 @@ export class ProtectionPoolService {
     const signer = this.provider.getSigner();
     const poolInstance = getPoolContract(poolAddress, signer);
     if (this.isPlayground) {
-      return await transferApproveAndDeposit(
-        this.provider,
-        poolInstance,
-        depositAmt,
-        signer
-      );
+      return await approveAndDeposit(poolInstance, depositAmt, signer);
     } else {
       return await poolInstance.deposit(depositAmt, await signer.getAddress());
     }
@@ -91,7 +86,8 @@ export class ProtectionPoolService {
 
   public async buyProtection(
     poolAddress: string,
-    purchaseParams: ProtectionPurchaseParams
+    purchaseParams: ProtectionPurchaseParams,
+    premiumAmt: BigNumber
   ) {
     this.setLastActionTimestamp();
     const poolInstance = getPoolContract(
@@ -103,7 +99,8 @@ export class ProtectionPoolService {
       return await transferApproveAndBuyProtection(
         this.provider,
         poolInstance,
-        purchaseParams
+        purchaseParams,
+        premiumAmt
       );
     } else {
       return await poolInstance.buyProtection(purchaseParams);
