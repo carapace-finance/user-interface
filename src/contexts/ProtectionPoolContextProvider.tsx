@@ -2,6 +2,9 @@ import React, { useState, createContext, useContext, useEffect } from "react";
 import { ProtectionPool, ProtectionPoolContextType } from "@type/types";
 import assets from "../assets";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import { getPoolContract } from "@contracts/contractService";
+import numeral from "numeral";
+import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 
 const goldfinchLogo = assets.goldfinch.src;
 
@@ -9,7 +12,7 @@ export const ProtectionPoolContext =
   createContext<ProtectionPoolContextType | null>(null);
 
 export const ProtectionPoolContextProvider = ({ children }) => {
-  const { protectionPoolFactoryService } = useContext(ApplicationContext);
+  const { provider, protectionPoolFactoryService } = useContext(ApplicationContext);
   const defaultProtectionPools: ProtectionPool[] = [
     {
       address: "0x0...",
@@ -31,7 +34,7 @@ export const ProtectionPoolContextProvider = ({ children }) => {
   const [isDefaultData, setIsDefaultData] = useState(true);
 
   useEffect(() => {
-    if (protectionPoolFactoryService) {
+    if (provider && protectionPoolFactoryService) {
       protectionPoolFactoryService
         .getProtectionPools()
         .then((protectionPools) => {
@@ -41,12 +44,53 @@ export const ProtectionPoolContextProvider = ({ children }) => {
           );
           setProtectionPools(protectionPools);
           setIsDefaultData(false);
+          
+          protectionPools.forEach((protectionPool) => {
+            const poolInstance = getPoolContract(protectionPool.address, provider.getSigner());
+            poolInstance.on(
+              "ProtectionBought",
+              async (buyerAddress, lendingPoolAddress, protectionAmount, premium, event) => {
+                console.log("ProtectionBought event triggered: ", event.args);
+                const totalProtection = await poolInstance.totalProtection();
+                const newProtectionPools = protectionPools.map((p) => { 
+                  if (p.address === protectionPool.address) {
+                    return {
+                      ...p,
+                      totalProtection: numeral(convertUSDCToNumber(totalProtection)).format(USDC_FORMAT) + " USDC"
+                    };
+                  }
+                  return p;
+                });
+                console.log("newProtectionPools: ", newProtectionPools);
+                setProtectionPools(newProtectionPools);
+              }
+            );
+
+            poolInstance.on(
+              "ProtectionSold",
+              async (userAddress, amount, event) => {
+                console.log("ProtectionSold event triggered: ", event.args);
+                const totalCapital = await poolInstance.totalSTokenUnderlying();
+                const newProtectionPools = protectionPools.map((p) => { 
+                  if (p.address === protectionPool.address) {
+                    return {
+                      ...p,
+                      totalCapital: numeral(convertUSDCToNumber(totalCapital)).format(USDC_FORMAT) + " USDC"
+                    };
+                  }
+                  return p;
+                });
+                console.log("newProtectionPools: ", newProtectionPools);
+                setProtectionPools(newProtectionPools);
+              }
+            );
+          });
         });
     } else {
       setProtectionPools(defaultProtectionPools);
       setIsDefaultData(true);
     }
-  }, [protectionPoolFactoryService]);
+  }, [provider, protectionPoolFactoryService]);
 
   return (
     <ProtectionPoolContext.Provider

@@ -49,8 +49,6 @@ const Dashboard = () => {
       .humanize();
   };
 
-  console.log("Dashboard render, user: ", user);
-
   return (
     <div className="mx-32">
       <div className="h-5"></div>
