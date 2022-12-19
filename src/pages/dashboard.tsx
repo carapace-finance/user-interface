@@ -14,16 +14,12 @@ import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
-import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
-import numeral from "numeral";
-import { formatAddress } from "@utils/utils";
 import moment from "moment";
 
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
-  const { contractAddresses, provider, protectionPoolService } =
-    useContext(ApplicationContext);
+  const { contractAddresses } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
   const { lendingPools } = useContext(LendingPoolContext);
   const { protectionPools } = useContext(ProtectionPoolContext);
@@ -32,54 +28,6 @@ const Dashboard = () => {
   useEffect(() => {
     setProtectionPoolAddress(contractAddresses?.pool);
   }, [contractAddresses]);
-
-  useEffect(() => {
-    if (protectionPools && protectionPoolService) {
-      protectionPools.map((protectionPool) => {
-        const poolAddress = protectionPool.address;
-        protectionPoolService
-          .getSTokenUnderlyingBalance(poolAddress)
-          .then((sTokenUnderlyingBalance) => {
-            protectionPoolService
-              .getRequestedWithdrawalAmount(poolAddress)
-              .then((requestedWithdrawalBalance) => {
-                const formattedUnderlyingBalance = numeral(
-                  convertUSDCToNumber(sTokenUnderlyingBalance)
-                ).format(USDC_FORMAT);
-                const formattedWithdrawalBalance = numeral(
-                  convertUSDCToNumber(requestedWithdrawalBalance)
-                ).format(USDC_FORMAT);
-                setUser({
-                  ...user,
-                  sTokenUnderlyingAmount: formattedUnderlyingBalance,
-                  requestedWithdrawalAmount: formattedWithdrawalBalance
-                });
-                console.log(
-                  "sTokenUnderlingBalance ==>",
-                  formattedUnderlyingBalance
-                );
-                console.log(
-                  "requestedWithdrawalBalance ==>",
-                  formattedWithdrawalBalance
-                );
-              });
-          });
-
-        (async () => {
-          const protectionPurchases =
-            await protectionPoolService.getProtectionPurchases(poolAddress);
-          console.log(
-            "Retrieved Protection Purchases ==>",
-            protectionPurchases
-          );
-          setUser({
-            ...user,
-            protectionPurchases: protectionPurchases
-          });
-        })();
-      });
-    }
-  }, [protectionPools]);
 
   const getTimeUntilExpiration = (lendingPool) => {
     let timeUntilExpirationInSeconds = moment().unix() + 1854120; // "21 Days 11 Hours 2 Mins" from now;
@@ -100,6 +48,8 @@ const Dashboard = () => {
       .duration(timeUntilExpirationInSeconds - moment().unix(), "seconds")
       .humanize();
   };
+
+  console.log("Dashboard render, user: ", user);
 
   return (
     <div className="mx-32">

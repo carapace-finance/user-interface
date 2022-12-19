@@ -163,8 +163,8 @@ export class ProtectionPoolService {
     const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(
       withdrawalCycleIndex
     );
-    const usdcBalance = await poolInstance.convertToUnderlying(sTokenBalance);
-    return usdcBalance;
+    const usdcAmount = await poolInstance.convertToUnderlying(sTokenBalance);
+    return usdcAmount;
   }
 
   /**

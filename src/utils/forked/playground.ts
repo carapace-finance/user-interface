@@ -35,7 +35,11 @@ export async function preparePlayground(playground: Playground) {
   console.log("********** Pool Cycle: 1, Day: 1     **********");
 
   const deployer = await playground.provider.getSigner(0);
-  console.log("Deployer address: ", await deployer.getAddress());
+  const deployerAddress = await deployer.getAddress();
+  console.log("Deployer address: ", deployerAddress);
+
+  // transfer usdc to deployer
+  await transferUsdc(playground.provider, deployerAddress, parseUSDC("50000"));
 
   const user = playground.provider.getSigner(
     "0x008c84421da5527f462886cec43d2717b686a7e4"
@@ -191,7 +195,7 @@ export async function transferApproveAndDeposit(
   const usdcContract = getUsdcContract(receiver);
   const receiverAddress = await receiver.getAddress();
 
-  // transfer usdc to deployer
+  // transfer usdc to receiver
   await transferUsdc(provider, receiverAddress, depositAmt);
 
   // Approve & deposit 5K USDC
