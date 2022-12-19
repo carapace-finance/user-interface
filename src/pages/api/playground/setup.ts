@@ -1,3 +1,4 @@
+import { deleteFork } from "@utils/forked/tenderly";
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   getAvailablePlaygroundCount,
@@ -44,6 +45,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             deleteAvailablePlaygroundDetails(playgroundId);
             removeUsedPlaygroundId(playgroundId);
             removeAvailablePlaygroundId(playgroundId);
+            deleteFork(playgroundId, process.env.TENDERLY_ACCESS_KEY);
           });
 
         res.status(200).json({
