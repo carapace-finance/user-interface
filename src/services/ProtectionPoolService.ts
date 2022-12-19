@@ -22,7 +22,6 @@ import {
   scale18DecimalsAmtToUsdcDecimals,
   scaleUsdcAmtTo18Decimals
 } from "@utils/utils";
-import { formatEther } from "@ethersproject/units";
 
 export class ProtectionPoolService {
   private protectionPurchaseByLendingPool: Map<string, BigNumber>;
@@ -183,7 +182,6 @@ export class ProtectionPoolService {
       .getLendingPools()
       .then((lendingPools) =>
         lendingPools.map((lendingPool) => {
-          console.log("lendingPool: ", lendingPool);
           const protectionPurchase = this.getProtectionPurchaseByLendingPool(
             lendingPool.toLowerCase()
           );
@@ -218,7 +216,7 @@ export class ProtectionPoolService {
     premiumCalculatorAddress: string,
     purchaseParams: ProtectionPurchaseParams
   ): Promise<BigNumber> {
-    console.log("calculatePremiumPrice: ", purchaseParams);
+    console.log("calculating premium price: ", purchaseParams);
     const user = this.provider.getSigner();
     const pool = getPoolContract(poolAddress, user);
     const poolInfo = await pool.getPoolInfo();
@@ -234,7 +232,6 @@ export class ProtectionPoolService {
       await referenceLendingPools.calculateProtectionBuyerAPR(
         purchaseParams.lendingPoolAddress
       );
-    console.log("buyerApy: ", formatEther(buyerApy));
 
     return premiumCalculator
       .calculatePremium(

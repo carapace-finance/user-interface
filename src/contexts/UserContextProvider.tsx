@@ -86,7 +86,6 @@ export const UserContextProvider = ({ children }) => {
       setUser({
         ...userRef.current
       });
-      console.log("Updated user usdc balance: ", newUsdcBalance);
     }
 
     return newUsdcBalance;

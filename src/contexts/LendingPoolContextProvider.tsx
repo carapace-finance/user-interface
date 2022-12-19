@@ -12,7 +12,7 @@ export const LendingPoolContext = createContext<LendingPoolContextType | null>(
 
 export const LendingPoolContextProvider = ({ children }) => {
   const { provider, protectionPoolService } = useContext(ApplicationContext);
-  const { protectionPools } = useContext(ProtectionPoolContext);
+  const { isDefaultData, protectionPools } = useContext(ProtectionPoolContext);
 
   const defaultLendingPools: LendingPool[] = [
     {
@@ -24,7 +24,7 @@ export const LendingPoolContextProvider = ({ children }) => {
       CARATokenRewards: "~3.5%",
       premium: "4 - 7%",
       timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0x0...",
+      protectionPoolAddress: "0xLP...",
       protectionPurchase: "51,000 USDC"
     },
     {
@@ -36,7 +36,7 @@ export const LendingPoolContextProvider = ({ children }) => {
       CARATokenRewards: "~3.5%",
       premium: "4 - 7%",
       timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0x0...",
+      protectionPoolAddress: "0xLP...",
       protectionPurchase: "21,000 USDC"
     },
     {
@@ -57,7 +57,7 @@ export const LendingPoolContextProvider = ({ children }) => {
     useState<LendingPool[]>(defaultLendingPools);
 
   useEffect(() => {
-    if (protectionPools && provider && protectionPoolService) {
+    if (!isDefaultData && protectionPools && provider && protectionPoolService) {
       const promises = protectionPools.map((protectionPool) => {
         return protectionPoolService
           .getLendingPools(protectionPool.address)
@@ -78,7 +78,7 @@ export const LendingPoolContextProvider = ({ children }) => {
     } else {
       setLendingPools(defaultLendingPools);
     }
-  }, [protectionPools]);
+  }, [isDefaultData, protectionPools]);
 
   return (
     <LendingPoolContext.Provider value={{ lendingPools, setLendingPools }}>

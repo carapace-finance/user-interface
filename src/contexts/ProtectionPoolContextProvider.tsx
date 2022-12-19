@@ -15,7 +15,7 @@ export const ProtectionPoolContextProvider = ({ children }) => {
   const { provider, protectionPoolFactoryService } = useContext(ApplicationContext);
   const defaultProtectionPools: ProtectionPool[] = [
     {
-      address: "0x0...",
+      address: "0xPP...",
       name: "Goldfinch Protection Pool #1",
       protocols: goldfinchLogo,
       APY: "15 - 20%",
@@ -37,22 +37,22 @@ export const ProtectionPoolContextProvider = ({ children }) => {
     if (provider && protectionPoolFactoryService) {
       protectionPoolFactoryService
         .getProtectionPools()
-        .then((protectionPools) => {
+        .then((newProtectionPools) => {
           console.log(
             "Retrieved Protection Pools in context: ",
-            protectionPools
+            newProtectionPools
           );
-          setProtectionPools(protectionPools);
+          setProtectionPools(newProtectionPools);
           setIsDefaultData(false);
           
-          protectionPools.forEach((protectionPool) => {
+          newProtectionPools.forEach((protectionPool) => {
             const poolInstance = getPoolContract(protectionPool.address, provider.getSigner());
             poolInstance.on(
               "ProtectionBought",
               async (buyerAddress, lendingPoolAddress, protectionAmount, premium, event) => {
                 console.log("ProtectionBought event triggered: ", event.args);
                 const totalProtection = await poolInstance.totalProtection();
-                const newProtectionPools = protectionPools.map((p) => { 
+                const updatedProtectionPools = newProtectionPools.map((p) => { 
                   if (p.address === protectionPool.address) {
                     return {
                       ...p,
@@ -61,8 +61,8 @@ export const ProtectionPoolContextProvider = ({ children }) => {
                   }
                   return p;
                 });
-                console.log("newProtectionPools: ", newProtectionPools);
-                setProtectionPools(newProtectionPools);
+                console.log("Updated protection pools: ", updatedProtectionPools);
+                setProtectionPools(updatedProtectionPools);
               }
             );
 
@@ -71,7 +71,7 @@ export const ProtectionPoolContextProvider = ({ children }) => {
               async (userAddress, amount, event) => {
                 console.log("ProtectionSold event triggered: ", event.args);
                 const totalCapital = await poolInstance.totalSTokenUnderlying();
-                const newProtectionPools = protectionPools.map((p) => { 
+                const updatedProtectionPools = newProtectionPools.map((p) => { 
                   if (p.address === protectionPool.address) {
                     return {
                       ...p,
@@ -80,8 +80,8 @@ export const ProtectionPoolContextProvider = ({ children }) => {
                   }
                   return p;
                 });
-                console.log("newProtectionPools: ", newProtectionPools);
-                setProtectionPools(newProtectionPools);
+                console.log("Updated protection pools: ", updatedProtectionPools);
+                setProtectionPools(updatedProtectionPools);
               }
             );
           });
