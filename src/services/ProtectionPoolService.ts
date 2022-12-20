@@ -7,7 +7,7 @@ import {
   getReferenceLendingPoolsContract
 } from "@contracts/contractService";
 import {
-  transferApproveAndDeposit,
+  approveAndDeposit,
   transferApproveAndBuyProtection,
   getLendingPoolName
 } from "@utils/forked/playground";
@@ -22,7 +22,6 @@ import {
   scale18DecimalsAmtToUsdcDecimals,
   scaleUsdcAmtTo18Decimals
 } from "@utils/utils";
-import { formatEther } from "@ethersproject/units";
 
 export class ProtectionPoolService {
   private protectionPurchaseByLendingPool: Map<string, BigNumber>;
@@ -64,12 +63,7 @@ export class ProtectionPoolService {
     const signer = this.provider.getSigner();
     const poolInstance = getPoolContract(poolAddress, signer);
     if (this.isPlayground) {
-      return await transferApproveAndDeposit(
-        this.provider,
-        poolInstance,
-        depositAmt,
-        signer
-      );
+      return await approveAndDeposit(poolInstance, depositAmt, signer);
     } else {
       return await poolInstance.deposit(depositAmt, await signer.getAddress());
     }
@@ -91,7 +85,8 @@ export class ProtectionPoolService {
 
   public async buyProtection(
     poolAddress: string,
-    purchaseParams: ProtectionPurchaseParams
+    purchaseParams: ProtectionPurchaseParams,
+    premiumAmt: BigNumber
   ) {
     this.setLastActionTimestamp();
     const poolInstance = getPoolContract(
@@ -103,7 +98,8 @@ export class ProtectionPoolService {
       return await transferApproveAndBuyProtection(
         this.provider,
         poolInstance,
-        purchaseParams
+        purchaseParams,
+        premiumAmt
       );
     } else {
       return await poolInstance.buyProtection(purchaseParams);
@@ -163,8 +159,8 @@ export class ProtectionPoolService {
     const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(
       withdrawalCycleIndex
     );
-    const usdcBalance = await poolInstance.convertToUnderlying(sTokenBalance);
-    return usdcBalance;
+    const usdcAmount = await poolInstance.convertToUnderlying(sTokenBalance);
+    return usdcAmount;
   }
 
   /**
@@ -186,7 +182,6 @@ export class ProtectionPoolService {
       .getLendingPools()
       .then((lendingPools) =>
         lendingPools.map((lendingPool) => {
-          console.log("lendingPool: ", lendingPool);
           const protectionPurchase = this.getProtectionPurchaseByLendingPool(
             lendingPool.toLowerCase()
           );
@@ -221,7 +216,7 @@ export class ProtectionPoolService {
     premiumCalculatorAddress: string,
     purchaseParams: ProtectionPurchaseParams
   ): Promise<BigNumber> {
-    console.log("calculatePremiumPrice: ", purchaseParams);
+    console.log("calculating premium price: ", purchaseParams);
     const user = this.provider.getSigner();
     const pool = getPoolContract(poolAddress, user);
     const poolInfo = await pool.getPoolInfo();
@@ -237,7 +232,6 @@ export class ProtectionPoolService {
       await referenceLendingPools.calculateProtectionBuyerAPR(
         purchaseParams.lendingPoolAddress
       );
-    console.log("buyerApy: ", formatEther(buyerApy));
 
     return premiumCalculator
       .calculatePremium(

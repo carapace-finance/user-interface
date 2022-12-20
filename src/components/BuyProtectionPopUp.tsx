@@ -70,7 +70,8 @@ const BuyProtectionPopUp = (props) => {
       };
       const tx = await protectionPoolService.buyProtection(
         protectionPoolAddress,
-        protectionPurchaseParams
+        protectionPurchaseParams,
+        convertNumberToUSDC(premiumAmount)
       );
 
       const receipt = await tx.wait();

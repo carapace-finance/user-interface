@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
 import { Tooltip } from "@material-tailwind/react";
-import { getUsdcBalance, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
+import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
 import numeral from "numeral";
@@ -21,8 +20,7 @@ export default function SellProtectionCard() {
   const [isOpen, setIsOpen] = useState(false);
   const [usdcBalance, setUsdcBalance] = useState(0);
   const router = useRouter();
-  const { protectionPoolService, provider } = useContext(ApplicationContext);
-  const { user, setUser } = useContext(UserContext);
+  const { updateUserUsdcBalance } = useContext(UserContext);
   const protectionPoolAddress = router.query.address;
 
   const setMaxAmount = async () => {
@@ -31,13 +29,7 @@ export default function SellProtectionCard() {
 
   useEffect(() => {
     (async () => {
-      if (provider) {
-        let newUsdcBalance = await getUsdcBalance(provider, user.address);
-        setUsdcBalance(convertUSDCToNumber(newUsdcBalance));
-        if (newUsdcBalance != user.USDCBalance) {
-          setUser({ ...user, USDCBalance: newUsdcBalance });
-        }
-      }
+      setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance()));
     })();
   }, [isOpen]);
 
