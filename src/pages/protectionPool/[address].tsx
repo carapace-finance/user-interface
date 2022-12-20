@@ -1,25 +1,33 @@
 import { Tooltip } from "@material-tailwind/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import BarChart from "@components/BarChart";
 import SellProtectionCard from "@components/SellProtectionCard";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
-import { formatAddress } from "@utils/utils";
 import TitleAndDescriptions from "@components/TitleAndDescriptions";
 import assets from "src/assets";
 import { Chart, ArcElement, Legend } from "chart.js";
 Chart.register(ArcElement);
 Chart.register(Legend);
 import { Doughnut } from "react-chartjs-2";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 
 const ProtectionPool = () => {
   const router = useRouter();
   const { lendingPools } = useContext(LendingPoolContext);
   const { protectionPools } = useContext(ProtectionPoolContext);
   const doughnutRadius = 100;
+
+  const { provider } = useContext(ApplicationContext);
+  const prevProvider = useRef(provider);
+  useEffect(() => { 
+    if (prevProvider.current !== provider) { 
+      router.push("/sellProtection");
+      prevProvider.current = provider;
+    }
+  }, [provider]);
 
   const handleClick = (href: string) => {
     router.push(href);

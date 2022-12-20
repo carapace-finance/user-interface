@@ -130,12 +130,14 @@ export async function preparePlayground(playground: Playground) {
 
   console.log("********** Pool Cycle: 3, Day: 62     **********");
 
-  // make payment to lending pool, so user can buy protection
-  await payToLendingPoolAddress(
-    lendingPoolAddress,
-    "200000",
-    playground.provider
-  );
+  // make payment to all playground lending pools for 3 months, so user can buy protections for them
+  GOLDFINCH_LENDING_POOLS.forEach(async (lendingPoolAddress) => {
+    await payToLendingPoolAddress(
+      lendingPoolAddress,
+      "900000",
+      playground.provider
+    );
+  });
 
   console.log("Playground is ready!");
 }
