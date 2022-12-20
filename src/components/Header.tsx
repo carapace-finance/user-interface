@@ -13,12 +13,14 @@ import { Playground } from "@utils/forked/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import ErrorPopup from "./ErrorPopup";
+import { LoadingButton } from "@mui/lab";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { active, activate, deactivate, chainId, account } = useWeb3React();
   const router = useRouter();
   const [error, setError] = useState("");
+  const [stoppingPlayground, setStoppingPlayground] = useState(false);
   const [playground, setPlayground] = useState<Playground>();
   const { updateProviderAndContractAddresses, protectionPoolService } =
     useContext(ApplicationContext);
@@ -101,7 +103,7 @@ const Header = () => {
         }
       };
     }
-  }, [playground?.forkId]);
+  }, [protectionPoolService, playground?.forkId]);
 
   const onError = (message, e) => {
     if (e) {
@@ -139,23 +141,26 @@ const Header = () => {
   };
 
   const stopPlayground = async (playgroundId) => {
+    setStoppingPlayground(true);
     const result = await fetch(`/api/playground/stop?userAddress=${account}`, {
       method: "DELETE",
       body: playgroundId
     });
-    console.log("End playground result", result);
+    console.log("Stop playground result", result);
+
     if (result.status === 200) {
       const data = await result.json();
       if (data.success) {
         updateProviderAndContractAddresses(undefined, {
-          isPlayground: true,
+          isPlayground: false,
           poolFactory: undefined,
           pool: undefined,
           premiumCalculator: undefined
         });
         updatePlayground(undefined);
 
-        console.log("Successfully ended playground");
+        console.log("Successfully stopped playground");
+        setStoppingPlayground(false);
       } else {
         onError("Failed to stop playground. Please try again.", data);
       }
@@ -282,7 +287,13 @@ const Header = () => {
             className="border rounded-md px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
             onClick={playgroundButtonAction}
           >
-            <span>{playgroundButtonTitle}</span>
+              <div>
+                {
+                stoppingPlayground ?
+                  (<>Stopping playground...<LoadingButton loading={true}></LoadingButton></>)
+                  : playgroundButtonTitle
+              }
+              </div>
           </button>
         )}
         {/* <Account /> */}

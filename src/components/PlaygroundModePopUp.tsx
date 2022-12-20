@@ -1,5 +1,6 @@
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
+import { LoadingButton } from "@mui/lab";
 import { Dialog, DialogContent } from "@mui/material";
 import { useContext } from "react";
 
@@ -66,7 +67,7 @@ const PlaygroundModePopUp = (props) => {
                 className="border rounded-full border-gray-400  w-full px-4 py-4 mt-8 mb-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
                 disabled
               >
-                <span>Setting Up the Playground Mode...</span>
+                <span>Setting Up Playground Mode...<LoadingButton loading={true}></LoadingButton></span>
               </button>
             )}
           </div>

@@ -1,18 +1,28 @@
 import { Tooltip } from "@material-tailwind/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import BuyProtectionCard from "@components/BuyProtectionCard";
 import BarChart from "@components/BarChart";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import TitleAndDescriptions from "@components/TitleAndDescriptions";
 import assets from "src/assets";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 
 const LendingPool = () => {
   const router = useRouter();
   const { lendingPools } = useContext(LendingPoolContext);
   const { protectionPools } = useContext(ProtectionPoolContext);
+
+  const { provider } = useContext(ApplicationContext);
+  const prevProvider = useRef(provider);
+  useEffect(() => { 
+    if (prevProvider.current !== provider) { 
+      router.push("/buyProtection");
+      prevProvider.current = provider;
+    }
+  }, [provider]);
 
   let name;
   let protocol;

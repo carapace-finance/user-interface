@@ -41,6 +41,7 @@ export type BondContextType = {
 export type UserContextType = {
   user: User;
   setUser: (user: User) => void;
+  updateUserUsdcBalance: () => Promise<BigNumber>;
 };
 
 export interface ProtectionPool {

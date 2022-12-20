@@ -31,33 +31,29 @@ export async function preparePlayground(playground: Playground) {
     playground.deployedContracts;
   console.log("Preparing a playground: ", playground.forkId);
 
+  // Setup deployer account
+  const deployer = await playground.provider.getSigner(0);
+  const deployerAddress = await deployer.getAddress();
+  console.log("Deployer address: ", deployerAddress);
+  // transfer usdc to deployer
+  await transferUsdc(playground.provider, deployerAddress, parseUSDC("100000")); // 100K USDC
+
+  // Setup another user account
+  const userAddress = "0x008c84421da5527f462886cec43d2717b686a7e4";
+  const user = playground.provider.getSigner(userAddress);
+  console.log("User address: ", userAddress);
+  await fillEther(userAddress, playground.provider);
+  // transfer usdc to user
+  await transferUsdc(playground.provider, userAddress, parseUSDC("100000")); // 100K USDC
+
   console.log("********** Pool Phase: OpenToSellers **********");
   console.log("********** Pool Cycle: 1, Day: 1     **********");
 
-  const deployer = await playground.provider.getSigner(0);
-  console.log("Deployer address: ", await deployer.getAddress());
-
-  const user = playground.provider.getSigner(
-    "0x008c84421da5527f462886cec43d2717b686a7e4"
-  );
-  await fillEther(await user.getAddress(), playground.provider);
-  console.log("User address: ", await user.getAddress());
-
   // Deposit 1 by user
-  await transferApproveAndDeposit(
-    playground.provider,
-    poolInstance,
-    parseUSDC("50000"),
-    user
-  );
+  await approveAndDeposit(poolInstance, parseUSDC("50000"), user);
 
   // Deposit 2 by deployer
-  await transferApproveAndDeposit(
-    playground.provider,
-    poolInstance,
-    parseUSDC("51000"),
-    deployer
-  );
+  await approveAndDeposit(poolInstance, parseUSDC("51000"), deployer);
 
   console.log(
     "Pool's total sToken underlying: ",
@@ -73,12 +69,17 @@ export async function preparePlayground(playground: Playground) {
   const lendingPoolAddress = GOLDFINCH_LENDING_POOLS[0];
 
   // buy protection 1
-  await transferApproveAndBuyProtection(playground.provider, poolInstance, {
-    lendingPoolAddress: lendingPoolAddress,
-    nftLpTokenId: 590,
-    protectionAmount: parseUSDC("150000"),
-    protectionDurationInSeconds: getDaysInSeconds(30)
-  });
+  await transferApproveAndBuyProtection(
+    playground.provider,
+    poolInstance,
+    {
+      lendingPoolAddress: lendingPoolAddress,
+      nftLpTokenId: 590,
+      protectionAmount: parseUSDC("150000"),
+      protectionDurationInSeconds: getDaysInSeconds(30)
+    },
+    parseUSDC("3500")
+  );
 
   console.log(
     "Pool leverage ratio: ",
@@ -114,12 +115,7 @@ export async function preparePlayground(playground: Playground) {
   console.log("********** Pool Cycle: 2, Day: 31     **********");
 
   // Deposit 3
-  await transferApproveAndDeposit(
-    playground.provider,
-    poolInstance,
-    parseUSDC("11000"),
-    user
-  );
+  await approveAndDeposit(poolInstance, parseUSDC("11000"), user);
 
   // Move pool to the next cycle (cycle 3)
   await movePoolCycle(
@@ -130,12 +126,14 @@ export async function preparePlayground(playground: Playground) {
 
   console.log("********** Pool Cycle: 3, Day: 62     **********");
 
-  // make payment to lending pool, so user can buy protection
-  await payToLendingPoolAddress(
-    lendingPoolAddress,
-    "200000",
-    playground.provider
-  );
+  // make payment to all playground lending pools for 3 months, so user can buy protections for them
+  GOLDFINCH_LENDING_POOLS.forEach(async (lendingPoolAddress) => {
+    await payToLendingPoolAddress(
+      lendingPoolAddress,
+      "900000",
+      playground.provider
+    );
+  });
 
   console.log("Playground is ready!");
 }
@@ -180,19 +178,14 @@ async function requestWithdrawal(
   );
 }
 
-export async function transferApproveAndDeposit(
-  provider,
-  poolInstance,
-  depositAmt,
-  receiver
-) {
+export async function approveAndDeposit(poolInstance, depositAmt, receiver) {
   const usdcContract = getUsdcContract(receiver);
   const receiverAddress = await receiver.getAddress();
 
-  // transfer usdc to deployer
-  await transferUsdc(provider, receiverAddress, depositAmt);
+  // transfer usdc to receiver
+  // await transferUsdc(provider, receiverAddress, depositAmt);
 
-  // Approve & deposit 5K USDC
+  // Approve & deposit
   await usdcContract.approve(poolInstance.address, depositAmt);
   return await poolInstance
     .connect(receiver)
@@ -202,7 +195,8 @@ export async function transferApproveAndDeposit(
 export async function transferApproveAndBuyProtection(
   provider,
   poolInstance,
-  purchaseParams
+  purchaseParams,
+  premiumAmt
 ) {
   // Update purchase params based on lending pool details
   const lendingPoolDetails =
@@ -227,10 +221,10 @@ export async function transferApproveAndBuyProtection(
   );
 
   const buyerAddress = await buyer.getAddress();
-  const premiumAmt = parseUSDC("5000");
 
+  // const premiumAmt = parseUSDC("5000");
   // transfer usdc to deployer
-  await transferUsdc(provider, buyerAddress, premiumAmt);
+  // await transferUsdc(provider, buyerAddress, premiumAmt);
 
   // Approve premium USDC
   await usdcContract.connect(buyer).approve(poolInstance.address, premiumAmt);
