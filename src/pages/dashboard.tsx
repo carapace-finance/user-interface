@@ -51,7 +51,6 @@ const Dashboard = () => {
 
   return (
     <div className="mx-32">
-      <div className="h-5"></div>
       <TitleAndDescriptions title="Dashboard" buttonExist={false} />
       <h3 className="text-left font-bold">Your Protection Purchases</h3>
       <div className="h-5"></div>
