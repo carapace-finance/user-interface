@@ -192,8 +192,6 @@ const Dashboard = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">Total Capital</th>
-              <th className="py-4">Total Protection</th>
               <th className="py-4">Deposited Amount</th>
               <th className="py-4">Requested Withdrawal</th>
               <th className="py-4">
@@ -272,8 +270,6 @@ const Dashboard = () => {
                   />
                 </td>
                 <td className="py-4">{protectionPool.APY}</td>
-                <td className="py-4">{protectionPool.totalCapital} </td>
-                <td className="py-4">{protectionPool.totalProtection} </td>
                 <td className="py-4">{user.sTokenUnderlyingAmount}</td>
                 <td className="py-4">{user.requestedWithdrawalAmount}</td>
                 <td className="py-4">
