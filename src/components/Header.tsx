@@ -216,7 +216,7 @@ const Header = () => {
   }
 
   return (
-    <div className="flex justify-between items-center top-0 h-16 shadow-md mb-12">
+    <div className="sticky z-30 w-full bg-white flex justify-between items-center top-0 h-16 shadow-md mb-12">
       <Link className="ml-12" href="/">
         <Image
           src={assets.headerLogo.src}
