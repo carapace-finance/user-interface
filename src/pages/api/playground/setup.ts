@@ -28,7 +28,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (playgroundsNeeded > 0) {
           for (let i = 0; i < playgroundsNeeded; i++) {
             const currentIndex = i;
-            startNewPlayground()
+            await startNewPlayground()
               .then((result: StartPlaygroundResult) => {
                 if (result.success) {
                   console.log(
