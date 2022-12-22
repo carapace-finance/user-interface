@@ -175,22 +175,22 @@ async function requestWithdrawal(
 ) {
   await protectionPoolInstance.connect(user).requestWithdrawal(sTokenAmt);
 
-  console.log(
-    "User's requested withdrawal Amount: ",
-    formatEther(
-      await protectionPoolInstance
-        .connect(user)
-        .getRequestedWithdrawalAmount(withdrawalCycleIndex)
-    )
-  );
-  console.log(
-    "Total requested withdrawal amount: ",
-    formatEther(
-      await protectionPoolInstance.getTotalRequestedWithdrawalAmount(
-        withdrawalCycleIndex
-      )
-    )
-  );
+  // console.log(
+  //   "User's requested withdrawal Amount: ",
+  //   formatEther(
+  //     await protectionPoolInstance
+  //       .connect(user)
+  //       .getRequestedWithdrawalAmount(withdrawalCycleIndex)
+  //   )
+  // );
+  // console.log(
+  //   "Total requested withdrawal amount: ",
+  //   formatEther(
+  //     await protectionPoolInstance.getTotalRequestedWithdrawalAmount(
+  //       withdrawalCycleIndex
+  //     )
+  //   )
+  // );
 }
 
 export async function approveAndDeposit(

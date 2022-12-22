@@ -78,36 +78,49 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export const startNewPlayground = async () => {
-  // step 1: create and deploy smart contracts to a fork
-  const playground: Playground = await deployToFork(
-    process.env.TENDERLY_ACCESS_KEY
-  );
+export type StartPlaygroundResult = {
+  success: boolean;
+  playgroundId?: string;
+};
+export const startNewPlayground = async (): Promise<StartPlaygroundResult> => {
+  let playgroundId: string;
 
-  // step 2: prepare the playground with required initial state changes
-  await preparePlayground(playground);
+  try {
+    // step 1: create and deploy smart contracts to a fork
+    const playground: Playground = await deployToFork(
+      process.env.TENDERLY_ACCESS_KEY
+    );
 
-  // step 3: Take a snapshot of the fork to be able to revert user actions later when the playground is stopped
-  const snapshotId = await playground.provider.send("evm_snapshot", []);
+    playgroundId = playground.forkId;
 
-  // step 4: add a new playground to available playgrounds in redis store
-  await saveAvailablePlaygroundDetails({
-    forkId: playground.forkId,
-    url: `https://rpc.tenderly.co/fork/${playground.forkId}`,
-    snapshotId: snapshotId,
-    poolFactoryAddress:
-      playground.deployedContracts.poolFactoryInstance.address,
-    poolAddress: playground.deployedContracts.protectionPoolInstance.address,
-    poolCycleManagerAddress:
-      playground.deployedContracts.poolCycleManagerInstance.address,
-    premiumCalculatorAddress:
-      playground.deployedContracts.premiumCalculatorInstance.address
-  });
+    // step 2: prepare the playground with required initial state changes
+    await preparePlayground(playground);
 
-  // step 5: store the id of the new playground to retrieve it later
-  await addAvailablePlaygroundId(playground.forkId);
+    // step 3: Take a snapshot of the fork to be able to revert user actions later when the playground is stopped
+    const snapshotId = await playground.provider.send("evm_snapshot", []);
 
-  console.log("Successfully started a playground: ", playground.forkId);
+    // step 4: add a new playground to available playgrounds in redis store
+    await saveAvailablePlaygroundDetails({
+      forkId: playground.forkId,
+      url: `https://rpc.tenderly.co/fork/${playground.forkId}`,
+      snapshotId: snapshotId,
+      poolFactoryAddress:
+        playground.deployedContracts.poolFactoryInstance.address,
+      poolAddress: playground.deployedContracts.protectionPoolInstance.address,
+      poolCycleManagerAddress:
+        playground.deployedContracts.poolCycleManagerInstance.address,
+      premiumCalculatorAddress:
+        playground.deployedContracts.premiumCalculatorInstance.address
+    });
 
-  return playground.forkId;
+    // step 5: store the id of the new playground to retrieve it later
+    await addAvailablePlaygroundId(playground.forkId);
+
+    console.log("Successfully started a playground: ", playground.forkId);
+
+    return { success: true, playgroundId };
+  } catch (e) {
+    console.error("Failed to start playground", e);
+    return { success: false, playgroundId };
+  }
 };

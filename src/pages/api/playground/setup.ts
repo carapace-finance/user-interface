@@ -8,7 +8,7 @@ import {
   getAvailablePlaygrounds,
   removeAvailablePlaygroundId
 } from "src/db/redis";
-import { startNewPlayground } from "./start";
+import { startNewPlayground, StartPlaygroundResult } from "./start";
 
 const TOTAL_AVAILABLE_PLAYGROUNDS = 10;
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -27,7 +27,30 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         console.log("we need to create a new playgrounds: ", playgroundsNeeded);
         if (playgroundsNeeded > 0) {
           for (let i = 0; i < playgroundsNeeded; i++) {
-            await startNewPlayground();
+            const currentIndex = i;
+            startNewPlayground()
+              .then((result: StartPlaygroundResult) => {
+                if (result.success) {
+                  console.log(
+                    `Successfully started new playground at index: ${currentIndex}, playgroundId: ${result.playgroundId}`
+                  );
+                } else {
+                  console.log(
+                    `Failed to start new playground at index: ${currentIndex}, playgroundId: ${result.playgroundId}`
+                  );
+
+                  if (result.playgroundId) {
+                    console.log("Deleting playground: ", result.playgroundId);
+                    deletePlayground(result.playgroundId);
+                  }
+                }
+              })
+              .catch((e) => {
+                console.log(
+                  `Failed to start new playground at index: ${currentIndex}`,
+                  e
+                );
+              });
           }
         }
         res.status(200).json({
@@ -39,14 +62,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const usedPlaygrounds = await getUsedPlaygrounds();
         const availablePlaygrounds = await getAvailablePlaygrounds();
 
-        usedPlaygrounds
-          .concat(availablePlaygrounds)
-          .forEach(async (playgroundId) => {
-            deleteAvailablePlaygroundDetails(playgroundId);
-            removeUsedPlaygroundId(playgroundId);
-            removeAvailablePlaygroundId(playgroundId);
-            deleteFork(playgroundId, process.env.TENDERLY_ACCESS_KEY);
-          });
+        usedPlaygrounds.concat(availablePlaygrounds).forEach(deletePlayground);
 
         res.status(200).json({
           success: true
@@ -62,4 +78,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       success: false
     });
   }
+};
+
+const deletePlayground = async (playgroundId: string): Promise<void> => {
+  deleteAvailablePlaygroundDetails(playgroundId);
+  removeUsedPlaygroundId(playgroundId);
+  removeAvailablePlaygroundId(playgroundId);
+  deleteFork(playgroundId, process.env.TENDERLY_ACCESS_KEY);
 };
