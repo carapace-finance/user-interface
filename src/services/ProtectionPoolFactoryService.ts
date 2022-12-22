@@ -2,7 +2,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 
 import {
   getPoolFactoryContract,
-  getPoolContract
+  getProtectionPoolContract
 } from "@contracts/contractService";
 import {
   convertUSDCToNumber,
@@ -35,8 +35,8 @@ export class ProtectionPoolFactoryService {
     return await poolFactoryInstance
       .getPoolAddress(1)
       .then(async (poolAddress) => {
-        const pool = getPoolContract(poolAddress, this.provider.getSigner());
-        const poolInfo = await pool.getPoolInfo();
+        const protectionPool = getProtectionPoolContract(poolAddress, this.provider.getSigner());
+        const poolInfo = await protectionPool.getPoolInfo();
 
         // Convert leverageRatio floor  & ceiling to from 18 to 6 (USDC decimals)
         const leverageRatioFloor = scale18DecimalsAmtToUsdcDecimals(
@@ -45,8 +45,8 @@ export class ProtectionPoolFactoryService {
         const leverageRatioCeiling = scale18DecimalsAmtToUsdcDecimals(
           poolInfo.params.leverageRatioCeiling
         );
-        return pool.totalProtection().then((totalProtection) => {
-          return pool.totalSTokenUnderlying().then((totalCapital) => {
+        return protectionPool.totalProtection().then((totalProtection) => {
+          return protectionPool.totalSTokenUnderlying().then((totalCapital) => {
             // no need to scale down purchase limit to 6 (USDC decimals) because of division
             const purchaseLimit = totalCapital.div(leverageRatioFloor);
             // need to scale down deposit limit to 6 (USDC decimals) because of multiplication

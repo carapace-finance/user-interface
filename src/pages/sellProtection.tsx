@@ -23,7 +23,7 @@ const SellProtection = () => {
       <div className="h-5"></div>
       <TitleAndDescriptions
         title="Sell Protection"
-        descriptions="Earn yields by depositing capital to diversified protection pools you think are safe"
+        descriptions="Earn yields by depositing capital to diversified protection pools"
         buttonExist={true}
         button="Learn about selling protection"
       />

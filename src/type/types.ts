@@ -86,11 +86,30 @@ export interface User {
   address: string;
   ETHBalance: string;
   USDCBalance: BigNumber;
+  userProtectionPools: UserProtectionPool[];
   sTokenUnderlyingAmount: string;
   requestedWithdrawalAmount: string;
-  protectionAmount: string;
-  protectionDuration: string;
-  protectionPurchases: ProtectionPurchase[];
+  userLendingPools: UserLendingPool[];
+}
+
+export interface UserProtectionPool {
+  sTokenUnderlyingAmount: string;
+  requestedWithdrawalAmount: string;
+}
+
+export interface UserLendingPool {
+  lendingPoolAddress: string;
+  timeUntilExpirationInSeconds: BigNumber;
+  protectionAmount: BigNumber;
+}
+
+export interface ProtectionInfo {
+  buyer: string;
+  protectionPremium: number;
+  startTimestamp: BigNumber;
+  K: BigNumber;
+  lambda: BigNumber;
+  purchaseParams: ProtectionPurchaseParams;
 }
 
 export interface ProtectionPurchaseParams {
