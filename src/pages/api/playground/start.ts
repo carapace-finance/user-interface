@@ -104,6 +104,9 @@ export const startNewPlayground = async (): Promise<StartPlaygroundResult> => {
       forkId: playground.forkId,
       url: `https://rpc.tenderly.co/fork/${playground.forkId}`,
       snapshotId: snapshotId,
+      snapshotBlockNumber: (
+        await playground.provider.getBlock("latest")
+      ).number,
       poolFactoryAddress:
         playground.deployedContracts.poolFactoryInstance.address,
       poolAddress: playground.deployedContracts.protectionPoolInstance.address,

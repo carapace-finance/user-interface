@@ -140,7 +140,9 @@ export const UserContextProvider = ({ children }) => {
         }
       });
       userRef.current.userLendingPools = newUserLendingPools;
-      setUser(userRef.current);
+      setUser({
+        ...userRef.current
+      });
     }
   };
 
@@ -157,13 +159,14 @@ export const UserContextProvider = ({ children }) => {
   }, [provider]);
 
   useEffect(() => {
+    let protectionPoolSubscriptions;
     if (
       protectionPoolService &&
       protectionPools &&
       lendingPools &&
       !isDefaultData
     ) {
-      protectionPools.map((protectionPool) => {
+      protectionPoolSubscriptions = protectionPools.map((protectionPool) => {
         const protectionPoolAddress = protectionPool.address;
         (async () => {
           // update user's address & protection purchases
@@ -187,10 +190,9 @@ export const UserContextProvider = ({ children }) => {
           protectionPoolAddress,
           provider.getSigner()
         );
-
+        
         // Listen for "ProtectionBought", by user
-        protectionPoolInstance.on(
-          "ProtectionBought",
+        const updateDataOnProtectionBought =
           async (buyer, lendingPoolAddress, protectionAmount, premium) => {
             console.log("ProtectionBought event triggered");
 
@@ -201,14 +203,11 @@ export const UserContextProvider = ({ children }) => {
               protectionPoolAddress,
               lendingPoolAddress
             );
-            // await updateUserUsdcBalance();
-            // }
-          }
-        );
-
+          };
+        protectionPoolInstance.on("ProtectionBought", updateDataOnProtectionBought);
+        
         // Listen for ProtectionSold/deposit by user
-        protectionPoolInstance.on(
-          "ProtectionSold",
+        const updateDataOnProtectionSold =
           async (userAddress, amount, event) => {
             console.log("ProtectionSold event triggered: ", event);
 
@@ -217,12 +216,11 @@ export const UserContextProvider = ({ children }) => {
               await updateSTokenUnderlyingAmount(protectionPoolAddress);
               await updateUserUsdcBalance();
             }
-          }
-        );
-
+          };
+        protectionPoolInstance.on("ProtectionSold", updateDataOnProtectionSold);
+        
         // Listen for WithdrawalMade by user
-        protectionPoolInstance.on(
-          "WithdrawalMade",
+        const updateDataOnWithdrawalMade =
           async (userAddress, amount, receiver, event) => {
             console.log("WithdrawalMade event triggered: ", event);
 
@@ -232,12 +230,32 @@ export const UserContextProvider = ({ children }) => {
               await updateRequestedWithdrawalAmount(protectionPoolAddress);
               await updateUserUsdcBalance();
             }
-          }
-        );
+          };
+        protectionPoolInstance.on("WithdrawalMade", updateDataOnWithdrawalMade);
+        
+        console.log("Subscribed to ProtectionPool events: ", protectionPoolAddress);
+        return [protectionPoolInstance, updateDataOnProtectionBought, updateDataOnProtectionSold, updateDataOnWithdrawalMade];
       });
     } else {
       setUser(defaultUser);
     }
+
+    return () => {
+      if (!protectionPoolSubscriptions) return;
+      protectionPoolSubscriptions.forEach((subscriptionDetails) => {
+        if(subscriptionDetails.length != 4) return;
+        const protectionPoolInstance = subscriptionDetails[0];
+        const updateDataOnProtectionBought = subscriptionDetails[1];
+        const updateDataOnProtectionSold = subscriptionDetails[2];
+        const updateDataOnWithdrawalMade = subscriptionDetails[3];
+
+        protectionPoolInstance.off("ProtectionBought", updateDataOnProtectionBought);
+        protectionPoolInstance.off("ProtectionSold", updateDataOnProtectionSold);
+        protectionPoolInstance.off("WithdrawalMade", updateDataOnWithdrawalMade);
+
+        console.log("Unsubscribed from ProtectionPool events: ", protectionPoolInstance.address);
+      });
+    };
   }, [protectionPools, isDefaultData, protectionPoolService]);
 
   return (
