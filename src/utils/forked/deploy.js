@@ -27,6 +27,7 @@ import accruedPremiumCalculatorArtifact from "../../contracts/forked/artifacts/A
 import premiumCalculatorArtifact from "../../contracts/forked/artifacts/PremiumCalculator.json";
 import poolFactoryArtifact from "../../contracts/forked/artifacts/PoolFactory.json";
 import poolHelperArtifact from "../../contracts/forked/artifacts/PoolHelper.json";
+import { isLendingPoolLate, payToLendingPoolAddress } from "./goldfinch";
 
 let deployer;
 let account1;
@@ -227,7 +228,40 @@ const deployContracts = async (forkProvider) => {
       "referenceLendingPoolsFactoryInstance.address ==>",
       referenceLendingPoolsFactoryInstance.address
     );
-    console.log("GOLDFINCH_LENDING_POOLS ==> ", GOLDFINCH_LENDING_POOLS);
+
+    console.log(
+      "Creating ReferenceLendingPools instance using GOLDFINCH_LENDING_POOLS ==> ",
+      GOLDFINCH_LENDING_POOLS
+    );
+
+    // If lending pools are late for payment, pay them
+    const promises = GOLDFINCH_LENDING_POOLS.map(async (lendingPoolAddress) => {
+      return isLendingPoolLate(lendingPoolAddress, forkProvider).then(
+        async (late) => {
+          if (late) {
+            console.log("Paying late lending pool: ", lendingPoolAddress);
+            await payToLendingPoolAddress(
+              lendingPoolAddress,
+              "300000",
+              forkProvider
+            );
+
+            if (await isLendingPoolLate(lendingPoolAddress, forkProvider)) {
+              console.log("Lending pool is still late: ", lendingPoolAddress);
+              throw new Error(
+                `Failed to create ReferenceLendingPools because lending pool: ${lendingPoolAddress} is late for payment.`
+              );
+            }
+
+            console.log("Paid late lending pool: ", lendingPoolAddress);
+          } else {
+            console.log("Lending pool is not late: ", lendingPoolAddress);
+          }
+        }
+      );
+    });
+    await Promise.all(promises);
+
     const tx1 =
       await referenceLendingPoolsFactoryInstance.createReferenceLendingPools(
         GOLDFINCH_LENDING_POOLS,

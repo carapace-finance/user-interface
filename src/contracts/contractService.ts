@@ -5,6 +5,7 @@ import poolAbi from "../contracts/forked/abi/Pool.json";
 import poolCycleManagerAbi from "../contracts/forked/abi/PoolCycleManager.json";
 import referenceLendingPoolsAbi from "../contracts/forked/abi/ReferenceLendingPools.json";
 import tranchedPoolAbi from "../contracts/forked/abi/ITranchedPool.json";
+import creditLineAbi from "../contracts/forked/abi/ICreditLine.json";
 import premiumCalculatorAbi from "../contracts/forked/abi/PremiumCalculator.json";
 import { isAddress } from "ethers/lib/utils";
 
@@ -34,6 +35,13 @@ export const getTranchedPoolContract = (address: string, signer: Signer) => {
     throw new Error("TranchedPool contract address is not valid");
   }
   return new Contract(address, tranchedPoolAbi, signer);
+};
+
+export const getCreditLineContract = (address: string, signer: Signer) => {
+  if (!isAddress(address)) {
+    throw new Error("CreditLine contract address is not valid");
+  }
+  return new Contract(address, creditLineAbi, signer);
 };
 
 export const getPoolCycleManagerContract = (
