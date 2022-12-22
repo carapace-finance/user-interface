@@ -31,7 +31,7 @@ import poolHelperArtifact from "../../contracts/forked/artifacts/PoolHelper.json
 let deployer;
 let account1;
 
-let poolInstance;
+let protectionPoolInstance;
 let poolFactoryInstance;
 let premiumCalculatorInstance;
 let referenceLendingPoolsInstance;
@@ -334,12 +334,12 @@ const deployContracts = async (forkProvider) => {
       "ST1"
     );
 
-    poolInstance = await getPoolInstanceFromTx(tx);
+    protectionPoolInstance = await getProtectionPoolInstanceFromTx(tx);
 
     return {
       poolCycleManagerInstance,
       poolFactoryInstance,
-      poolInstance,
+      protectionPoolInstance,
       premiumCalculatorInstance
     };
   } catch (e) {
@@ -375,7 +375,7 @@ async function getReferenceLendingPoolsInstanceFromTx(forkProvider, tx) {
   }
 }
 
-async function getPoolInstanceFromTx(tx) {
+async function getProtectionPoolInstanceFromTx(tx) {
   const receipt = await tx.wait();
 
   const poolCreatedEvent = receipt.events.find(

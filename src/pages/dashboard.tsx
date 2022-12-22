@@ -1,6 +1,7 @@
 // github does not show third commit
 
 import { Tooltip } from "@material-tailwind/react";
+import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -14,7 +15,8 @@ import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
-import moment from "moment";
+import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
+import numeral from "numeral";
 
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
@@ -29,25 +31,7 @@ const Dashboard = () => {
     setProtectionPoolAddress(contractAddresses?.pool);
   }, [contractAddresses]);
 
-  const getTimeUntilExpiration = (lendingPool) => {
-    let timeUntilExpirationInSeconds = moment().unix() + 1854120; // "21 Days 11 Hours 2 Mins" from now;
-    if (user?.protectionPurchases?.length > 0) {
-      user.protectionPurchases.map((protection) => {
-        if (
-          protection.purchaseParams.lendingPoolAddress === lendingPool.address
-        ) {
-          timeUntilExpirationInSeconds = protection.startTimestamp
-            .add(protection.purchaseParams.protectionDurationInSeconds)
-            .toNumber();
-        }
-      });
-    }
-
-    // TODO: need to figure out how to display hours and minutes
-    return moment
-      .duration(timeUntilExpirationInSeconds - moment().unix(), "seconds")
-      .humanize();
-  };
+  console.log("user ==>", user);
 
   return (
     <div className="mx-32">
@@ -123,7 +107,6 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {/*  TODO: use User.protectionPurchases */}
             {lendingPools.map((lendingPool) => (
               <tr
                 key={lendingPool.address}
@@ -141,8 +124,38 @@ const Dashboard = () => {
                 <td className="py-4">{lendingPool.premium}</td>
                 <td>{lendingPool.lendingPoolAPY}</td>
                 <td className="py-4">{lendingPool.adjustedYields}</td>
-                <td className="py-4">{getTimeUntilExpiration(lendingPool)}</td>
-                <td className="py-4">{user.protectionAmount}</td>
+                <td className="py-4">
+                  {user.userLendingPools?.length > 0
+                    ? user.userLendingPools.map((userLendingPool) =>
+                        userLendingPool.lendingPoolAddress ===
+                        lendingPool.address
+                          ? moment
+                              .duration(
+                                userLendingPool.timeUntilExpirationInSeconds.toNumber() -
+                                  moment().unix(),
+                                "seconds"
+                              )
+                              .humanize()
+                          : "0"
+                      )
+                    : "0"}
+                </td>
+                <td className="py-4">
+                  {user.userLendingPools?.length > 0
+                    ? user.userLendingPools.map((userLendingPool) =>
+                        userLendingPool.lendingPoolAddress ===
+                        lendingPool.address
+                          ? numeral(
+                              convertUSDCToNumber(
+                                userLendingPool.protectionAmount
+                              )
+                            )
+                              .format(USDC_FORMAT)
+                              .toString()
+                          : "0"
+                      )
+                    : "0"}
+                </td>
                 <td className="py-4">
                   <button
                     disabled
