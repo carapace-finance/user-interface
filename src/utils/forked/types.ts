@@ -17,6 +17,7 @@ export interface PlaygroundInfo {
   forkId: string;
   url: string;
   snapshotId: string;
+  snapshotBlockNumber: number;
   poolFactoryAddress: string;
   poolAddress: string;
   poolCycleManagerAddress: string;

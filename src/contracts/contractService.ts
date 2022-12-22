@@ -10,6 +10,9 @@ import premiumCalculatorAbi from "../contracts/forked/abi/PremiumCalculator.json
 import { isAddress } from "ethers/lib/utils";
 
 export const getPoolFactoryContract = (address: string, signer: Signer) => {
+  if (!isAddress(address)) {
+    throw new Error("PoolFactory contract address is not valid");
+  }
   return new Contract(address, poolFactoryAbi, signer);
 };
 
