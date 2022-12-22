@@ -108,4 +108,6 @@ export const startNewPlayground = async () => {
   await addAvailablePlaygroundId(playground.forkId);
 
   console.log("Successfully started a playground: ", playground.forkId);
+
+  return playground.forkId;
 };

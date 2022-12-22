@@ -27,8 +27,11 @@ export function getLendingPoolName(lendingPoolAddress: string): string {
 }
 
 export async function preparePlayground(playground: Playground) {
-  const { poolCycleManagerInstance, poolFactoryInstance, protectionPoolInstance } =
-    playground.deployedContracts;
+  const {
+    poolCycleManagerInstance,
+    poolFactoryInstance,
+    protectionPoolInstance
+  } = playground.deployedContracts;
   console.log("Preparing a playground: ", playground.forkId);
 
   // Setup deployer account
@@ -69,7 +72,7 @@ export async function preparePlayground(playground: Playground) {
   const lendingPoolAddress = GOLDFINCH_LENDING_POOLS[0];
 
   // buy protection 1
-  await transferApproveAndBuyProtection(
+  await approveAndBuyProtection(
     playground.provider,
     protectionPoolInstance,
     {
@@ -138,19 +141,29 @@ export async function preparePlayground(playground: Playground) {
   console.log("Playground is ready!");
 }
 
-async function movePoolCycle(provider, protectionPoolInstance, poolCycleManagerInstance) {
+async function movePoolCycle(
+  provider,
+  protectionPoolInstance,
+  poolCycleManagerInstance
+) {
   const protectionPoolInfo = await protectionPoolInstance.getPoolInfo();
 
   // move from open to locked state
   await moveForwardTime(provider, getDaysInSeconds(11));
-  await poolCycleManagerInstance.calculateAndSetPoolCycleState(protectionPoolInfo.poolId);
+  await poolCycleManagerInstance.calculateAndSetPoolCycleState(
+    protectionPoolInfo.poolId
+  );
 
   // move to new cycle
   await moveForwardTime(provider, getDaysInSeconds(20));
-  await poolCycleManagerInstance.calculateAndSetPoolCycleState(protectionPoolInfo.poolId);
+  await poolCycleManagerInstance.calculateAndSetPoolCycleState(
+    protectionPoolInfo.poolId
+  );
   console.log(
     "Pool Cycle:",
-    await poolCycleManagerInstance.getCurrentPoolCycle(protectionPoolInfo.poolId)
+    await poolCycleManagerInstance.getCurrentPoolCycle(
+      protectionPoolInfo.poolId
+    )
   );
 }
 
@@ -173,12 +186,18 @@ async function requestWithdrawal(
   console.log(
     "Total requested withdrawal amount: ",
     formatEther(
-      await protectionPoolInstance.getTotalRequestedWithdrawalAmount(withdrawalCycleIndex)
+      await protectionPoolInstance.getTotalRequestedWithdrawalAmount(
+        withdrawalCycleIndex
+      )
     )
   );
 }
 
-export async function approveAndDeposit(protectionPoolInstance, depositAmt, receiver) {
+export async function approveAndDeposit(
+  protectionPoolInstance,
+  depositAmt,
+  receiver
+) {
   const usdcContract = getUsdcContract(receiver);
   const receiverAddress = await receiver.getAddress();
 
@@ -192,7 +211,7 @@ export async function approveAndDeposit(protectionPoolInstance, depositAmt, rece
     .deposit(depositAmt, receiverAddress);
 }
 
-export async function transferApproveAndBuyProtection(
+export async function approveAndBuyProtection(
   provider,
   protectionPoolInstance,
   purchaseParams,
@@ -227,39 +246,23 @@ export async function transferApproveAndBuyProtection(
   // await transferUsdc(provider, buyerAddress, premiumAmt);
 
   // Approve premium USDC
-  await usdcContract.connect(buyer).approve(protectionPoolInstance.address, premiumAmt);
+  await usdcContract
+    .connect(buyer)
+    .approve(protectionPoolInstance.address, premiumAmt);
 
   console.log("Purchasing a protection using params: ", purchaseParams);
 
-  return await protectionPoolInstance.connect(buyer).buyProtection(purchaseParams, {
-    gasPrice: "25900000000",
-    gasLimit: "210000000"
-  });
+  return await protectionPoolInstance
+    .connect(buyer)
+    .buyProtection(purchaseParams, {
+      gasPrice: "25900000000",
+      gasLimit: "210000000"
+    });
 }
 
 const getLatestBlockTimestamp: Function = async (provider): Promise<number> => {
   return (await provider.getBlock("latest")).timestamp;
 };
-
-export async function resetPlayground(
-  playground: Playground,
-  snapshotId: string
-) {
-  await playground.provider.send("evm_revert", [snapshotId]);
-
-  console.log(
-    "Total capital: ",
-    formatUSDC(
-      await playground.deployedContracts.protectionPoolInstance.totalSTokenUnderlying()
-    )
-  );
-  console.log(
-    "Total protection: ",
-    formatUSDC(
-      await playground.deployedContracts.protectionPoolInstance.totalProtection()
-    )
-  );
-}
 
 export async function deletePlayground(
   forkId: string,
