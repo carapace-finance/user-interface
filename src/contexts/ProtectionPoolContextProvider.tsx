@@ -2,7 +2,7 @@ import React, { useState, createContext, useContext, useEffect } from "react";
 import { ProtectionPool, ProtectionPoolContextType } from "@type/types";
 import assets from "../assets";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { getPoolContract } from "@contracts/contractService";
+import { getProtectionPoolContract } from "@contracts/contractService";
 import numeral from "numeral";
 import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 
@@ -46,12 +46,12 @@ export const ProtectionPoolContextProvider = ({ children }) => {
           setIsDefaultData(false);
           
           newProtectionPools.forEach((protectionPool) => {
-            const poolInstance = getPoolContract(protectionPool.address, provider.getSigner());
-            poolInstance.on(
+            const protectionPoolInstance = getProtectionPoolContract(protectionPool.address, provider.getSigner());
+            protectionPoolInstance.on(
               "ProtectionBought",
               async (buyerAddress, lendingPoolAddress, protectionAmount, premium, event) => {
                 console.log("ProtectionBought event triggered: ", event.args);
-                const totalProtection = await poolInstance.totalProtection();
+                const totalProtection = await protectionPoolInstance.totalProtection();
                 const updatedProtectionPools = newProtectionPools.map((p) => { 
                   if (p.address === protectionPool.address) {
                     return {
@@ -66,11 +66,11 @@ export const ProtectionPoolContextProvider = ({ children }) => {
               }
             );
 
-            poolInstance.on(
+            protectionPoolInstance.on(
               "ProtectionSold",
               async (userAddress, amount, event) => {
                 console.log("ProtectionSold event triggered: ", event.args);
-                const totalCapital = await poolInstance.totalSTokenUnderlying();
+                const totalCapital = await protectionPoolInstance.totalSTokenUnderlying();
                 const updatedProtectionPools = newProtectionPools.map((p) => { 
                   if (p.address === protectionPool.address) {
                     return {

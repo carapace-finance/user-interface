@@ -3,7 +3,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 export interface DeployedContracts {
   poolCycleManagerInstance: any;
   poolFactoryInstance: any;
-  poolInstance: any;
+  protectionPoolInstance: any;
   premiumCalculatorInstance: any;
 }
 

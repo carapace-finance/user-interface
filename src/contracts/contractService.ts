@@ -12,7 +12,7 @@ export const getPoolFactoryContract = (address: string, signer: Signer) => {
   return new Contract(address, poolFactoryAbi, signer);
 };
 
-export const getPoolContract = (address: string, signer: Signer) => {
+export const getProtectionPoolContract = (address: string, signer: Signer) => {
   if (!isAddress(address)) {
     throw new Error("Pool contract address is not valid");
   }

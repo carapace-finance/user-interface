@@ -27,7 +27,7 @@ export function getLendingPoolName(lendingPoolAddress: string): string {
 }
 
 export async function preparePlayground(playground: Playground) {
-  const { poolCycleManagerInstance, poolFactoryInstance, poolInstance } =
+  const { poolCycleManagerInstance, poolFactoryInstance, protectionPoolInstance } =
     playground.deployedContracts;
   console.log("Preparing a playground: ", playground.forkId);
 
@@ -50,19 +50,19 @@ export async function preparePlayground(playground: Playground) {
   console.log("********** Pool Cycle: 1, Day: 1     **********");
 
   // Deposit 1 by user
-  await approveAndDeposit(poolInstance, parseUSDC("50000"), user);
+  await approveAndDeposit(protectionPoolInstance, parseUSDC("50000"), user);
 
   // Deposit 2 by deployer
-  await approveAndDeposit(poolInstance, parseUSDC("51000"), deployer);
+  await approveAndDeposit(protectionPoolInstance, parseUSDC("51000"), deployer);
 
   console.log(
     "Pool's total sToken underlying: ",
-    formatUSDC(await poolInstance.totalSTokenUnderlying())
+    formatUSDC(await protectionPoolInstance.totalSTokenUnderlying())
   );
   console.log("Completed min capital requirement.");
 
   // move the pool to the next phase
-  await poolInstance.connect(deployer).movePoolPhase();
+  await protectionPoolInstance.connect(deployer).movePoolPhase();
 
   console.log("********** Pool Phase: OpenToBuyers **********");
 
@@ -71,7 +71,7 @@ export async function preparePlayground(playground: Playground) {
   // buy protection 1
   await transferApproveAndBuyProtection(
     playground.provider,
-    poolInstance,
+    protectionPoolInstance,
     {
       lendingPoolAddress: lendingPoolAddress,
       nftLpTokenId: 590,
@@ -83,14 +83,14 @@ export async function preparePlayground(playground: Playground) {
 
   console.log(
     "Pool leverage ratio: ",
-    formatEther(await poolInstance.calculateLeverageRatio())
+    formatEther(await protectionPoolInstance.calculateLeverageRatio())
   );
 
   // move the pool to the next phase(Open)
-  await poolInstance.connect(deployer).movePoolPhase();
+  await protectionPoolInstance.connect(deployer).movePoolPhase();
   console.log(
     "Current Pool Phase: ",
-    (await poolInstance.getPoolInfo()).currentPhase
+    (await protectionPoolInstance.getPoolInfo()).currentPhase
   );
 
   console.log("********** Pool Phase: Open **********");
@@ -99,7 +99,7 @@ export async function preparePlayground(playground: Playground) {
   // We are in cycle with index 0, so withdrawal index is 2
   const withdrawalCycleIndex = 2;
   await requestWithdrawal(
-    poolInstance,
+    protectionPoolInstance,
     deployer,
     parseEther("10000"),
     withdrawalCycleIndex
@@ -108,19 +108,19 @@ export async function preparePlayground(playground: Playground) {
   // Move pool to the next cycle (cycle 2)
   await movePoolCycle(
     playground.provider,
-    poolInstance,
+    protectionPoolInstance,
     poolCycleManagerInstance
   );
 
   console.log("********** Pool Cycle: 2, Day: 31     **********");
 
   // Deposit 3
-  await approveAndDeposit(poolInstance, parseUSDC("11000"), user);
+  await approveAndDeposit(protectionPoolInstance, parseUSDC("11000"), user);
 
   // Move pool to the next cycle (cycle 3)
   await movePoolCycle(
     playground.provider,
-    poolInstance,
+    protectionPoolInstance,
     poolCycleManagerInstance
   );
 
@@ -138,34 +138,34 @@ export async function preparePlayground(playground: Playground) {
   console.log("Playground is ready!");
 }
 
-async function movePoolCycle(provider, poolInstance, poolCycleManagerInstance) {
-  const poolInfo = await poolInstance.getPoolInfo();
+async function movePoolCycle(provider, protectionPoolInstance, poolCycleManagerInstance) {
+  const protectionPoolInfo = await protectionPoolInstance.getPoolInfo();
 
   // move from open to locked state
   await moveForwardTime(provider, getDaysInSeconds(11));
-  await poolCycleManagerInstance.calculateAndSetPoolCycleState(poolInfo.poolId);
+  await poolCycleManagerInstance.calculateAndSetPoolCycleState(protectionPoolInfo.poolId);
 
   // move to new cycle
   await moveForwardTime(provider, getDaysInSeconds(20));
-  await poolCycleManagerInstance.calculateAndSetPoolCycleState(poolInfo.poolId);
+  await poolCycleManagerInstance.calculateAndSetPoolCycleState(protectionPoolInfo.poolId);
   console.log(
     "Pool Cycle:",
-    await poolCycleManagerInstance.getCurrentPoolCycle(poolInfo.poolId)
+    await poolCycleManagerInstance.getCurrentPoolCycle(protectionPoolInfo.poolId)
   );
 }
 
 async function requestWithdrawal(
-  poolInstance,
+  protectionPoolInstance,
   user,
   sTokenAmt,
   withdrawalCycleIndex
 ) {
-  await poolInstance.connect(user).requestWithdrawal(sTokenAmt);
+  await protectionPoolInstance.connect(user).requestWithdrawal(sTokenAmt);
 
   console.log(
     "User's requested withdrawal Amount: ",
     formatEther(
-      await poolInstance
+      await protectionPoolInstance
         .connect(user)
         .getRequestedWithdrawalAmount(withdrawalCycleIndex)
     )
@@ -173,12 +173,12 @@ async function requestWithdrawal(
   console.log(
     "Total requested withdrawal amount: ",
     formatEther(
-      await poolInstance.getTotalRequestedWithdrawalAmount(withdrawalCycleIndex)
+      await protectionPoolInstance.getTotalRequestedWithdrawalAmount(withdrawalCycleIndex)
     )
   );
 }
 
-export async function approveAndDeposit(poolInstance, depositAmt, receiver) {
+export async function approveAndDeposit(protectionPoolInstance, depositAmt, receiver) {
   const usdcContract = getUsdcContract(receiver);
   const receiverAddress = await receiver.getAddress();
 
@@ -186,15 +186,15 @@ export async function approveAndDeposit(poolInstance, depositAmt, receiver) {
   // await transferUsdc(provider, receiverAddress, depositAmt);
 
   // Approve & deposit
-  await usdcContract.approve(poolInstance.address, depositAmt);
-  return await poolInstance
+  await usdcContract.approve(protectionPoolInstance.address, depositAmt);
+  return await protectionPoolInstance
     .connect(receiver)
     .deposit(depositAmt, receiverAddress);
 }
 
 export async function transferApproveAndBuyProtection(
   provider,
-  poolInstance,
+  protectionPoolInstance,
   purchaseParams,
   premiumAmt
 ) {
@@ -212,7 +212,7 @@ export async function transferApproveAndBuyProtection(
 
   console.log(
     "Total protection before buyProtection: ",
-    formatUSDC(await poolInstance.totalProtection())
+    formatUSDC(await protectionPoolInstance.totalProtection())
   );
 
   console.log(
@@ -227,11 +227,11 @@ export async function transferApproveAndBuyProtection(
   // await transferUsdc(provider, buyerAddress, premiumAmt);
 
   // Approve premium USDC
-  await usdcContract.connect(buyer).approve(poolInstance.address, premiumAmt);
+  await usdcContract.connect(buyer).approve(protectionPoolInstance.address, premiumAmt);
 
   console.log("Purchasing a protection using params: ", purchaseParams);
 
-  return await poolInstance.connect(buyer).buyProtection(purchaseParams, {
+  return await protectionPoolInstance.connect(buyer).buyProtection(purchaseParams, {
     gasPrice: "25900000000",
     gasLimit: "210000000"
   });
@@ -250,13 +250,13 @@ export async function resetPlayground(
   console.log(
     "Total capital: ",
     formatUSDC(
-      await playground.deployedContracts.poolInstance.totalSTokenUnderlying()
+      await playground.deployedContracts.protectionPoolInstance.totalSTokenUnderlying()
     )
   );
   console.log(
     "Total protection: ",
     formatUSDC(
-      await playground.deployedContracts.poolInstance.totalProtection()
+      await playground.deployedContracts.protectionPoolInstance.totalProtection()
     )
   );
 }

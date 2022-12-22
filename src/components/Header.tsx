@@ -216,7 +216,7 @@ const Header = () => {
   }
 
   return (
-    <div className="flex justify-between items-center top-0 h-16 shadow-md mb-10">
+    <div className="sticky z-30 w-full bg-white flex justify-between items-center top-0 h-16 shadow-md mb-12">
       <Link className="ml-12" href="/">
         <Image
           src={assets.headerLogo.src}
@@ -227,16 +227,38 @@ const Header = () => {
         />
       </Link>
       <div className="flex items-center">
-        <Link href="/buyProtection" className="hover:text-customBlue">
-          <h3>Protect</h3>
+        <Link
+          href="/buyProtection"
+          className={`${
+            router.pathname == "/buyProtection" ||
+            router.pathname.startsWith("/lendingPool") ||
+            router.pathname == "/"
+              ? "text-customBlue font-medium"
+              : ""
+          } hover:text-customBlue`}
+        >
+          <h3>Buy</h3>
         </Link>
         {/* <Link href="/lendWithProtection">
           <h3>Lend With Protection</h3>
         </Link> */}
-        <Link href="/sellProtection" className="ml-16 hover:text-customBlue">
-          <h3>Earn</h3>
+        <Link
+          href="/sellProtection"
+          className={`${
+            router.pathname == "/sellProtection" ||
+            router.pathname.startsWith("/protectionPool")
+              ? "text-customBlue font-medium"
+              : ""
+          } hover:text-customBlue ml-16`}
+        >
+          <h3>Sell</h3>
         </Link>
-        <Link href="/dashboard" className="ml-16 hover:text-customBlue">
+        <Link
+          href="/dashboard"
+          className={`${
+            router.pathname == "/dashboard" ? "text-customBlue font-medium" : ""
+          } hover:text-customBlue ml-16`}
+        >
           <h3>Dashboard</h3>
         </Link>
       </div>
@@ -287,13 +309,16 @@ const Header = () => {
             className="border rounded-md px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
             onClick={playgroundButtonAction}
           >
-              <div>
-                {
-                stoppingPlayground ?
-                  (<>Stopping playground...<LoadingButton loading={true}></LoadingButton></>)
-                  : playgroundButtonTitle
-              }
-              </div>
+            <div>
+              {stoppingPlayground ? (
+                <>
+                  Stopping playground...
+                  <LoadingButton loading={true}></LoadingButton>
+                </>
+              ) : (
+                playgroundButtonTitle
+              )}
+            </div>
           </button>
         )}
         {/* <Account /> */}

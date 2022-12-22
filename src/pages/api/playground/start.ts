@@ -97,7 +97,7 @@ export const startNewPlayground = async () => {
     snapshotId: snapshotId,
     poolFactoryAddress:
       playground.deployedContracts.poolFactoryInstance.address,
-    poolAddress: playground.deployedContracts.poolInstance.address,
+    poolAddress: playground.deployedContracts.protectionPoolInstance.address,
     poolCycleManagerAddress:
       playground.deployedContracts.poolCycleManagerInstance.address,
     premiumCalculatorAddress:

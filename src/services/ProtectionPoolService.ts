@@ -2,7 +2,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { BigNumber } from "@ethersproject/bignumber";
 
 import {
-  getPoolContract,
+  getProtectionPoolContract,
   getPremiumCalculatorContract,
   getReferenceLendingPoolsContract
 } from "@contracts/contractService";
@@ -13,7 +13,7 @@ import {
 } from "@utils/forked/playground";
 import {
   LendingPool,
-  ProtectionPurchase,
+  ProtectionInfo,
   ProtectionPurchaseParams
 } from "@type/types";
 import { convertUSDCToNumber, parseUSDC, USDC_FORMAT } from "@utils/usdc";
@@ -57,121 +57,154 @@ export class ProtectionPoolService {
     return this.protectionPurchaseByLendingPool.get(lendingPoolAddress);
   }
 
-  public async deposit(poolAddress: string, depositAmt: BigNumber) {
+  public async deposit(protectionPoolAddress: string, depositAmt: BigNumber) {
     this.setLastActionTimestamp();
 
     const signer = this.provider.getSigner();
-    const poolInstance = getPoolContract(poolAddress, signer);
+    const protectionPoolInstance = getProtectionPoolContract(
+      protectionPoolAddress,
+      signer
+    );
     if (this.isPlayground) {
-      return await approveAndDeposit(poolInstance, depositAmt, signer);
+      return await approveAndDeposit(
+        protectionPoolInstance,
+        depositAmt,
+        signer
+      );
     } else {
-      return await poolInstance.deposit(depositAmt, await signer.getAddress());
+      return await protectionPoolInstance.deposit(
+        depositAmt,
+        await signer.getAddress()
+      );
     }
   }
 
-  public async requestWithdrawal(poolAddress: string, usdcAmt: BigNumber) {
+  public async requestWithdrawal(
+    protectionPoolAddress: string,
+    usdcAmt: BigNumber
+  ) {
     this.setLastActionTimestamp();
 
     const signer = this.provider.getSigner();
-    const poolInstance = getPoolContract(poolAddress, signer);
-    const sTokenAmt = await poolInstance.convertToSToken(usdcAmt);
+    const protectionPoolInstance = getProtectionPoolContract(
+      protectionPoolAddress,
+      signer
+    );
+    const sTokenAmt = await protectionPoolInstance.convertToSToken(usdcAmt);
 
     console.log("Requesting to withdraw sTokenAmt: ", sTokenAmt.toString());
-    return await poolInstance.requestWithdrawal(sTokenAmt, {
+    return await protectionPoolInstance.requestWithdrawal(sTokenAmt, {
       gasPrice: "25900000000",
       gasLimit: "210000000"
     });
   }
 
   public async buyProtection(
-    poolAddress: string,
+    protectionPoolAddress: string,
     purchaseParams: ProtectionPurchaseParams,
     premiumAmt: BigNumber
   ) {
     this.setLastActionTimestamp();
-    const poolInstance = getPoolContract(
-      poolAddress,
+    const protectionPoolInstance = getProtectionPoolContract(
+      protectionPoolAddress,
       this.provider.getSigner()
     );
 
     if (this.isPlayground) {
       return await transferApproveAndBuyProtection(
         this.provider,
-        poolInstance,
+        protectionPoolInstance,
         purchaseParams,
         premiumAmt
       );
     } else {
-      return await poolInstance.buyProtection(purchaseParams);
+      return await protectionPoolInstance.buyProtection(purchaseParams);
     }
   }
 
   /**
    * Sends withdrawal transaction to the pool contract with specified amount with receiver as signed user.
-   * @param poolAddress
+   * @param protectionPoolAddress
    * @param usdcAmt
    * @returns
    */
-  public async withdraw(poolAddress: string, usdcAmt: BigNumber) {
+  public async withdraw(protectionPoolAddress: string, usdcAmt: BigNumber) {
     this.setLastActionTimestamp();
 
     const signer = this.provider.getSigner();
-    const poolInstance = getPoolContract(poolAddress, signer);
-    const sTokenAmt = await poolInstance.convertToSToken(usdcAmt);
+    const protectionPoolInstance = getProtectionPoolContract(
+      protectionPoolAddress,
+      signer
+    );
+    const sTokenAmt = await protectionPoolInstance.convertToSToken(usdcAmt);
 
     console.log("Withdrawing sTokenAmt: ", sTokenAmt.toString());
-    return await poolInstance.withdraw(sTokenAmt, signer.getAddress(), {
-      gasPrice: "25900000000",
-      gasLimit: "210000000"
-    });
+    return await protectionPoolInstance.withdraw(
+      sTokenAmt,
+      signer.getAddress(),
+      {
+        gasPrice: "25900000000",
+        gasLimit: "210000000"
+      }
+    );
   }
 
   /**
    * Provides USDC balance of signed user in the pool.
-   * @param poolAddress
+   * @param protectionPoolAddress
    * @returns
    */
-  public async getSTokenUnderlyingBalance(poolAddress: string) {
-    const poolInstance = getPoolContract(
-      poolAddress,
+  public async getSTokenUnderlyingBalance(protectionPoolAddress: string) {
+    const protectionPoolInstance = getProtectionPoolContract(
+      protectionPoolAddress,
       this.provider.getSigner()
     );
-    const sTokenBalance = await poolInstance.balanceOf(
+    const sTokenBalance = await protectionPoolInstance.balanceOf(
       await this.provider.getSigner().getAddress()
     );
-    const usdcBalance = await poolInstance.convertToUnderlying(sTokenBalance);
+    const usdcBalance = await protectionPoolInstance.convertToUnderlying(
+      sTokenBalance
+    );
     return usdcBalance;
   }
 
   /**
    * Provides requested withdrawal amount in USDC for a signed user in the pool for current pool cycle.
-   * @param poolAddress
+   * @param protectionPoolAddress
    * @returns
    */
-  public async getRequestedWithdrawalAmount(poolAddress: string) {
-    const poolInstance = getPoolContract(
-      poolAddress,
+  public async getRequestedWithdrawalAmount(protectionPoolAddress: string) {
+    const protectionPoolInstance = getProtectionPoolContract(
+      protectionPoolAddress,
       this.provider.getSigner()
     );
 
     // TODO: use the new contract method to get the requested withdrawal amount for current cycle
     const withdrawalCycleIndex = 2;
-    const sTokenBalance = await poolInstance.getRequestedWithdrawalAmount(
-      withdrawalCycleIndex
+    const sTokenBalance =
+      await protectionPoolInstance.getRequestedWithdrawalAmount(
+        withdrawalCycleIndex
+      );
+    const usdcAmount = await protectionPoolInstance.convertToUnderlying(
+      sTokenBalance
     );
-    const usdcAmount = await poolInstance.convertToUnderlying(sTokenBalance);
     return usdcAmount;
   }
 
   /**
    * Provides all lending pools for a given protection pool.
-   * @param poolAddress
+   * @param protectionPoolAddress
    * @returns
    */
-  public async getLendingPools(poolAddress: string): Promise<LendingPool[]> {
+  public async getLendingPools(
+    protectionPoolAddress: string
+  ): Promise<LendingPool[]> {
     const user = this.provider.getSigner();
-    const pool = getPoolContract(poolAddress, user);
-    const poolInfo = await pool.getPoolInfo();
+    const protectionPool = getProtectionPoolContract(
+      protectionPoolAddress,
+      user
+    );
+    const poolInfo = await protectionPool.getPoolInfo();
     console.log("Retrieved Pool Info: ", poolInfo);
     const referenceLendingPoolsContract = getReferenceLendingPoolsContract(
       poolInfo.referenceLendingPools,
@@ -200,7 +233,7 @@ export class ProtectionPoolService {
             CARATokenRewards: "~3.5%",
             premium: "4 - 7%",
             timeLeft: "59 Days 8 Hours 2 Mins",
-            protectionPoolAddress: poolAddress,
+            protectionPoolAddress: protectionPoolAddress,
             protectionPurchase: protectionPurchase
               ? numeral(convertUSDCToNumber(protectionPurchase)).format(
                   USDC_FORMAT
@@ -212,14 +245,17 @@ export class ProtectionPoolService {
   }
 
   public async calculatePremiumPrice(
-    poolAddress: string,
+    protectionPoolAddress: string,
     premiumCalculatorAddress: string,
     purchaseParams: ProtectionPurchaseParams
   ): Promise<BigNumber> {
     console.log("calculating premium price: ", purchaseParams);
     const user = this.provider.getSigner();
-    const pool = getPoolContract(poolAddress, user);
-    const poolInfo = await pool.getPoolInfo();
+    const protectionPool = getProtectionPoolContract(
+      protectionPoolAddress,
+      user
+    );
+    const poolInfo = await protectionPool.getPoolInfo();
     const referenceLendingPools = getReferenceLendingPoolsContract(
       poolInfo.referenceLendingPools,
       user
@@ -238,8 +274,8 @@ export class ProtectionPoolService {
         purchaseParams.protectionDurationInSeconds,
         scaleUsdcAmtTo18Decimals(purchaseParams.protectionAmount),
         buyerApy,
-        await pool.calculateLeverageRatio(),
-        await pool.totalSTokenUnderlying(),
+        await protectionPool.calculateLeverageRatio(),
+        await protectionPool.totalSTokenUnderlying(),
         poolInfo.params
       )
       .then((result) => {
@@ -248,10 +284,40 @@ export class ProtectionPoolService {
       });
   }
 
+  // todo: this needs to be rewritten in the mainnet
+  // todo: we don't check users as another address buys protection on behalf of the this.provider.getSigner().getAddress()
   public async getProtectionPurchases(
-    poolAddress: string
-  ): Promise<ProtectionPurchase[]> {
-    return Promise.resolve([]);
+    protectionPoolAddress: string
+  ): Promise<ProtectionInfo[]> {
+    const protectionPoolInstance = getProtectionPoolContract(
+      protectionPoolAddress,
+      await this.provider.getSigner()
+    );
+    let activeProtections1 = await protectionPoolInstance.getActiveProtections(
+      "0x4902b20bb3b8e7776cbcdcb6e3397e7f6b4e449e"
+    );
+    let activeProtections2 = await protectionPoolInstance.getActiveProtections(
+      "0x008c84421da5527f462886cec43d2717b686a7e4"
+    );
+    let activeProtections3 = await protectionPoolInstance.getActiveProtections(
+      "0x3371E5ff5aE3f1979074bE4c5828E71dF51d299c"
+    );
+    let activeProtections4 = await protectionPoolInstance.getActiveProtections(
+      await this.provider.getSigner().getAddress()
+    );
+    let activeProtections = [
+      ...activeProtections1,
+      ...activeProtections2,
+      ...activeProtections3,
+      ...activeProtections4
+    ];
+    console.log("activeProtections ==>", activeProtections);
+
+    if (activeProtections) {
+      return activeProtections;
+    } else {
+      return;
+    }
   }
 
   public setLastActionTimestamp(): number {
