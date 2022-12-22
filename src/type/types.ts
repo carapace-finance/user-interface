@@ -130,7 +130,7 @@ export interface ProtectionPurchase {
 export interface deployedContracts {
   poolCycleManagerInstance: Contract;
   poolFactoryInstance: Contract;
-  poolInstance: Contract;
+  protectionPoolInstance: Contract;
 }
 
 export interface BuyProtectionInputs {

@@ -31,7 +31,7 @@ import poolHelperArtifact from "../../contracts/forked/artifacts/PoolHelper.json
 let deployer;
 let account1;
 
-let poolInstance;
+let protectionPoolInstance;
 let poolFactoryInstance;
 let premiumCalculatorInstance;
 let referenceLendingPoolsInstance;
