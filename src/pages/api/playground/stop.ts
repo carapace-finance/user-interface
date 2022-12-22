@@ -1,5 +1,4 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { PlaygroundInfo } from "@utils/forked/types";
 import { NextApiRequest, NextApiResponse } from "next";
 import {
   addAvailablePlaygroundId,
@@ -49,6 +48,11 @@ async function stopPlayground(playgroundId: string) {
   // step 2: Revert the fork to the snapshot id
   const forkProvider = new JsonRpcProvider(playgroundInfoString.url);
   await forkProvider.send("evm_revert", [playgroundInfoString.snapshotId]);
+
+  console.log(
+    "Reverted the fork to snapshot block number: ",
+    (await forkProvider.getBlock("latest")).number
+  );
 
   // step 3: Remove the playground id from the used playgrounds set
   await removeUsedPlaygroundId(playgroundId);

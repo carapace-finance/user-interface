@@ -23,7 +23,7 @@ export class ProtectionPoolFactoryService {
   ) {
     this.provider = provider;
     this.isPlayground = isPlayground;
-    this, (poolFactoryAddress = poolFactoryAddress);
+    this.poolFactoryAddress = poolFactoryAddress;
   }
 
   public async getProtectionPools(): Promise<ProtectionPool[]> {
@@ -32,10 +32,17 @@ export class ProtectionPoolFactoryService {
       this.poolFactoryAddress,
       signer
     );
+    console.log(
+      "Getting protection pools from factory: ",
+      poolFactoryInstance.address
+    );
     return await poolFactoryInstance
       .getPoolAddress(1)
       .then(async (poolAddress) => {
-        const protectionPool = getProtectionPoolContract(poolAddress, this.provider.getSigner());
+        const protectionPool = getProtectionPoolContract(
+          poolAddress,
+          this.provider.getSigner()
+        );
         const poolInfo = await protectionPool.getPoolInfo();
 
         // Convert leverageRatio floor  & ceiling to from 18 to 6 (USDC decimals)
