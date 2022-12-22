@@ -130,7 +130,7 @@ const Header = () => {
         });
         updatePlayground(playground);
 
-        console.log("Successfully started a playground: ", playground);
+        console.log(`Successfully started a playground with fork: ${playground.forkId}`, playground);
       }
     } else {
       onError(
@@ -159,7 +159,7 @@ const Header = () => {
         });
         updatePlayground(undefined);
 
-        console.log("Successfully stopped playground");
+        console.log("Successfully stopped playground: ", playgroundId);
         setStoppingPlayground(false);
       } else {
         onError("Failed to stop playground. Please try again.", data);
