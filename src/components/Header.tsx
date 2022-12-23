@@ -253,14 +253,6 @@ const Header = () => {
         >
           <h3>Sell</h3>
         </Link>
-        <Link
-          href="/dashboard"
-          className={`${
-            router.pathname == "/dashboard" ? "text-customBlue font-medium" : ""
-          } hover:text-customBlue ml-16`}
-        >
-          <h3>Dashboard</h3>
-        </Link>
       </div>
       <div className="mr-12">
         {/* {active && chainId === 1
