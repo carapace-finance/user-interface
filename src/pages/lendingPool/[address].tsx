@@ -17,8 +17,8 @@ const LendingPool = () => {
 
   const { provider } = useContext(ApplicationContext);
   const prevProvider = useRef(provider);
-  useEffect(() => { 
-    if (prevProvider.current !== provider) { 
+  useEffect(() => {
+    if (prevProvider.current !== provider) {
       router.push("/buyProtection");
       prevProvider.current = provider;
     }

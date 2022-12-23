@@ -22,8 +22,8 @@ const ProtectionPool = () => {
 
   const { provider } = useContext(ApplicationContext);
   const prevProvider = useRef(provider);
-  useEffect(() => { 
-    if (prevProvider.current !== provider) { 
+  useEffect(() => {
+    if (prevProvider.current !== provider) {
       router.push("/sellProtection");
       prevProvider.current = provider;
     }

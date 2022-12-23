@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import {
   Dialog,
   DialogContent,
@@ -12,10 +13,7 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import {
-  convertNumberToUSDC,
-  USDC_FORMAT
-} from "@utils/usdc";
+import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
 import { formatAddress, getDaysInSeconds } from "@utils/utils";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
@@ -38,6 +36,8 @@ const BuyProtectionPopUp = (props) => {
   const [adjustedYield, setAdjustedYield] = useState("10 - 17%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
   const { protectionPoolService } = useContext(ApplicationContext);
+
+  const router = useRouter()
 
   const reset = () => {
     setSuccessMessage("");
@@ -88,6 +88,7 @@ const BuyProtectionPopUp = (props) => {
         );
         setTimeout(() => {
           onClose();
+          router.push('/buyProtection');
         }, 2000);
       } else {
         onError(receipt);
@@ -146,20 +147,30 @@ const BuyProtectionPopUp = (props) => {
             {renderFieldAndValue("Token Id", tokenId)}
             {renderFieldAndValue(
               "Premium Price",
-              calculatingPremiumPrice
-                ? (<div>Calculating Premium Price...<LoadingButton loading={calculatingPremiumPrice}></LoadingButton></div>)
-                : numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
+              calculatingPremiumPrice ? (
+                <div>
+                  Calculating Premium Price...
+                  <LoadingButton
+                    loading={calculatingPremiumPrice}
+                  ></LoadingButton>
+                </div>
+              ) : (
+                numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
+              )
             )}
           </div>
-          <Divider className="mb-4" />
-          <div className="mb-8">
+          <Divider className="mb-8" />
+          <div className="mt-4">
             <Typography
-              className="flex justify-left pb-5 text-customGrey text-base font-bold"
+              className="flex justify-left text-customGrey text-base font-bold"
               variant="subtitle2"
             >
-              Estimated Stats
+              <p className="text-base">Estimated Stats</p>
             </Typography>
-            <Typography className="flex justify-between pb-3" variant="caption">
+            <Typography
+              className="flex justify-between pb-3 mt-4"
+              variant="caption"
+            >
               <div className="text-gray-500 text-sm flex items-center">
                 Expected Adjusted Yield:
                 <div className="pl-2">
@@ -211,7 +222,7 @@ const BuyProtectionPopUp = (props) => {
             </Typography>
           </div>
           <button
-            className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            className="text-white text-base bg-customBlue px-8 py-4 mt-8 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
             onClick={buyProtection}
             disabled={
               loading ||

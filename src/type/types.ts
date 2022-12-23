@@ -99,6 +99,7 @@ export interface UserProtectionPool {
 
 export interface UserLendingPool {
   lendingPoolAddress: string;
+  protectionPremium: BigNumber;
   timeUntilExpirationInSeconds: BigNumber;
   protectionAmount: BigNumber;
 }

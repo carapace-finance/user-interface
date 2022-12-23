@@ -36,7 +36,7 @@ const Header = () => {
   };
 
   // playground idle timeout is 10 minutes
-  let idleTimeoutInMilliSeconds = 1000 * 60 * 10;
+  let idleTimeoutInMilliSeconds = 1000 * 60 * 30;
   let idleTimerId;
 
   const cleanup = async () => {
@@ -130,7 +130,10 @@ const Header = () => {
         });
         updatePlayground(playground);
 
-        console.log(`Successfully started a playground with fork: ${playground.forkId}`, playground);
+        console.log(
+          `Successfully started a playground with fork: ${playground.forkId}`,
+          playground
+        );
       }
     } else {
       onError(
@@ -252,14 +255,6 @@ const Header = () => {
           } hover:text-customBlue ml-16`}
         >
           <h3>Sell</h3>
-        </Link>
-        <Link
-          href="/dashboard"
-          className={`${
-            router.pathname == "/dashboard" ? "text-customBlue font-medium" : ""
-          } hover:text-customBlue ml-16`}
-        >
-          <h3>Dashboard</h3>
         </Link>
       </div>
       <div className="mr-12">

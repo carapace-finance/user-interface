@@ -12,7 +12,8 @@ export const ProtectionPoolContext =
   createContext<ProtectionPoolContextType | null>(null);
 
 export const ProtectionPoolContextProvider = ({ children }) => {
-  const { provider, protectionPoolFactoryService } = useContext(ApplicationContext);
+  const { provider, protectionPoolFactoryService } =
+    useContext(ApplicationContext);
   const defaultProtectionPools: ProtectionPool[] = [
     {
       address: "0xPP...",
@@ -44,24 +45,40 @@ export const ProtectionPoolContextProvider = ({ children }) => {
           );
           setProtectionPools(newProtectionPools);
           setIsDefaultData(false);
-          
+
           newProtectionPools.forEach((protectionPool) => {
-            const protectionPoolInstance = getProtectionPoolContract(protectionPool.address, provider.getSigner());
+            const protectionPoolInstance = getProtectionPoolContract(
+              protectionPool.address,
+              provider.getSigner()
+            );
             protectionPoolInstance.on(
               "ProtectionBought",
-              async (buyerAddress, lendingPoolAddress, protectionAmount, premium, event) => {
+              async (
+                buyerAddress,
+                lendingPoolAddress,
+                protectionAmount,
+                premium,
+                event
+              ) => {
                 console.log("ProtectionBought event triggered: ", event.args);
-                const totalProtection = await protectionPoolInstance.totalProtection();
-                const updatedProtectionPools = newProtectionPools.map((p) => { 
+                const totalProtection =
+                  await protectionPoolInstance.totalProtection();
+                const updatedProtectionPools = newProtectionPools.map((p) => {
                   if (p.address === protectionPool.address) {
                     return {
                       ...p,
-                      totalProtection: numeral(convertUSDCToNumber(totalProtection)).format(USDC_FORMAT) + " USDC"
+                      totalProtection:
+                        numeral(convertUSDCToNumber(totalProtection)).format(
+                          USDC_FORMAT
+                        ) + " USDC"
                     };
                   }
                   return p;
                 });
-                console.log("Updated protection pools: ", updatedProtectionPools);
+                console.log(
+                  "Updated protection pools: ",
+                  updatedProtectionPools
+                );
                 setProtectionPools(updatedProtectionPools);
               }
             );
@@ -70,17 +87,24 @@ export const ProtectionPoolContextProvider = ({ children }) => {
               "ProtectionSold",
               async (userAddress, amount, event) => {
                 console.log("ProtectionSold event triggered: ", event.args);
-                const totalCapital = await protectionPoolInstance.totalSTokenUnderlying();
-                const updatedProtectionPools = newProtectionPools.map((p) => { 
+                const totalCapital =
+                  await protectionPoolInstance.totalSTokenUnderlying();
+                const updatedProtectionPools = newProtectionPools.map((p) => {
                   if (p.address === protectionPool.address) {
                     return {
                       ...p,
-                      totalCapital: numeral(convertUSDCToNumber(totalCapital)).format(USDC_FORMAT) + " USDC"
+                      totalCapital:
+                        numeral(convertUSDCToNumber(totalCapital)).format(
+                          USDC_FORMAT
+                        ) + " USDC"
                     };
                   }
                   return p;
                 });
-                console.log("Updated protection pools: ", updatedProtectionPools);
+                console.log(
+                  "Updated protection pools: ",
+                  updatedProtectionPools
+                );
                 setProtectionPools(updatedProtectionPools);
               }
             );

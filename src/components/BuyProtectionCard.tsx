@@ -3,10 +3,7 @@ import { useForm } from "react-hook-form";
 import { Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
-import {
-  convertNumberToUSDC,
-  convertUSDCToNumber
-} from "@utils/usdc";
+import { convertNumberToUSDC, convertUSDCToNumber } from "@utils/usdc";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { getDaysInSeconds } from "@utils/utils";
 import { BuyProtectionInputs } from "@type/types";
@@ -32,10 +29,12 @@ export default function BuyProtectionCard() {
   const router = useRouter();
   const protectionPoolAddress = router.query.protectionPoolAddress as string;
   const lendingPoolAddress = router.query.address as string;
-  
+
   useEffect(() => {
     const protectionAmount = parseFloat(getValues("protectionAmount"));
-    const protectionDurationInDays = parseFloat(getValues("protectionDurationInDays"));
+    const protectionDurationInDays = parseFloat(
+      getValues("protectionDurationInDays")
+    );
 
     if (
       protectionPoolService &&
@@ -48,12 +47,8 @@ export default function BuyProtectionCard() {
       const protectionPurchaseParams = {
         lendingPoolAddress: router.query.address as string,
         nftLpTokenId: tokenId,
-        protectionAmount: convertNumberToUSDC(
-          protectionAmount
-        ),
-        protectionDurationInSeconds: getDaysInSeconds(
-          protectionDurationInDays
-        )
+        protectionAmount: convertNumberToUSDC(protectionAmount),
+        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
       };
       console.log(
         "Calculating premium price for Protection purchase params: ",

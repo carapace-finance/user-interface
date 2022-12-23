@@ -5,8 +5,8 @@ const Mobile = () => {
   return (
     <div className="grid h-screen place-items-center m-16">
       <p>
-        Whoooops! Sorry, we don&apos;t have the mobile version yet. Visit our dapp
-        from your desktop!
+        Whoooops! Sorry, we don&apos;t have the mobile version yet. Visit our
+        dapp from your desktop!
       </p>
       <p>
         You can visit our website

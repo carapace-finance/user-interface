@@ -25,10 +25,17 @@ export const UserContextProvider = ({ children }) => {
     USDCBalance: BigNumber.from(0),
     // todo: make protection pool array of object
     userProtectionPools: [],
-    sTokenUnderlyingAmount: "0",
-    requestedWithdrawalAmount: "0",
+    sTokenUnderlyingAmount: "51,000.00",
+    requestedWithdrawalAmount: "10,000.00",
     // todo: make lending pool array of object
-    userLendingPools: []
+    userLendingPools: [
+      {
+        lendingPoolAddress: "0xb26B42Dd5771689D0a7faEea32825ff9710b9c11",
+        protectionPremium: BigNumber.from(0xbf4c5737),
+        timeUntilExpirationInSeconds: BigNumber.from(0x63ccd0ee),
+        protectionAmount: BigNumber.from(0x22ecb25c00)
+      }
+    ]
   };
 
   const { protectionPoolService, provider } = useContext(ApplicationContext);
@@ -104,45 +111,48 @@ export const UserContextProvider = ({ children }) => {
     protectionPoolAddress: string,
     lendingPoolAddress: string
   ) => {
-    if (
-      !protectionPoolService ||
-      !protectionPoolAddress ||
-      !lendingPoolAddress
-    ) {
-      return {};
-    }
+    if (protectionPoolService || protectionPoolAddress || lendingPoolAddress) {
+      const ProtectionInfos =
+        await protectionPoolService.getProtectionPurchases(
+          protectionPoolAddress
+        );
 
-    const ProtectionInfos = await protectionPoolService.getProtectionPurchases(
-      protectionPoolAddress
-    );
+      let timeUntilExpirationInSeconds;
+      let protectionPremium;
+      let protectionAmount;
+      let newUserLendingPools: UserLendingPool[] = [];
 
-    let timeUntilExpirationInSeconds;
-    let protectionAmount;
-    let userLendingPools: UserLendingPool[] = defaultUser.userLendingPools;
-    let newUserLendingPools: UserLendingPool[] = defaultUser.userLendingPools;
-
-    if (ProtectionInfos?.length > 0) {
-      ProtectionInfos.map((protectionInfo) => {
-        if (
-          protectionInfo.purchaseParams.lendingPoolAddress ===
-          lendingPoolAddress
-        ) {
-          timeUntilExpirationInSeconds = protectionInfo.startTimestamp.add(
-            protectionInfo.purchaseParams.protectionDurationInSeconds
+      if (ProtectionInfos?.length > 0) {
+        ProtectionInfos.map((protectionInfo) => {
+          if (
+            protectionInfo.purchaseParams.lendingPoolAddress ==
+            lendingPoolAddress
+          ) {
+            timeUntilExpirationInSeconds = protectionInfo.startTimestamp.add(
+              protectionInfo.purchaseParams.protectionDurationInSeconds
+            );
+            protectionPremium = protectionInfo.protectionPremium;
+            protectionAmount = protectionInfo.purchaseParams.protectionAmount;
+            const newUserLendingPool: UserLendingPool = {
+              lendingPoolAddress: lendingPoolAddress,
+              protectionPremium: protectionPremium,
+              timeUntilExpirationInSeconds: timeUntilExpirationInSeconds,
+              protectionAmount: protectionAmount
+            };
+            newUserLendingPools.push(newUserLendingPool);
+          }
+        });
+        if (newUserLendingPools.length != 0) {
+          userRef.current.userLendingPools = newUserLendingPools;
+          setUser({
+            ...userRef.current
+          });
+          console.log(
+            "User's ProtectionAmountAndExpiration Updated ==>",
+            newUserLendingPools
           );
-          protectionAmount = protectionInfo.purchaseParams.protectionAmount;
-          const newUserLendingPool: UserLendingPool = {
-            lendingPoolAddress: lendingPoolAddress,
-            timeUntilExpirationInSeconds: timeUntilExpirationInSeconds,
-            protectionAmount: protectionAmount
-          };
-          newUserLendingPools = [{...userLendingPools, ...newUserLendingPool}];
         }
-      });
-      userRef.current.userLendingPools = newUserLendingPools;
-      setUser({
-        ...userRef.current
-      });
+      }
     }
   };
 
@@ -190,51 +200,73 @@ export const UserContextProvider = ({ children }) => {
           protectionPoolAddress,
           provider.getSigner()
         );
-        
+
         // Listen for "ProtectionBought", by user
-        const updateDataOnProtectionBought =
-          async (buyer, lendingPoolAddress, protectionAmount, premium) => {
-            console.log("ProtectionBought event triggered");
+        const updateDataOnProtectionBought = async (
+          buyer,
+          lendingPoolAddress,
+          protectionAmount,
+          premium
+        ) => {
+          console.log("ProtectionBought event triggered");
 
-            // todo: this condition should be added in the mainnet
-            // if (buyer === user.address) {
-            console.log("User bought protection!");
-            await updateProtectionAmountAndExpiration(
-              protectionPoolAddress,
-              lendingPoolAddress
-            );
-          };
-        protectionPoolInstance.on("ProtectionBought", updateDataOnProtectionBought);
-        
+          // todo: this condition should be added in the mainnet
+          // if (buyer === user.address) {
+          console.log("User bought protection!");
+          await updateProtectionAmountAndExpiration(
+            protectionPoolAddress,
+            lendingPoolAddress
+          );
+        };
+        protectionPoolInstance.on(
+          "ProtectionBought",
+          updateDataOnProtectionBought
+        );
+
         // Listen for ProtectionSold/deposit by user
-        const updateDataOnProtectionSold =
-          async (userAddress, amount, event) => {
-            console.log("ProtectionSold event triggered: ", event);
+        const updateDataOnProtectionSold = async (
+          userAddress,
+          amount,
+          event
+        ) => {
+          console.log("ProtectionSold event triggered: ", event);
 
-            if (userAddress === user.address) {
-              console.log("User made a deposit!");
-              await updateSTokenUnderlyingAmount(protectionPoolAddress);
-              await updateUserUsdcBalance();
-            }
-          };
+          if (userAddress === user.address) {
+            console.log("User made a deposit!");
+            await updateSTokenUnderlyingAmount(protectionPoolAddress);
+            await updateUserUsdcBalance();
+          }
+        };
         protectionPoolInstance.on("ProtectionSold", updateDataOnProtectionSold);
-        
-        // Listen for WithdrawalMade by user
-        const updateDataOnWithdrawalMade =
-          async (userAddress, amount, receiver, event) => {
-            console.log("WithdrawalMade event triggered: ", event);
 
-            if (receiver === user.address) {
-              console.log("User made a withdrawal!");
-              await updateSTokenUnderlyingAmount(protectionPoolAddress);
-              await updateRequestedWithdrawalAmount(protectionPoolAddress);
-              await updateUserUsdcBalance();
-            }
-          };
+        // Listen for WithdrawalMade by user
+        const updateDataOnWithdrawalMade = async (
+          userAddress,
+          amount,
+          receiver,
+          event
+        ) => {
+          console.log("WithdrawalMade event triggered: ", event);
+
+          if (receiver === user.address) {
+            console.log("User made a withdrawal!");
+            await updateSTokenUnderlyingAmount(protectionPoolAddress);
+            await updateRequestedWithdrawalAmount(protectionPoolAddress);
+            await updateUserUsdcBalance();
+          }
+        };
         protectionPoolInstance.on("WithdrawalMade", updateDataOnWithdrawalMade);
-        
-        console.log("Subscribed to ProtectionPool events: ", protectionPoolAddress);
-        return [protectionPoolInstance, updateDataOnProtectionBought, updateDataOnProtectionSold, updateDataOnWithdrawalMade];
+
+        console.log(
+          "Subscribed to ProtectionPool events: ",
+          protectionPoolAddress
+        );
+        return [
+          protectionPoolInstance,
+          updateDataOnProtectionBought,
+          updateDataOnProtectionSold,
+          updateDataOnWithdrawalMade
+        ];
       });
     } else {
       setUser(defaultUser);
@@ -243,17 +275,29 @@ export const UserContextProvider = ({ children }) => {
     return () => {
       if (!protectionPoolSubscriptions) return;
       protectionPoolSubscriptions.forEach((subscriptionDetails) => {
-        if(subscriptionDetails.length != 4) return;
+        if (subscriptionDetails.length != 4) return;
         const protectionPoolInstance = subscriptionDetails[0];
         const updateDataOnProtectionBought = subscriptionDetails[1];
         const updateDataOnProtectionSold = subscriptionDetails[2];
         const updateDataOnWithdrawalMade = subscriptionDetails[3];
 
-        protectionPoolInstance.off("ProtectionBought", updateDataOnProtectionBought);
-        protectionPoolInstance.off("ProtectionSold", updateDataOnProtectionSold);
-        protectionPoolInstance.off("WithdrawalMade", updateDataOnWithdrawalMade);
+        protectionPoolInstance.off(
+          "ProtectionBought",
+          updateDataOnProtectionBought
+        );
+        protectionPoolInstance.off(
+          "ProtectionSold",
+          updateDataOnProtectionSold
+        );
+        protectionPoolInstance.off(
+          "WithdrawalMade",
+          updateDataOnWithdrawalMade
+        );
 
-        console.log("Unsubscribed from ProtectionPool events: ", protectionPoolInstance.address);
+        console.log(
+          "Unsubscribed from ProtectionPool events: ",
+          protectionPoolInstance.address
+        );
       });
     };
   }, [protectionPools, isDefaultData, protectionPoolService]);

@@ -16,7 +16,7 @@ export const LendingPoolContextProvider = ({ children }) => {
 
   const defaultLendingPools: LendingPool[] = [
     {
-      address: "0x00...",
+      address: "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
       name: "Lend East #1: Emerging Asia Fintech Pool",
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",
@@ -28,7 +28,7 @@ export const LendingPoolContextProvider = ({ children }) => {
       protectionPurchase: "51,000 USDC"
     },
     {
-      address: "0x01...",
+      address: "0xd09a57127bc40d680be7cb061c2a6629fe71abef",
       name: "Cauris Fund #2: Africa Innovation Pool",
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",
@@ -40,8 +40,8 @@ export const LendingPoolContextProvider = ({ children }) => {
       protectionPurchase: "21,000 USDC"
     },
     {
-      address: "0x02...",
-      name: "Almavest Basket #6",
+      address: "0x89d7c618a4eef3065da8ad684859a547548e6169",
+      name: "Asset-Backed Pool via Addem Capital",
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",
       lendingPoolAPY: "17%",
@@ -57,7 +57,12 @@ export const LendingPoolContextProvider = ({ children }) => {
     useState<LendingPool[]>(defaultLendingPools);
 
   useEffect(() => {
-    if (!isDefaultData && protectionPools && provider && protectionPoolService) {
+    if (
+      !isDefaultData &&
+      protectionPools &&
+      provider &&
+      protectionPoolService
+    ) {
       const promises = protectionPools.map((protectionPool) => {
         return protectionPoolService
           .getLendingPools(protectionPool.address)
