@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +28,8 @@ const SellProtectionPopUp = (props) => {
   const [loading, setLoading] = useState(false);
   const [expectedYield, setExpectedYield] = useState("18 - 25%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
+
+  const router = useRouter()
 
   const reset = () => {
     setSuccessMessage("");
@@ -65,6 +68,7 @@ const SellProtectionPopUp = (props) => {
         );
         setTimeout(() => {
           onClose();
+          router.push('/sellProtection');
         }, 2000);
       } else {
         onError(receipt);

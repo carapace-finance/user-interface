@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import {
   Dialog,
   DialogContent,
@@ -35,6 +36,8 @@ const BuyProtectionPopUp = (props) => {
   const [adjustedYield, setAdjustedYield] = useState("10 - 17%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
   const { protectionPoolService } = useContext(ApplicationContext);
+
+  const router = useRouter()
 
   const reset = () => {
     setSuccessMessage("");
@@ -85,6 +88,7 @@ const BuyProtectionPopUp = (props) => {
         );
         setTimeout(() => {
           onClose();
+          router.push('/buyProtection');
         }, 2000);
       } else {
         onError(receipt);
