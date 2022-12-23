@@ -36,7 +36,7 @@ const Header = () => {
   };
 
   // playground idle timeout is 10 minutes
-  let idleTimeoutInMilliSeconds = 1000 * 60 * 10;
+  let idleTimeoutInMilliSeconds = 1000 * 60 * 30;
   let idleTimerId;
 
   const cleanup = async () => {
