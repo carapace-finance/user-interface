@@ -12,26 +12,25 @@ const TitleAndDescriptions = dynamic(
 import WithdrawalRequestPopUp from "@components/WithdrawalRequestPopUp";
 import WithdrawPopUp from "@components/WithdrawPopUp";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
 import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import numeral from "numeral";
+import { getLendingPoolName } from "@utils/forked/playground";
+
+import assets from "src/assets";
 
 const Dashboard = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const { contractAddresses } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
-  const { lendingPools } = useContext(LendingPoolContext);
   const { protectionPools } = useContext(ProtectionPoolContext);
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     setProtectionPoolAddress(contractAddresses?.pool);
   }, [contractAddresses]);
-
-  console.log("user ==>", user);
 
   return (
     <div className="mx-32">
@@ -107,54 +106,42 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {lendingPools.map((lendingPool) => (
+            {user.userLendingPools.map((userLendingPool) => (
               <tr
-                key={lendingPool.address}
+                key={userLendingPool.lendingPoolAddress}
                 className="text-left text-ms font-medium"
               >
-                <td className="py-4">{lendingPool.name}</td>
+                <td className="py-4">{getLendingPoolName(userLendingPool.lendingPoolAddress)}</td>
                 <td className="py-4">
                   <Image
-                    src={lendingPool.protocol}
+                    src={assets.goldfinch.src}
                     width={24}
                     height={24}
                     alt=""
                   />
                 </td>
-                <td className="py-4">{lendingPool.premium}</td>
-                <td>{lendingPool.lendingPoolAPY}</td>
-                <td className="py-4">{lendingPool.adjustedYields}</td>
+                <td className="py-4">{numeral(convertUSDCToNumber(userLendingPool.protectionPremium)).format(USDC_FORMAT).toString()}</td>
+                <td className="py-4">17%</td>
+                <td className="py-4">7 - 10%</td>
                 <td className="py-4">
-                  {user.userLendingPools?.length > 0
-                    ? user.userLendingPools.map((userLendingPool) =>
-                        userLendingPool.lendingPoolAddress ===
-                        lendingPool.address
-                          ? moment
-                              .duration(
-                                userLendingPool.timeUntilExpirationInSeconds.toNumber() -
-                                  moment().unix(),
-                                "seconds"
-                              )
-                              .humanize()
-                          : "0"
-                      )
-                    : "0"}
+                  {moment
+                    .duration(
+                      userLendingPool.timeUntilExpirationInSeconds.toNumber() -
+                        moment().unix(),
+                      "seconds"
+                    )
+                    .humanize()
+                  }
                 </td>
                 <td className="py-4">
-                  {user.userLendingPools?.length > 0
-                    ? user.userLendingPools.map((userLendingPool) =>
-                        userLendingPool.lendingPoolAddress ===
-                        lendingPool.address
-                          ? numeral(
-                              convertUSDCToNumber(
-                                userLendingPool.protectionAmount
-                              )
-                            )
-                              .format(USDC_FORMAT)
-                              .toString()
-                          : "0"
+                  {numeral(
+                        convertUSDCToNumber(
+                          userLendingPool.protectionAmount
+                        )
                       )
-                    : "0"}
+                        .format(USDC_FORMAT)
+                        .toString()
+                  }
                 </td>
                 <td className="py-4">
                   <button
