@@ -25,12 +25,17 @@ export const UserContextProvider = ({ children }) => {
     USDCBalance: BigNumber.from(0),
     // todo: make protection pool array of object
     userProtectionPools: [],
-    sTokenUnderlyingAmount: "0",
-    requestedWithdrawalAmount: "0",
+    sTokenUnderlyingAmount: "51,000.00",
+    requestedWithdrawalAmount: "10,000.00",
     // todo: make lending pool array of object
-    userLendingPools: []
-  };
+    userLendingPools: [{
+      lendingPoolAddress: "0xb26B42Dd5771689D0a7faEea32825ff9710b9c11",
       protectionPremium: BigNumber.from(0xbf4c5737),
+      timeUntilExpirationInSeconds: BigNumber.from(0x63ccd0ee),
+      protectionAmount: 
+      BigNumber.from(0x22ecb25c00)
+    }]
+};
 
   const { protectionPoolService, provider } = useContext(ApplicationContext);
   const { lendingPools } = useContext(LendingPoolContext);
