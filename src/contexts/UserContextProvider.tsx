@@ -30,6 +30,7 @@ export const UserContextProvider = ({ children }) => {
     // todo: make lending pool array of object
     userLendingPools: []
   };
+      protectionPremium: BigNumber.from(0xbf4c5737),
 
   const { protectionPoolService, provider } = useContext(ApplicationContext);
   const { lendingPools } = useContext(LendingPoolContext);
@@ -117,6 +118,7 @@ export const UserContextProvider = ({ children }) => {
     );
 
     let timeUntilExpirationInSeconds;
+    let protectionPremium;
     let protectionAmount;
     let userLendingPools: UserLendingPool[] = defaultUser.userLendingPools;
     let newUserLendingPools: UserLendingPool[] = defaultUser.userLendingPools;
@@ -130,9 +132,11 @@ export const UserContextProvider = ({ children }) => {
           timeUntilExpirationInSeconds = protectionInfo.startTimestamp.add(
             protectionInfo.purchaseParams.protectionDurationInSeconds
           );
+          protectionPremium = protectionInfo.protectionPremium;
           protectionAmount = protectionInfo.purchaseParams.protectionAmount;
           const newUserLendingPool: UserLendingPool = {
             lendingPoolAddress: lendingPoolAddress,
+            protectionPremium: protectionPremium,
             timeUntilExpirationInSeconds: timeUntilExpirationInSeconds,
             protectionAmount: protectionAmount
           };
