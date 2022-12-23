@@ -23,6 +23,7 @@ const BuyProtection = () => {
         descriptions="Buy protection for your lending pools to hedge against default risks"
         buttonExist={true}
         button="Learn about buying protection"
+        guideLink="https://docs.google.com/document/d/1kL2j-yLL8Syprj-kqVgF0yePRErlgjZdRRu2dPeCW3Q"
       />
       <h3 className="text-left font-bold">All Lending Pools</h3>
       <div className="h-5"></div>
