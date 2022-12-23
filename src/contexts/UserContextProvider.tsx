@@ -111,13 +111,10 @@ export const UserContextProvider = ({ children }) => {
     lendingPoolAddress: string
   ) => {
     if (
-      !protectionPoolService ||
-      !protectionPoolAddress ||
-      !lendingPoolAddress
+      protectionPoolService ||
+      protectionPoolAddress ||
+      lendingPoolAddress
     ) {
-      return {};
-    }
-
     const ProtectionInfos = await protectionPoolService.getProtectionPurchases(
       protectionPoolAddress
     );
@@ -125,13 +122,12 @@ export const UserContextProvider = ({ children }) => {
     let timeUntilExpirationInSeconds;
     let protectionPremium;
     let protectionAmount;
-    let userLendingPools: UserLendingPool[] = defaultUser.userLendingPools;
-    let newUserLendingPools: UserLendingPool[] = defaultUser.userLendingPools;
+    let newUserLendingPools: UserLendingPool[] = [];
 
     if (ProtectionInfos?.length > 0) {
       ProtectionInfos.map((protectionInfo) => {
         if (
-          protectionInfo.purchaseParams.lendingPoolAddress ===
+          protectionInfo.purchaseParams.lendingPoolAddress ==
           lendingPoolAddress
         ) {
           timeUntilExpirationInSeconds = protectionInfo.startTimestamp.add(
@@ -145,13 +141,20 @@ export const UserContextProvider = ({ children }) => {
             timeUntilExpirationInSeconds: timeUntilExpirationInSeconds,
             protectionAmount: protectionAmount
           };
-          newUserLendingPools = [{...userLendingPools, ...newUserLendingPool}];
+          newUserLendingPools.push(newUserLendingPool);
         }
       });
-      userRef.current.userLendingPools = newUserLendingPools;
-      setUser({
-        ...userRef.current
-      });
+      if(newUserLendingPools.length != 0){
+        userRef.current.userLendingPools = newUserLendingPools;
+        setUser({
+          ...userRef.current
+        });
+        console.log(
+          "User's ProtectionAmountAndExpiration Updated ==>",
+          newUserLendingPools
+        );
+        }
+      }
     }
   };
 
