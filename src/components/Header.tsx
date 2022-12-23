@@ -130,7 +130,10 @@ const Header = () => {
         });
         updatePlayground(playground);
 
-        console.log(`Successfully started a playground with fork: ${playground.forkId}`, playground);
+        console.log(
+          `Successfully started a playground with fork: ${playground.forkId}`,
+          playground
+        );
       }
     } else {
       onError(

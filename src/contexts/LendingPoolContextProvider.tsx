@@ -57,7 +57,12 @@ export const LendingPoolContextProvider = ({ children }) => {
     useState<LendingPool[]>(defaultLendingPools);
 
   useEffect(() => {
-    if (!isDefaultData && protectionPools && provider && protectionPoolService) {
+    if (
+      !isDefaultData &&
+      protectionPools &&
+      provider &&
+      protectionPoolService
+    ) {
       const promises = protectionPools.map((protectionPool) => {
         return protectionPoolService
           .getLendingPools(protectionPool.address)

@@ -42,7 +42,9 @@ const SellProtection = () => {
         guideLink="https://docs.google.com/document/d/1-wp-gBIVkwrzN0u-eRY78u9rDGZsSCTFsj9xSfB8NJw"
       />
 
-<h3 className="text-left font-bold mb-8">Your Protection Pools with Deposit</h3>
+      <h3 className="text-left font-bold mb-8">
+        Your Protection Pools with Deposit
+      </h3>
       <div className="rounded-2xl shadow-table p-8">
         <table className="table-fixed w-full">
           <thead>
@@ -142,22 +144,22 @@ const SellProtection = () => {
             {/* todo: list up the protection pools the user has interacted with */}
             {protectionPools.map((protectionPool) => (
               <tr
-              key={protectionPool.address}
-              className="text-left text-ms font-medium"
-            >
-              <td>{protectionPool.name}</td>
-              <td className="py-4">
-                <Image
-                  src={protectionPool.protocols}
-                  width={24}
-                  height={24}
-                  alt=""
-                />
-              </td>
-              <td className="py-4">{protectionPool.APY}</td>
-              <td className="py-4">{user.sTokenUnderlyingAmount}</td>
-              <td className="py-4">{user.requestedWithdrawalAmount}</td>
-              <td className="py-4">
+                key={protectionPool.address}
+                className="text-left text-ms font-medium"
+              >
+                <td>{protectionPool.name}</td>
+                <td className="py-4">
+                  <Image
+                    src={protectionPool.protocols}
+                    width={24}
+                    height={24}
+                    alt=""
+                  />
+                </td>
+                <td className="py-4">{protectionPool.APY}</td>
+                <td className="py-4">{user.sTokenUnderlyingAmount}</td>
+                <td className="py-4">{user.requestedWithdrawalAmount}</td>
+                <td className="py-4">
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}
                     className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
@@ -178,15 +180,15 @@ const SellProtection = () => {
           </tbody>
         </table>
         <WithdrawalRequestPopUp
-        open={isWithdrawalRequestOpen}
-        onClose={() => setIsWithdrawalRequestOpen(false)}
-        protectionPoolAddress={protectionPoolAddress}
-      ></WithdrawalRequestPopUp>
-      <WithdrawPopUp
-        open={isWithdrawOpen}
-        onClose={() => setIsWithdrawOpen(false)}
-        protectionPoolAddress={protectionPoolAddress}
-      ></WithdrawPopUp>
+          open={isWithdrawalRequestOpen}
+          onClose={() => setIsWithdrawalRequestOpen(false)}
+          protectionPoolAddress={protectionPoolAddress}
+        ></WithdrawalRequestPopUp>
+        <WithdrawPopUp
+          open={isWithdrawOpen}
+          onClose={() => setIsWithdrawOpen(false)}
+          protectionPoolAddress={protectionPoolAddress}
+        ></WithdrawPopUp>
       </div>
       <h3 className="text-left font-bold mb-8 mt-16">All Protection Pools</h3>
       <div className="rounded-2xl shadow-table">

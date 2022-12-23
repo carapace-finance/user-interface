@@ -35,18 +35,20 @@ const BuyProtection = () => {
         guideLink="https://docs.google.com/document/d/1kL2j-yLL8Syprj-kqVgF0yePRErlgjZdRRu2dPeCW3Q"
       />
 
-<h3 className="text-left font-bold">Your Lending Pools with Protection</h3>
+      <h3 className="text-left font-bold">
+        Your Lending Pools with Protection
+      </h3>
       <div className="h-5"></div>
       <div className="rounded-2xl shadow-table p-8">
         <table className="table-fixed w-full">
           <thead>
-          <tr className="text-left text-ms font-bold">
+            <tr className="text-left text-ms font-bold">
               <th className="py-4">Lending Pool</th>
               <th className="py-4">Protocol</th>
               <th className="py-4">Premium</th>
               <th className="text-left py-4">Lending Pool APY</th>
               <th className="py-4">
-              <div className="flex flex-row justify-between mr-4">
+                <div className="flex flex-row justify-between mr-4">
                   Estimated Adjusted Yields
                   <Tooltip
                     animate={{
@@ -76,7 +78,7 @@ const BuyProtection = () => {
               <th className="py-4">Protection expires in</th>
               <th className="py-4">Protection Amount</th>
               <th className="py-4">
-              <div className="flex flex-row items-center">
+                <div className="flex flex-row items-center">
                   Claim
                   <Tooltip
                     animate={{
@@ -108,19 +110,27 @@ const BuyProtection = () => {
           <tbody>
             {user.userLendingPools.map((userLendingPool) => (
               <tr
-              key={userLendingPool.lendingPoolAddress}
-              className="text-left text-ms font-medium"
-            >
-              <td className="py-4">{getLendingPoolName(userLendingPool.lendingPoolAddress)}</td>
-              <td className="py-4">
-              <Image
+                key={userLendingPool.lendingPoolAddress}
+                className="text-left text-ms font-medium"
+              >
+                <td className="py-4">
+                  {getLendingPoolName(userLendingPool.lendingPoolAddress)}
+                </td>
+                <td className="py-4">
+                  <Image
                     src={assets.goldfinch.src}
                     width={24}
                     height={24}
                     alt=""
                   />
                 </td>
-                <td className="py-4">{numeral(convertUSDCToNumber(userLendingPool.protectionPremium)).format(USDC_FORMAT).toString()}</td>
+                <td className="py-4">
+                  {numeral(
+                    convertUSDCToNumber(userLendingPool.protectionPremium)
+                  )
+                    .format(USDC_FORMAT)
+                    .toString()}
+                </td>
                 <td className="py-4">17%</td>
                 <td className="py-4">7 - 10%</td>
                 <td className="py-4">
@@ -130,18 +140,14 @@ const BuyProtection = () => {
                         moment().unix(),
                       "seconds"
                     )
-                    .humanize()
-                  }
+                    .humanize()}
                 </td>
                 <td className="py-4">
                   {numeral(
-                        convertUSDCToNumber(
-                          userLendingPool.protectionAmount
-                        )
-                      )
-                        .format(USDC_FORMAT)
-                        .toString()
-                  }
+                    convertUSDCToNumber(userLendingPool.protectionAmount)
+                  )
+                    .format(USDC_FORMAT)
+                    .toString()}
                 </td>
                 <td className="py-4">
                   <button

@@ -177,7 +177,10 @@ const SellProtectionPopUp = (props) => {
             className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
             onClick={sellProtection}
             disabled={
-              loading || !protectionPoolService || !protectionPoolAddress || !amount
+              loading ||
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !amount
             }
           >
             Confirm Deposit

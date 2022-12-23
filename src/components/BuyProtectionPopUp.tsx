@@ -12,10 +12,7 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import {
-  convertNumberToUSDC,
-  USDC_FORMAT
-} from "@utils/usdc";
+import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
 import { formatAddress, getDaysInSeconds } from "@utils/utils";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
@@ -146,9 +143,16 @@ const BuyProtectionPopUp = (props) => {
             {renderFieldAndValue("Token Id", tokenId)}
             {renderFieldAndValue(
               "Premium Price",
-              calculatingPremiumPrice
-                ? (<div>Calculating Premium Price...<LoadingButton loading={calculatingPremiumPrice}></LoadingButton></div>)
-                : numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
+              calculatingPremiumPrice ? (
+                <div>
+                  Calculating Premium Price...
+                  <LoadingButton
+                    loading={calculatingPremiumPrice}
+                  ></LoadingButton>
+                </div>
+              ) : (
+                numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
+              )
             )}
           </div>
           <Divider className="mb-8" />
@@ -159,7 +163,10 @@ const BuyProtectionPopUp = (props) => {
             >
               <p className="text-base">Estimated Stats</p>
             </Typography>
-            <Typography className="flex justify-between pb-3 mt-4" variant="caption">
+            <Typography
+              className="flex justify-between pb-3 mt-4"
+              variant="caption"
+            >
               <div className="text-gray-500 text-sm flex items-center">
                 Expected Adjusted Yield:
                 <div className="pl-2">
