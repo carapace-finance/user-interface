@@ -8,7 +8,7 @@ import {
 } from "@contracts/contractService";
 import {
   approveAndDeposit,
-  approveAndBuyProtection,
+  transferApproveAndBuyProtection,
   getLendingPoolName
 } from "@utils/forked/playground";
 import {
@@ -111,7 +111,7 @@ export class ProtectionPoolService {
     );
 
     if (this.isPlayground) {
-      return await approveAndBuyProtection(
+      return await transferApproveAndBuyProtection(
         this.provider,
         protectionPoolInstance,
         purchaseParams,

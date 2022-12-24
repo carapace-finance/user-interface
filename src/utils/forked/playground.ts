@@ -72,7 +72,7 @@ export async function preparePlayground(playground: Playground) {
   const lendingPoolAddress = GOLDFINCH_LENDING_POOLS[0];
 
   // buy protection 1
-  await approveAndBuyProtection(
+  await transferApproveAndBuyProtection(
     playground.provider,
     protectionPoolInstance,
     {
@@ -213,7 +213,7 @@ export async function approveAndDeposit(
     .deposit(depositAmt, receiverAddress);
 }
 
-export async function approveAndBuyProtection(
+export async function transferApproveAndBuyProtection(
   provider,
   protectionPoolInstance,
   purchaseParams,
@@ -243,9 +243,8 @@ export async function approveAndBuyProtection(
 
   const buyerAddress = await buyer.getAddress();
 
-  // const premiumAmt = parseUSDC("5000");
-  // transfer usdc to deployer
-  // await transferUsdc(provider, buyerAddress, premiumAmt);
+  // transfer usdc to buyer, the lending position owner
+  await transferUsdc(provider, buyerAddress, premiumAmt);
 
   // Approve premium USDC
   await usdcContract
