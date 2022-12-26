@@ -24,7 +24,7 @@ export const LendingPoolContextProvider = ({ children }) => {
       CARATokenRewards: "~3.5%",
       premium: "4 - 7%",
       timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0xLP...",
+      protectionPoolAddress: "0xPP...",
       protectionPurchase: "51,000 USDC"
     },
     {
@@ -36,7 +36,7 @@ export const LendingPoolContextProvider = ({ children }) => {
       CARATokenRewards: "~3.5%",
       premium: "4 - 7%",
       timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0xLP...",
+      protectionPoolAddress: "0xPP...",
       protectionPurchase: "21,000 USDC"
     },
     {

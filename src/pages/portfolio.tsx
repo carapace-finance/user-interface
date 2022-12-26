@@ -37,7 +37,7 @@ const Portfolio = () => {
       <TitleAndDescriptions title="Portfolio" buttonExist={false} />
       <h3 className="text-left font-bold">Your Protection Purchases</h3>
       <div className="h-5"></div>
-      <div className="rounded-2xl shadow-table p-8">
+      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-ms font-bold">
@@ -241,7 +241,7 @@ const Portfolio = () => {
       </div>
       <div className="h-16"></div>
       <h3 className="text-left font-bold mb-8">Your Deposits</h3>
-      <div className="rounded-2xl shadow-table p-8">
+      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-ms font-bold">

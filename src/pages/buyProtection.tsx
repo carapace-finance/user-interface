@@ -27,7 +27,7 @@ const BuyProtection = () => {
       />
       <h3 className="text-left font-bold">All Lending Pools</h3>
       <div className="h-5"></div>
-      <div className="rounded-2xl shadow-table">
+      <div className="rounded-2xl shadow-lg shadow-gray-200">
         <div className="h-4"></div>
         <table className="table-fixed w-full ">
           <thead>

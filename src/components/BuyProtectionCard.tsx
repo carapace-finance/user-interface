@@ -79,7 +79,7 @@ export default function BuyProtectionCard() {
   }; // your form submit function which will invoke after successful validation
 
   return (
-    <div className="block py-10 px-8 rounded-2xl shadow-boxShadow  shadow-table w-450">
+    <div className="block py-10 px-8 rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200 w-450 h-fit">
       <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
         Estimated Adjusted Yields
         <div className="pl-2">

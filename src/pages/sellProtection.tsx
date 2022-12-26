@@ -28,7 +28,7 @@ const SellProtection = () => {
         guideLink="https://docs.google.com/document/d/1-wp-gBIVkwrzN0u-eRY78u9rDGZsSCTFsj9xSfB8NJw"
       />
       <h3 className="text-left font-bold mb-8">All Protection Pools</h3>
-      <div className="rounded-2xl shadow-table">
+      <div className="rounded-2xl shadow-lg shadow-gray-200">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-sm font-bold">
@@ -37,7 +37,7 @@ const SellProtection = () => {
               <th className="py-8">Estimated APY</th>
               <th className="py-8">
                 <div className="flex flex-row justify-start mr-4">
-                  <p className="mr-4">Total Capital</p>
+                  <p className="mr-4">Total Pool Balance</p>
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
