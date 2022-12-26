@@ -38,8 +38,8 @@ export default function SellProtectionCard() {
   }; // your form submit function which will invoke after successful validation
 
   return (
-    <div className="block py-10 px-8 bg-white rounded-2xl shadow-boxShadow  shadow-table w-450">
-      <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
+    <div className="py-10 px-8 bg-white rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200 w-450 h-fit">
+      <h5 className="text-left text-customGrey text-xl mb-2 flex items-center">
         Estimated APY
         <div className="pl-2">
           <Tooltip
@@ -89,7 +89,7 @@ export default function SellProtectionCard() {
         </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
+        <h5 className="text-left text-customGrey text-xl  font-normal mb-2 flex items-center">
           Deposit Amount
         </h5>
         <input
@@ -102,7 +102,7 @@ export default function SellProtectionCard() {
           })}
         />
         {errors.depositAmount && (
-          <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">
+          <h5 className="block text-left text-buttonPink text-base font-normal mb-4">
             the deposit amount must be in between 0 and the deposit amount
             available if you have enough balance
           </h5>
@@ -129,9 +129,9 @@ export default function SellProtectionCard() {
           USDC Balance: {numeral(usdcBalance).format(USDC_FORMAT)}
         </p>
         <input
-          className="cursor-pointer border border-black rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           type="submit"
-          value="Preview"
+          value="Deposit"
           // disabled={} // todo: add the leverage ratio limit
         />
       </form>

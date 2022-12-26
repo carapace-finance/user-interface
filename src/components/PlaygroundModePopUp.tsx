@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { LoadingButton } from "@mui/lab";
@@ -9,6 +10,8 @@ const PlaygroundModePopUp = (props) => {
 
   const { lendingPools } = useContext(LendingPoolContext);
   const { isDefaultData, protectionPools } = useContext(ProtectionPoolContext);
+
+  const router = useRouter();
 
   const handleClose = (
     event: {},
@@ -29,6 +32,7 @@ const PlaygroundModePopUp = (props) => {
       disableScrollLock
       open={open}
       onClose={handleClose}
+      BackdropProps={{ style: { backgroundColor: "#FFFFFFE6" } }}
       PaperProps={{
         style: {
           borderRadius: "16px"
@@ -58,7 +62,10 @@ const PlaygroundModePopUp = (props) => {
             lendingPools?.length > 0 ? (
               <button
                 className="border rounded-full border-customDarkGrey text-customDarkGrey w-full px-4 py-4 mt-8 mb-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-                onClick={onClose}
+                onClick={() => {
+                  router.push("/portfolio");
+                  onClose();
+                }}
               >
                 <span>Start Playing Around!</span>
               </button>
