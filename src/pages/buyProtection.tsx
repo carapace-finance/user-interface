@@ -28,7 +28,7 @@ const BuyProtection = () => {
   return (
     <div className="mx-32">
       <TitleAndDescriptions
-        title="Buy Protection"
+        title="Protect"
         descriptions="Buy protection for your lending pools to hedge against default risks"
         buttonExist={true}
         button="Learn about buying protection"

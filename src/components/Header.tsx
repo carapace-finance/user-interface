@@ -240,7 +240,7 @@ const Header = () => {
               : ""
           } hover:text-customBlue`}
         >
-          <h3>Buy</h3>
+          <h3>Protect</h3>
         </Link>
         {/* <Link href="/lendWithProtection">
           <h3>Lend With Protection</h3>
@@ -254,7 +254,7 @@ const Header = () => {
               : ""
           } hover:text-customBlue ml-16`}
         >
-          <h3>Sell</h3>
+          <h3>Earn</h3>
         </Link>
       </div>
       <div className="mr-12">

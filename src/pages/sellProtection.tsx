@@ -35,7 +35,7 @@ const SellProtection = () => {
   return (
     <div className="mx-32">
       <TitleAndDescriptions
-        title="Sell Protection"
+        title="Earn"
         descriptions="Earn yields by depositing capital to diversified protection pools"
         buttonExist={true}
         button="Learn about selling protection"
