@@ -256,6 +256,14 @@ const Header = () => {
         >
           <h3>Earn</h3>
         </Link>
+        <Link
+          href="/portfolio"
+          className={`${
+            router.pathname == "/portfolio" ? "text-customBlue font-medium" : ""
+          } hover:text-customBlue ml-16`}
+        >
+          <h3>Portfolio</h3>
+        </Link>
       </div>
       <div className="mr-12">
         {/* {active && chainId === 1

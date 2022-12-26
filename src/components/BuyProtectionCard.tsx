@@ -250,7 +250,7 @@ export default function BuyProtectionCard() {
         <input
           className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           type="submit"
-          value="Protect"
+          value="Buy Protection"
           disabled={premiumPrice === 0}
         />
       </form>
