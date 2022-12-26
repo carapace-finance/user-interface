@@ -110,12 +110,13 @@ export class ProtectionPoolService {
       this.provider.getSigner()
     );
 
+    // todo: approve the exact premiumAmt after the buyProtection method with the premiumAmt argument is implemented
     if (this.isPlayground) {
       return await transferApproveAndBuyProtection(
         this.provider,
         protectionPoolInstance,
         purchaseParams,
-        premiumAmt
+        new BigNumber("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "16")
       );
     } else {
       return await protectionPoolInstance.buyProtection(purchaseParams);

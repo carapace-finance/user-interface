@@ -1,4 +1,5 @@
 import { formatEther, parseEther } from "@ethersproject/units";
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   transferUsdc,
   getUsdcContract,
@@ -247,9 +248,11 @@ export async function transferApproveAndBuyProtection(
   await transferUsdc(provider, buyerAddress, premiumAmt);
 
   // Approve premium USDC
+  // todo: approve the exact premiumAmt after the buyProtection method with the premiumAmt argument is implemented
   await usdcContract
     .connect(buyer)
-    .approve(protectionPoolInstance.address, premiumAmt);
+    .approve(protectionPoolInstance.address, new BigNumber("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "16")
+    );
 
   console.log("Purchasing a protection using params: ", purchaseParams);
 
