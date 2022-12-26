@@ -248,9 +248,9 @@ export default function BuyProtectionCard() {
           </div>
         </div>
         <input
+          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
           type="submit"
-          value="Preview"
-          className="cursor-pointer border border-customDarkGrey text-customDarkGrey rounded-md px-16 py-5 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
+          value="Buy Protection"
           disabled={premiumPrice === 0}
         />
       </form>
