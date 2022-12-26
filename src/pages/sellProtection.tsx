@@ -34,15 +34,16 @@ const SellProtection = () => {
             <tr className="text-left text-sm font-bold">
               <th className="py-8 pl-8">Name</th>
               <th className="py-8">Protocols</th>
+              <th className="py-8">Estimated APY</th>
               <th className="py-8">
                 <div className="flex flex-row justify-start mr-4">
-                  <p className="mr-4">Estimated APY</p>
+                  <p className="mr-4">Total Capital</p>
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
                       unmount: { scale: 0, y: 25 }
                     }}
-                    content="Estimated APY for protection sellers."
+                    content="How much capital have been deposited to this pool"
                     placement="top"
                   >
                     <svg
@@ -62,8 +63,34 @@ const SellProtection = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-8">Total Capital</th>
-              <th className="py-8">Total Protection</th>
+              <th className="py-8">
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Total Protection</p>
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 }
+                    }}
+                    content="How much protection have been bought by all the buyers"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>

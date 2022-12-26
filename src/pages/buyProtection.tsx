@@ -32,7 +32,34 @@ const BuyProtection = () => {
         <table className="table-fixed w-full ">
           <thead>
             <tr className="text-left text-sm font-bold">
-              <th className="py-8 pl-8">Lending Pool</th>
+              <th className="py-8 pl-8">
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Name</p>
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 }
+                    }}
+                    content="The name of the underlying lending pool for which you can buy protection"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
               <th className="py-8">Protocol</th>
               <th className="py-8">Premium</th>
               <th className="py-8">
@@ -44,7 +71,7 @@ const BuyProtection = () => {
                       mount: { scale: 1, y: 0 },
                       unmount: { scale: 0, y: 25 }
                     }}
-                    content="APY in an underlying lending protocol like Goldfinch."
+                    content="APY in an underlying lending protocol"
                     placement="top"
                   >
                     <svg
@@ -73,7 +100,7 @@ const BuyProtection = () => {
                       mount: { scale: 1, y: 0 },
                       unmount: { scale: 0, y: 25 }
                     }}
-                    content="Lending Pool APY % minus Premium %"
+                    content="Lending Pool APY minus Premium"
                     placement="top"
                   >
                     <svg
@@ -94,7 +121,35 @@ const BuyProtection = () => {
                 </div>
               </th>
               {/* <th className="py-8">CARA Token Rewards</th> */}
-              <th className="py-8">Buy Protection Within</th>
+              <th className="py-8">
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Buy Protection Within</p>
+                  {/* <div className="float-right"> */}
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 }
+                    }}
+                    content="Time left to buy protection for this lending pool"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
