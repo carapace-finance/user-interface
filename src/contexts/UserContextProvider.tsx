@@ -117,9 +117,9 @@ export const UserContextProvider = ({ children }) => {
           protectionPoolAddress
         );
 
-      let timeUntilExpirationInSeconds;
-      let protectionPremium;
-      let protectionAmount;
+      let expirationTimestamp: BigNumber;
+      let protectionPremium: BigNumber;
+      let protectionAmount: BigNumber;
       let newUserLendingPools: UserLendingPool[] = [];
 
       if (ProtectionInfos?.length > 0) {
@@ -131,7 +131,7 @@ export const UserContextProvider = ({ children }) => {
             timeUntilExpirationInSeconds = protectionInfo.startTimestamp.add(
               protectionInfo.purchaseParams.protectionDurationInSeconds
             );
-            protectionPremium = protectionInfo.protectionPremium;
+            protectionPremium = BigNumber.from(protectionInfo.protectionPremium);
             protectionAmount = protectionInfo.purchaseParams.protectionAmount;
             const newUserLendingPool: UserLendingPool = {
               lendingPoolAddress: lendingPoolAddress,
