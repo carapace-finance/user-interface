@@ -100,7 +100,7 @@ export interface UserProtectionPool {
 export interface UserLendingPool {
   lendingPoolAddress: string;
   protectionPremium: BigNumber;
-  timeUntilExpirationInSeconds: BigNumber;
+  expirationTimestamp: BigNumber;
   protectionAmount: BigNumber;
 }
 

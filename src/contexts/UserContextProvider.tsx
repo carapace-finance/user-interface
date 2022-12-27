@@ -32,7 +32,7 @@ export const UserContextProvider = ({ children }) => {
       {
         lendingPoolAddress: "0xb26B42Dd5771689D0a7faEea32825ff9710b9c11",
         protectionPremium: BigNumber.from(0xbf4c5737),
-        timeUntilExpirationInSeconds: BigNumber.from(0x63ccd0ee),
+        expirationTimestamp: BigNumber.from(0x63ccd0ee), // todo: make this value dynamic
         protectionAmount: BigNumber.from(0x22ecb25c00)
       }
     ]
@@ -128,7 +128,7 @@ export const UserContextProvider = ({ children }) => {
             protectionInfo.purchaseParams.lendingPoolAddress ==
             lendingPoolAddress
           ) {
-            timeUntilExpirationInSeconds = protectionInfo.startTimestamp.add(
+            expirationTimestamp = protectionInfo.startTimestamp.add(
               protectionInfo.purchaseParams.protectionDurationInSeconds
             );
             protectionPremium = BigNumber.from(protectionInfo.protectionPremium);
@@ -136,7 +136,7 @@ export const UserContextProvider = ({ children }) => {
             const newUserLendingPool: UserLendingPool = {
               lendingPoolAddress: lendingPoolAddress,
               protectionPremium: protectionPremium,
-              timeUntilExpirationInSeconds: timeUntilExpirationInSeconds,
+              expirationTimestamp: expirationTimestamp,
               protectionAmount: protectionAmount
             };
             newUserLendingPools.push(newUserLendingPool);

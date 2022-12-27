@@ -212,7 +212,7 @@ const Portfolio = () => {
                 <td className="py-4">
                   {moment
                     .duration(
-                      userLendingPool.timeUntilExpirationInSeconds.toNumber() -
+                      userLendingPool.expirationTimestamp.toNumber() -
                         moment().unix(),
                       "seconds"
                     )
