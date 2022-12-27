@@ -107,51 +107,53 @@ export const UserContextProvider = ({ children }) => {
     return newUsdcBalance;
   };
 
-  const updateProtectionAmountAndExpiration = async (
+  const updatePurchasedProtectionDetails = async (
     protectionPoolAddress: string,
     lendingPoolAddress: string
   ) => {
     if (protectionPoolService || protectionPoolAddress || lendingPoolAddress) {
-      const ProtectionInfos =
+      const protectionInfos =
         await protectionPoolService.getProtectionPurchases(
           protectionPoolAddress
         );
 
-      let expirationTimestamp: BigNumber;
-      let protectionPremium: BigNumber;
-      let protectionAmount: BigNumber;
-      let newUserLendingPools: UserLendingPool[] = [];
+      // todo: this needs to be added in the mainnet
+      // let filteredProtectionInfos;
+      // if (protectionInfos?.length > 0) {
+      //   filteredProtectionInfos = protectionInfos.filter(
+      //     (protectionInfo) =>
+      //       protectionInfo.purchaseParams.lendingPoolAddress ==
+      //       lendingPoolAddress
+      //   );
+      // }
+      // console.log('filteredProtectionInfos ==>', filteredProtectionInfos);
 
-      if (ProtectionInfos?.length > 0) {
-        ProtectionInfos.map((protectionInfo) => {
-          if (
-            protectionInfo.purchaseParams.lendingPoolAddress ==
-            lendingPoolAddress
-          ) {
-            expirationTimestamp = protectionInfo.startTimestamp.add(
+      let newUserLendingPools: UserLendingPool[] = [];
+      if (protectionInfos?.length > 0) {
+        newUserLendingPools = protectionInfos.map((protectionInfo) => {
+          const newUserLendingPool: UserLendingPool = {
+            lendingPoolAddress:
+              protectionInfo.purchaseParams.lendingPoolAddress,
+            protectionPremium: BigNumber.from(protectionInfo.protectionPremium),
+            expirationTimestamp: protectionInfo.startTimestamp.add(
               protectionInfo.purchaseParams.protectionDurationInSeconds
-            );
-            protectionPremium = BigNumber.from(protectionInfo.protectionPremium);
-            protectionAmount = protectionInfo.purchaseParams.protectionAmount;
-            const newUserLendingPool: UserLendingPool = {
-              lendingPoolAddress: lendingPoolAddress,
-              protectionPremium: protectionPremium,
-              expirationTimestamp: expirationTimestamp,
-              protectionAmount: protectionAmount
-            };
-            newUserLendingPools.push(newUserLendingPool);
-          }
+            ),
+            protectionAmount: protectionInfo.purchaseParams.protectionAmount
+          };
+          return newUserLendingPool;
         });
-        if (newUserLendingPools.length != 0) {
-          userRef.current.userLendingPools = newUserLendingPools;
-          setUser({
-            ...userRef.current
-          });
-          console.log(
-            "User's ProtectionAmountAndExpiration Updated ==>",
-            newUserLendingPools
-          );
-        }
+      }
+      console.log("newUserLendingPools ==>", newUserLendingPools);
+
+      if (newUserLendingPools.length != 0) {
+        userRef.current.userLendingPools = newUserLendingPools;
+        setUser({
+          ...userRef.current
+        });
+        console.log(
+          "User's Purchased Protection Details Updated ==>",
+          newUserLendingPools
+        );
       }
     }
   };
@@ -184,7 +186,7 @@ export const UserContextProvider = ({ children }) => {
 
           if (lendingPools?.length > 0) {
             lendingPools.map(async (lendingPool) => {
-              await updateProtectionAmountAndExpiration(
+              await updatePurchasedProtectionDetails(
                 protectionPoolAddress,
                 lendingPool.address
               );
@@ -213,7 +215,7 @@ export const UserContextProvider = ({ children }) => {
           // todo: this condition should be added in the mainnet
           // if (buyer === user.address) {
           console.log("User bought protection!");
-          await updateProtectionAmountAndExpiration(
+          await updatePurchasedProtectionDetails(
             protectionPoolAddress,
             lendingPoolAddress
           );

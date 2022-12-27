@@ -210,13 +210,15 @@ const Portfolio = () => {
                     .toString()} USDC
                 </td>
                 <td className="py-4">
-                  {moment
+                  coming soon
+                  {/* todo: fix this weird days error */}
+                  {/* {moment
                     .duration(
                       userLendingPool.expirationTimestamp.toNumber() -
                         moment().unix(),
                       "seconds"
                     )
-                    .asDays().toFixed(0)} days
+                    .asDays().toFixed(0)} days */}
                 </td>
                 <td className="py-4">
                   {numeral(
