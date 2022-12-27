@@ -85,7 +85,6 @@ const WithdrawalPopUp = (props) => {
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {
-        setLoading(false);
         console.log("The withdrawal transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
@@ -96,6 +95,7 @@ const WithdrawalPopUp = (props) => {
         setTimeout(() => {
           resetInputs();
           onClose();
+          setLoading(false);
         }, 2000);
       } else {
         onError(receipt);

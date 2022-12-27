@@ -60,7 +60,6 @@ const SellProtectionPopUp = (props) => {
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {
-        setLoading(false);
         console.log("The deposit transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
@@ -68,7 +67,8 @@ const SellProtectionPopUp = (props) => {
         );
         setTimeout(() => {
           onClose();
-          router.push('/sellProtection');
+          router.push('/portfolio');
+          setLoading(false);
         }, 2000);
       } else {
         onError(receipt);

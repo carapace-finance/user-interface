@@ -80,7 +80,6 @@ const BuyProtectionPopUp = (props) => {
           lendingPoolAddress,
           protectionPurchaseParams.protectionAmount
         );
-        setLoading(false);
         console.log("The buy protection transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
@@ -88,7 +87,8 @@ const BuyProtectionPopUp = (props) => {
         );
         setTimeout(() => {
           onClose();
-          router.push('/buyProtection');
+          router.push('/portfolio');
+          setLoading(false);
         }, 2000);
       } else {
         onError(receipt);
