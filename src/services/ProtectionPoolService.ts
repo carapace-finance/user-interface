@@ -116,7 +116,7 @@ export class ProtectionPoolService {
         this.provider,
         protectionPoolInstance,
         purchaseParams,
-        BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+        premiumAmt
       );
     } else {
       return await protectionPoolInstance.buyProtection(purchaseParams);
