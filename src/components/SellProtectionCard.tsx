@@ -129,7 +129,7 @@ export default function SellProtectionCard() {
           USDC Balance: {numeral(usdcBalance).format(USDC_FORMAT)}
         </p>
         <input
-          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer"
           type="submit"
           value="Deposit"
           // disabled={} // todo: add the leverage ratio limit

@@ -207,7 +207,7 @@ const Portfolio = () => {
                     convertUSDCToNumber(userLendingPool.protectionPremium)
                   )
                     .format(USDC_FORMAT)
-                    .toString()}
+                    .toString()} USDC
                 </td>
                 <td className="py-4">
                   {moment
@@ -223,7 +223,7 @@ const Portfolio = () => {
                     convertUSDCToNumber(userLendingPool.protectionAmount)
                   )
                     .format(USDC_FORMAT)
-                    .toString()}
+                    .toString()} USDC
                 </td>
                 {/* //todo: show this button when there is a valid claim  */}
                 {/* <td className="py-4">
@@ -380,8 +380,8 @@ const Portfolio = () => {
                   />
                 </td>
                 <td className="py-4">{protectionPool.APY}</td>
-                <td className="py-4">{user.sTokenUnderlyingAmount}</td>
-                <td className="py-4">{user.requestedWithdrawalAmount}</td>
+                <td className="py-4">{user.sTokenUnderlyingAmount} USDC</td>
+                <td className="py-4">{user.requestedWithdrawalAmount} USDC</td>
                 <td className="py-4">
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}
