@@ -216,7 +216,7 @@ const Portfolio = () => {
                         moment().unix(),
                       "seconds"
                     )
-                    .humanize()}
+                    .asDays().toFixed(0)} days
                 </td>
                 <td className="py-4">
                   {numeral(
