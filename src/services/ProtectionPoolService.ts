@@ -8,7 +8,7 @@ import {
 } from "@contracts/contractService";
 import {
   approveAndDeposit,
-  approveAndBuyProtection,
+  transferApproveAndBuyProtection,
   getLendingPoolName
 } from "@utils/forked/playground";
 import {
@@ -110,12 +110,13 @@ export class ProtectionPoolService {
       this.provider.getSigner()
     );
 
+    // todo: approve the exact premiumAmt after the buyProtection method with the premiumAmt argument is implemented
     if (this.isPlayground) {
-      return await approveAndBuyProtection(
+      return await transferApproveAndBuyProtection(
         this.provider,
         protectionPoolInstance,
         purchaseParams,
-        premiumAmt
+        BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
       );
     } else {
       return await protectionPoolInstance.buyProtection(purchaseParams);
