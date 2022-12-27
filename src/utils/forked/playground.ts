@@ -251,7 +251,7 @@ export async function transferApproveAndBuyProtection(
   // todo: approve the exact premiumAmt after the buyProtection method with the premiumAmt argument is implemented
   await usdcContract
     .connect(buyer)
-    .approve(protectionPoolInstance.address, new BigNumber("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "16")
+    .approve(protectionPoolInstance.address, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "16")
     );
 
   console.log("Purchasing a protection using params: ", purchaseParams);
