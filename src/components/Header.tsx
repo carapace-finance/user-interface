@@ -43,12 +43,13 @@ const Header = () => {
     console.log("Cleanup...");
     const playgroundId = playgroundRef.current?.forkId;
     if (playgroundId) {
+      // todo: we cannot stop the playground when a page is refreshed because playgroundId is undefined at that point.
       console.log("Stopping playground: ", playgroundId);
       await stopPlayground(playgroundId);
     }
   };
 
-  // this is to ensure that playground is stopped when user closes the tab
+  // this is to ensure that playground is stopped when a user closes the tab or refreshes the app
   useEffect(() => {
     window.addEventListener("beforeunload", cleanup);
     return () => {
