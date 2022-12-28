@@ -176,7 +176,7 @@ export default function BuyProtectionCard() {
                   })} // todo: add the leverage ratio limit to max
                 />
                 {errors.protectionAmount && (
-                  <h5 className="block text-left text-buttonPink text-xl leading-tight font-normal mb-4">
+                  <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">
                     the protection amount must be in between 0 and the available
                     protection purchase amount
                   </h5>
@@ -215,7 +215,7 @@ export default function BuyProtectionCard() {
                 })}
               />
               {errors.protectionDurationInDays && (
-                <h5 className="block text-left text-buttonPink text-xl leading-tight font-normal mb-4">
+                <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">
                   the protection duration must be in between 0 day and the next
                   cycle end(180 days the longest)
                 </h5>

@@ -6,17 +6,14 @@ module.exports = withMT({
   theme: {
     extend: {
       colors: {
-        buttonPink: "#FF5896",
-        buttonPinkHover: "#FF2576",
-        textPinkHover: "#FF0C66",
+        customPink: "#FF639F",
         customDarkBlue: "#161C2E",
-        headerBorder: "#B8B8B8",
-        customBlue: "#293C9A",
+        customBlue: "#293C8E",
         customLightBlue: "#2B69F5",
         customGrey: "#6E7191",
         customDarkGrey: "#14142B",
-        customLightGrey: "#F6F6F6",
         customGraphGrey: "#B8B8B8",
+        customPristineWhite: "#F9F9FF",
         customPopupGrey: "#87898E"
       },
       boxShadow: {

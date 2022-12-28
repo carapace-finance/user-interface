@@ -293,16 +293,17 @@ const Header = () => {
         {playgroundButtonTitle === "Start Playground" ? (
           <button
             // disabled={!account}
-            className="text-white bg-customBlue rounded-md px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            className="text-white text-xl bg-customPink rounded-md px-8 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
             onClick={playgroundButtonAction}
           >
             <Tooltip
-              content="Test our app features in a sandbox!"
+              content="Test our app features here!"
               animate={{
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 }
               }}
               placement="bottom"
+              offset={20}
             >
               <span>{playgroundButtonTitle}</span>
             </Tooltip>

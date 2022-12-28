@@ -150,7 +150,7 @@ const WithdrawalPopUp = (props) => {
                   })}
                 />
                 {errors.amount && (
-                  <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">
+                  <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
                     the withdrawal amount must be in between 0 and your
                     requested amount
                   </h5>

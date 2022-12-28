@@ -102,7 +102,7 @@ export default function SellProtectionCard() {
           })}
         />
         {errors.depositAmount && (
-          <h5 className="block text-left text-buttonPink text-base font-normal mb-4">
+          <h5 className="block text-left text-customPink text-base font-normal mb-4">
             the deposit amount must be in between 0 and the deposit amount
             available if you have enough balance
           </h5>
