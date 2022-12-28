@@ -31,8 +31,11 @@ const ProtectionPool = () => {
     }
   }, [provider]);
 
-  const handleClick = (href: string) => {
-    router.push(href);
+  const handleClick = (lendingPoolAddress: string) => {
+    window.open(
+      `https://app.goldfinch.finance/pools/${lendingPoolAddress}`,
+      "_blank"
+    );
   };
 
   let protectionPoolAddress;
@@ -142,11 +145,7 @@ const ProtectionPool = () => {
                 {underlyingLendingPools.map((lendingPool) => (
                   <tr
                     key={lendingPool.address}
-                    onClick={() =>
-                      handleClick(
-                        `/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`
-                      )
-                    }
+                    onClick={() => handleClick(lendingPool.address)}
                     className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
                   >
                     <td className="px-4 py-8 pl-8">{lendingPool.name}</td>
