@@ -131,13 +131,22 @@ export const UserContextProvider = ({ children }) => {
       let newUserLendingPools: UserLendingPool[] = [];
       if (protectionInfos?.length > 0) {
         newUserLendingPools = protectionInfos.map((protectionInfo) => {
+          let expirationTimestamp = protectionInfo.startTimestamp.add(
+            protectionInfo.purchaseParams.protectionDurationInSeconds
+          );
+
+          // todo: the startTimestamp is wrong because we advances time
+          // todo: movePoolCycle moves 31 days and it's called twice, and thus 62 days need to be subtracted
+          if (
+            !protectionInfo.purchaseParams.protectionAmount.eq(0x22ecb25c00)
+          ) {
+            expirationTimestamp = expirationTimestamp.sub(62 * 86400);
+          }
           const newUserLendingPool: UserLendingPool = {
             lendingPoolAddress:
               protectionInfo.purchaseParams.lendingPoolAddress,
             protectionPremium: BigNumber.from(protectionInfo.protectionPremium),
-            expirationTimestamp: protectionInfo.startTimestamp.add(
-              protectionInfo.purchaseParams.protectionDurationInSeconds
-            ),
+            expirationTimestamp: expirationTimestamp,
             protectionAmount: protectionInfo.purchaseParams.protectionAmount
           };
           return newUserLendingPool;

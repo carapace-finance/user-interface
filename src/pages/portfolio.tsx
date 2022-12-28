@@ -207,25 +207,27 @@ const Portfolio = () => {
                     convertUSDCToNumber(userLendingPool.protectionPremium)
                   )
                     .format(USDC_FORMAT)
-                    .toString()} USDC
+                    .toString()}
+                  USDC
                 </td>
                 <td className="py-4">
-                  coming soon
-                  {/* todo: fix this weird days error */}
-                  {/* {moment
+                  {moment
                     .duration(
                       userLendingPool.expirationTimestamp.toNumber() -
                         moment().unix(),
                       "seconds"
                     )
-                    .asDays().toFixed(0)} days */}
+                    .asDays()
+                    .toFixed(0)}
+                  days
                 </td>
                 <td className="py-4">
                   {numeral(
                     convertUSDCToNumber(userLendingPool.protectionAmount)
                   )
                     .format(USDC_FORMAT)
-                    .toString()} USDC
+                    .toString()}
+                  USDC
                 </td>
                 {/* //todo: show this button when there is a valid claim  */}
                 {/* <td className="py-4">
