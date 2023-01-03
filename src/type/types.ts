@@ -63,7 +63,6 @@ export interface LendingPool {
   protocol: string;
   adjustedYields: string;
   lendingPoolAPY: string;
-  CARATokenRewards: string;
   premium: string;
   timeLeft: string;
   protectionPoolAddress: string;
@@ -78,7 +77,6 @@ export interface Bond {
   protocol: string;
   adjustedYields: string;
   lendingPoolAPY: string;
-  CARATokenRewards: string;
   premium: string;
 }
 

@@ -1,4 +1,3 @@
-import { Tooltip } from "@material-tailwind/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef } from "react";
@@ -7,12 +6,10 @@ import SellProtectionCard from "@components/SellProtectionCard";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import TitleAndDescriptions from "@components/TitleAndDescriptions";
-import { USDC_FORMAT } from "@utils/usdc";
 import assets from "src/assets";
-import { Chart, ArcElement, Legend } from "chart.js";
-Chart.register(ArcElement);
-Chart.register(Legend);
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+ChartJS.register(ArcElement, Tooltip, Legend);
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import numeral from "numeral";
 
@@ -45,6 +42,7 @@ const ProtectionPool = () => {
   let depositLimit;
   let maxAvailableDepositAmount;
   let depositPercentage = 0;
+  let estimatedAPY;
   protectionPools.map((protectionPool) => {
     if (protectionPool.address === router.query.address) {
       protectionPoolAddress = protectionPool.address;
@@ -56,6 +54,7 @@ const ProtectionPool = () => {
       let depositLimitNumber = depositLimit.replace(/\D/g, "");
       maxAvailableDepositAmount = depositLimitNumber - totalCapitalNumber;
       depositPercentage = (totalCapitalNumber / depositLimitNumber) * 100;
+      estimatedAPY = protectionPool.APY;
     }
   });
   const underlyingLendingPools = lendingPools.filter(
@@ -118,13 +117,13 @@ const ProtectionPool = () => {
           <div className="flex justify-between">
             <div className="rounded-2xl shadow-lg shadow-gray-200 shadow-gray-200 p-8 w-fit">
               <h4 className="text-left mb-4">Total Protection Pool Balance</h4>
-              <p className="text-left font-bold">{totalCapital}</p>
+              <p className="text-left font-bold">{totalCapital}&nbsp;USDC</p>
             </div>
             <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-fit ml-8">
               <h4 className="text-left mb-4">
                 Total Protection Pool Balance Limit
               </h4>
-              <p className="text-left font-bold">{depositLimit}</p>
+              <p className="text-left font-bold">{depositLimit}&nbsp;USDC</p>
             </div>
           </div>
           <h3 className="text-left font-bold mb-4 mt-8">
@@ -169,68 +168,37 @@ const ProtectionPool = () => {
             Protection Distribution Across Lending Pools
           </h3>
           <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-700">
-            <div className="w-full flex">
-              <Doughnut
-                className="mx-auto"
-                plugins={plugins}
-                options={{
-                  cutout: "70%",
-                  radius: doughnutRadius,
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: "bottom",
-                      labels: {},
-                      onClick: () => {}
-                    }
-                  },
-                  elements: {
-                    arc: {
-                      borderAlign: "center",
-                      borderWidth: 0
-                    }
+            <Doughnut
+              className="mx-auto"
+              data={{
+                labels: underlyingLendingPools.map((lendingPool) => {
+                  const total = underlyingLendingPools
+                    .map((lendingPool) =>
+                      Number(lendingPool.protectionPurchase.replace(/\D/g, ""))
+                    )
+                    .reduce(
+                      (accumulator, currentValue) => accumulator + currentValue
+                    );
+                  return `${lendingPool.name} ${Math.round(
+                    (Number(lendingPool.protectionPurchase.replace(/\D/g, "")) /
+                      total) *
+                      100
+                  )}%`;
+                }),
+                datasets: [
+                  {
+                    label: "Purchase Protection Balance in USDC",
+                    data: underlyingLendingPools.map((lendingPool) =>
+                      Number(lendingPool.protectionPurchase.replace(/\D/g, ""))
+                    ),
+                    backgroundColor: ["#161C2E", "#6E7191", "#14142B"]
                   }
-                }}
-                data={{
-                  labels: underlyingLendingPools.map((lendingPool) => {
-                    const total = underlyingLendingPools
-                      .map((lendingPool) =>
-                        Number(
-                          lendingPool.protectionPurchase.replace(/\D/g, "")
-                        )
-                      )
-                      .reduce(
-                        (accumulator, currentValue) =>
-                          accumulator + currentValue
-                      );
-                    return `${lendingPool.name} ${Math.round(
-                      (Number(
-                        lendingPool.protectionPurchase.replace(/\D/g, "")
-                      ) /
-                        total) *
-                        100
-                    )}%`;
-                  }),
-                  datasets: [
-                    {
-                      backgroundColor: [
-                        "hsl(0, 0%, 85%)",
-                        "hsl(0, 0%, %)",
-                        "hsl(0, 0%, 35%)"
-                      ],
-                      data: underlyingLendingPools.map((lendingPool) =>
-                        Number(
-                          lendingPool.protectionPurchase.replace(/\D/g, "")
-                        )
-                      )
-                    }
-                  ]
-                }}
-              />
-            </div>
+                ]
+              }}
+            />
           </div>
         </div>
-        <SellProtectionCard></SellProtectionCard>
+        <SellProtectionCard estimatedAPY={estimatedAPY}></SellProtectionCard>
       </div>
       {/* <p className="text-left mb-2">
               The maximum amount you can deposit:

@@ -22,14 +22,13 @@ import assets from "src/assets";
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
   const { protectionPoolService } = useContext(ApplicationContext);
-  const { open, onClose, amount, protectionPoolAddress } = props;
+  const { open, onClose, amount, protectionPoolAddress, estimatedAPY } = props;
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [expectedYield, setExpectedYield] = useState("18 - 25%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
 
-  const router = useRouter()
+  const router = useRouter();
 
   const reset = () => {
     setSuccessMessage("");
@@ -67,7 +66,7 @@ const SellProtectionPopUp = (props) => {
         );
         setTimeout(() => {
           onClose();
-          router.push('/portfolio');
+          router.push("/portfolio");
           setLoading(false);
         }, 2000);
       } else {
@@ -90,14 +89,11 @@ const SellProtectionPopUp = (props) => {
         }
       }}
     >
-      <IconButton
-        onClick={onClose}
-        className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
-        color="primary"
-        size="small"
-      >
-        <div className="text-black">×</div>
-      </IconButton>
+      <div className="flex justify-end mr-4">
+        <IconButton onClick={onClose}>
+          <span className="text-black">×</span>
+        </IconButton>
+      </div>
       <DialogTitle className="mt-6">Deposit</DialogTitle>
       <DialogContent className="mb-4">
         <div>
@@ -147,7 +143,7 @@ const SellProtectionPopUp = (props) => {
                 </Tooltip>
               </div>
             </div>
-            <div className="text-sm">{expectedYield}</div>
+            <div className="text-sm">{estimatedAPY}</div>
           </Typography>
           <Typography className="flex justify-between mb-4" variant="caption">
             <div className="text-gray-500 text-sm flex items-center">
@@ -194,18 +190,11 @@ const SellProtectionPopUp = (props) => {
         </div>
         <div>
           <div className="text-sm">
-            <div className="flex">
-              <p>
-                By clicking &quot;Confirm Deposit&quot;, you agree to
-                Carapace&apos;s&nbsp;
-              </p>
-              <p className="underline">Terms of Service&nbsp;</p>
-              <p>and</p>
-            </div>
-            <div className="flex">
-              <p>acknowledge that you have read and understand the&nbsp;</p>
-              <p className="underline">Carapace protocol disclaimer.</p>
-            </div>
+            By clicking &quot;Confirm Deposit&quot;, you agree to
+            Carapace&apos;s&nbsp;
+            <span className="underline">Terms of Service&nbsp;</span>
+            and acknowledge that you have read and understand the&nbsp;
+            <span className="underline">Carapace protocol disclaimer.</span>
           </div>
         </div>
       </DialogContent>

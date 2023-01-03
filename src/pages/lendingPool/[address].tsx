@@ -29,12 +29,20 @@ const LendingPool = () => {
   let protocol;
   let lendingPoolAddress;
   let protectionPoolAddress;
+  let adjustedYields;
+  let lendingPoolAPY;
+  let premium;
+  let timeLeft;
   lendingPools.map((lendingPool) => {
     if (lendingPool.address === router.query.address) {
       name = lendingPool.name;
       protocol = lendingPool.protocol;
       lendingPoolAddress = lendingPool.address;
       protectionPoolAddress = lendingPool.protectionPoolAddress;
+      adjustedYields = lendingPool.adjustedYields;
+      lendingPoolAPY = lendingPool.lendingPoolAPY;
+      premium = lendingPool.premium;
+      timeLeft = lendingPool.timeLeft;
     }
   });
 
@@ -102,16 +110,18 @@ const LendingPool = () => {
           <div className="flex justify-between">
             <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-fit">
               <h4 className="text-left mb-4">Total Purchased Protection</h4>
-              <p className="text-left font-bold">{totalProtection}</p>
+              <p className="text-left font-bold">{totalProtection}&nbsp;USDC</p>
             </div>
             <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-fit ml-8">
               <h4 className="text-left mb-4">
                 Total Protection Purchase Limit
               </h4>
-              <p className="text-left font-bold">{protectionPurchaseLimit}</p>
+              <p className="text-left font-bold">
+                {protectionPurchaseLimit}&nbsp;USDC
+              </p>
             </div>
           </div>
-          <div className="rounded-2xl shadow-boxShadow py-12 px-8 mt-8 h-fit w-fit shadow-lg shadow-gray-200">
+          <div className="rounded-2xl shadow-boxShadow py-8 px-8 mt-8 h-fit w-fit shadow-lg shadow-gray-200">
             <div className=" text-black text-2xl bold flex justify-between">
               <div className="flex">
                 <h4 className="text-left mb-4">Leverage Ratio</h4>
@@ -150,13 +160,19 @@ const LendingPool = () => {
             </div>
             <div className="flex justify-between  text-sm">
               <p className="pr-20">
-                Total Protection Pool Balance: {totalCapital}
+                Total Protection Pool Balance: {totalCapital}&nbsp;USDC
               </p>
-              <p>Total Purchased Protection: {totalProtection}</p>
+              <p>Total Purchased Protection: {totalProtection}&nbsp;USDC</p>
             </div>
           </div>
         </div>
-        <BuyProtectionCard></BuyProtectionCard>
+        <BuyProtectionCard
+          name={name}
+          adjustedYields={adjustedYields}
+          lendingPoolAPY={lendingPoolAPY}
+          premium={premium}
+          timeLeft={timeLeft}
+        ></BuyProtectionCard>
       </div>
       {/* <p className="text-left text-base mb-2">
             The maximum protection amount you can buy:{" "}

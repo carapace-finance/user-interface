@@ -231,7 +231,6 @@ export class ProtectionPoolService {
             protocol: "goldfinch",
             adjustedYields: "7 - 10%",
             lendingPoolAPY: "17%",
-            CARATokenRewards: "~3.5%",
             premium: "4 - 7%",
             timeLeft: "59 Days 8 Hours 2 Mins",
             protectionPoolAddress: protectionPoolAddress,

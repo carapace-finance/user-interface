@@ -208,7 +208,7 @@ const Portfolio = () => {
                   )
                     .format(USDC_FORMAT)
                     .toString()}
-                  USDC
+                  &nbsp;USDC
                 </td>
                 <td className="py-4">
                   {moment
@@ -219,7 +219,7 @@ const Portfolio = () => {
                     )
                     .asDays()
                     .toFixed(0)}
-                  days
+                  &nbsp;days
                 </td>
                 <td className="py-4">
                   {numeral(
@@ -227,7 +227,7 @@ const Portfolio = () => {
                   )
                     .format(USDC_FORMAT)
                     .toString()}
-                  USDC
+                  &nbsp;USDC
                 </td>
                 {/* //todo: show this button when there is a valid claim  */}
                 {/* <td className="py-4">
@@ -384,8 +384,8 @@ const Portfolio = () => {
                   />
                 </td>
                 <td className="py-4">{protectionPool.APY}</td>
-                <td className="py-4">{user.sTokenUnderlyingAmount} USDC</td>
-                <td className="py-4">{user.requestedWithdrawalAmount} USDC</td>
+                <td className="py-4">{user.sTokenUnderlyingAmount}&nbsp;USDC</td>
+                <td className="py-4">{user.requestedWithdrawalAmount}&nbsp;USDC</td>
                 <td className="py-4">
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}

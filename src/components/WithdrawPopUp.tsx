@@ -1,10 +1,10 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
-  IconButton as MuiIconButton,
   Dialog,
   DialogContent,
   DialogTitle,
-  Divider
+  Divider,
+  IconButton
 } from "@mui/material";
 import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
@@ -117,14 +117,11 @@ const WithdrawalPopUp = (props) => {
         }
       }}
     >
-      <MuiIconButton
-        onClick={onClose}
-        color="primary"
-        className="absolute top-4 right-4 flex items-center w-6 h-6"
-        size="small"
-      >
-        <div className="text-black">×</div>
-      </MuiIconButton>
+      <div className="flex justify-end mr-4">
+        <IconButton onClick={onClose}>
+          <span className="text-black">×</span>
+        </IconButton>
+      </div>
       <DialogTitle className="mt-6">Withdraw</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
@@ -179,7 +176,7 @@ const WithdrawalPopUp = (props) => {
               /> */}
               </div>
               <div className="text-right mr-5 mb-1">
-                Withdrawable Amount:
+                Withdrawable Amount:&nbsp;
                 {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}
               </div>
             </div>
@@ -227,18 +224,11 @@ const WithdrawalPopUp = (props) => {
           <div className="flex"></div>
           <LoadingButton loading={loading}></LoadingButton>
           <div className="text-sm">
-            <div className="flex">
-              <p>
-                By clicking &quot;Confirm Withdrawal&quot;, you agree to
-                Carapace&apos;s&nbsp;
-              </p>
-              <p className="underline">Terms of Service&nbsp;</p>
-              <p>and</p>
-            </div>
-            <div className="flex">
-              <p>acknowledge that you have read and understand the&nbsp;</p>
-              <p className="underline">Carapace protocol disclaimer.</p>
-            </div>
+            By clicking &quot;Confirm Withdraw&quot;, you agree to
+            Carapace&apos;s&nbsp;
+            <span className="underline">Terms of Service&nbsp;</span>
+            and acknowledge that you have read and understand the&nbsp;
+            <span className="underline">Carapace protocol disclaimer.</span>
           </div>
         </DialogContent>
       </form>

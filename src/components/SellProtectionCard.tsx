@@ -8,7 +8,8 @@ import { useRouter } from "next/router";
 import numeral from "numeral";
 import { SellProtectionInput } from "@type/types";
 
-export default function SellProtectionCard() {
+export default function SellProtectionCard(props) {
+  const { estimatedAPY } = props;
   const {
     register,
     handleSubmit,
@@ -69,27 +70,11 @@ export default function SellProtectionCard() {
       </h5>
       <div className="py-2 border-b border-gray-300">
         <h1 className="text-customDarkGrey text-4xl mb-4 text-left">
-          18 - 25%
+          {estimatedAPY}
         </h1>
       </div>
-      <div className="my-4">
-        <div className="flex mb-4">
-          <div>
-            <h5 className="text-customGrey text-base flex mb-2 ">
-              Interest from Premium
-            </h5>
-            <p className="text-left text-xl">10 - 15%</p>
-          </div>
-          <div className="ml-14">
-            <h5 className="text-customGrey text-left text-base mb-2">
-              CARA Token Rewards
-            </h5>
-            <p className="text-left text-xl">8 - 10%</p>
-          </div>
-        </div>
-      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h5 className="text-left text-customGrey text-xl  font-normal mb-2 flex items-center">
+        <h5 className="text-left text-customGrey text-xl  font-normal mt-4 mb-2 flex items-center">
           Deposit Amount
         </h5>
         <input
@@ -126,7 +111,7 @@ export default function SellProtectionCard() {
           }}
         /> */}
         <p className="text-right">
-          USDC Balance: {numeral(usdcBalance).format(USDC_FORMAT)}
+          Balance: {numeral(usdcBalance).format(USDC_FORMAT)}&nbsp;USDC
         </p>
         <input
           className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer"
@@ -140,6 +125,7 @@ export default function SellProtectionCard() {
         onClose={() => setIsOpen(false)}
         amount={getValues("depositAmount")}
         protectionPoolAddress={protectionPoolAddress}
+        estimatedAPY={estimatedAPY}
       ></SellProtectionPopUp>
     </div>
   );

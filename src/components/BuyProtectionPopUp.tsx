@@ -28,16 +28,17 @@ const BuyProtectionPopUp = (props) => {
     premiumAmount,
     calculatingPremiumPrice,
     lendingPoolAddress,
-    protectionPoolAddress
+    protectionPoolAddress,
+    name,
+    adjustedYields
   } = props;
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [adjustedYield, setAdjustedYield] = useState("10 - 17%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
   const { protectionPoolService } = useContext(ApplicationContext);
 
-  const router = useRouter()
+  const router = useRouter();
 
   const reset = () => {
     setSuccessMessage("");
@@ -87,7 +88,7 @@ const BuyProtectionPopUp = (props) => {
         );
         setTimeout(() => {
           onClose();
-          router.push('/portfolio');
+          router.push("/portfolio");
           setLoading(false);
         }, 2000);
       } else {
@@ -110,14 +111,11 @@ const BuyProtectionPopUp = (props) => {
         }
       }}
     >
-      <IconButton
-        onClick={onClose}
-        className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
-        color="primary"
-        size="small"
-      >
-        <div className="text-black">×</div>
-      </IconButton>
+      <div className="flex justify-end mr-4">
+        <IconButton onClick={onClose}>
+          <span className="text-black">×</span>
+        </IconButton>
+      </div>
       <DialogTitle className="mt-6">Buy Protection</DialogTitle>
       <DialogContent className="mb-4">
         <div>
@@ -125,7 +123,7 @@ const BuyProtectionPopUp = (props) => {
             <div className="flex">
               {renderFieldAndValue(
                 "Lending Pool",
-                formatAddress(lendingPoolAddress)
+                name
               )}
               <div className="ml-2 mt-1">
                 <img
@@ -192,7 +190,7 @@ const BuyProtectionPopUp = (props) => {
                   </Tooltip>
                 </div>
               </div>
-              <div className="text-sm">{adjustedYield}</div>
+              <div className="text-sm">{adjustedYields}</div>
             </Typography>
             <Typography className="flex justify-between mb-4" variant="caption">
               <div className="text-gray-500 text-sm flex items-center">
@@ -240,19 +238,11 @@ const BuyProtectionPopUp = (props) => {
           <div className="flex"></div>
           <LoadingButton loading={loading}></LoadingButton>
           <div className="text-sm">
-            <div className="flex">
-              <p>
-                By clicking &quot;Confirm Protection Purchase&quot;, you agree
-                toCarapace&apos;s&nbsp;{" "}
-              </p>
-              <p className="underline">Terms of Service</p>
-            </div>
-            <div className="flex">
-              <p>
-                and acknowledge that you have read and understand the&nbsp;{" "}
-              </p>
-              <p className="underline">Carapace protocol disclaimer.</p>
-            </div>
+            By clicking &quot;Confirm Protection Purchase&quot;, you agree to
+            Carapace&apos;s&nbsp;
+            <span className="underline">Terms of Service&nbsp;</span>
+            and acknowledge that you have read and understand the&nbsp;
+            <span className="underline">Carapace protocol disclaimer.</span>
           </div>
         </div>
       </DialogContent>
