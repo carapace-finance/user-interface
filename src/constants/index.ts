@@ -49,14 +49,14 @@ export const footerLinks = [
       }
     ]
   },
-  {
-    title: "LEGAL",
-    links: [
-      {
-        name: "Coming soon",
-        link: "",
-        target: ""
-      }
+  // {
+    // title: "LEGAL",
+    // links: [
+    //   {
+    //     name: "Coming soon",
+    //     link: "",
+    //     target: ""
+    //   }
       // {
       //   name: "Privacy Policy",
       //   link: "",
@@ -67,6 +67,6 @@ export const footerLinks = [
       //   link: "",
       //   target: ""
       // },
-    ]
-  }
+    // ]
+  // }
 ];

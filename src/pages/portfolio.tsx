@@ -36,12 +36,11 @@ const Portfolio = () => {
     <div className="mx-32">
       <TitleAndDescriptions title="Portfolio" buttonExist={false} />
       <h3 className="text-left font-bold">Your Protection Purchases</h3>
-      <div className="h-5"></div>
-      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
+      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 mt-4">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-ms font-bold">
-              <th className="py-8">
+              <th>
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Name</p>
                   <Tooltip
@@ -69,8 +68,8 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">Protocol</th>
-              <th className="py-8">
+              <th>Protocol</th>
+              <th>
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Premium</p>
                   <Tooltip
@@ -98,7 +97,7 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-8">
+              <th>
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Protection Expires In</p>
                   <Tooltip
@@ -126,7 +125,7 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-8">
+              <th>
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Protection Amount</p>
                   <Tooltip
@@ -155,7 +154,7 @@ const Portfolio = () => {
                 </div>
               </th>
               {/* //todo: show this button when there is a valid claim  */}
-              {/* <th className="py-4">
+              {/* <th>
                 <div className="flex flex-row items-center">
                   Claim
                   <Tooltip
@@ -191,7 +190,7 @@ const Portfolio = () => {
                 key={userLendingPool.lendingPoolAddress}
                 className="text-left text-ms font-medium"
               >
-                <td className="py-4">
+                <td className="py-4 pr-4">
                   {getLendingPoolName(userLendingPool.lendingPoolAddress)}
                 </td>
                 <td className="py-4">
@@ -243,16 +242,15 @@ const Portfolio = () => {
           </tbody>
         </table>
       </div>
-      <div className="h-16"></div>
-      <h3 className="text-left font-bold mb-8">Your Deposits</h3>
+      <h3 className="text-left font-bold mb-4 mt-16">Your Balance in Protection Pools</h3>
       <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-ms font-bold">
-              <th className="py-4">Name</th>
-              <th className="py-4">Protocols</th>
-              <th className="py-8">Estimated APY</th>
-              <th className="py-4">
+              <th>Name</th>
+              <th>Protocols</th>
+              <th>Estimated APY</th>
+              <th>
                 <div className="flex flex-row pr-3 items-center">
                   Deposited Amount
                   <Tooltip
@@ -280,7 +278,7 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">
+              <th>
                 <div className="flex flex-row pr-3 items-center">
                   Requested Withdrawal
                   <Tooltip
@@ -308,7 +306,7 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">
+              <th>
                 {/* the div needs to be there otherwise there is a bug with styling */}
                 <div className="flex flex-row pr-3 items-center">
                   Request Withdrawal
@@ -337,7 +335,7 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">
+              <th>
                 <div className="flex flex-row pr-3 items-center">
                   Withdraw
                   <Tooltip
@@ -374,8 +372,8 @@ const Portfolio = () => {
                 key={protectionPool.address}
                 className="text-left text-ms font-medium"
               >
-                <td>{protectionPool.name}</td>
-                <td className="py-4">
+                <td className="pr-4">{protectionPool.name}</td>
+                <td>
                   <Image
                     src={protectionPool.protocols}
                     width={24}
@@ -383,10 +381,10 @@ const Portfolio = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-4">{protectionPool.APY}</td>
-                <td className="py-4">{user.sTokenUnderlyingAmount}&nbsp;USDC</td>
-                <td className="py-4">{user.requestedWithdrawalAmount}&nbsp;USDC</td>
-                <td className="py-4">
+                <td>{protectionPool.APY}</td>
+                <td>{user.sTokenUnderlyingAmount}&nbsp;USDC</td>
+                <td>{user.requestedWithdrawalAmount}&nbsp;USDC</td>
+                <td>
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}
                     className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
@@ -394,7 +392,7 @@ const Portfolio = () => {
                     Request
                   </button>
                 </td>
-                <td className="py-4">
+                <td>
                   <button
                     onClick={() => setIsWithdrawOpen(true)}
                     className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"

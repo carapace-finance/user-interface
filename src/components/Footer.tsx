@@ -19,7 +19,7 @@ const Footer = () => {
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-between w-[260px] md:w-[797px]">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-between w-[260px] md:w-[560px]">
           {footerLinks.map((footerlink, index) => (
             <div
               key={footerlink.title}
@@ -33,12 +33,12 @@ const Footer = () => {
               <h4 className="text-[20px] sm:text-[16px] text-black">
                 {footerlink.title}
               </h4>
-              <ul className="list-none mt-6 md:mt-8">
+              <ul className="list-none mt-2 md:mt-4">
                 {footerlink.links.map((link, index) => (
                   <li
                     key={link.name}
                     className={`list-none font-normal text-[16px] sm:text-[16px] text-center lg:text-left cursor-pointer ${
-                      index !== footerlink.links.length - 1 ? "mb-4" : "mb-0"
+                      index !== footerlink.links.length - 1 ? "mb-2" : "mb-0"
                     }`}
                   >
                     <Link

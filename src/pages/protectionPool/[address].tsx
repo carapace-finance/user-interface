@@ -136,8 +136,8 @@ const ProtectionPool = () => {
                   <th className="px-4 py-8 pl-8">Name</th>
                   <th className="px-4 py-8">Protocol</th>
                   <th className="px-4 py-8">APY</th>
-                  <th className="px-4 py-8">Payment Term</th>
-                  <th className="px-4 py-8">Opening Date</th>
+                  <th className="px-4 py-8">Payment Frequency</th>
+                  <th className="px-4 py-8">Payment Term End</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,8 +157,8 @@ const ProtectionPool = () => {
                       />
                     </td>
                     <td className="px-4 py-8">{lendingPool.lendingPoolAPY}</td>
-                    <td className="px-4 py-8">{"TERM"}</td>
-                    <td className="px-4 py-8">{"DATE"}</td>
+                    <td className="px-4 py-8">30 Days</td>
+                    <td className="px-4 py-8">Apr 4, 2024</td>
                   </tr>
                 ))}
               </tbody>

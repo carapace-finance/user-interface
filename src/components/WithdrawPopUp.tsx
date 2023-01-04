@@ -129,7 +129,7 @@ const WithdrawalPopUp = (props) => {
             Protection Pool
           </h4>
           <div className="flex justify-left mb-3 text-base">
-            {protectionPoolAddress}
+            Goldfinch Protection Pool #1
           </div>
           <div>
             <h4 className="text-left text-base font-medium mb-3">
