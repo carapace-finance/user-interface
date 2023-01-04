@@ -192,6 +192,7 @@ export default function BuyProtectionCard(props) {
                     max: 10000000,
                     required: true
                   })} // todo: add the leverage ratio limit to max
+                  onWheel={(e: any) => e.target.blur()}
                 />
                 {errors.protectionAmount && (
                   <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">
@@ -231,6 +232,7 @@ export default function BuyProtectionCard(props) {
                   max: 180,
                   required: true
                 })}
+                onWheel={(e: any) => e.target.blur()}
               />
               {errors.protectionDurationInDays && (
                 <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">

@@ -145,7 +145,8 @@ const WithdrawalPopUp = (props) => {
                     max: withdrawableAmount,
                     required: true
                   })}
-                />
+                  onWheel={(e: any) => (e.target).blur()}
+                  />
                 {errors.amount && (
                   <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
                     the withdrawal amount must be in between 0 and your

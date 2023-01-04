@@ -85,6 +85,7 @@ export default function SellProtectionCard(props) {
             max: usdcBalance,
             required: true
           })}
+          onWheel={(e: any) => (e.target).blur()}
         />
         {errors.depositAmount && (
           <h5 className="block text-left text-customPink text-base font-normal mb-4">
