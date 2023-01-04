@@ -95,7 +95,8 @@ const ProtectionPool = () => {
               alt=""
               className="mr-6"
             />
-            <a
+            {/* todo: enable the link once we deploy our protection pool to the mainney */}
+            {/* <a
               target="_blank"
               rel="noreferrer"
               href={`https://etherscan.io/address/${protectionPoolAddress}`}
@@ -108,7 +109,7 @@ const ProtectionPool = () => {
                 alt=""
                 className="mr-6"
               />
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
