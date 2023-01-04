@@ -12,29 +12,38 @@ export const LendingPoolContext = createContext<LendingPoolContextType | null>(
 
 export const LendingPoolContextProvider = ({ children }) => {
   const { provider, protectionPoolService } = useContext(ApplicationContext);
-  const { protectionPools } = useContext(ProtectionPoolContext);
+  const { isDefaultData, protectionPools } = useContext(ProtectionPoolContext);
 
   const defaultLendingPools: LendingPool[] = [
     {
-      address: "0x00...",
-      name: "Almavest Basket #6",
+      address: "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
+      name: "Lend East #1: Emerging Asia Fintech Pool",
       protocol: goldfinchLogo,
-      adjustedYields: "7 - 10%",
+      adjustedYields: "11%",
       lendingPoolAPY: "17%",
-      CARATokenRewards: "~3.5%",
-      premium: "4 - 7%",
+      premium: "6%",
       timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0x0...",
+      protectionPoolAddress: "0xPP...",
       protectionPurchase: "51,000 USDC"
     },
     {
-      address: "0x01...",
-      name: "Almavest Basket #6",
+      address: "0xd09a57127bc40d680be7cb061c2a6629fe71abef",
+      name: "Cauris Fund #2: Africa Innovation Pool",
       protocol: goldfinchLogo,
-      adjustedYields: "7 - 10%",
+      adjustedYields: "11%",
       lendingPoolAPY: "17%",
-      CARATokenRewards: "~3.5%",
-      premium: "4 - 7%",
+      premium: "6%",
+      timeLeft: "7 Days 8 Hours 2 Mins",
+      protectionPoolAddress: "0xPP...",
+      protectionPurchase: "21,000 USDC"
+    },
+    {
+      address: "0x89d7c618a4eef3065da8ad684859a547548e6169",
+      name: "Asset-Backed Pool via Addem Capital",
+      protocol: goldfinchLogo,
+      adjustedYields: "11%",
+      lendingPoolAPY: "17%",
+      premium: "6%",
       timeLeft: "7 Days 8 Hours 2 Mins",
       protectionPoolAddress: "0x0...",
       protectionPurchase: "21,000 USDC"
@@ -45,7 +54,12 @@ export const LendingPoolContextProvider = ({ children }) => {
     useState<LendingPool[]>(defaultLendingPools);
 
   useEffect(() => {
-    if (protectionPools && provider && protectionPoolService) {
+    if (
+      !isDefaultData &&
+      protectionPools &&
+      provider &&
+      protectionPoolService
+    ) {
       const promises = protectionPools.map((protectionPool) => {
         return protectionPoolService
           .getLendingPools(protectionPool.address)
@@ -63,8 +77,10 @@ export const LendingPoolContextProvider = ({ children }) => {
         const allLendingPools = arrayOfLendingPools.flat();
         setLendingPools(allLendingPools);
       });
+    } else {
+      setLendingPools(defaultLendingPools);
     }
-  }, [protectionPools]);
+  }, [isDefaultData, protectionPools]);
 
   return (
     <LendingPoolContext.Provider value={{ lendingPools, setLendingPools }}>

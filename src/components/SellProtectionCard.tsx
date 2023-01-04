@@ -1,44 +1,56 @@
 import { useContext, useEffect, useState } from "react";
-import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import { useForm } from "react-hook-form";
 import { UserContext } from "@contexts/UserContextProvider";
-import { InputAdornment, TextField } from "@mui/material";
-import { IconButton, Tooltip } from "@material-tailwind/react";
-import { getUsdcBalance, convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
+import { Tooltip } from "@material-tailwind/react";
+import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
 import numeral from "numeral";
+import { SellProtectionInput } from "@type/types";
 
-export default function SellProtectionCard() {
+export default function SellProtectionCard(props) {
+  const { estimatedAPY } = props;
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors }
+  } = useForm<SellProtectionInput>({ defaultValues: { depositAmount: "0" } });
+
   const [isOpen, setIsOpen] = useState(false);
-  const [amount, setAmount] = useState(0);
   const [usdcBalance, setUsdcBalance] = useState(0);
   const router = useRouter();
-  const { protectionPoolService, provider } = useContext(ApplicationContext);
-  const { user, setUser } = useContext(UserContext);
+  const { updateUserUsdcBalance } = useContext(UserContext);
   const protectionPoolAddress = router.query.address;
 
   const setMaxAmount = async () => {
-    setAmount(usdcBalance);
+    setValue("depositAmount", usdcBalance.toString());
   };
 
   useEffect(() => {
     (async () => {
-      if (provider) {
-        let newUsdcBalance = await getUsdcBalance(provider, user.address);
-        setUsdcBalance(convertUSDCToNumber(newUsdcBalance));
-        if (newUsdcBalance != user.USDCBalance) {
-          setUser({ ...user, USDCBalance: newUsdcBalance });
-        }
-      }
+      setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance()));
     })();
   }, [isOpen]);
 
+  const onSubmit = () => {
+    setIsOpen(true);
+  }; // your form submit function which will invoke after successful validation
+
   return (
-    <div className="flex justify-center">
-      <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
-        <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">
-          Estimated APY
-          <Tooltip content="test test" placement="top">
+    <div className="py-10 px-8 bg-white rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200 w-450 h-fit">
+      <h5 className="text-left text-customGrey text-xl mb-2 flex items-center">
+        Estimated APY
+        <div className="pl-2">
+          <Tooltip
+            animate={{
+              mount: { scale: 1, y: 0 },
+              unmount: { scale: 0, y: 25 }
+            }}
+            content="Estimated APY for protection sellers."
+            placement="top"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -54,18 +66,33 @@ export default function SellProtectionCard() {
               />
             </svg>
           </Tooltip>
+        </div>
+      </h5>
+      <div className="py-2 border-b border-gray-300">
+        <h1 className="text-customDarkGrey text-4xl mb-4 text-left">
+          {estimatedAPY}
+        </h1>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <h5 className="text-left text-customGrey text-xl  font-normal mt-4 mb-2 flex items-center">
+          Deposit Amount
         </h5>
-        <p className="text-gray-700 text-base mb-4">18 - 25%</p>
-        <h5>Interest from Premium</h5>
-        <p>10 - 15%</p>
-        <h5>CARA Token Rewards</h5>
-        <p>8 - 10%</p>
-        <div>Deposit Amount</div>
-        <TextField
+        <input
+          className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
           type="number"
-          placeholder={"0.0"}
-          variant="outlined"
-          size="medium"
+          {...register("depositAmount", {
+            min: 1,
+            max: usdcBalance,
+            required: true
+          })}
+        />
+        {errors.depositAmount && (
+          <h5 className="block text-left text-customPink text-base font-normal mb-4">
+            the deposit amount must be in between 0 and the deposit amount
+            available if you have enough balance
+          </h5>
+        )}
+        {/* <TextField
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">USDC</InputAdornment>
@@ -82,27 +109,24 @@ export default function SellProtectionCard() {
               </InputAdornment>
             )
           }}
-          value={amount}
-          onChange={(e) =>
-            e.target.value ? setAmount(parseFloat(e.target.value)) : 0
-          }
+        /> */}
+        <p className="text-right">
+          Balance: {numeral(usdcBalance).format(USDC_FORMAT)}&nbsp;USDC
+        </p>
+        <input
+          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer"
+          type="submit"
+          value="Deposit"
+          // disabled={} // todo: add the leverage ratio limit
         />
-        <p>Balance: {numeral(usdcBalance).format(USDC_FORMAT)} USDC</p>
-        <button
-          type="button"
-          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          // disabled={!amount || amount > usdcBalance} // todo: enable the button for styling
-          onClick={() => setIsOpen(true)}
-        >
-          Preview
-        </button>
-        <SellProtectionPopUp
-          open={isOpen}
-          onClose={() => setIsOpen(false)}
-          amount={amount}
-          protectionPoolAddress={protectionPoolAddress}
-        ></SellProtectionPopUp>
-      </div>
+      </form>
+      <SellProtectionPopUp
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        amount={getValues("depositAmount")}
+        protectionPoolAddress={protectionPoolAddress}
+        estimatedAPY={estimatedAPY}
+      ></SellProtectionPopUp>
     </div>
   );
 }

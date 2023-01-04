@@ -1,92 +1,100 @@
 import { formatEther, parseEther } from "@ethersproject/units";
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   transferUsdc,
   getUsdcContract,
   formatUSDC,
   parseUSDC
 } from "@utils/usdc";
-import { getDaysInSeconds } from "@utils/utils";
-import {
-  deleteFork,
-  fillEther,
-  moveForwardTime,
-  sendTransaction
-} from "./tenderly";
+import { formatAddress, getDaysInSeconds } from "@utils/utils";
+import { deleteFork, fillEther, moveForwardTime } from "./tenderly";
 import { Playground } from "./types";
 import { payToLendingPoolAddress } from "./goldfinch";
+import {
+  GOLDFINCH_LENDING_POOLS,
+  PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS
+} from "./deploy";
+
+export function getLendingPoolName(lendingPoolAddress: string): string {
+  const lendingPoolDetails =
+    PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS[
+      lendingPoolAddress.toLowerCase()
+    ];
+
+  return (
+    lendingPoolDetails?.name ||
+    `Goldfinch Lending Pool - ${formatAddress(lendingPoolAddress)}`
+  );
+}
 
 export async function preparePlayground(playground: Playground) {
-  const { poolCycleManagerInstance, poolFactoryInstance, poolInstance } =
-    playground.deployedContracts;
-  console.log(
-    "Preparing a playground with contracts: ",
-    playground.deployedContracts
-  );
+  const {
+    poolCycleManagerInstance,
+    poolFactoryInstance,
+    protectionPoolInstance
+  } = playground.deployedContracts;
+  console.log("Preparing a playground: ", playground.forkId);
+
+  // Setup deployer account
+  const deployer = await playground.provider.getSigner(0);
+  const deployerAddress = await deployer.getAddress();
+  console.log("Deployer address: ", deployerAddress);
+  // transfer usdc to deployer
+  await transferUsdc(playground.provider, deployerAddress, parseUSDC("100000")); // 100K USDC
+
+  // Setup another user account
+  const userAddress = "0x008c84421da5527f462886cec43d2717b686a7e4";
+  const user = playground.provider.getSigner(userAddress);
+  console.log("User address: ", userAddress);
+  await fillEther(userAddress, playground.provider);
+  // transfer usdc to user
+  await transferUsdc(playground.provider, userAddress, parseUSDC("100000")); // 100K USDC
 
   console.log("********** Pool Phase: OpenToSellers **********");
   console.log("********** Pool Cycle: 1, Day: 1     **********");
 
-  const deployer = await playground.provider.getSigner(0);
-  console.log("Deployer address: ", await deployer.getAddress());
-
-  const user = playground.provider.getSigner(
-    "0x008c84421da5527f462886cec43d2717b686a7e4"
-  );
-  await fillEther(await user.getAddress(), playground.provider);
-  console.log("User address: ", await user.getAddress());
-
   // Deposit 1 by user
-  await transferApproveAndDeposit(
-    playground.provider,
-    poolInstance,
-    parseUSDC("50000"),
-    user
-  );
+  await approveAndDeposit(protectionPoolInstance, parseUSDC("50000"), user);
 
   // Deposit 2 by deployer
-  await transferApproveAndDeposit(
-    playground.provider,
-    poolInstance,
-    parseUSDC("51000"),
-    deployer
-  );
+  await approveAndDeposit(protectionPoolInstance, parseUSDC("51000"), deployer);
 
   console.log(
     "Pool's total sToken underlying: ",
-    formatUSDC(await poolInstance.totalSTokenUnderlying())
+    formatUSDC(await protectionPoolInstance.totalSTokenUnderlying())
   );
   console.log("Completed min capital requirement.");
 
   // move the pool to the next phase
-  await poolInstance.connect(deployer).movePoolPhase();
+  await protectionPoolInstance.connect(deployer).movePoolPhase();
 
   console.log("********** Pool Phase: OpenToBuyers **********");
 
-  const lendingPoolAddress = "0xd09a57127bc40d680be7cb061c2a6629fe71abef";
+  const lendingPoolAddress = GOLDFINCH_LENDING_POOLS[0];
 
   // buy protection 1
   await transferApproveAndBuyProtection(
     playground.provider,
-    poolInstance,
-    user,
+    protectionPoolInstance,
     {
       lendingPoolAddress: lendingPoolAddress,
       nftLpTokenId: 590,
       protectionAmount: parseUSDC("150000"),
       protectionDurationInSeconds: getDaysInSeconds(30)
-    }
+    },
+    parseUSDC("3500")
   );
 
   console.log(
     "Pool leverage ratio: ",
-    formatEther(await poolInstance.calculateLeverageRatio())
+    formatEther(await protectionPoolInstance.calculateLeverageRatio())
   );
 
   // move the pool to the next phase(Open)
-  await poolInstance.connect(deployer).movePoolPhase();
+  await protectionPoolInstance.connect(deployer).movePoolPhase();
   console.log(
     "Current Pool Phase: ",
-    (await poolInstance.getPoolInfo()).currentPhase
+    (await protectionPoolInstance.getPoolInfo()).currentPhase
   );
 
   console.log("********** Pool Phase: Open **********");
@@ -95,7 +103,7 @@ export async function preparePlayground(playground: Playground) {
   // We are in cycle with index 0, so withdrawal index is 2
   const withdrawalCycleIndex = 2;
   await requestWithdrawal(
-    poolInstance,
+    protectionPoolInstance,
     deployer,
     parseEther("10000"),
     withdrawalCycleIndex
@@ -104,67 +112,76 @@ export async function preparePlayground(playground: Playground) {
   // Move pool to the next cycle (cycle 2)
   await movePoolCycle(
     playground.provider,
-    poolInstance,
+    protectionPoolInstance,
     poolCycleManagerInstance
   );
 
   console.log("********** Pool Cycle: 2, Day: 31     **********");
 
   // Deposit 3
-  await transferApproveAndDeposit(
-    playground.provider,
-    poolInstance,
-    parseUSDC("11000"),
-    user
-  );
+  await approveAndDeposit(protectionPoolInstance, parseUSDC("11000"), user);
 
   // Move pool to the next cycle (cycle 3)
   await movePoolCycle(
     playground.provider,
-    poolInstance,
+    protectionPoolInstance,
     poolCycleManagerInstance
   );
 
   console.log("********** Pool Cycle: 3, Day: 62     **********");
 
-  // make payment to lending pool, so user can buy protection
-  await payToLendingPoolAddress(
-    lendingPoolAddress,
-    "200000",
-    playground.provider
-  );
+  // make payment to all playground lending pools for 3 months, so user can buy protections for them
+  for (let i = 0; i < GOLDFINCH_LENDING_POOLS.length; i++) {
+    const lendingPoolAddress = GOLDFINCH_LENDING_POOLS[i];
+    await payToLendingPoolAddress(
+      lendingPoolAddress,
+      "900000",
+      playground.provider
+    );
+    console.log("Payment made to lending pool: ", lendingPoolAddress);
+  }
 
   console.log("Playground is ready!");
 }
 
-async function movePoolCycle(provider, poolInstance, poolCycleManagerInstance) {
-  const poolInfo = await poolInstance.getPoolInfo();
+async function movePoolCycle(
+  provider,
+  protectionPoolInstance,
+  poolCycleManagerInstance
+) {
+  const protectionPoolInfo = await protectionPoolInstance.getPoolInfo();
 
   // move from open to locked state
   await moveForwardTime(provider, getDaysInSeconds(11));
-  await poolCycleManagerInstance.calculateAndSetPoolCycleState(poolInfo.poolId);
+  await poolCycleManagerInstance.calculateAndSetPoolCycleState(
+    protectionPoolInfo.poolId
+  );
 
   // move to new cycle
   await moveForwardTime(provider, getDaysInSeconds(20));
-  await poolCycleManagerInstance.calculateAndSetPoolCycleState(poolInfo.poolId);
+  await poolCycleManagerInstance.calculateAndSetPoolCycleState(
+    protectionPoolInfo.poolId
+  );
   console.log(
     "Pool Cycle:",
-    await poolCycleManagerInstance.getCurrentPoolCycle(poolInfo.poolId)
+    await poolCycleManagerInstance.getCurrentPoolCycle(
+      protectionPoolInfo.poolId
+    )
   );
 }
 
 async function requestWithdrawal(
-  poolInstance,
+  protectionPoolInstance,
   user,
   sTokenAmt,
   withdrawalCycleIndex
 ) {
-  await poolInstance.connect(user).requestWithdrawal(sTokenAmt);
+  await protectionPoolInstance.connect(user).requestWithdrawal(sTokenAmt);
 
   console.log(
     "User's requested withdrawal Amount: ",
     formatEther(
-      await poolInstance
+      await protectionPoolInstance
         .connect(user)
         .getRequestedWithdrawalAmount(withdrawalCycleIndex)
     )
@@ -172,83 +189,84 @@ async function requestWithdrawal(
   console.log(
     "Total requested withdrawal amount: ",
     formatEther(
-      await poolInstance.getTotalRequestedWithdrawalAmount(withdrawalCycleIndex)
+      await protectionPoolInstance.getTotalRequestedWithdrawalAmount(
+        withdrawalCycleIndex
+      )
     )
   );
 }
 
-export async function transferApproveAndDeposit(
-  provider,
-  poolInstance,
+export async function approveAndDeposit(
+  protectionPoolInstance,
   depositAmt,
   receiver
 ) {
   const usdcContract = getUsdcContract(receiver);
   const receiverAddress = await receiver.getAddress();
 
-  // transfer usdc to deployer
-  await transferUsdc(provider, receiverAddress, depositAmt);
+  // transfer usdc to receiver
+  // await transferUsdc(provider, receiverAddress, depositAmt);
 
-  // Approve & deposit 5K USDC
-  await usdcContract.approve(poolInstance.address, depositAmt);
-  return await poolInstance
+  // Approve & deposit
+  await usdcContract.approve(protectionPoolInstance.address, depositAmt);
+  return await protectionPoolInstance
     .connect(receiver)
     .deposit(depositAmt, receiverAddress);
 }
 
 export async function transferApproveAndBuyProtection(
   provider,
-  poolInstance,
-  buyer,
-  purchaseParams
+  protectionPoolInstance,
+  purchaseParams,
+  premiumAmt
 ) {
+  // Update purchase params based on lending pool details
+  const lendingPoolDetails =
+    PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS[
+      purchaseParams.lendingPoolAddress.toLowerCase()
+    ];
+  const buyer = provider.getSigner(lendingPoolDetails.lendingPosition.owner);
+  await fillEther(await buyer.getAddress(), provider);
+  console.log("Buyer eth balance: ", formatEther(await buyer.getBalance()));
+  purchaseParams.nftLpTokenId = lendingPoolDetails.lendingPosition.tokenId;
+
   const usdcContract = getUsdcContract(buyer);
 
   console.log(
     "Total protection before buyProtection: ",
-    formatUSDC(await poolInstance.totalProtection())
+    formatUSDC(await protectionPoolInstance.totalProtection())
+  );
+
+  console.log(
+    "Using Lending pool position: ",
+    lendingPoolDetails.lendingPosition
   );
 
   const buyerAddress = await buyer.getAddress();
-  const premiumAmt = parseUSDC("5000");
 
-  // transfer usdc to deployer
+  // transfer usdc to buyer, the lending position owner
   await transferUsdc(provider, buyerAddress, premiumAmt);
 
   // Approve premium USDC
-  await usdcContract.connect(buyer).approve(poolInstance.address, premiumAmt);
+  // todo: approve the exact premiumAmt after the buyProtection method with the premiumAmt argument is implemented
+  await usdcContract
+    .connect(buyer)
+    .approve(protectionPoolInstance.address, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+    );
 
   console.log("Purchasing a protection using params: ", purchaseParams);
 
-  return await poolInstance.connect(buyer).buyProtection(purchaseParams, {
-    gasPrice: "259000000000",
-    gasLimit: "210000000"
-  });
+  return await protectionPoolInstance
+    .connect(buyer)
+    .buyProtection(purchaseParams, {
+      gasPrice: "25900000000",
+      gasLimit: "210000000"
+    });
 }
 
 const getLatestBlockTimestamp: Function = async (provider): Promise<number> => {
   return (await provider.getBlock("latest")).timestamp;
 };
-
-export async function resetPlayground(
-  playground: Playground,
-  snapshotId: string
-) {
-  await playground.provider.send("evm_revert", [snapshotId]);
-
-  console.log(
-    "Total capital: ",
-    formatUSDC(
-      await playground.deployedContracts.poolInstance.totalSTokenUnderlying()
-    )
-  );
-  console.log(
-    "Total protection: ",
-    formatUSDC(
-      await playground.deployedContracts.poolInstance.totalProtection()
-    )
-  );
-}
 
 export async function deletePlayground(
   forkId: string,

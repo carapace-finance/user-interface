@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@material-tailwind/react";
@@ -14,33 +15,47 @@ import { UserContextProvider } from "@contexts/UserContextProvider";
 const Header = dynamic(() => import("@components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
 
-function App({ Component, pageProps, tenderlyAccessKey }) {
-  return (
-    <ThemeProvider>
-      <CssBaseline />
-      <Web3ReactProvider getLibrary={getWeb3Library}>
-        <ApplicationContextProvider>
-          <ProtectionPoolContextProvider>
-            <LendingPoolContextProvider>
-              <BondContextProvider>
-                <UserContextProvider>
-                  <Header tenderlyAccessKey={tenderlyAccessKey} />
-                  <Component {...pageProps} />
-                  <Footer />
-                </UserContextProvider>
-              </BondContextProvider>
-            </LendingPoolContextProvider>
-          </ProtectionPoolContextProvider>
-        </ApplicationContextProvider>
-      </Web3ReactProvider>
-    </ThemeProvider>
-  );
-}
+import Mobile from "@components/Mobile";
 
-App.getInitialProps = async () => {
-  return {
-    tenderlyAccessKey: process.env.TENDERLY_ACCESS_KEY // this value will be passed to the App component as props
-  };
-};
+function App({ Component, pageProps }) {
+  const [mobile, setMobile] = useState(undefined);
+
+  useEffect(() => {
+    const updateMobile = () => {
+      setMobile(window.innerWidth < 576 ? true : false);
+    };
+
+    updateMobile();
+    window.addEventListener("resize", updateMobile);
+    return () => {
+      window.removeEventListener("resize", updateMobile);
+    };
+  }, []);
+
+  return typeof mobile !== "undefined" ? (
+    mobile ? (
+      <Mobile />
+    ) : (
+      <ThemeProvider>
+        <CssBaseline />
+        <Web3ReactProvider getLibrary={getWeb3Library}>
+          <ApplicationContextProvider>
+            <ProtectionPoolContextProvider>
+              <LendingPoolContextProvider>
+                <BondContextProvider>
+                  <UserContextProvider>
+                    <Header />
+                    <Component {...pageProps} />
+                    <Footer />
+                  </UserContextProvider>
+                </BondContextProvider>
+              </LendingPoolContextProvider>
+            </ProtectionPoolContextProvider>
+          </ApplicationContextProvider>
+        </Web3ReactProvider>
+      </ThemeProvider>
+    )
+  ) : null;
+}
 
 export default App;

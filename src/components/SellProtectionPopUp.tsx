@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import {
   Dialog,
   DialogContent,
@@ -15,16 +16,19 @@ import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { convertNumberToUSDC, parseUSDC, USDC_FORMAT } from "@utils/usdc";
 import { formatAddress } from "@utils/utils";
 import { LoadingButton } from "@mui/lab";
+import { Tooltip } from "@material-tailwind/react";
+import assets from "src/assets";
 
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
   const { protectionPoolService } = useContext(ApplicationContext);
-  const { open, onClose, amount, protectionPoolAddress } = props;
+  const { open, onClose, amount, protectionPoolAddress, estimatedAPY } = props;
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [expectedYield, setExpectedYield] = useState("18 - 25%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
+
+  const router = useRouter();
 
   const reset = () => {
     setSuccessMessage("");
@@ -51,11 +55,10 @@ const SellProtectionPopUp = (props) => {
     try {
       const tx = await protectionPoolService.deposit(
         protectionPoolAddress,
-        convertNumberToUSDC(amount)
+        convertNumberToUSDC(parseFloat(amount))
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {
-        setLoading(false);
         console.log("The deposit transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
@@ -63,6 +66,8 @@ const SellProtectionPopUp = (props) => {
         );
         setTimeout(() => {
           onClose();
+          router.push("/portfolio");
+          setLoading(false);
         }, 2000);
       } else {
         onError(receipt);
@@ -74,7 +79,7 @@ const SellProtectionPopUp = (props) => {
 
   return (
     <Dialog
-      maxWidth="lg"
+      className="inset-x-36"
       disableScrollLock
       open={open}
       onClose={onClose}
@@ -84,51 +89,113 @@ const SellProtectionPopUp = (props) => {
         }
       }}
     >
-      <DialogTitle>
-        Deposit
-        <IconButton
-          onClick={onClose}
-          className="absolute top-0 right-0"
-          color="primary"
-          size="small"
-        >
-          X
+      <div className="flex justify-end mr-4">
+        <IconButton onClick={onClose}>
+          <span className="text-black">×</span>
         </IconButton>
-      </DialogTitle>
-      <DialogContent>
-        {renderFieldAndValue(
-          "Protection Pool",
-          formatAddress(protectionPoolAddress)
-        )}
-        {renderFieldAndValue(
-          "Deposit Amount",
-          numeral(amount).format(USDC_FORMAT) + " USDC"
-        )}
-
-        <Divider className="mb-2" />
-
-        <Typography className="flex justify-left mb-4" variant="subtitle2">
-          Estimated Stats
-        </Typography>
-        <Typography className="flex justify-left mb-2" variant="caption">
-          Expected APY: {expectedYield}
-        </Typography>
-        <Typography className="flex justify-left mb-4" variant="caption">
-          Expected Network Fees: ${numeral(expectedNetworkFee).format("0.00")}
-        </Typography>
-        <LoadingButton
-          style={{ textTransform: "none" }}
-          onClick={sellProtection}
-          disabled={!protectionPoolService || !protectionPoolAddress || !amount}
-          loading={loading}
-          variant="outlined"
-        >
-          Confirm Deposit
-        </LoadingButton>
+      </div>
+      <DialogTitle className="mt-6">Deposit</DialogTitle>
+      <DialogContent className="mb-4">
         <div>
-          By clicking &quot;Confirm Deposit&quot;, you agree to Carapace&apos;s
-          Terms of Service and acknowledge that you have read and understand the
-          Carapace protocol disclaimer.
+          <div className="flex justify-start">
+            {renderFieldAndValue("Name", "Goldfinch Protection Pool #1")}
+            <div className="-ml-40 mt-1">
+              <img
+                src={assets.goldfinch.src}
+                alt="carapace"
+                height="16"
+                width="16"
+              />
+            </div>
+          </div>
+          {renderFieldAndValue(
+            "Deposit Amount",
+            numeral(amount).format(USDC_FORMAT) + " USDC"
+          )}
+        </div>
+        <Divider />
+        <div className="mb-8 pt-4">
+          <Typography
+            className="flex justify-left pb-5 text-gray-900 text-base font-medium"
+            variant="subtitle2"
+          >
+            Estimated Stats
+          </Typography>
+          <Typography className="flex justify-between pb-3" variant="caption">
+            <div className="text-gray-500 text-sm flex items-center">
+              Expected APY:
+              <div className="pl-2">
+                <Tooltip content="test test" placement="top">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                    />
+                  </svg>
+                </Tooltip>
+              </div>
+            </div>
+            <div className="text-sm">{estimatedAPY}</div>
+          </Typography>
+          <Typography className="flex justify-between mb-4" variant="caption">
+            <div className="text-gray-500 text-sm flex items-center">
+              Expected Network Fees:
+              <div className="pl-2">
+                <Tooltip content="test test" placement="top">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                    />
+                  </svg>
+                </Tooltip>
+              </div>
+            </div>
+            <div className="text-sm">
+              ${numeral(expectedNetworkFee).format("0.00")}
+            </div>
+          </Typography>
+        </div>
+        <div>
+          <button
+            className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            onClick={sellProtection}
+            disabled={
+              loading ||
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !amount
+            }
+          >
+            Confirm Deposit
+          </button>
+          <div className="flex"></div>
+          <LoadingButton loading={loading}></LoadingButton>
+        </div>
+        <div>
+          <div className="text-sm">
+            By clicking &quot;Confirm Deposit&quot;, you agree to
+            Carapace&apos;s&nbsp;
+            <span className="underline">Terms of Service&nbsp;</span>
+            and acknowledge that you have read and understand the&nbsp;
+            <span className="underline">Carapace protocol disclaimer.</span>
+          </div>
         </div>
       </DialogContent>
       <SuccessPopup
@@ -143,8 +210,11 @@ const SellProtectionPopUp = (props) => {
 const renderFieldAndValue = (fieldLabel, fieldValue) => {
   return (
     <div>
-      <Typography className="flex justify-left" variant="subtitle2">
-        {fieldLabel}
+      <Typography
+        className="flex justify-left text-gray-900 text-base font-medium mb-5"
+        variant="subtitle2"
+      >
+        <div>{fieldLabel}</div>
       </Typography>
       <div className="flex justify-left mb-4">{fieldValue}</div>
     </div>

@@ -1,44 +1,88 @@
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { useRouter } from "next/router";
+import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
+import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
+import { LoadingButton } from "@mui/lab";
+import { Dialog, DialogContent } from "@mui/material";
+import { useContext } from "react";
 
 const PlaygroundModePopUp = (props) => {
   const { open, onClose, playground } = props;
+
+  const { lendingPools } = useContext(LendingPoolContext);
+  const { isDefaultData, protectionPools } = useContext(ProtectionPoolContext);
+
+  const router = useRouter();
+
+  const handleClose = (
+    event: {},
+    reason: "backdropClick" | "escapeKeyDown"
+  ) => {
+    if (reason === "backdropClick") {
+      console.log(reason);
+    } else if (reason === "escapeKeyDown") {
+      console.log(reason);
+    } else {
+      return onClose;
+    }
+  };
 
   return (
     <Dialog
       maxWidth="lg"
       disableScrollLock
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
+      BackdropProps={{ style: { backgroundColor: "#FFFFFFE6" } }}
       PaperProps={{
         style: {
-          borderRadius: "8px"
+          borderRadius: "16px"
         }
       }}
     >
-      <DialogTitle>Carapace Playground Mode</DialogTitle>
       <DialogContent>
-        <span>Following are the things to take into consideration:</span>
-        <ul>
-          <li>You have 1 ETH and 5000 USDC to test</li>
-          <li>
-            You can test different features like deposit, withdrawal request,
-            withdrawal, and buy protection
-          </li>
-          <li>The set up may take some time</li>
-        </ul>
+        <div className="px-8">
+          <h2 className="mt-6 mb-8 font-medium text-2xl">
+            Carapace Playground Mode
+          </h2>
+          <div className="text-left text-customPopupGrey w-96">
+            <h4 className="mb-2">
+              You can test different features in our playground mode:
+            </h4>
+            <ul className="list-disc pl-4">
+              <li>buy protection</li>
+              <li>sell protection(deposit)</li>
+              <li>make a request to withdraw</li>
+              <li>withdraw</li>
+            </ul>
+            <p className="mt-2">
+              *You have no need to use your wallet and there is no real money.
+            </p>
+            {!isDefaultData &&
+            protectionPools?.length > 0 &&
+            lendingPools?.length > 0 ? (
+              <button
+                className="border rounded-full border-customDarkGrey text-customDarkGrey w-full px-4 py-4 mt-8 mb-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+                onClick={() => {
+                  router.push("/portfolio");
+                  onClose();
+                }}
+              >
+                <span>Start Playing Around!</span>
+              </button>
+            ) : (
+              <button
+                className="border rounded-full border-gray-400  w-full px-4 py-4 mt-8 mb-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+                disabled
+              >
+                <span>
+                  Setting Up Playground Mode...
+                  <LoadingButton loading={true}></LoadingButton>
+                </span>
+              </button>
+            )}
+          </div>
+        </div>
       </DialogContent>
-      {playground?.deployedContracts ? (
-        <button
-          className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
-          onClick={onClose}
-        >
-          <span>Start Playing Around!</span>
-        </button>
-      ) : (
-        <button className="border rounded-md px-4 py-2 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline">
-          <span>Setting Up the Playground Mode...</span>
-        </button>
-      )}
     </Dialog>
   );
 };

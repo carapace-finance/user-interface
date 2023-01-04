@@ -1,4 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber";
+import { USDC_NUM_OF_DECIMALS } from "./usdc";
 
 export const SECONDS_PER_DAY = 86400;
 
@@ -16,5 +17,9 @@ export const getDaysInSeconds = (days) => {
 };
 
 export const scale18DecimalsAmtToUsdcDecimals = (amt: BigNumber) => {
-  return amt.div(BigNumber.from(10).pow(12));
+  return amt.div(BigNumber.from(10).pow(18 - USDC_NUM_OF_DECIMALS));
+};
+
+export const scaleUsdcAmtTo18Decimals = (usdcAmt: BigNumber) => {
+  return usdcAmt.mul(BigNumber.from(10).pow(18 - USDC_NUM_OF_DECIMALS));
 };

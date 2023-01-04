@@ -8,75 +8,144 @@ const TitleAndDescriptions = dynamic(
 );
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { useContext } from "react";
-import { formatAddress } from "@utils/utils";
+import { useRouter } from "next/router";
 
 const SellProtection = () => {
+  const router = useRouter();
+
   const { protectionPools } = useContext(ProtectionPoolContext);
+  const handleClick = (href: string) => {
+    router.push(href);
+  };
 
   return (
-    <div>
+    <div className="mx-32">
       <TitleAndDescriptions
-        title="Sell Protection"
-        descriptions="Earn yields by depositing capital to diversified protection pools you think are safe."
+        title="Earn"
+        descriptions="Earn yields by depositing capital to diversified protection pools"
         buttonExist={true}
         button="Learn about selling protection"
+        guideLink="https://docs.google.com/document/d/1-wp-gBIVkwrzN0u-eRY78u9rDGZsSCTFsj9xSfB8NJw"
       />
-      <div>All Protection Pools</div>
-      <table className="table-auto w-full">
-        <thead>
-          <tr>
-            <th>Address</th>
-            <th>Protocols</th>
-            <th>
-              Estimated APY
-              <Tooltip content="test test" placement="top">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </th>
-            <th>Total Capital</th>
-            <th>Total Protection</th>
-          </tr>
-        </thead>
-        <tbody>
-          {protectionPools.map((protectionPool) => (
-            <tr key={protectionPool.address}>
-              <td>{formatAddress(protectionPool.address)}</td>
-              <td>
-                <Image
-                  src={protectionPool.protocols}
-                  width={24}
-                  height={24}
-                  alt=""
-                />
-              </td>
-              <td>{protectionPool.APY}</td>
-              <td>{protectionPool.totalCapital}</td>
-              <td>{protectionPool.totalProtection}</td>
-              <td>
-                <Link
-                  key={protectionPool.address}
-                  href={"/protectionPool/" + protectionPool.address}
-                >
-                  link
-                </Link>
-              </td>
+      <h3 className="text-left font-bold mb-8">All Protection Pools</h3>
+      <div className="rounded-2xl shadow-lg shadow-gray-200">
+        <table className="table-fixed w-full">
+          <thead>
+            <tr className="text-left text-sm font-bold">
+              <th className="py-8 pl-8">Name</th>
+              <th className="py-8">Protocols</th>
+              <th className="py-8">
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Estimated APY</p>
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 }
+                    }}
+                    content="Estimated APY excluding token rewards"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
+              <th className="py-8">
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Total Pool Balance</p>
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 }
+                    }}
+                    content="How much capital have been deposited to this pool"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
+              <th className="py-8">
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Total Protection</p>
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 }
+                    }}
+                    content="How much protection have been bought by all the buyers"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {protectionPools.map((protectionPool) => (
+              <tr
+                key={protectionPool.address}
+                onClick={() =>
+                  handleClick(`/protectionPool/${protectionPool.address}`)
+                }
+                className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50"
+              >
+                <td className="py-8 pl-8">{protectionPool.name}</td>
+                <td className="py-8">
+                  <Image
+                    src={protectionPool.protocols}
+                    width={24}
+                    height={24}
+                    alt=""
+                  />
+                </td>
+                <td className="py-8">{protectionPool.APY}</td>
+                <td className="py-8">{protectionPool.totalCapital}&nbsp;USDC</td>
+                <td className="py-8">{protectionPool.totalProtection}&nbsp;USDC</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

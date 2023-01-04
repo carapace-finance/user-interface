@@ -18,7 +18,7 @@ const LendWithProtection = () => {
     <div>
       <TitleAndDescriptions
         title="Lend with Protection"
-        descriptions="Earn adjusted yields by purchasing bonds with protection."
+        descriptions="Earn adjusted yields by purchasing bonds with protection"
         buttonExist={true}
         button="Learn about lending with protection"
       />
@@ -32,8 +32,7 @@ const LendWithProtection = () => {
             <th>Protocol</th>
             <th>Adjusted Yields</th>
             <th>Lending Pool APY</th>
-            <th>CARA Token Rewards</th>
-            <th>Premium</th>
+=            <th>Premium</th>
           </tr>
         </thead>
         <tbody>
@@ -47,7 +46,6 @@ const LendWithProtection = () => {
               </td>
               <td>{bond.adjustedYields}</td>
               <td>{bond.lendingPoolAPY}</td>
-              <td>{bond.CARATokenRewards}</td>
               <td>{bond.premium}</td>
               <td>
                 <Link key={bond.poolTokenId} href={"/bond/" + bond.poolTokenId}>

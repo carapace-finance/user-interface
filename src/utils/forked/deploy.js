@@ -27,11 +27,12 @@ import accruedPremiumCalculatorArtifact from "../../contracts/forked/artifacts/A
 import premiumCalculatorArtifact from "../../contracts/forked/artifacts/PremiumCalculator.json";
 import poolFactoryArtifact from "../../contracts/forked/artifacts/PoolFactory.json";
 import poolHelperArtifact from "../../contracts/forked/artifacts/PoolHelper.json";
+import { isLendingPoolLate, payToLendingPoolAddress } from "./goldfinch";
 
 let deployer;
 let account1;
 
-let poolInstance;
+let protectionPoolInstance;
 let poolFactoryInstance;
 let premiumCalculatorInstance;
 let referenceLendingPoolsInstance;
@@ -42,11 +43,83 @@ let referenceLendingPoolsFactoryInstance;
 let referenceLendingPoolsImplementation;
 let defaultStateManagerInstance;
 
-const GOLDFINCH_LENDING_POOLS = [
-  "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
-  "0xd09a57127bc40d680be7cb061c2a6629fe71abef",
-  "0x418749e294cabce5a714efccc22a8aade6f9db57" // https://app.goldfinch.finance/pools/0x418749e294cabce5a714efccc22a8aade6f9db57
-];
+// Lending positions of pool can be found by looking at withdrawal txs in goldfinch app,
+// then open it in etherscan and look at logs data for TokenRedeemed event
+export const PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS = {
+  // https://app.goldfinch.finance/pools/0xb26b42dd5771689d0a7faeea32825ff9710b9c11
+  // Name: Lend East #1: Emerging Asia Fintech Pool
+  // Payment date: 14 of every month
+  // lending positions:
+  // 645: 0x4902b20bb3b8e7776cbcdcb6e3397e7f6b4e449e, 158751.936393
+  "0xb26b42dd5771689d0a7faeea32825ff9710b9c11": {
+    name: "Lend East #1: Emerging Asia Fintech Pool",
+    lendingPosition: {
+      tokenId: 645,
+      owner: "0x4902b20bb3b8e7776cbcdcb6e3397e7f6b4e449e"
+    }
+  },
+
+  // https://app.goldfinch.finance/pools/0xd09a57127bc40d680be7cb061c2a6629fe71abef
+  // Name: Cauris Fund #2: Africa Innovation Pool
+  // Next repayment date: 21 of every month
+  // lending positions:
+  // 590: 0x008c84421da5527f462886cec43d2717b686a7e4  420,000.000000
+  "0xd09a57127bc40d680be7cb061c2a6629fe71abef": {
+    name: "Cauris Fund #2: Africa Innovation Pool",
+    lendingPosition: {
+      tokenId: 590,
+      owner: "0x008c84421da5527f462886cec43d2717b686a7e4"
+    }
+  },
+
+  // https://app.goldfinch.finance/pools/0x89d7c618a4eef3065da8ad684859a547548e6169
+  // Next repayment date: 22 of every month
+  // lending positions:
+  // 717: 0x3371E5ff5aE3f1979074bE4c5828E71dF51d299c  808,000.000000
+  "0x89d7c618a4eef3065da8ad684859a547548e6169": {
+    name: "Asset-Backed Pool via Addem Capital",
+    lendingPosition: {
+      tokenId: 717,
+      owner: "0x3371E5ff5aE3f1979074bE4c5828E71dF51d299c"
+    }
+  }
+
+  // https://app.goldfinch.finance/pools/0x759f097f3153f5d62ff1c2d82ba78b6350f223e3
+  // Name: Almavest Basket #7: Fintech and Carbon Reduction Basket
+  // next repayment date: Jan 7, 2023
+  // Lending positions:
+  // 699: 0x94e0bC3aedA93434B848C49752cfC58B1e7c5029  90,000.000000
+  // "0x759f097f3153f5d62ff1c2d82ba78b6350f223e3": {
+  //   name: "Almavest Basket #7: Fintech and Carbon Reduction Basket",
+  //   lendingPosition: {
+  //     tokenId: 699,
+  //     owner: "0x94e0bC3aedA93434B848C49752cfC58B1e7c5029"
+  //   }
+  // }
+
+  // https://app.goldfinch.finance/pools/0xc9bdd0d3b80cc6efe79a82d850f44ec9b55387ae
+  // Name: Cauris
+  // Lending positions:
+  // 106: 0xdB86B02928C47CB1c1D231B21732E6C639b28051  30000.000000
+  // "0xc9bdd0d3b80cc6efe79a82d850f44ec9b55387ae": {
+  //   name: "Cauris",
+  //   lendingPosition: {
+  //     tokenId: 179,
+  //     owner: "0x8481a6EbAf5c7DABc3F7e09e44A89531fd31F822"
+  //   }
+  // }
+
+  // "0x418749e294cabce5a714efccc22a8aade6f9db57"
+};
+
+export const GOLDFINCH_LENDING_POOLS = Object.keys(
+  PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS
+);
+const _lendingProtocols = GOLDFINCH_LENDING_POOLS.map(() => 0); // 0 = Goldfinch
+const _purchaseLimitInDays = hexValue(90);
+const _purchaseLimitsInDays = GOLDFINCH_LENDING_POOLS.map(
+  () => _purchaseLimitInDays
+);
 
 function getLinkedBytecode(contractArtifact, libRefs) {
   const libs = libRefs.map((libRef) => {
@@ -151,24 +224,51 @@ const deployContracts = async (forkProvider) => {
     );
 
     // Create an instance of the ReferenceLendingPools
-    const _lendingProtocols = [0, 0, 0]; // 0 = Goldfinch
-    const _purchaseLimitInDays = hexValue(90);
-    const _purchaseLimitsInDays = [
-      _purchaseLimitInDays,
-      _purchaseLimitInDays,
-      _purchaseLimitInDays
-    ];
     console.log(
       "referenceLendingPoolsFactoryInstance.address ==>",
       referenceLendingPoolsFactoryInstance.address
     );
+
+    console.log(
+      "Creating ReferenceLendingPools instance using GOLDFINCH_LENDING_POOLS ==> ",
+      GOLDFINCH_LENDING_POOLS
+    );
+
+    // If lending pools are late for payment, pay them
+    const promises = GOLDFINCH_LENDING_POOLS.map(async (lendingPoolAddress) => {
+      return isLendingPoolLate(lendingPoolAddress, forkProvider).then(
+        async (late) => {
+          if (late) {
+            console.log("Paying late lending pool: ", lendingPoolAddress);
+            await payToLendingPoolAddress(
+              lendingPoolAddress,
+              "300000",
+              forkProvider
+            );
+
+            if (await isLendingPoolLate(lendingPoolAddress, forkProvider)) {
+              console.log("Lending pool is still late: ", lendingPoolAddress);
+              throw new Error(
+                `Failed to create ReferenceLendingPools because lending pool: ${lendingPoolAddress} is late for payment.`
+              );
+            }
+
+            console.log("Paid late lending pool: ", lendingPoolAddress);
+          } else {
+            console.log("Lending pool is not late: ", lendingPoolAddress);
+          }
+        }
+      );
+    });
+    await Promise.all(promises);
+
     const tx1 =
       await referenceLendingPoolsFactoryInstance.createReferenceLendingPools(
         GOLDFINCH_LENDING_POOLS,
         _lendingProtocols,
         _purchaseLimitsInDays,
         {
-          gasPrice: "259000000000",
+          gasPrice: "25900000000",
           gasLimit: "210000000"
         }
       );
@@ -209,7 +309,7 @@ const deployContracts = async (forkProvider) => {
       deployer
     );
     poolFactoryInstance = await poolFactoryFactory.deploy({
-      gasPrice: "259000000000",
+      gasPrice: "25900000000",
       gasLimit: "21000000"
     });
     await poolFactoryInstance.deployed();
@@ -267,11 +367,15 @@ const deployContracts = async (forkProvider) => {
       "sToken1",
       "ST1"
     );
-    console.log("Pool creation tx ==> ", tx);
 
-    poolInstance = await getPoolInstanceFromTx(tx);
+    protectionPoolInstance = await getProtectionPoolInstanceFromTx(tx);
 
-    return { poolCycleManagerInstance, poolFactoryInstance, poolInstance };
+    return {
+      poolCycleManagerInstance,
+      poolFactoryInstance,
+      protectionPoolInstance,
+      premiumCalculatorInstance
+    };
   } catch (e) {
     console.log(e);
   }
@@ -282,29 +386,30 @@ async function getReferenceLendingPoolsInstanceFromTx(forkProvider, tx) {
 
   try {
     receipt = await tx.wait();
-    console.log("receipt ==>", receipt);
+    const referenceLendingPoolsCreatedEvent = receipt.events.find(
+      (eventInfo) => eventInfo.event === "ReferenceLendingPoolsCreated"
+    );
+
+    const newReferenceLendingPoolsInstance = new Contract(
+      referenceLendingPoolsCreatedEvent.args.referenceLendingPools,
+      referenceLendingPoolsAbi,
+      deployer
+    );
+    console.log(
+      "ReferenceLendingPools instance created at: ",
+      newReferenceLendingPoolsInstance.address
+    );
+
+    return newReferenceLendingPoolsInstance;
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Failed to retrieve reference lending pool from creation tx: ",
+      error
+    );
   }
-
-  const referenceLendingPoolsCreatedEvent = receipt.events.find(
-    (eventInfo) => eventInfo.event === "ReferenceLendingPoolsCreated"
-  );
-
-  const newReferenceLendingPoolsInstance = new Contract(
-    referenceLendingPoolsCreatedEvent.args.referenceLendingPools,
-    referenceLendingPoolsAbi,
-    deployer
-  );
-  console.log(
-    "ReferenceLendingPools instance created at: ",
-    newReferenceLendingPoolsInstance.address
-  );
-
-  return newReferenceLendingPoolsInstance;
 }
 
-async function getPoolInstanceFromTx(tx) {
+async function getProtectionPoolInstanceFromTx(tx) {
   const receipt = await tx.wait();
 
   const poolCreatedEvent = receipt.events.find(

@@ -1,3 +1,4 @@
+import { Contract } from "@ethersproject/contracts";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { ProtectionPoolFactoryService } from "@services/ProtectionPoolFactoryService";
 import { ProtectionPoolService } from "@services/ProtectionPoolService";
@@ -7,18 +8,22 @@ export interface ContractAddresses {
   isPlayground: boolean;
   poolFactory: string;
   pool: string;
+  premiumCalculator: string;
 }
 
 export type ApplicationContextType = {
   provider: JsonRpcProvider;
   contractAddresses: ContractAddresses;
-  updateContractAddresses: (newContractAddresses: ContractAddresses) => void;
-  updateProvider: (newProvider: JsonRpcProvider) => void;
+  updateProviderAndContractAddresses: (
+    newProvider: JsonRpcProvider,
+    newContractAddresses: ContractAddresses
+  ) => void;
   protectionPoolService: ProtectionPoolService;
   protectionPoolFactoryService: ProtectionPoolFactoryService;
 };
 
 export type ProtectionPoolContextType = {
+  isDefaultData: boolean;
   protectionPools: ProtectionPool[];
   setProtectionPools: (protectionPools: ProtectionPool[]) => void;
 };
@@ -36,15 +41,19 @@ export type BondContextType = {
 export type UserContextType = {
   user: User;
   setUser: (user: User) => void;
+  updateUserUsdcBalance: () => Promise<BigNumber>;
 };
 
 export interface ProtectionPool {
   address: string;
-  APY: string;
+  name: string;
   protocols: string;
+  APY: string;
   totalCapital: string;
   totalProtection: string;
   protectionPurchaseLimit: string;
+  leverageRatioFloor: string;
+  leverageRatioCeiling: string;
   depositLimit: string;
 }
 
@@ -54,7 +63,6 @@ export interface LendingPool {
   protocol: string;
   adjustedYields: string;
   lendingPoolAPY: string;
-  CARATokenRewards: string;
   premium: string;
   timeLeft: string;
   protectionPoolAddress: string;
@@ -69,7 +77,6 @@ export interface Bond {
   protocol: string;
   adjustedYields: string;
   lendingPoolAPY: string;
-  CARATokenRewards: string;
   premium: string;
 }
 
@@ -77,11 +84,31 @@ export interface User {
   address: string;
   ETHBalance: string;
   USDCBalance: BigNumber;
+  userProtectionPools: UserProtectionPool[];
   sTokenUnderlyingAmount: string;
   requestedWithdrawalAmount: string;
-  protectionAmount: string;
-  protectionDuration: string;
-  protectionPurchases: ProtectionPurchase[];
+  userLendingPools: UserLendingPool[];
+}
+
+export interface UserProtectionPool {
+  sTokenUnderlyingAmount: string;
+  requestedWithdrawalAmount: string;
+}
+
+export interface UserLendingPool {
+  lendingPoolAddress: string;
+  protectionPremium: BigNumber;
+  expirationTimestamp: BigNumber;
+  protectionAmount: BigNumber;
+}
+
+export interface ProtectionInfo {
+  buyer: string;
+  protectionPremium: number;
+  startTimestamp: BigNumber;
+  K: BigNumber;
+  lambda: BigNumber;
+  purchaseParams: ProtectionPurchaseParams;
 }
 
 export interface ProtectionPurchaseParams {
@@ -97,4 +124,27 @@ export interface ProtectionPurchase {
   purchaseParams: ProtectionPurchaseParams;
   startTimestamp: BigNumber;
   premium: BigNumber;
+}
+
+export interface deployedContracts {
+  poolCycleManagerInstance: Contract;
+  poolFactoryInstance: Contract;
+  protectionPoolInstance: Contract;
+}
+
+export interface BuyProtectionInputs {
+  protectionAmount: string;
+  protectionDurationInDays: string;
+}
+
+export interface SellProtectionInput {
+  depositAmount: string;
+}
+
+export interface WithdrawalRequestInput {
+  amount: string;
+}
+
+export interface WithdrawalInput {
+  amount: string;
 }

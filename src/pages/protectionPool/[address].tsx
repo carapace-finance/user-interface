@@ -1,22 +1,48 @@
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
+import BarChart from "@components/BarChart";
 import SellProtectionCard from "@components/SellProtectionCard";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
-import { formatAddress } from "@utils/utils";
+import TitleAndDescriptions from "@components/TitleAndDescriptions";
+import assets from "src/assets";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+ChartJS.register(ArcElement, Tooltip, Legend);
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import numeral from "numeral";
 
 const ProtectionPool = () => {
   const router = useRouter();
   const { lendingPools } = useContext(LendingPoolContext);
   const { protectionPools } = useContext(ProtectionPoolContext);
+  const doughnutRadius = 100;
+
+  const { provider } = useContext(ApplicationContext);
+  const prevProvider = useRef(provider);
+  useEffect(() => {
+    if (prevProvider.current !== provider) {
+      router.push("/sellProtection");
+      prevProvider.current = provider;
+    }
+  }, [provider]);
+
+  const handleClick = (lendingPoolAddress: string) => {
+    window.open(
+      `https://app.goldfinch.finance/pools/${lendingPoolAddress}`,
+      "_blank"
+    );
+  };
 
   let protectionPoolAddress;
   let protocols;
   let totalCapital;
   let totalProtection;
   let depositLimit;
+  let maxAvailableDepositAmount;
+  let depositPercentage = 0;
+  let estimatedAPY;
   protectionPools.map((protectionPool) => {
     if (protectionPool.address === router.query.address) {
       protectionPoolAddress = protectionPool.address;
@@ -24,80 +50,163 @@ const ProtectionPool = () => {
       totalCapital = protectionPool.totalCapital;
       totalProtection = protectionPool.totalProtection;
       depositLimit = protectionPool.depositLimit;
+      let totalCapitalNumber = totalCapital.replace(/\D/g, "");
+      let depositLimitNumber = depositLimit.replace(/\D/g, "");
+      maxAvailableDepositAmount = depositLimitNumber - totalCapitalNumber;
+      depositPercentage = (totalCapitalNumber / depositLimitNumber) * 100;
+      estimatedAPY = protectionPool.APY;
     }
   });
-
   const underlyingLendingPools = lendingPools.filter(
     (lendingPool) => lendingPool.protectionPoolAddress === protectionPoolAddress
   );
 
+  const plugins = [
+    {
+      id: "title",
+      beforeDraw: (chart: any) => {
+        const width = chart.width;
+        const ctx = chart.ctx;
+        ctx.restore();
+        const fontSize = (doughnutRadius / 100).toFixed(2);
+        ctx.font = `bold ${fontSize}em sans-serif`;
+        ctx.textBaseline = "top";
+        const text = totalCapital;
+        const textX = Math.round((width - ctx.measureText(text).width) / 2);
+        ctx.fillText(text, textX, doughnutRadius);
+        ctx.save();
+      }
+    }
+  ];
   return (
-    <div>
-      <div>
-        Protection Pool
-        {formatAddress(router.query.address)}
+    <div className="mx-32">
+      <div className="flex">
+        <TitleAndDescriptions
+          title={`Goldfinch Protection Pool #1`}
+          descriptions=""
+          buttonExist={false}
+        />
+        <div className="ml-3">
+          <div className="flex items-center">
+            <Image
+              src={protocols}
+              width={40}
+              height={40}
+              alt=""
+              className="mr-6"
+            />
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={`https://etherscan.io/address/${protectionPoolAddress}`}
+              className=""
+            >
+              <Image
+                src={assets.grayVector}
+                width={18}
+                height={18}
+                alt=""
+                className="mr-6"
+              />
+            </a>
+          </div>
+        </div>
       </div>
-      <Image src={protocols} width={24} height={24} alt="" />
-      <a
-        target="_blank"
-        rel="noreferrer"
-        href={`https://etherscan.io/address/${protectionPoolAddress}`}
-      >
-        link
-      </a>
-      <div>
-        <h2>Capital in the Pool</h2>
-        <div>Deposited Amount: {totalCapital}</div>
-        <h4>Deposit Limit: {depositLimit}</h4>
-        <h2>Protection Purchases Till Date</h2>
-        {underlyingLendingPools.map((lendingPool) => {
-          return (
-            <div key={lendingPool.address}>
-              {formatAddress(lendingPool.address)} :{" "}
-              {lendingPool.protectionPurchase}
+      <div className="flex justify-between">
+        <div>
+          <div className="flex justify-between">
+            <div className="rounded-2xl shadow-lg shadow-gray-200 shadow-gray-200 p-8 w-fit">
+              <h4 className="text-left mb-4">Total Protection Pool Balance</h4>
+              <p className="text-left font-bold">{totalCapital}&nbsp;USDC</p>
             </div>
-          );
-        })}
-        <div>Total Protection: {totalProtection}</div>
+            <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-fit ml-8">
+              <h4 className="text-left mb-4">
+                Total Protection Pool Balance Limit
+              </h4>
+              <p className="text-left font-bold">{depositLimit}&nbsp;USDC</p>
+            </div>
+          </div>
+          <h3 className="text-left font-bold mb-4 mt-8">
+            Underlying Protected Lending Pools
+          </h3>
+          <div className="rounded-2xl shadow-lg shadow-gray-200">
+            <table className="table-auto">
+              <thead>
+                <tr className="text-left text-sm font-bold">
+                  <th className="px-4 py-8 pl-8">Name</th>
+                  <th className="px-4 py-8">Protocol</th>
+                  <th className="px-4 py-8">APY</th>
+                  <th className="px-4 py-8">Payment Term</th>
+                  <th className="px-4 py-8">Opening Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {underlyingLendingPools.map((lendingPool) => (
+                  <tr
+                    key={lendingPool.address}
+                    onClick={() => handleClick(lendingPool.address)}
+                    className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
+                  >
+                    <td className="px-4 py-8 pl-8">{lendingPool.name}</td>
+                    <td className="px-4 py-8">
+                      <Image
+                        src={lendingPool.protocol}
+                        width={24}
+                        height={24}
+                        alt=""
+                      />
+                    </td>
+                    <td className="px-4 py-8">{lendingPool.lendingPoolAPY}</td>
+                    <td className="px-4 py-8">{"TERM"}</td>
+                    <td className="px-4 py-8">{"DATE"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <h3 className="text-left font-bold mt-8 mb-4">
+            Protection Distribution Across Lending Pools
+          </h3>
+          <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-700">
+            <Doughnut
+              className="mx-auto"
+              data={{
+                labels: underlyingLendingPools.map((lendingPool) => {
+                  const total = underlyingLendingPools
+                    .map((lendingPool) =>
+                      Number(lendingPool.protectionPurchase.replace(/\D/g, ""))
+                    )
+                    .reduce(
+                      (accumulator, currentValue) => accumulator + currentValue
+                    );
+                  return `${lendingPool.name} ${Math.round(
+                    (Number(lendingPool.protectionPurchase.replace(/\D/g, "")) /
+                      total) *
+                      100
+                  )}%`;
+                }),
+                datasets: [
+                  {
+                    label: "Purchase Protection Balance in USDC",
+                    data: underlyingLendingPools.map((lendingPool) =>
+                      Number(lendingPool.protectionPurchase.replace(/\D/g, ""))
+                    ),
+                    backgroundColor: ["#161C2E", "#6E7191", "#14142B"]
+                  }
+                ]
+              }}
+            />
+          </div>
+        </div>
+        <SellProtectionCard estimatedAPY={estimatedAPY}></SellProtectionCard>
       </div>
-      <SellProtectionCard></SellProtectionCard>
-
-      <h2>Underlying Protected Lending Pools</h2>
-      <table className="table-auto w-full">
-        <thead>
-          <tr>
-            <th>address</th>
-            <th>Lending Pool</th>
-            <th>Protocol</th>
-            <th>Lending Pool APY</th>
-          </tr>
-        </thead>
-        <tbody>
-          {underlyingLendingPools.map((lendingPool) => (
-            <tr key={lendingPool.address}>
-              <td>{formatAddress(lendingPool.address)}</td>
-              <td>{lendingPool.name}</td>
-              <td>
-                <Image
-                  src={lendingPool.protocol}
-                  width={24}
-                  height={24}
-                  alt=""
-                />
-              </td>
-              <td>{lendingPool.lendingPoolAPY}</td>
-              <td>
-                <Link
-                  key={lendingPool.address}
-                  href={`/lendingPool/${lendingPool.address}?protectionPoolAddress=${lendingPool.protectionPoolAddress}`}
-                >
-                  link
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* <p className="text-left mb-2">
+              The maximum amount you can deposit:
+              {numeral(maxAvailableDepositAmount).format(0.0) + " USDC"}
+            </p>
+            <div className="h-6 mb-2">
+              <BarChart filledPercentage={depositPercentage} />
+            </div> */}
     </div>
   );
 };
