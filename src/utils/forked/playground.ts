@@ -208,7 +208,10 @@ export async function approveAndDeposit(
   // await transferUsdc(provider, receiverAddress, depositAmt);
 
   // Approve & deposit
-  await usdcContract.approve(protectionPoolInstance.address, depositAmt);
+  await usdcContract.approve(protectionPoolInstance.address, depositAmt, {
+    gasPrice: "25900000000",
+    gasLimit: "200000"
+  });
   return await protectionPoolInstance
     .connect(receiver)
     .deposit(depositAmt, receiverAddress);
