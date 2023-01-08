@@ -15,7 +15,7 @@ export default function BuyProtectionCard(props) {
     register,
     handleSubmit,
     getValues,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<BuyProtectionInputs>({
     defaultValues: { protectionAmount: "0", protectionDurationInDays: "50" }
   });
@@ -293,10 +293,10 @@ export default function BuyProtectionCard(props) {
           </div>
         </div>
         <input
-          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer"
+          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           value="Buy Protection"
-          disabled={premiumPrice === 0}
+          disabled={premiumPrice === 0 || !protectionPoolAddress || !isValid} // todo: add the leverage ratio limit
         />
       </form>
       <p>Buy protection within: {timeLeft}</p>

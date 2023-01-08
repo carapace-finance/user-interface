@@ -29,7 +29,7 @@ const WithdrawalRequestPopUp = (props) => {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<WithdrawalRequestInput>({ defaultValues: { amount: "0" } });
 
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -217,11 +217,11 @@ const WithdrawalRequestPopUp = (props) => {
             </div>
           </div>
           <input
-            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             type="submit"
             value="Confirm Withdrawal Request"
             disabled={
-              loading || !protectionPoolService || !protectionPoolAddress
+              loading || !protectionPoolService || !protectionPoolAddress || !isValid
             }
           />
           <div className="flex"></div>

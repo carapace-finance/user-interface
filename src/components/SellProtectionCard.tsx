@@ -15,7 +15,7 @@ export default function SellProtectionCard(props) {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<SellProtectionInput>({ defaultValues: { depositAmount: "0" } });
 
   const [isOpen, setIsOpen] = useState(false);
@@ -85,7 +85,7 @@ export default function SellProtectionCard(props) {
             max: usdcBalance,
             required: true
           })}
-          onWheel={(e: any) => (e.target).blur()}
+          onWheel={(e: any) => e.target.blur()}
         />
         {errors.depositAmount && (
           <h5 className="block text-left text-customPink text-base font-normal mb-4">
@@ -115,10 +115,10 @@ export default function SellProtectionCard(props) {
           Balance: {numeral(usdcBalance).format(USDC_FORMAT)}&nbsp;USDC
         </p>
         <input
-          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer"
+          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           value="Deposit"
-          // disabled={} // todo: add the leverage ratio limit
+          disabled={!protectionPoolAddress || !isValid} // todo: add the leverage ratio limit
         />
       </form>
       <SellProtectionPopUp
