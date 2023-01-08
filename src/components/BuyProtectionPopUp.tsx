@@ -220,7 +220,7 @@ const BuyProtectionPopUp = (props) => {
             </Typography>
           </div>
           <button
-            className="text-white text-base bg-customBlue px-8 py-4 mt-8 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            className="text-white text-base bg-customBlue px-8 py-4 mt-8 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={buyProtection}
             disabled={
               loading ||

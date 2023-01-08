@@ -61,7 +61,7 @@ const PlaygroundModePopUp = (props) => {
             protectionPools?.length > 0 &&
             lendingPools?.length > 0 ? (
               <button
-                className="w-full text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-none"
+                className="w-full text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer"
                 onClick={() => {
                   router.push("/portfolio");
                   onClose();
@@ -71,7 +71,7 @@ const PlaygroundModePopUp = (props) => {
               </button>
             ) : (
               <button
-                className=" w-full border rounded-md border-gray-400 px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+                className=" w-full border rounded-md border-gray-400 px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline  disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled
               >
                 <span>

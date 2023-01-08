@@ -174,7 +174,7 @@ const SellProtectionPopUp = (props) => {
         </div>
         <div>
           <button
-            className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={sellProtection}
             disabled={
               loading ||
