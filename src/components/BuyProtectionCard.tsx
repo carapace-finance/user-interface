@@ -31,7 +31,12 @@ export default function BuyProtectionCard(props) {
   const protectionPoolAddress = router.query.protectionPoolAddress as string;
   const lendingPoolAddress = router.query.address as string;
 
-  useEffect(() => {
+  const onSubmit = () => {
+    calculatePremium();
+    setIsOpen(true);
+  }; // your form submit function which will invoke after successful validation
+
+  const calculatePremium = () => {
     const protectionAmount = parseFloat(getValues("protectionAmount"));
     const protectionDurationInDays = parseFloat(
       getValues("protectionDurationInDays")
@@ -46,7 +51,7 @@ export default function BuyProtectionCard(props) {
     ) {
       setCalculatingPremiumPrice(true);
       const protectionPurchaseParams = {
-        lendingPoolAddress: router.query.address as string,
+        lendingPoolAddress: lendingPoolAddress,
         nftLpTokenId: tokenId,
         protectionAmount: convertNumberToUSDC(protectionAmount),
         protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
@@ -57,7 +62,7 @@ export default function BuyProtectionCard(props) {
       );
       protectionPoolService
         .calculatePremiumPrice(
-          router.query.protectionPoolAddress as string,
+          protectionPoolAddress,
           contractAddresses.premiumCalculator,
           protectionPurchaseParams
         )
@@ -67,17 +72,7 @@ export default function BuyProtectionCard(props) {
           setCalculatingPremiumPrice(false);
         });
     }
-  }, [
-    protectionPoolService,
-    contractAddresses,
-    getValues("protectionAmount"),
-    getValues("protectionDurationInDays"),
-    tokenId
-  ]);
-
-  const onSubmit = () => {
-    setIsOpen(true);
-  }; // your form submit function which will invoke after successful validation
+  };
 
   return (
     <div className="block py-10 px-8 rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200 w-450 h-fit">
@@ -296,7 +291,7 @@ export default function BuyProtectionCard(props) {
           className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           value="Buy Protection"
-          disabled={premiumPrice === 0 || !protectionPoolAddress || !isValid} // todo: add the leverage ratio limit
+          disabled={!protectionPoolAddress || !isValid} // todo: add the leverage ratio limit
         />
       </form>
       <p>Buy protection within: {timeLeft}</p>
@@ -308,8 +303,9 @@ export default function BuyProtectionCard(props) {
         tokenId={tokenId}
         premiumAmount={premiumPrice}
         calculatingPremiumPrice={calculatingPremiumPrice}
-        lendingPoolAddress={router.query.address}
-        protectionPoolAddress={router.query.protectionPoolAddress}
+        setPremiumPrice={setPremiumPrice}
+        lendingPoolAddress={lendingPoolAddress}
+        protectionPoolAddress={protectionPoolAddress}
         name={name}
         adjustedYields={adjustedYields}
       ></BuyProtectionPopUp>

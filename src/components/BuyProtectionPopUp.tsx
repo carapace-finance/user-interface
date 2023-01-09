@@ -13,7 +13,12 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
+import { UserContext } from "@contexts/UserContextProvider";
+import {
+  convertNumberToUSDC,
+  convertUSDCToNumber,
+  USDC_FORMAT
+} from "@utils/usdc";
 import { getDaysInSeconds } from "@utils/utils";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
@@ -27,6 +32,7 @@ const BuyProtectionPopUp = (props) => {
     tokenId,
     premiumAmount,
     calculatingPremiumPrice,
+    setPremiumPrice,
     lendingPoolAddress,
     protectionPoolAddress,
     name,
@@ -36,17 +42,26 @@ const BuyProtectionPopUp = (props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
+  const [usdcBalance, setUsdcBalance] = useState(0);
   const { protectionPoolService } = useContext(ApplicationContext);
+  const { updateUserUsdcBalance } = useContext(UserContext);
 
   const router = useRouter();
 
   const reset = () => {
     setSuccessMessage("");
     setError("");
+    setPremiumPrice(0);
     setLoading(false);
   };
 
   useEffect(reset, [open]);
+
+  useEffect(() => {
+    (async () => {
+      setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance()));
+    })();
+  }, [open]);
 
   const onError = (e) => {
     if (e) {
@@ -57,6 +72,14 @@ const BuyProtectionPopUp = (props) => {
     setTimeout(() => {
       reset();
     }, 2000);
+  };
+
+  const hasEnoughUsdcBalance = () => {
+    if (premiumAmount > usdcBalance) {
+      return false;
+    } else {
+      return true;
+    }
   };
 
   // Function passed into 'onClick' of 'Buy Protection' button
@@ -122,9 +145,30 @@ const BuyProtectionPopUp = (props) => {
       <DialogContent className="mb-4">
         <div>
           <div>
+            <div>
+              {renderFieldAndValue(
+                "Premium Price",
+                calculatingPremiumPrice ? (
+                  <div>
+                    Calculating Premium Price...
+                    <LoadingButton
+                      loading={calculatingPremiumPrice}
+                    ></LoadingButton>
+                  </div>
+                ) : (
+                  numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
+                )
+              )}
+              {hasEnoughUsdcBalance() ? null : (
+                <h5 className="block text-left text-customPink text-base font-normal">
+                  You don't have enough USDC balance:&nbsp;
+                  {numeral(usdcBalance).format(USDC_FORMAT)}&nbsp;USDC
+                </h5>
+              )}
+            </div>
             <div className="flex">
               {renderFieldAndValue("Lending Pool", name)}
-              <div className="ml-2 mt-1">
+              <div className="ml-2 mt-5">
                 <img
                   src={assets.goldfinch.src}
                   alt="carapace"
@@ -142,19 +186,6 @@ const BuyProtectionPopUp = (props) => {
               protectionDurationInDays + " Days"
             )}
             {renderFieldAndValue("Token Id", tokenId)}
-            {renderFieldAndValue(
-              "Premium Price",
-              calculatingPremiumPrice ? (
-                <div>
-                  Calculating Premium Price...
-                  <LoadingButton
-                    loading={calculatingPremiumPrice}
-                  ></LoadingButton>
-                </div>
-              ) : (
-                numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
-              )
-            )}
           </div>
           <Divider className="mb-8" />
           <div className="mt-4">
@@ -229,7 +260,9 @@ const BuyProtectionPopUp = (props) => {
               calculatingPremiumPrice ||
               !protectionDurationInDays ||
               !tokenId ||
-              !lendingPoolAddress
+              !lendingPoolAddress ||
+              !hasEnoughUsdcBalance() ||
+              premiumAmount === 0
             }
           >
             Confirm Protection Purchase
@@ -258,12 +291,12 @@ const renderFieldAndValue = (fieldLabel, fieldValue) => {
   return (
     <div>
       <Typography
-        className="flex justify-left text-customGrey text-base font-bold mb-5"
+        className="flex justify-left text-customGrey text-base font-bold"
         variant="subtitle2"
       >
-        <div className="text-base">{fieldLabel}</div>
+        <div className="text-base mt-4">{fieldLabel}</div>
       </Typography>
-      <div className="flex justify-left mb-4">{fieldValue}</div>
+      <div className="flex justify-left">{fieldValue}</div>
     </div>
   );
 };
