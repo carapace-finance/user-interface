@@ -1,17 +1,14 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
 );
 import { BondContext } from "@contexts/BondContextProvider";
-import assets from "../assets";
 
 const LendWithProtection = () => {
-  const goldfinchLogo = assets.goldfinch.src;
-
   const { bonds, setBonds } = useContext(BondContext);
 
   return (
@@ -31,8 +28,7 @@ const LendWithProtection = () => {
             <th>Lending Pool</th>
             <th>Protocol</th>
             <th>Adjusted Yields</th>
-            <th>Lending Pool APY</th>
-=            <th>Premium</th>
+            <th>Lending Pool APY</th>= <th>Premium</th>
           </tr>
         </thead>
         <tbody>

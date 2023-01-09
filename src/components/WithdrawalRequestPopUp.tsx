@@ -8,13 +8,10 @@ import {
 import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import {
   convertNumberToUSDC,
   convertUSDCToNumber,
-  formatUSDC,
-  parseUSDC,
   USDC_FORMAT
 } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
@@ -40,10 +37,10 @@ const WithdrawalRequestPopUp = (props) => {
   const [loading, setLoading] = useState(false);
 
   const reset = () => {
-    setValue("amount", "0");
-    setRequestableAmount(0);
     setSuccessMessage("");
     setError("");
+    setValue("amount", "0");
+    setRequestableAmount(0);
     setLoading(false);
   };
 
@@ -76,7 +73,6 @@ const WithdrawalRequestPopUp = (props) => {
     setError("Failed to request withdrawal...");
     setTimeout(() => {
       reset();
-      setLoading(false);
     }, 2000);
   };
 
@@ -100,7 +96,6 @@ const WithdrawalRequestPopUp = (props) => {
         setTimeout(() => {
           reset();
           onClose();
-          setLoading(false);
         }, 2000);
       } else {
         onError(receipt);
@@ -123,7 +118,7 @@ const WithdrawalRequestPopUp = (props) => {
       }}
     >
       <div className="flex justify-end mr-4">
-      <IconButton onClick={loading ? null : onClose}>
+        <IconButton onClick={loading ? null : onClose}>
           <span className="text-black">×</span>
         </IconButton>
       </div>
@@ -150,8 +145,8 @@ const WithdrawalRequestPopUp = (props) => {
                     max: requestableAmount,
                     required: true
                   })}
-                  onWheel={(e: any) => (e.target).blur()}
-                  />
+                  onWheel={(e: any) => e.target.blur()}
+                />
                 {errors.amount && (
                   <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
                     the withdrawal request amount must be in between 0 and your
@@ -224,7 +219,10 @@ const WithdrawalRequestPopUp = (props) => {
             type="submit"
             value="Confirm Withdrawal Request"
             disabled={
-              loading || !protectionPoolService || !protectionPoolAddress || !isValid
+              loading ||
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !isValid
             }
           />
           <div className="flex"></div>

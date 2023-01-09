@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Dialog,
@@ -13,8 +13,7 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { convertNumberToUSDC, parseUSDC, USDC_FORMAT } from "@utils/usdc";
-import { formatAddress } from "@utils/utils";
+import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
 import { LoadingButton } from "@mui/lab";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
@@ -92,7 +91,7 @@ const SellProtectionPopUp = (props) => {
       }}
     >
       <div className="flex justify-end mr-4">
-      <IconButton onClick={loading ? null : onClose}>
+        <IconButton onClick={loading ? null : onClose}>
           <span className="text-black">×</span>
         </IconButton>
       </div>

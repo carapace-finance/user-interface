@@ -9,10 +9,8 @@ import {
 import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import {
-  formatUSDC,
   convertNumberToUSDC,
   convertUSDCToNumber,
   USDC_FORMAT
@@ -28,7 +26,7 @@ const WithdrawalPopUp = (props) => {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors, isValid } 
+    formState: { errors, isValid }
   } = useForm<WithdrawalInput>({ defaultValues: { amount: "0" } });
 
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -38,16 +36,17 @@ const WithdrawalPopUp = (props) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
 
-  const resetInputs = () => {
-    setValue("amount", "0");
-    setWithdrawableAmount(0);
+  const reset = () => {
     setSuccessMessage("");
     setError("");
+    setValue("amount", "0");
+    setWithdrawableAmount(0);
+    setLoading(false);
   };
 
   // fetch withdrawable amount on each open
   useEffect(() => {
-    resetInputs();
+    reset();
 
     if (protectionPoolService && protectionPoolAddress) {
       console.log("Getting user's withdrawal request...");
@@ -74,8 +73,7 @@ const WithdrawalPopUp = (props) => {
     console.log("The withdrawal transaction failed");
     setError("Failed to withdraw...");
     setTimeout(() => {
-      resetInputs();
-      setLoading(false);
+      reset();
     }, 2000);
   };
 
@@ -97,9 +95,8 @@ const WithdrawalPopUp = (props) => {
           )} USDC from the protection pool!`
         );
         setTimeout(() => {
-          resetInputs();
+          reset();
           onClose();
-          setLoading(false);
         }, 2000);
       } else {
         onError(receipt);
@@ -122,7 +119,7 @@ const WithdrawalPopUp = (props) => {
       }}
     >
       <div className="flex justify-end mr-4">
-      <IconButton onClick={loading ? null : onClose}>
+        <IconButton onClick={loading ? null : onClose}>
           <span className="text-black">×</span>
         </IconButton>
       </div>
@@ -149,8 +146,8 @@ const WithdrawalPopUp = (props) => {
                     max: withdrawableAmount,
                     required: true
                   })}
-                  onWheel={(e: any) => (e.target).blur()}
-                  />
+                  onWheel={(e: any) => e.target.blur()}
+                />
                 {errors.amount && (
                   <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
                     the withdrawal amount must be in between 0 and your
@@ -223,7 +220,10 @@ const WithdrawalPopUp = (props) => {
             type="submit"
             value="Confirm Withdraw"
             disabled={
-              loading || !protectionPoolService || !protectionPoolAddress || !isValid
+              loading ||
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !isValid
             }
           />
           <div className="flex"></div>

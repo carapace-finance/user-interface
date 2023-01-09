@@ -14,7 +14,7 @@ import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
-import { formatAddress, getDaysInSeconds } from "@utils/utils";
+import { getDaysInSeconds } from "@utils/utils";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
 
@@ -123,10 +123,7 @@ const BuyProtectionPopUp = (props) => {
         <div>
           <div>
             <div className="flex">
-              {renderFieldAndValue(
-                "Lending Pool",
-                name
-              )}
+              {renderFieldAndValue("Lending Pool", name)}
               <div className="ml-2 mt-1">
                 <img
                   src={assets.goldfinch.src}

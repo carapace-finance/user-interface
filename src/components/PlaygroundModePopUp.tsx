@@ -55,7 +55,8 @@ const PlaygroundModePopUp = (props) => {
               <li>Withdraw</li>
             </ol>
             <p className="text-customPink mt-4">
-              *All the data including APY and premium shown in this test app is dummy.
+              *All the data including APY and premium shown in this test app is
+              dummy.
             </p>
             {!isDefaultData &&
             protectionPools?.length > 0 &&
