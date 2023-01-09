@@ -74,7 +74,10 @@ const WithdrawalRequestPopUp = (props) => {
     }
     console.log("The requestWithdrawal transaction failed");
     setError("Failed to request withdrawal...");
-    setLoading(false);
+    setTimeout(() => {
+      reset();
+      setLoading(false);
+    }, 2000);
   };
 
   const requestedWithdrawal = async () => {

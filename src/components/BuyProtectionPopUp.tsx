@@ -54,7 +54,9 @@ const BuyProtectionPopUp = (props) => {
     }
     console.log("The buy protection transaction failed");
     setError("Failed to buy protection...");
-    setLoading(false);
+    setTimeout(() => {
+      reset();
+    }, 2000);
   };
 
   // Function passed into 'onClick' of 'Buy Protection' button

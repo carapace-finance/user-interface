@@ -44,7 +44,9 @@ const SellProtectionPopUp = (props) => {
     }
     console.log("The deposit transaction failed");
     setError("Failed to sell protection...");
-    setLoading(false);
+    setTimeout(() => {
+      reset();
+    }, 2000);
   };
 
   // Function passed into 'onClick' of 'Sell Protection' button
