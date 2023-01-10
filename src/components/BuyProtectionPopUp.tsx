@@ -161,7 +161,7 @@ const BuyProtectionPopUp = (props) => {
               )}
               {hasEnoughUsdcBalance() ? null : (
                 <h5 className="block text-left text-customPink text-base font-normal">
-                  You don't have enough USDC balance:&nbsp;
+                  You don&apos;t have enough USDC balance:&nbsp;
                   {numeral(usdcBalance).format(USDC_FORMAT)}&nbsp;USDC
                 </h5>
               )}
