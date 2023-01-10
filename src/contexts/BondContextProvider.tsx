@@ -15,7 +15,6 @@ export const BondContextProvider = ({ children }) => {
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",
       lendingPoolAPY: "17%",
-      CARATokenRewards: "~3.5%",
       premium: "4 - 7%"
     },
     {
@@ -25,7 +24,6 @@ export const BondContextProvider = ({ children }) => {
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",
       lendingPoolAPY: "17%",
-      CARATokenRewards: "~3.5%",
       premium: "4 - 7%"
     },
     {
@@ -35,7 +33,6 @@ export const BondContextProvider = ({ children }) => {
       protocol: goldfinchLogo,
       adjustedYields: "7 - 10%",
       lendingPoolAPY: "17%",
-      CARATokenRewards: "~3.5%",
       premium: "4 - 7%"
     }
   ];

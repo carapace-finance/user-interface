@@ -48,25 +48,25 @@ export const footerLinks = [
         target: "_blank"
       }
     ]
-  },
-  {
-    title: "LEGAL",
-    links: [
-      {
-        name: "Coming soon",
-        link: "",
-        target: ""
-      }
-      // {
-      //   name: "Privacy Policy",
-      //   link: "",
-      //   target: ""
-      // },
-      // {
-      //   name: "Terms of use",
-      //   link: "",
-      //   target: ""
-      // },
-    ]
   }
+  // {
+  // title: "LEGAL",
+  // links: [
+  //   {
+  //     name: "Coming soon",
+  //     link: "",
+  //     target: ""
+  //   }
+  // {
+  //   name: "Privacy Policy",
+  //   link: "",
+  //   target: ""
+  // },
+  // {
+  //   name: "Terms of use",
+  //   link: "",
+  //   target: ""
+  // },
+  // ]
+  // }
 ];

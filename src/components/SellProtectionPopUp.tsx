@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Dialog,
@@ -13,8 +13,7 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { convertNumberToUSDC, parseUSDC, USDC_FORMAT } from "@utils/usdc";
-import { formatAddress } from "@utils/utils";
+import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
 import { LoadingButton } from "@mui/lab";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
@@ -22,14 +21,13 @@ import assets from "src/assets";
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
   const { protectionPoolService } = useContext(ApplicationContext);
-  const { open, onClose, amount, protectionPoolAddress } = props;
+  const { open, onClose, amount, protectionPoolAddress, estimatedAPY } = props;
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [expectedYield, setExpectedYield] = useState("18 - 25%");
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
 
-  const router = useRouter()
+  const router = useRouter();
 
   const reset = () => {
     setSuccessMessage("");
@@ -45,7 +43,9 @@ const SellProtectionPopUp = (props) => {
     }
     console.log("The deposit transaction failed");
     setError("Failed to sell protection...");
-    setLoading(false);
+    setTimeout(() => {
+      reset();
+    }, 2000);
   };
 
   // Function passed into 'onClick' of 'Sell Protection' button
@@ -60,7 +60,6 @@ const SellProtectionPopUp = (props) => {
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {
-        setLoading(false);
         console.log("The deposit transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
@@ -68,7 +67,8 @@ const SellProtectionPopUp = (props) => {
         );
         setTimeout(() => {
           onClose();
-          router.push('/sellProtection');
+          router.push("/portfolio");
+          setLoading(false);
         }, 2000);
       } else {
         onError(receipt);
@@ -83,21 +83,18 @@ const SellProtectionPopUp = (props) => {
       className="inset-x-36"
       disableScrollLock
       open={open}
-      onClose={onClose}
+      onClose={loading ? null : onClose}
       PaperProps={{
         style: {
           borderRadius: "10px"
         }
       }}
     >
-      <IconButton
-        onClick={onClose}
-        className="absolute top-10 right-10 flex items-center w-6 h-6 rounded-full border-2 border-solid border-gray-300"
-        color="primary"
-        size="small"
-      >
-        <div className="text-black">×</div>
-      </IconButton>
+      <div className="flex justify-end mr-4">
+        <IconButton onClick={loading ? null : onClose}>
+          <span className="text-black">×</span>
+        </IconButton>
+      </div>
       <DialogTitle className="mt-6">Deposit</DialogTitle>
       <DialogContent className="mb-4">
         <div>
@@ -147,7 +144,7 @@ const SellProtectionPopUp = (props) => {
                 </Tooltip>
               </div>
             </div>
-            <div className="text-sm">{expectedYield}</div>
+            <div className="text-sm">{estimatedAPY}</div>
           </Typography>
           <Typography className="flex justify-between mb-4" variant="caption">
             <div className="text-gray-500 text-sm flex items-center">
@@ -178,7 +175,7 @@ const SellProtectionPopUp = (props) => {
         </div>
         <div>
           <button
-            className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={sellProtection}
             disabled={
               loading ||
@@ -194,18 +191,11 @@ const SellProtectionPopUp = (props) => {
         </div>
         <div>
           <div className="text-sm">
-            <div className="flex">
-              <p>
-                By clicking &quot;Confirm Deposit&quot;, you agree to
-                Carapace&apos;s&nbsp;
-              </p>
-              <p className="underline">Terms of Service&nbsp;</p>
-              <p>and</p>
-            </div>
-            <div className="flex">
-              <p>acknowledge that you have read and understand the&nbsp;</p>
-              <p className="underline">Carapace protocol disclaimer.</p>
-            </div>
+            By clicking &quot;Confirm Deposit&quot;, you agree to
+            Carapace&apos;s&nbsp;
+            <span className="underline">Terms of Service&nbsp;</span>
+            and acknowledge that you have read and understand the&nbsp;
+            <span className="underline">Carapace protocol disclaimer.</span>
           </div>
         </div>
       </DialogContent>

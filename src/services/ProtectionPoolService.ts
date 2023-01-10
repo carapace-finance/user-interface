@@ -8,7 +8,7 @@ import {
 } from "@contracts/contractService";
 import {
   approveAndDeposit,
-  approveAndBuyProtection,
+  transferApproveAndBuyProtection,
   getLendingPoolName
 } from "@utils/forked/playground";
 import {
@@ -110,8 +110,9 @@ export class ProtectionPoolService {
       this.provider.getSigner()
     );
 
+    // todo: approve the exact premiumAmt after the buyProtection method with the premiumAmt argument is implemented
     if (this.isPlayground) {
-      return await approveAndBuyProtection(
+      return await transferApproveAndBuyProtection(
         this.provider,
         protectionPoolInstance,
         purchaseParams,
@@ -230,7 +231,6 @@ export class ProtectionPoolService {
             protocol: "goldfinch",
             adjustedYields: "7 - 10%",
             lendingPoolAPY: "17%",
-            CARATokenRewards: "~3.5%",
             premium: "4 - 7%",
             timeLeft: "59 Days 8 Hours 2 Mins",
             protectionPoolAddress: protectionPoolAddress,

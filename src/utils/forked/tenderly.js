@@ -107,6 +107,9 @@ export const sendTransaction = async (
 
 export const moveForwardTime = async (provider, seconds) => {
   await provider.send("evm_increaseTime", [hexValue(seconds)]);
+  // todo: this is problematic because we the block number doesn't change although we advance time
+  // todo: startTimestamp in protection purchase is returning the wrong value because of this
+  // todo: what the average block time when we advance time?
   await provider.send("evm_increaseBlocks", [
     hexValue(1) // hex encoded number of blocks to increase
   ]);

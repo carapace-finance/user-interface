@@ -9,12 +9,13 @@ import { getDaysInSeconds } from "@utils/utils";
 import { BuyProtectionInputs } from "@type/types";
 import { isAddress } from "ethers/lib/utils";
 
-export default function BuyProtectionCard() {
+export default function BuyProtectionCard(props) {
+  const { adjustedYields, lendingPoolAPY, premium, timeLeft, name } = props;
   const {
     register,
     handleSubmit,
     getValues,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<BuyProtectionInputs>({
     defaultValues: { protectionAmount: "0", protectionDurationInDays: "50" }
   });
@@ -30,7 +31,12 @@ export default function BuyProtectionCard() {
   const protectionPoolAddress = router.query.protectionPoolAddress as string;
   const lendingPoolAddress = router.query.address as string;
 
-  useEffect(() => {
+  const onSubmit = () => {
+    calculatePremium();
+    setIsOpen(true);
+  }; // your form submit function which will invoke after successful validation
+
+  const calculatePremium = () => {
     const protectionAmount = parseFloat(getValues("protectionAmount"));
     const protectionDurationInDays = parseFloat(
       getValues("protectionDurationInDays")
@@ -45,7 +51,7 @@ export default function BuyProtectionCard() {
     ) {
       setCalculatingPremiumPrice(true);
       const protectionPurchaseParams = {
-        lendingPoolAddress: router.query.address as string,
+        lendingPoolAddress: lendingPoolAddress,
         nftLpTokenId: tokenId,
         protectionAmount: convertNumberToUSDC(protectionAmount),
         protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
@@ -56,7 +62,7 @@ export default function BuyProtectionCard() {
       );
       protectionPoolService
         .calculatePremiumPrice(
-          router.query.protectionPoolAddress as string,
+          protectionPoolAddress,
           contractAddresses.premiumCalculator,
           protectionPurchaseParams
         )
@@ -66,29 +72,19 @@ export default function BuyProtectionCard() {
           setCalculatingPremiumPrice(false);
         });
     }
-  }, [
-    protectionPoolService,
-    contractAddresses,
-    getValues("protectionAmount"),
-    getValues("protectionDurationInDays"),
-    tokenId
-  ]);
-
-  const onSubmit = () => {
-    setIsOpen(true);
-  }; // your form submit function which will invoke after successful validation
+  };
 
   return (
-    <div className="block py-10 px-8 rounded-2xl shadow-boxShadow  shadow-table w-450">
+    <div className="block py-10 px-8 rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200 w-450 h-fit">
       <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
-        Estimated Adjusted Yields
+        Estimated Premium
         <div className="pl-2">
           <Tooltip
             animate={{
               mount: { scale: 1, y: 0 },
               unmount: { scale: 0, y: 25 }
             }}
-            content="Lending Pool APY % minus Premium %"
+            content="Estimated premium amount divided your lending amount"
             placement="top"
           >
             <svg
@@ -109,19 +105,21 @@ export default function BuyProtectionCard() {
         </div>
       </h5>
       <div className="py-2 border-b border-gray-300">
-        <h1 className="text-customDarkGrey text-4xl mb-4 text-left">7 - 10%</h1>
+        <h1 className="text-customDarkGrey text-4xl mb-4 text-left">
+          {premium}
+        </h1>
       </div>
       <div className="my-4">
         <div className="flex mb-4">
           <div>
-            <h5 className="text-customGrey text-base flex mb-2 ">
+            <h5 className="text-left text-customGrey text-base flex mb-2">
               Lending Pool APY
               <Tooltip
                 animate={{
                   mount: { scale: 1, y: 0 },
                   unmount: { scale: 0, y: 25 }
                 }}
-                content="APY in an underlying lending protocol like Goldfinch."
+                content="APY in an underlying lending protocol"
                 placement="top"
               >
                 <svg
@@ -140,21 +138,36 @@ export default function BuyProtectionCard() {
                 </svg>
               </Tooltip>
             </h5>
-            <p className="text-left text-xl">17%</p>
+            <p className="text-left text-xl">{lendingPoolAPY}</p>
           </div>
           <div className="ml-14">
             <h5 className="text-customGrey text-left text-base mb-2">
-              Premium
+              Estimated Adjusted Yields
+              <Tooltip
+                animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 }
+                }}
+                content="Lending Pool APY minus Premium"
+                placement="top"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-4 h-4 ml-1"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                  />
+                </svg>
+              </Tooltip>
             </h5>
-            <p className="text-left text-xl">7% - 10%</p>
-          </div>
-        </div>
-        <div className="flex">
-          <div>
-            <h5 className="text-customGrey text-base mb-2">
-              CARA Token Rewards
-            </h5>
-            <p className="text-left text-xl">~3.5%</p>
+            <p className="text-left text-xl">{adjustedYields}</p>
           </div>
         </div>
       </div>
@@ -174,9 +187,10 @@ export default function BuyProtectionCard() {
                     max: 10000000,
                     required: true
                   })} // todo: add the leverage ratio limit to max
+                  onWheel={(e: any) => e.target.blur()}
                 />
                 {errors.protectionAmount && (
-                  <h5 className="block text-left text-buttonPink text-xl leading-tight font-normal mb-4">
+                  <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">
                     the protection amount must be in between 0 and the available
                     protection purchase amount
                   </h5>
@@ -213,9 +227,10 @@ export default function BuyProtectionCard() {
                   max: 180,
                   required: true
                 })}
+                onWheel={(e: any) => e.target.blur()}
               />
               {errors.protectionDurationInDays && (
-                <h5 className="block text-left text-buttonPink text-xl leading-tight font-normal mb-4">
+                <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">
                   the protection duration must be in between 0 day and the next
                   cycle end(180 days the longest)
                 </h5>
@@ -232,8 +247,33 @@ export default function BuyProtectionCard() {
             /> */}
             </div>
           </div>
-          <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">
+          <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
             Goldfinch Token ID
+            <div className="pl-2">
+              <Tooltip
+                animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 }
+                }}
+                content="ID of your LP token in Goldfinch"
+                placement="top"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                  />
+                </svg>
+              </Tooltip>
+            </div>
           </h5>
           <div className="flex w-72 flex-col gap-4">
             {/* <Input
@@ -248,13 +288,13 @@ export default function BuyProtectionCard() {
           </div>
         </div>
         <input
+          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
-          value="Preview"
-          className="cursor-pointer border border-customDarkGrey text-customDarkGrey rounded-md px-16 py-5 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline disabled:opacity-50"
-          disabled={premiumPrice === 0}
+          value="Buy Protection"
+          disabled={!protectionPoolAddress || !isValid} // todo: add the leverage ratio limit
         />
       </form>
-      <p>Buy protection within: 2 days 12 hours 34 mins</p>
+      <p>Buy protection within: {timeLeft}</p>
       <BuyProtectionPopUp
         open={isOpen}
         onClose={() => setIsOpen(false)}
@@ -263,8 +303,11 @@ export default function BuyProtectionCard() {
         tokenId={tokenId}
         premiumAmount={premiumPrice}
         calculatingPremiumPrice={calculatingPremiumPrice}
-        lendingPoolAddress={router.query.address}
-        protectionPoolAddress={router.query.protectionPoolAddress}
+        setPremiumPrice={setPremiumPrice}
+        lendingPoolAddress={lendingPoolAddress}
+        protectionPoolAddress={protectionPoolAddress}
+        name={name}
+        adjustedYields={adjustedYields}
       ></BuyProtectionPopUp>
     </div>
   );

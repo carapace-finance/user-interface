@@ -1,4 +1,4 @@
-import { Contract, Signer } from "ethers";
+import { Contract } from "ethers";
 import { BigNumber } from "@ethersproject/bignumber";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { sendTransaction } from "./forked/tenderly";

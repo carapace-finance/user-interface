@@ -1,18 +1,16 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
-  IconButton as MuiIconButton,
   Dialog,
   DialogContent,
   DialogTitle,
-  Divider
+  Divider,
+  IconButton
 } from "@mui/material";
 import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import {
-  formatUSDC,
   convertNumberToUSDC,
   convertUSDCToNumber,
   USDC_FORMAT
@@ -28,7 +26,7 @@ const WithdrawalPopUp = (props) => {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<WithdrawalInput>({ defaultValues: { amount: "0" } });
 
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -38,16 +36,17 @@ const WithdrawalPopUp = (props) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
 
-  const resetInputs = () => {
-    setValue("amount", "0");
-    setWithdrawableAmount(0);
+  const reset = () => {
     setSuccessMessage("");
     setError("");
+    setValue("amount", "0");
+    setWithdrawableAmount(0);
+    setLoading(false);
   };
 
   // fetch withdrawable amount on each open
   useEffect(() => {
-    resetInputs();
+    reset();
 
     if (protectionPoolService && protectionPoolAddress) {
       console.log("Getting user's withdrawal request...");
@@ -73,6 +72,9 @@ const WithdrawalPopUp = (props) => {
     }
     console.log("The withdrawal transaction failed");
     setError("Failed to withdraw...");
+    setTimeout(() => {
+      reset();
+    }, 2000);
   };
 
   const withdraw = async () => {
@@ -85,7 +87,6 @@ const WithdrawalPopUp = (props) => {
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {
-        setLoading(false);
         console.log("The withdrawal transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
@@ -94,7 +95,7 @@ const WithdrawalPopUp = (props) => {
           )} USDC from the protection pool!`
         );
         setTimeout(() => {
-          resetInputs();
+          reset();
           onClose();
         }, 2000);
       } else {
@@ -110,21 +111,18 @@ const WithdrawalPopUp = (props) => {
       className="top-32 inset-x-36"
       disableScrollLock
       open={open}
-      onClose={onClose}
+      onClose={loading ? null : onClose}
       PaperProps={{
         style: {
           borderRadius: "10px"
         }
       }}
     >
-      <MuiIconButton
-        onClick={onClose}
-        color="primary"
-        className="absolute top-4 right-4 flex items-center w-6 h-6"
-        size="small"
-      >
-        <div className="text-black">×</div>
-      </MuiIconButton>
+      <div className="flex justify-end mr-4">
+        <IconButton onClick={loading ? null : onClose}>
+          <span className="text-black">×</span>
+        </IconButton>
+      </div>
       <DialogTitle className="mt-6">Withdraw</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
@@ -132,7 +130,7 @@ const WithdrawalPopUp = (props) => {
             Protection Pool
           </h4>
           <div className="flex justify-left mb-3 text-base">
-            {protectionPoolAddress}
+            Goldfinch Protection Pool #1
           </div>
           <div>
             <h4 className="text-left text-base font-medium mb-3">
@@ -148,9 +146,10 @@ const WithdrawalPopUp = (props) => {
                     max: withdrawableAmount,
                     required: true
                   })}
+                  onWheel={(e: any) => e.target.blur()}
                 />
                 {errors.amount && (
-                  <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">
+                  <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
                     the withdrawal amount must be in between 0 and your
                     requested amount
                   </h5>
@@ -179,7 +178,7 @@ const WithdrawalPopUp = (props) => {
               /> */}
               </div>
               <div className="text-right mr-5 mb-1">
-                Withdrawable Amount:
+                Withdrawable Amount:&nbsp;
                 {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}
               </div>
             </div>
@@ -217,28 +216,24 @@ const WithdrawalPopUp = (props) => {
             </div>
           </div>
           <input
-            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             type="submit"
             value="Confirm Withdraw"
             disabled={
-              loading || !protectionPoolService || !protectionPoolAddress
+              loading ||
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !isValid
             }
           />
           <div className="flex"></div>
           <LoadingButton loading={loading}></LoadingButton>
           <div className="text-sm">
-            <div className="flex">
-              <p>
-                By clicking &quot;Confirm Withdrawal&quot;, you agree to
-                Carapace&apos;s&nbsp;
-              </p>
-              <p className="underline">Terms of Service&nbsp;</p>
-              <p>and</p>
-            </div>
-            <div className="flex">
-              <p>acknowledge that you have read and understand the&nbsp;</p>
-              <p className="underline">Carapace protocol disclaimer.</p>
-            </div>
+            By clicking &quot;Confirm Withdraw&quot;, you agree to
+            Carapace&apos;s&nbsp;
+            <span className="underline">Terms of Service&nbsp;</span>
+            and acknowledge that you have read and understand the&nbsp;
+            <span className="underline">Carapace protocol disclaimer.</span>
           </div>
         </DialogContent>
       </form>

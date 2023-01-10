@@ -32,7 +32,7 @@ export const UserContextProvider = ({ children }) => {
       {
         lendingPoolAddress: "0xb26B42Dd5771689D0a7faEea32825ff9710b9c11",
         protectionPremium: BigNumber.from(0xbf4c5737),
-        timeUntilExpirationInSeconds: BigNumber.from(0x63ccd0ee),
+        expirationTimestamp: BigNumber.from(0x63ccd0ee), // todo: make this value dynamic
         protectionAmount: BigNumber.from(0x22ecb25c00)
       }
     ]
@@ -107,51 +107,62 @@ export const UserContextProvider = ({ children }) => {
     return newUsdcBalance;
   };
 
-  const updateProtectionAmountAndExpiration = async (
+  const updatePurchasedProtectionDetails = async (
     protectionPoolAddress: string,
     lendingPoolAddress: string
   ) => {
     if (protectionPoolService || protectionPoolAddress || lendingPoolAddress) {
-      const ProtectionInfos =
+      const protectionInfos =
         await protectionPoolService.getProtectionPurchases(
           protectionPoolAddress
         );
 
-      let timeUntilExpirationInSeconds;
-      let protectionPremium;
-      let protectionAmount;
-      let newUserLendingPools: UserLendingPool[] = [];
+      // todo: this needs to be added in the mainnet
+      // let filteredProtectionInfos;
+      // if (protectionInfos?.length > 0) {
+      //   filteredProtectionInfos = protectionInfos.filter(
+      //     (protectionInfo) =>
+      //       protectionInfo.purchaseParams.lendingPoolAddress ==
+      //       lendingPoolAddress
+      //   );
+      // }
+      // console.log('filteredProtectionInfos ==>', filteredProtectionInfos);
 
-      if (ProtectionInfos?.length > 0) {
-        ProtectionInfos.map((protectionInfo) => {
-          if (
-            protectionInfo.purchaseParams.lendingPoolAddress ==
-            lendingPoolAddress
-          ) {
-            timeUntilExpirationInSeconds = protectionInfo.startTimestamp.add(
-              protectionInfo.purchaseParams.protectionDurationInSeconds
-            );
-            protectionPremium = protectionInfo.protectionPremium;
-            protectionAmount = protectionInfo.purchaseParams.protectionAmount;
-            const newUserLendingPool: UserLendingPool = {
-              lendingPoolAddress: lendingPoolAddress,
-              protectionPremium: protectionPremium,
-              timeUntilExpirationInSeconds: timeUntilExpirationInSeconds,
-              protectionAmount: protectionAmount
-            };
-            newUserLendingPools.push(newUserLendingPool);
-          }
-        });
-        if (newUserLendingPools.length != 0) {
-          userRef.current.userLendingPools = newUserLendingPools;
-          setUser({
-            ...userRef.current
-          });
-          console.log(
-            "User's ProtectionAmountAndExpiration Updated ==>",
-            newUserLendingPools
+      let newUserLendingPools: UserLendingPool[] = [];
+      if (protectionInfos?.length > 0) {
+        newUserLendingPools = protectionInfos.map((protectionInfo) => {
+          let expirationTimestamp = protectionInfo.startTimestamp.add(
+            protectionInfo.purchaseParams.protectionDurationInSeconds
           );
-        }
+
+          // todo: the startTimestamp is wrong because we advances time
+          // todo: movePoolCycle moves 31 days and it's called twice, and thus 62 days need to be subtracted
+          if (
+            !protectionInfo.purchaseParams.protectionAmount.eq(0x22ecb25c00)
+          ) {
+            expirationTimestamp = expirationTimestamp.sub(62 * 86400);
+          }
+          const newUserLendingPool: UserLendingPool = {
+            lendingPoolAddress:
+              protectionInfo.purchaseParams.lendingPoolAddress,
+            protectionPremium: BigNumber.from(protectionInfo.protectionPremium),
+            expirationTimestamp: expirationTimestamp,
+            protectionAmount: protectionInfo.purchaseParams.protectionAmount
+          };
+          return newUserLendingPool;
+        });
+      }
+      console.log("newUserLendingPools ==>", newUserLendingPools);
+
+      if (newUserLendingPools.length != 0) {
+        userRef.current.userLendingPools = newUserLendingPools;
+        setUser({
+          ...userRef.current
+        });
+        console.log(
+          "User's Purchased Protection Details Updated ==>",
+          newUserLendingPools
+        );
       }
     }
   };
@@ -184,7 +195,7 @@ export const UserContextProvider = ({ children }) => {
 
           if (lendingPools?.length > 0) {
             lendingPools.map(async (lendingPool) => {
-              await updateProtectionAmountAndExpiration(
+              await updatePurchasedProtectionDetails(
                 protectionPoolAddress,
                 lendingPool.address
               );
@@ -213,7 +224,7 @@ export const UserContextProvider = ({ children }) => {
           // todo: this condition should be added in the mainnet
           // if (buyer === user.address) {
           console.log("User bought protection!");
-          await updateProtectionAmountAndExpiration(
+          await updatePurchasedProtectionDetails(
             protectionPoolAddress,
             lendingPoolAddress
           );

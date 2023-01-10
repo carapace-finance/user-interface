@@ -43,12 +43,13 @@ const Header = () => {
     console.log("Cleanup...");
     const playgroundId = playgroundRef.current?.forkId;
     if (playgroundId) {
+      // todo: we cannot stop the playground when a page is refreshed because playgroundId is undefined at that point.
       console.log("Stopping playground: ", playgroundId);
       await stopPlayground(playgroundId);
     }
   };
 
-  // this is to ensure that playground is stopped when user closes the tab
+  // this is to ensure that playground is stopped when a user closes the tab or refreshes the app
   useEffect(() => {
     window.addEventListener("beforeunload", cleanup);
     return () => {
@@ -240,7 +241,7 @@ const Header = () => {
               : ""
           } hover:text-customBlue`}
         >
-          <h3>Buy</h3>
+          <h3>Protect</h3>
         </Link>
         {/* <Link href="/lendWithProtection">
           <h3>Lend With Protection</h3>
@@ -254,7 +255,15 @@ const Header = () => {
               : ""
           } hover:text-customBlue ml-16`}
         >
-          <h3>Sell</h3>
+          <h3>Earn</h3>
+        </Link>
+        <Link
+          href="/portfolio"
+          className={`${
+            router.pathname == "/portfolio" ? "text-customBlue font-medium" : ""
+          } hover:text-customBlue ml-16`}
+        >
+          <h3>Portfolio</h3>
         </Link>
       </div>
       <div className="mr-12">
@@ -284,16 +293,17 @@ const Header = () => {
         {playgroundButtonTitle === "Start Playground" ? (
           <button
             // disabled={!account}
-            className="text-white bg-customBlue rounded-md px-4 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            className="text-white text-xl bg-customPink rounded-md px-8 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
             onClick={playgroundButtonAction}
           >
             <Tooltip
-              content="Test our app features in a sandbox!"
+              content="Test our app features here!"
               animate={{
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 }
               }}
               placement="bottom"
+              offset={20}
             >
               <span>{playgroundButtonTitle}</span>
             </Tooltip>

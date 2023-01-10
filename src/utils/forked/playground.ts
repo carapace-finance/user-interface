@@ -1,4 +1,5 @@
 import { formatEther, parseEther } from "@ethersproject/units";
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   transferUsdc,
   getUsdcContract,
@@ -72,7 +73,7 @@ export async function preparePlayground(playground: Playground) {
   const lendingPoolAddress = GOLDFINCH_LENDING_POOLS[0];
 
   // buy protection 1
-  await approveAndBuyProtection(
+  await transferApproveAndBuyProtection(
     playground.provider,
     protectionPoolInstance,
     {
@@ -207,13 +208,16 @@ export async function approveAndDeposit(
   // await transferUsdc(provider, receiverAddress, depositAmt);
 
   // Approve & deposit
-  await usdcContract.approve(protectionPoolInstance.address, depositAmt);
+  await usdcContract.approve(protectionPoolInstance.address, depositAmt, {
+    gasPrice: "25900000000",
+    gasLimit: "200000"
+  });
   return await protectionPoolInstance
     .connect(receiver)
     .deposit(depositAmt, receiverAddress);
 }
 
-export async function approveAndBuyProtection(
+export async function transferApproveAndBuyProtection(
   provider,
   protectionPoolInstance,
   purchaseParams,
@@ -243,14 +247,19 @@ export async function approveAndBuyProtection(
 
   const buyerAddress = await buyer.getAddress();
 
-  // const premiumAmt = parseUSDC("5000");
-  // transfer usdc to deployer
-  // await transferUsdc(provider, buyerAddress, premiumAmt);
+  // transfer usdc to buyer, the lending position owner
+  await transferUsdc(provider, buyerAddress, premiumAmt);
 
   // Approve premium USDC
+  // todo: approve the exact premiumAmt after the buyProtection method with the premiumAmt argument is implemented
   await usdcContract
     .connect(buyer)
-    .approve(protectionPoolInstance.address, premiumAmt);
+    .approve(
+      protectionPoolInstance.address,
+      BigNumber.from(
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      )
+    );
 
   console.log("Purchasing a protection using params: ", purchaseParams);
 

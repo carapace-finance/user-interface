@@ -2,19 +2,16 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  IconButton as MuiIconButton,
+  IconButton,
   Divider
 } from "@mui/material";
 import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import {
   convertNumberToUSDC,
   convertUSDCToNumber,
-  formatUSDC,
-  parseUSDC,
   USDC_FORMAT
 } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
@@ -29,7 +26,7 @@ const WithdrawalRequestPopUp = (props) => {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<WithdrawalRequestInput>({ defaultValues: { amount: "0" } });
 
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -40,10 +37,10 @@ const WithdrawalRequestPopUp = (props) => {
   const [loading, setLoading] = useState(false);
 
   const reset = () => {
-    setValue("amount", "0");
-    setRequestableAmount(0);
     setSuccessMessage("");
     setError("");
+    setValue("amount", "0");
+    setRequestableAmount(0);
     setLoading(false);
   };
 
@@ -74,7 +71,9 @@ const WithdrawalRequestPopUp = (props) => {
     }
     console.log("The requestWithdrawal transaction failed");
     setError("Failed to request withdrawal...");
-    setLoading(false);
+    setTimeout(() => {
+      reset();
+    }, 2000);
   };
 
   const requestedWithdrawal = async () => {
@@ -87,7 +86,6 @@ const WithdrawalRequestPopUp = (props) => {
       );
       const receipt = await tx.wait();
       if (receipt.status === 1) {
-        setLoading(false);
         console.log("The requestWithdrawal transaction was successful");
         // Show success message for 2 seconds before closing popup
         setSuccessMessage(
@@ -112,21 +110,18 @@ const WithdrawalRequestPopUp = (props) => {
       className="top-32 inset-x-36"
       disableScrollLock
       open={open}
-      onClose={onClose}
+      onClose={loading ? null : onClose}
       PaperProps={{
         style: {
           borderRadius: "10px"
         }
       }}
     >
-      <MuiIconButton
-        onClick={onClose}
-        color="primary"
-        className="absolute top-4 right-4 flex items-center w-6 h-6"
-        size="small"
-      >
-        <div className="text-black">×</div>
-      </MuiIconButton>
+      <div className="flex justify-end mr-4">
+        <IconButton onClick={loading ? null : onClose}>
+          <span className="text-black">×</span>
+        </IconButton>
+      </div>
       <DialogTitle className="mt-6">Withdrawal Request</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
@@ -134,7 +129,7 @@ const WithdrawalRequestPopUp = (props) => {
             Protection Pool
           </h4>
           <div className="flex justify-left mb-3 text-base">
-            {protectionPoolAddress}
+            Goldfinch Protection Pool #1
           </div>
           <div>
             <h4 className="text-left text-base font-medium mb-3">
@@ -150,9 +145,10 @@ const WithdrawalRequestPopUp = (props) => {
                     max: requestableAmount,
                     required: true
                   })}
+                  onWheel={(e: any) => e.target.blur()}
                 />
                 {errors.amount && (
-                  <h5 className="block text-left text-buttonPink text-base leading-tight font-normal mb-4">
+                  <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
                     the withdrawal request amount must be in between 0 and your
                     deposited amount
                   </h5>
@@ -182,7 +178,7 @@ const WithdrawalRequestPopUp = (props) => {
               </div>
             </div>
             <div className="text-right mr-5 pb-4">
-              Requestable Amount:
+              Requestable Amount:&nbsp;
               {numeral(requestableAmount).format(USDC_FORMAT) + " USDC"}
             </div>
           </div>
@@ -219,27 +215,24 @@ const WithdrawalRequestPopUp = (props) => {
             </div>
           </div>
           <input
-            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             type="submit"
             value="Confirm Withdrawal Request"
             disabled={
-              loading || !protectionPoolService || !protectionPoolAddress
+              loading ||
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !isValid
             }
           />
           <div className="flex"></div>
           <LoadingButton loading={loading}></LoadingButton>
           <div className="text-sm">
-            <div className="flex">
-              <p>
-                By clicking &quot;Confirm Withdrawal Request&quot;, you agree to
-                Carapace&apos;s &nbsp;
-              </p>
-              <p className="underline">Terms of Service</p>
-            </div>
-            <div className="flex">
-              <p>and acknowledge that you have read and understand the&nbsp;</p>
-              <p className="underline">Carapace protocol disclaimer.</p>
-            </div>
+            By clicking &quot;Confirm Withdrawal Request&quot;, you agree to
+            Carapace&apos;s&nbsp;
+            <span className="underline">Terms of Service&nbsp;</span>
+            and acknowledge that you have read and understand the&nbsp;
+            <span className="underline">Carapace protocol disclaimer.</span>
           </div>
         </DialogContent>
       </form>
