@@ -47,4 +47,8 @@ Deploy the contracts
 1. Run `npx hardhat export-bytecode` & `npx hardhat export-abi` in `credit-default-swap-contracts` project
 2. Copy all files from `/credit-default-swap-contracts/abi` to `/user-interface/src/contracts/forked/abi`
 3. Copy `PoolHelper.json`, `AccruedPremiumCalculator.json`, `PoolFactory.json` & `PremiumCalculator.json` from `/credit-default-swap-contracts/artifacts` folder to `/user-interface/src/contracts/forked/artifacts`
-4. Copy all files from `/credit-default-swap-contracts/bytecode` folder to `/user-interface/src/contracts/forked/bytecode` and update bytecode in `ReferenceLendingPools.ts`, `ReferenceLendingPoolsFactory.ts` & `RiskFactorCalculator.ts`
+4. Copy bytecode for following `.bin` files from `/credit-default-swap-contracts/bytecode` folder and update corresponding `.ts` files in `/user-interface/src/contracts/forked/bytecode` folder:
+
+- `ReferenceLendingPools`,
+- `ReferenceLendingPoolsFactory`
+- `RiskFactorCalculator`

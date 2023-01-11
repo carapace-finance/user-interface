@@ -181,6 +181,22 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "premiumAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxPremiumAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PremiumExceedsMaxPremiumAmount",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "protectionDurationInSeconds",
         "type": "uint256"
       }
@@ -377,7 +393,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "protectionSeller",
         "type": "address"
@@ -396,9 +412,9 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "msgSender",
+        "name": "seller",
         "type": "address"
       },
       {
@@ -421,9 +437,9 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "msgSender",
+        "name": "seller",
         "type": "address"
       },
       {
@@ -435,7 +451,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "minPoolCycleIndex",
+        "name": "withdrawalCycleIndex",
         "type": "uint256"
       }
     ],
@@ -483,6 +499,11 @@
         "internalType": "struct ProtectionPurchaseParams",
         "name": "_protectionPurchaseParams",
         "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxPremiumAmount",
+        "type": "uint256"
       }
     ],
     "name": "buyProtection",
@@ -498,6 +519,89 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_lendingPool",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_nftLpTokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "calculateMaxAllowedProtectionAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_maxAllowedProtectionAmount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "calculateMaxAllowedProtectionDuration",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_maxAllowedProtectionDurationInSeconds",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "lendingPoolAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nftLpTokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protectionDurationInSeconds",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ProtectionPurchaseParams",
+        "name": "_protectionPurchaseParams",
+        "type": "tuple"
+      }
+    ],
+    "name": "calculateProtectionPremium",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_premiumAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isMinPremium",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -562,6 +666,11 @@
         "internalType": "struct ProtectionPurchaseParams",
         "name": "_protectionPurchaseParams",
         "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxPremiumAmount",
+        "type": "uint256"
       }
     ],
     "name": "extendProtection",

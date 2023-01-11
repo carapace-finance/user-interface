@@ -1,6 +1,19 @@
 [
   {
     "inputs": [],
+    "name": "LATE_PAYMENT_GRACE_PERIOD_IN_DAYS",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "SCALED_DAYS_IN_YEAR",
     "outputs": [
       {
