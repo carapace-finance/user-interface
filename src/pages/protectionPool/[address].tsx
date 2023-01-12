@@ -145,7 +145,7 @@ const ProtectionPool = () => {
                 {underlyingLendingPools.map((lendingPool) => (
                   <tr
                     key={lendingPool.address}
-                    onClick={() => handleClick(lendingPool.address)}
+                    onClick={() => handleClick(lendingPool.address.toLowerCase())}
                     className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
                   >
                     <td className="px-4 py-8 pl-8">{lendingPool.name}</td>

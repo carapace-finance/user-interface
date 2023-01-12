@@ -22,6 +22,11 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_lendingPoolAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_lender",
         "type": "address"
       },
@@ -84,16 +89,16 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_lendingPoolAddress",
+        "name": "_lendingPool",
         "type": "address"
       }
     ],
-    "name": "isLendingPoolDefaulted",
+    "name": "getPaymentPeriodInDays",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "uint256",
         "name": "",
-        "type": "bool"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -141,38 +146,16 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_buyer",
+        "name": "_lendingPoolAddress",
         "type": "address"
       },
       {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "lendingPoolAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "nftLpTokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "protectionAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "protectionDurationInSeconds",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct ProtectionPurchaseParams",
-        "name": "_purchaseParams",
-        "type": "tuple"
+        "internalType": "uint256",
+        "name": "_gracePeriodInDays",
+        "type": "uint256"
       }
     ],
-    "name": "isProtectionAmountValid",
+    "name": "isLendingPoolLateWithinGracePeriod",
     "outputs": [
       {
         "internalType": "bool",

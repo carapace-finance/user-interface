@@ -68,6 +68,22 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "premiumAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxPremiumAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PremiumExceedsMaxPremiumAmount",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "protectionDurationInSeconds",
         "type": "uint256"
       }

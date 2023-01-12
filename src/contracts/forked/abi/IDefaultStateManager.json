@@ -180,6 +180,30 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_protectionPoolAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lendingPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getLendingPoolStatus",
+    "outputs": [
+      {
+        "internalType": "enum LendingPoolStatus",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "contract IPool",
         "name": "_protectionPool",
         "type": "address"

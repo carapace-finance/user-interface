@@ -221,7 +221,7 @@ export async function transferApproveAndBuyProtection(
   provider,
   protectionPoolInstance,
   purchaseParams,
-  premiumAmt
+  maxPremiumAmt
 ) {
   // Update purchase params based on lending pool details
   const lendingPoolDetails =
@@ -248,24 +248,19 @@ export async function transferApproveAndBuyProtection(
   const buyerAddress = await buyer.getAddress();
 
   // transfer usdc to buyer, the lending position owner
-  await transferUsdc(provider, buyerAddress, premiumAmt);
+  await transferUsdc(provider, buyerAddress, maxPremiumAmt);
 
   // Approve premium USDC
   // todo: approve the exact premiumAmt after the buyProtection method with the premiumAmt argument is implemented
   await usdcContract
     .connect(buyer)
-    .approve(
-      protectionPoolInstance.address,
-      BigNumber.from(
-        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-      )
-    );
+    .approve(protectionPoolInstance.address, maxPremiumAmt);
 
   console.log("Purchasing a protection using params: ", purchaseParams);
 
   return await protectionPoolInstance
     .connect(buyer)
-    .buyProtection(purchaseParams, {
+    .buyProtection(purchaseParams, maxPremiumAmt, {
       gasPrice: "25900000000",
       gasLimit: "210000000"
     });

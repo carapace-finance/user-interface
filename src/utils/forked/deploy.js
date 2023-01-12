@@ -273,8 +273,18 @@ const deployContracts = async (forkProvider) => {
         }
       );
 
-    referenceLendingPoolsInstance =
-      await getReferenceLendingPoolsInstanceFromTx(forkProvider, tx1);
+    const referenceLendingPoolsList =
+      await referenceLendingPoolsFactoryInstance.getReferenceLendingPoolsList();
+    referenceLendingPoolsInstance = new Contract(
+      referenceLendingPoolsList[0],
+      referenceLendingPoolsAbi,
+      deployer
+    );
+
+    console.log(
+      "ReferenceLendingPools instance created at: ",
+      referenceLendingPoolsInstance.address
+    );
 
     // Deploy PoolHelper library contract
     const accruedPremiumCalculatorLibRef = {
@@ -368,7 +378,13 @@ const deployContracts = async (forkProvider) => {
       "ST1"
     );
 
-    protectionPoolInstance = await getProtectionPoolInstanceFromTx(tx);
+    protectionPoolInstance = new Contract(
+      await poolFactoryInstance.getPoolAddress(1),
+      poolAbi,
+      deployer
+    );
+
+    console.log("Pool instance created at: ", protectionPoolInstance.address);
 
     return {
       poolCycleManagerInstance,
@@ -380,51 +396,5 @@ const deployContracts = async (forkProvider) => {
     console.log(e);
   }
 };
-
-async function getReferenceLendingPoolsInstanceFromTx(forkProvider, tx) {
-  let receipt = await tx.wait();
-
-  try {
-    receipt = await tx.wait();
-    const referenceLendingPoolsCreatedEvent = receipt.events.find(
-      (eventInfo) => eventInfo.event === "ReferenceLendingPoolsCreated"
-    );
-
-    const newReferenceLendingPoolsInstance = new Contract(
-      referenceLendingPoolsCreatedEvent.args.referenceLendingPools,
-      referenceLendingPoolsAbi,
-      deployer
-    );
-    console.log(
-      "ReferenceLendingPools instance created at: ",
-      newReferenceLendingPoolsInstance.address
-    );
-
-    return newReferenceLendingPoolsInstance;
-  } catch (error) {
-    console.error(
-      "Failed to retrieve reference lending pool from creation tx: ",
-      error
-    );
-  }
-}
-
-async function getProtectionPoolInstanceFromTx(tx) {
-  const receipt = await tx.wait();
-
-  const poolCreatedEvent = receipt.events.find(
-    (eventInfo) => eventInfo.event === "PoolCreated"
-  );
-
-  const newPoolInstance = new Contract(
-    poolCreatedEvent.args.poolAddress,
-    poolAbi,
-    deployer
-  );
-
-  console.log("Pool instance created at: ", newPoolInstance.address);
-
-  return newPoolInstance;
-}
 
 export { deployContracts };
