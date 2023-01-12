@@ -42,7 +42,7 @@ Deploy the contracts
   npm run deploy:mainnet_forked
 ```
 
-# Set up contracts for the forked mainnet
+# Set up/update contracts for the forked mainnet
 
 1. Run `npx hardhat export-bytecode` & `npx hardhat export-abi` in `credit-default-swap-contracts` project
 2. Copy all files from `/credit-default-swap-contracts/abi` to `/user-interface/src/contracts/forked/abi`
@@ -52,3 +52,6 @@ Deploy the contracts
 - `ReferenceLendingPools`,
 - `ReferenceLendingPoolsFactory`
 - `RiskFactorCalculator`
+
+5. Update the deploy script if necessary
+6. Refresh the database and deploy new forks with the updated contracts
