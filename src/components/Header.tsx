@@ -39,7 +39,8 @@ const Header = () => {
   let idleTimeoutInMilliSeconds = 1000 * 60 * 30;
   let idleTimerId;
 
-  const cleanup = async () => {
+  const cleanup = async (e) => {
+    e.preventDefault();
     console.log("Cleanup...");
     const playgroundId = playgroundRef.current?.forkId;
     if (playgroundId) {
