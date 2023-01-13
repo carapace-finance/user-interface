@@ -308,9 +308,9 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th>
+              {/* <th> */}
                 {/* the div needs to be there otherwise there is a bug with styling */}
-                <div className="flex flex-row pr-3 items-center">
+                {/* <div className="flex flex-row pr-3 items-center">
                   Request Withdrawal
                   <Tooltip
                     animate={{
@@ -335,8 +335,8 @@ const Portfolio = () => {
                       />
                     </svg>
                   </Tooltip>
-                </div>
-              </th>
+                </div> */}
+              {/* </th> */}
               <th>
                 <div className="flex flex-row pr-3 items-center">
                   Withdraw
@@ -386,14 +386,14 @@ const Portfolio = () => {
                 <td>{protectionPool.APY}</td>
                 <td>{user.sTokenUnderlyingAmount}&nbsp;USDC</td>
                 <td>{user.requestedWithdrawalAmount}&nbsp;USDC</td>
-                <td>
+                {/* <td>
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}
                     className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
                   >
                     Request
                   </button>
-                </td>
+                </td> */}
                 <td>
                   <button
                     onClick={() => setIsWithdrawOpen(true)}
