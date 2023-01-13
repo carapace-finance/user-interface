@@ -215,19 +215,16 @@ const WithdrawalPopUp = (props) => {
               </div>
             </div>
           </div>
-          <input
-            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          <button
+            className={`text-white bg-customBlue rounded-md px-12 py-4 mb-8 mt-8 transition duration-500 ease min-w-[230px] select-none focus:outline-none focus:shadow-outline cursor-pointer ${loading ? 'disabled:opacity-90' : 'disabled:opacity-50'} disabled:cursor-not-allowed`}
             type="submit"
-            value="Confirm Withdraw"
             disabled={
               loading ||
               !protectionPoolService ||
               !protectionPoolAddress ||
               !isValid
             }
-          />
-          <div className="flex"></div>
-          <LoadingButton loading={loading}></LoadingButton>
+          >{loading ? <LoadingButton loading={loading}></LoadingButton> : "Confirm Withdraw"}</button>
           <div className="text-sm">
             By clicking &quot;Confirm Withdraw&quot;, you agree to
             Carapace&apos;s&nbsp;

@@ -250,7 +250,7 @@ const BuyProtectionPopUp = (props) => {
             </Typography>
           </div>
           <button
-            className="text-white text-base bg-customBlue px-8 py-4 mt-8 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`text-white text-base bg-customBlue px-8 py-4 mt-8 rounded-md cursor-pointer min-w-[330px] ${loading ? 'disabled:opacity-90' : 'disabled:opacity-50'} disabled:cursor-not-allowed`}
             onClick={buyProtection}
             disabled={
               loading ||
@@ -264,8 +264,7 @@ const BuyProtectionPopUp = (props) => {
               !hasEnoughUsdcBalance() ||
               premiumAmount === 0
             }
-          >
-            Confirm Protection Purchase
+          >{loading ? <LoadingButton loading={loading}></LoadingButton> : "Confirm Protection Purchase"}
           </button>
           <div className="flex"></div>
           <LoadingButton loading={loading}></LoadingButton>
