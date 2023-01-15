@@ -39,12 +39,13 @@ const Header = () => {
   let idleTimeoutInMilliSeconds = 1000 * 60 * 30;
   let idleTimerId;
 
-  const cleanup = async (e) => {
-    e.preventDefault();
+  const cleanup = async (event) => {
+    if (event != undefined) {
+      event.preventDefault();
+    }
     console.log("Cleanup...");
     const playgroundId = playgroundRef.current?.forkId;
     if (playgroundId) {
-      // todo: we cannot stop the playground when a page is refreshed because playgroundId is undefined at that point.
       console.log("Stopping playground: ", playgroundId);
       await stopPlayground(playgroundId);
     }
@@ -78,7 +79,7 @@ const Header = () => {
       );
       if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) {
         console.log("Stopping playground due to inactivity...");
-        cleanup();
+        cleanup(undefined);
       }
 
       pingStartAndStopApi();
