@@ -1,5 +1,6 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -216,7 +217,9 @@ const WithdrawalPopUp = (props) => {
             </div>
           </div>
           <button
-            className={`text-white bg-customBlue rounded-md px-12 py-4 mb-8 mt-8 transition duration-500 ease min-w-[230px] select-none focus:outline-none focus:shadow-outline cursor-pointer ${loading ? 'disabled:opacity-90' : 'disabled:opacity-50'} disabled:cursor-not-allowed`}
+            className={`text-white bg-customBlue rounded-md px-12 py-4 mb-8 mt-8 transition duration-500 ease min-w-[230px] select-none focus:outline-none focus:shadow-outline cursor-pointer ${
+              loading ? "disabled:opacity-90" : "disabled:opacity-50"
+            } disabled:cursor-not-allowed`}
             type="submit"
             disabled={
               loading ||
@@ -224,7 +227,15 @@ const WithdrawalPopUp = (props) => {
               !protectionPoolAddress ||
               !isValid
             }
-          >{loading ? <LoadingButton loading={loading}></LoadingButton> : "Confirm Withdraw"}</button>
+          >
+            {loading ? (
+              <LoadingButton loading={loading}>
+                <CircularProgress color="secondary" size={16} />
+              </LoadingButton>
+            ) : (
+              "Confirm Withdraw"
+            )}
+          </button>
           <div className="text-sm">
             By clicking &quot;Confirm Withdraw&quot;, you agree to
             Carapace&apos;s&nbsp;
