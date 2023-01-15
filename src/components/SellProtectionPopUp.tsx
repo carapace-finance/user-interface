@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -175,7 +176,9 @@ const SellProtectionPopUp = (props) => {
         </div>
         <div>
           <button
-            className={`text-white text-base bg-customBlue px-8 py-4 min-w-[230px] rounded-md cursor-pointer ${loading ? 'disabled:opacity-90' : 'disabled:opacity-50'} disabled:cursor-not-allowed`}
+            className={`text-white text-base bg-customBlue px-8 py-4 min-w-[230px] rounded-md cursor-pointer ${
+              loading ? "disabled:opacity-90" : "disabled:opacity-50"
+            } disabled:cursor-not-allowed`}
             onClick={sellProtection}
             disabled={
               loading ||
@@ -184,13 +187,19 @@ const SellProtectionPopUp = (props) => {
               !amount
             }
           >
-            {loading ? <LoadingButton loading={loading}></LoadingButton> : "Confirm Deposit"}
+            {loading ? (
+              <LoadingButton loading={loading}>
+                {" "}
+                <CircularProgress color="secondary" size={16} />
+              </LoadingButton>
+            ) : (
+              "Confirm Deposit"
+            )}
           </button>
           <div className="flex"></div>
-          <LoadingButton loading={loading}></LoadingButton>
         </div>
         <div>
-          <div className="text-sm">
+          <div className="text-sm mt-4">
             By clicking &quot;Confirm Deposit&quot;, you agree to
             Carapace&apos;s&nbsp;
             <span className="underline">Terms of Service&nbsp;</span>
