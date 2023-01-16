@@ -51,7 +51,7 @@ const PlaygroundModePopUp = (props) => {
             <ol className="pl-6 list-decimal">
               <li>Buy protection</li>
               <li>Sell protection(deposit)</li>
-              <li>Withdrawal request</li>
+              {/* <li>Withdrawal request</li> */}
               <li>Withdraw</li>
             </ol>
             <p className="text-customPink mt-4">
