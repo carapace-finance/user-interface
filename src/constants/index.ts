@@ -70,3 +70,23 @@ export const footerLinks = [
   // ]
   // }
 ];
+
+export interface protocolParameters {
+  leverageRatioFloor: string;
+  leverageRatioCeiling: string;
+  leverageRatioBuffer: string;
+  openCycleDurationInDays: number;
+  cycleDurationInDays: number;
+  minProtectionDurationInDays: number;
+  protectionExtensionGracePeriodInDays: number;
+}
+
+export const protocolParameters = {
+  leverageRatioFloor: "0.5",
+  leverageRatioCeiling: "1",
+  leverageRatioBuffer: "0.05",
+  openCycleDurationInDays: 7,
+  cycleDurationInDays: 90,
+  minProtectionDurationInDays: 30,
+  protectionExtensionGracePeriodInDays: 14
+};

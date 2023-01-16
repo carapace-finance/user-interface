@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
+import { protocolParameters } from "@constants/index";
 import { convertNumberToUSDC, convertUSDCToNumber } from "@utils/usdc";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { getDaysInSeconds } from "@utils/utils";
@@ -184,7 +185,7 @@ export default function BuyProtectionCard(props) {
                   type="number"
                   {...register("protectionAmount", {
                     min: 1,
-                    max: 10000000,
+                    max: 71000,
                     required: true
                   })} // todo: add the leverage ratio limit to max
                   onWheel={(e: any) => e.target.blur()}
@@ -223,16 +224,15 @@ export default function BuyProtectionCard(props) {
                 className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
                 type="number"
                 {...register("protectionDurationInDays", {
-                  min: 1,
-                  max: 180,
+                  min: protocolParameters.minProtectionDurationInDays,
+                  max: protocolParameters.cycleDurationInDays,
                   required: true
                 })}
                 onWheel={(e: any) => e.target.blur()}
               />
               {errors.protectionDurationInDays && (
                 <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">
-                  the protection duration must be in between 0 day and the next
-                  cycle end(180 days the longest)
+                  the protection duration must be in between 30 days 90 days
                 </h5>
               )}
               {/* <Input

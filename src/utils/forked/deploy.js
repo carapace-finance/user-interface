@@ -2,6 +2,7 @@ import { hexValue } from "@ethersproject/bytes";
 import { parseEther } from "ethers/lib/utils";
 import { ContractFactory, Contract } from "ethers";
 import { fillEther } from "./tenderly";
+import { protocolParameters } from "@constants/index";
 
 import riskFactorCalculatorAbi from "../../contracts/forked/abi/RiskFactorCalculator.json";
 import accruedPremiumCalculatorAbi from "../../contracts/forked/abi/AccruedPremiumCalculator.json";
@@ -348,21 +349,27 @@ const deployContracts = async (forkProvider) => {
     );
 
     const _poolCycleParams = {
-      openCycleDuration: getDaysInSeconds(10),
-      cycleDuration: getDaysInSeconds(30)
+      openCycleDuration: getDaysInSeconds(
+        protocolParameters.openCycleDurationInDays
+      ),
+      cycleDuration: getDaysInSeconds(protocolParameters.cycleDurationInDays)
     };
 
     const _poolParams = {
-      leverageRatioFloor: parseEther("0.5"),
-      leverageRatioCeiling: parseEther("1"),
-      leverageRatioBuffer: parseEther("0.05"),
+      leverageRatioFloor: parseEther(protocolParameters.leverageRatioFloor),
+      leverageRatioCeiling: parseEther(protocolParameters.leverageRatioCeiling),
+      leverageRatioBuffer: parseEther(protocolParameters.leverageRatioBuffer),
       minRequiredCapital: parseUSDC("100000"), // 100k
       curvature: parseEther("0.05"),
       minCarapaceRiskPremiumPercent: parseEther("0.02"),
       underlyingRiskPremiumPercent: parseEther("0.1"),
-      minProtectionDurationInSeconds: getDaysInSeconds(10),
+      minProtectionDurationInSeconds: getDaysInSeconds(
+        protocolParameters.minProtectionDurationInDays
+      ),
       poolCycleParams: _poolCycleParams,
-      protectionExtensionGracePeriodInSeconds: getDaysInSeconds(14) // 2 weeks
+      protectionExtensionGracePeriodInSeconds: getDaysInSeconds(
+        protocolParameters.protectionExtensionGracePeriodInDays
+      )
     };
 
     // Create a pool using PoolFactory instead of deploying new pool directly to mimic the prod behavior
