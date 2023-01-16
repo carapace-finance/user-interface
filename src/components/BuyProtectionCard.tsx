@@ -16,7 +16,7 @@ export default function BuyProtectionCard(props) {
     register,
     handleSubmit,
     getValues,
-    formState: { errors, isValid }
+    formState: { errors }
   } = useForm<BuyProtectionInputs>({
     defaultValues: { protectionAmount: "0", protectionDurationInDays: "50" }
   });
@@ -232,7 +232,7 @@ export default function BuyProtectionCard(props) {
               />
               {errors.protectionDurationInDays && (
                 <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">
-                  the protection duration must be in between 30 days 90 days
+                  the protection duration must be between 30 to 90 days
                 </h5>
               )}
               {/* <Input
@@ -291,7 +291,7 @@ export default function BuyProtectionCard(props) {
           className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           value="Buy Protection"
-          disabled={!protectionPoolAddress || !isValid} // todo: add the leverage ratio limit
+          disabled={!protectionPoolAddress} // todo: add the leverage ratio limit
         />
       </form>
       <p>Buy protection within: {timeLeft}</p>
