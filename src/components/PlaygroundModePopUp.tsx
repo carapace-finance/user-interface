@@ -46,12 +46,12 @@ const PlaygroundModePopUp = (props) => {
           </h2>
           <div className="text-left text-customPopupGrey w-96">
             <h4 className="mb-2">
-              You can test different features with no wallet or money:
+              You can test different features without wallet or money:
             </h4>
             <ol className="pl-6 list-decimal">
               <li>Buy protection</li>
               <li>Sell protection(deposit)</li>
-              <li>Withdrawal request</li>
+              {/* <li>Withdrawal request</li> */}
               <li>Withdraw</li>
             </ol>
             <p className="text-customPink mt-4">
