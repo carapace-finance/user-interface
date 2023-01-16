@@ -71,13 +71,13 @@ const Portfolio = () => {
               <th>Protocol</th>
               <th>
                 <div className="flex flex-row justify-start mr-4">
-                  <p className="mr-4">Premium</p>
+                  <p className="mr-4">Protection Amount</p>
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
                       unmount: { scale: 0, y: 25 }
                     }}
-                    content="The premium you have paid for this protection"
+                    content="The amount of protection you can get"
                     placement="top"
                   >
                     <svg
@@ -97,6 +97,7 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
+
               <th>
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Protection Expires In</p>
@@ -127,13 +128,13 @@ const Portfolio = () => {
               </th>
               <th>
                 <div className="flex flex-row justify-start mr-4">
-                  <p className="mr-4">Protection Amount</p>
+                  <p className="mr-4">Premium</p>
                   <Tooltip
                     animate={{
                       mount: { scale: 1, y: 0 },
                       unmount: { scale: 0, y: 25 }
                     }}
-                    content="The amount of protection you can get"
+                    content="The premium you have paid for this protection"
                     placement="top"
                   >
                     <svg
@@ -203,7 +204,7 @@ const Portfolio = () => {
                 </td>
                 <td className="py-4">
                   {numeral(
-                    convertUSDCToNumber(userLendingPool.protectionPremium)
+                    convertUSDCToNumber(userLendingPool.protectionAmount)
                   )
                     .format(USDC_FORMAT)
                     .toString()}
@@ -222,7 +223,7 @@ const Portfolio = () => {
                 </td>
                 <td className="py-4">
                   {numeral(
-                    convertUSDCToNumber(userLendingPool.protectionAmount)
+                    convertUSDCToNumber(userLendingPool.protectionPremium)
                   )
                     .format(USDC_FORMAT)
                     .toString()}
@@ -309,8 +310,8 @@ const Portfolio = () => {
                 </div>
               </th>
               {/* <th> */}
-                {/* the div needs to be there otherwise there is a bug with styling */}
-                {/* <div className="flex flex-row pr-3 items-center">
+              {/* the div needs to be there otherwise there is a bug with styling */}
+              {/* <div className="flex flex-row pr-3 items-center">
                   Request Withdrawal
                   <Tooltip
                     animate={{

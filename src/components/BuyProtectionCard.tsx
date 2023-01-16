@@ -247,7 +247,7 @@ export default function BuyProtectionCard(props) {
             /> */}
             </div>
           </div>
-          <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
+          {/* <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
             Goldfinch Token ID
             <div className="pl-2">
               <Tooltip
@@ -274,8 +274,8 @@ export default function BuyProtectionCard(props) {
                 </svg>
               </Tooltip>
             </div>
-          </h5>
-          <div className="flex w-72 flex-col gap-4">
+          </h5> */}
+          {/* <div className="flex w-72 flex-col gap-4"> */}
             {/* <Input
             label="Goldfinch Token ID"
             value={tokenId}
@@ -284,8 +284,8 @@ export default function BuyProtectionCard(props) {
               e.target.value ? setTokenId(parseInt(e.target.value)) : 0
             }
           /> */}
-            <p className="text-left text-xl">{tokenId}</p>
-          </div>
+            {/* <p className="text-left text-xl">{tokenId}</p> */}
+          {/* </div> */}
         </div>
         <input
           className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
