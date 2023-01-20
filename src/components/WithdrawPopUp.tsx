@@ -144,7 +144,7 @@ const WithdrawalPopUp = (props) => {
                   type="number"
                   {...register("amount", {
                     min: 1,
-                    max: withdrawableAmount,
+                    max: props.withdrawableAmount,
                     required: true
                   })}
                   onWheel={(e: any) => e.target.blur()}
@@ -180,7 +180,7 @@ const WithdrawalPopUp = (props) => {
               </div>
               <div className="text-right mr-5 mb-1">
                 Withdrawable Amount:&nbsp;
-                {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}
+                {numeral(props.withdrawableAmount).format(USDC_FORMAT) + " USDC"}
               </div>
             </div>
           </div>
