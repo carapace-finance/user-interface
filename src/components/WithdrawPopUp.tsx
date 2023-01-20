@@ -32,7 +32,6 @@ const WithdrawalPopUp = (props) => {
 
   const { protectionPoolService } = useContext(ApplicationContext);
   const { open, onClose, protectionPoolAddress } = props;
-  const [withdrawableAmount, setWithdrawableAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
@@ -41,7 +40,7 @@ const WithdrawalPopUp = (props) => {
     setSuccessMessage("");
     setError("");
     setValue("amount", "0");
-    setWithdrawableAmount(0);
+    // setWithdrawableAmount(0);
     setLoading(false);
   };
 
@@ -49,18 +48,18 @@ const WithdrawalPopUp = (props) => {
   useEffect(() => {
     reset();
 
-    if (protectionPoolService && protectionPoolAddress) {
-      console.log("Getting user's withdrawal request...");
-      protectionPoolService
-        .getRequestedWithdrawalAmount(protectionPoolAddress)
-        .then((balance) => {
-          setWithdrawableAmount(convertUSDCToNumber(balance));
-        });
-    }
+    // if (protectionPoolService && protectionPoolAddress) {
+    //   console.log("Getting user's withdrawal request...");
+    //   protectionPoolService
+    //     .getRequestedWithdrawalAmount(protectionPoolAddress)
+    //     .then((balance) => {
+    //       setWithdrawableAmount(convertUSDCToNumber(balance));
+    //     });
+    // }
   }, [open]);
 
   const setMaxAmount = async () => {
-    setValue("amount", withdrawableAmount.toString());
+    setValue("amount", props.withdrawableAmount.toString());
   };
 
   const onSubmit = () => {
@@ -144,15 +143,14 @@ const WithdrawalPopUp = (props) => {
                   type="number"
                   {...register("amount", {
                     min: 1,
-                    max: props.withdrawableAmount,
+                    max: Number(props.withdrawableAmount),
                     required: true
                   })}
                   onWheel={(e: any) => e.target.blur()}
                 />
                 {errors.amount && (
                   <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
-                    the withdrawal amount must be in between 0 and your
-                    requested amount
+                    the withdrawal amount must be in between 0 and {props.withdrawableAmount}
                   </h5>
                 )}
                 {/* <TextField
