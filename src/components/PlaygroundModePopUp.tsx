@@ -2,11 +2,12 @@ import { useRouter } from "next/router";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { LoadingButton } from "@mui/lab";
-import { Dialog, DialogContent } from "@mui/material";
-import { useContext } from "react";
+import { CircularProgress, Dialog, DialogContent } from "@mui/material";
+import { useContext, useState } from "react";
 
 const PlaygroundModePopUp = (props) => {
   const { open, onClose, playground } = props;
+  const [loading, setLoading] = useState(false);
 
   const { lendingPools } = useContext(LendingPoolContext);
   const { isDefaultData, protectionPools } = useContext(ProtectionPoolContext);
@@ -64,11 +65,24 @@ const PlaygroundModePopUp = (props) => {
               <button
                 className="w-full text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer"
                 onClick={() => {
-                  router.push("/portfolio");
-                  onClose();
+                  setLoading(true);
+                  setTimeout(() => {
+                    router.push("/portfolio");
+                    onClose();
+                    setLoading(false);
+                  }, 3000);
                 }}
               >
-                <span>Start Playing Around!</span>
+                {loading ? (
+                  <div>
+                    <span>Setting Up Your Test Portfolio</span>
+                    <LoadingButton loading={loading}>
+                      <CircularProgress color="secondary" size={16} />
+                    </LoadingButton>
+                  </div>
+                ) : (
+                  <span>Start Playing Around!</span>
+                )}
               </button>
             ) : (
               <button
