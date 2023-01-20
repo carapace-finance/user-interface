@@ -179,8 +179,9 @@ const WithdrawalPopUp = (props) => {
               /> */}
               </div>
               <div className="text-right mr-5 mb-1">
-                Withdrawable Amount:&nbsp;
-                {numeral(props.withdrawableAmount).format(USDC_FORMAT) + " USDC"}
+                Requested Withdrawal Amount:&nbsp;
+                {numeral(props.withdrawableAmount).format(USDC_FORMAT) +
+                  " USDC"}
               </div>
             </div>
           </div>
