@@ -42,13 +42,16 @@ export const UserContextProvider = ({ children }) => {
   const { lendingPools } = useContext(LendingPoolContext);
   const { protectionPools, isDefaultData } = useContext(ProtectionPoolContext);
   const [user, setUser] = useState<User>(defaultUser);
+  const [loading, setLoading] = useState(false);
+  const [depositAmountLoading, setDepositAmountLoading] = useState(false);
+  const [requestAmountLoading, setRequestAmountLoading] = useState(false);
   const userRef = useRef<User>(user);
 
   const updateSTokenUnderlyingAmount = async (protectionPoolAddress) => {
     if (!protectionPoolService || !protectionPoolAddress) {
       return;
     }
-
+    setDepositAmountLoading(true)
     const sTokenUnderlyingBalance =
       await protectionPoolService.getSTokenUnderlyingBalance(
         protectionPoolAddress
@@ -60,7 +63,7 @@ export const UserContextProvider = ({ children }) => {
     setUser({
       ...userRef.current
     });
-
+    setDepositAmountLoading(false)
     console.log(
       "User's sTokenUnderlyingBalance Updated ==>",
       formattedUnderlyingBalance
@@ -71,7 +74,7 @@ export const UserContextProvider = ({ children }) => {
     if (!protectionPoolService || !protectionPoolAddress) {
       return;
     }
-
+    setRequestAmountLoading(true)
     const requestedWithdrawalBalance =
       await protectionPoolService.getRequestedWithdrawalAmount(
         protectionPoolAddress
@@ -83,7 +86,7 @@ export const UserContextProvider = ({ children }) => {
     setUser({
       ...userRef.current
     });
-
+    setRequestAmountLoading(false)
     console.log(
       "User's (%s) requestedWithdrawalAmount updated: %s",
       user.address,
@@ -112,6 +115,7 @@ export const UserContextProvider = ({ children }) => {
     lendingPoolAddress: string
   ) => {
     if (protectionPoolService || protectionPoolAddress || lendingPoolAddress) {
+      setLoading(true)
       const protectionInfos =
         await protectionPoolService.getProtectionPurchases(
           protectionPoolAddress
@@ -159,6 +163,7 @@ export const UserContextProvider = ({ children }) => {
         setUser({
           ...userRef.current
         });
+        setLoading(false)
         console.log(
           "User's Purchased Protection Details Updated ==>",
           newUserLendingPools
@@ -201,9 +206,9 @@ export const UserContextProvider = ({ children }) => {
               );
             });
           }
-          await updateSTokenUnderlyingAmount(protectionPoolAddress);
-          await updateRequestedWithdrawalAmount(protectionPoolAddress);
-          await updateUserUsdcBalance();
+           updateSTokenUnderlyingAmount(protectionPoolAddress);
+           updateRequestedWithdrawalAmount(protectionPoolAddress);
+           updateUserUsdcBalance();
           setUser(userRef.current);
         })();
 
@@ -244,8 +249,8 @@ export const UserContextProvider = ({ children }) => {
 
           if (userAddress === user.address) {
             console.log("User made a deposit!");
-            await updateSTokenUnderlyingAmount(protectionPoolAddress);
-            await updateUserUsdcBalance();
+             updateSTokenUnderlyingAmount(protectionPoolAddress);
+             updateUserUsdcBalance();
           }
         };
         protectionPoolInstance.on("ProtectionSold", updateDataOnProtectionSold);
@@ -261,9 +266,11 @@ export const UserContextProvider = ({ children }) => {
 
           if (receiver === user.address) {
             console.log("User made a withdrawal!");
-            await updateSTokenUnderlyingAmount(protectionPoolAddress);
-            await updateRequestedWithdrawalAmount(protectionPoolAddress);
-            await updateUserUsdcBalance();
+            // removed await as all the transactions are independent
+            // it was causing unneccesary delay in the succesive api call
+             updateSTokenUnderlyingAmount(protectionPoolAddress);
+             updateRequestedWithdrawalAmount(protectionPoolAddress);
+             updateUserUsdcBalance();
           }
         };
         protectionPoolInstance.on("WithdrawalMade", updateDataOnWithdrawalMade);
@@ -318,7 +325,10 @@ export const UserContextProvider = ({ children }) => {
       value={{
         user,
         setUser,
-        updateUserUsdcBalance
+        updateUserUsdcBalance,
+        loading,
+        depositAmountLoading,
+        requestAmountLoading,
       }}
     >
       {children}

@@ -42,6 +42,9 @@ export type UserContextType = {
   user: User;
   setUser: (user: User) => void;
   updateUserUsdcBalance: () => Promise<BigNumber>;
+  loading : boolean;
+  depositAmountLoading: boolean;
+  requestAmountLoading: boolean
 };
 
 export interface ProtectionPool {
