@@ -44,22 +44,13 @@ const WithdrawalPopUp = (props) => {
     setLoading(false);
   };
 
-  // fetch withdrawable amount on each open
+  // reset values on each open
   useEffect(() => {
     reset();
-
-    // if (protectionPoolService && protectionPoolAddress) {
-    //   console.log("Getting user's withdrawal request...");
-    //   protectionPoolService
-    //     .getRequestedWithdrawalAmount(protectionPoolAddress)
-    //     .then((balance) => {
-    //       setWithdrawableAmount(convertUSDCToNumber(balance));
-    //     });
-    // }
   }, [open]);
 
   const setMaxAmount = async () => {
-    setValue("amount", props.withdrawableAmount.toString());
+    setValue("amount", props.withdrawableAmount);
   };
 
   const onSubmit = () => {
@@ -143,7 +134,7 @@ const WithdrawalPopUp = (props) => {
                   type="number"
                   {...register("amount", {
                     min: 1,
-                    max: Number(props.withdrawableAmount),
+                    max: numeral(props.withdrawableAmount)._value,
                     required: true
                   })}
                   onWheel={(e: any) => e.target.blur()}
