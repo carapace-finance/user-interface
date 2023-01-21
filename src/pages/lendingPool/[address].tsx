@@ -110,14 +110,14 @@ const LendingPool = () => {
           <div className="flex justify-between">
             <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-fit">
               <h4 className="text-left mb-4">Total Purchased Protection</h4>
-              <p className="text-left font-bold">{totalProtection}&nbsp;</p>
+              <p className="text-left font-bold">{totalProtection}&nbsp;USDC</p>
             </div>
             <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-fit ml-8">
               <h4 className="text-left mb-4">
                 Total Protection Purchase Limit
               </h4>
               <p className="text-left font-bold">
-                {protectionPurchaseLimit}&nbsp;
+                {protectionPurchaseLimit}&nbsp;USDC
               </p>
             </div>
           </div>
@@ -160,9 +160,9 @@ const LendingPool = () => {
             </div>
             <div className="flex justify-between  text-sm">
               <p className="pr-20">
-                Total Protection Pool Balance: {totalCapital}&nbsp;
+                Total Protection Pool Balance: {totalCapital}&nbsp;USDC
               </p>
-              <p>Total Purchased Protection: {totalProtection}&nbsp;</p>
+              <p>Total Purchased Protection: {totalProtection}&nbsp;USDC</p>
             </div>
           </div>
         </div>

@@ -118,13 +118,13 @@ const ProtectionPool = () => {
           <div className="flex justify-between">
             <div className="rounded-2xl shadow-lg shadow-gray-200 shadow-gray-200 p-8 w-fit">
               <h4 className="text-left mb-4">Total Protection Pool Balance</h4>
-              <p className="text-left font-bold">{totalCapital}&nbsp;</p>
+              <p className="text-left font-bold">{totalCapital}&nbsp;USDC</p>
             </div>
             <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-fit ml-8">
               <h4 className="text-left mb-4">
                 Total Protection Pool Balance Limit
               </h4>
-              <p className="text-left font-bold">{depositLimit}&nbsp;</p>
+              <p className="text-left font-bold">{depositLimit}&nbsp;USDC</p>
             </div>
           </div>
           <h3 className="text-left font-bold mb-4 mt-8">

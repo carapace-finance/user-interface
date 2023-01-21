@@ -139,10 +139,10 @@ const SellProtection = () => {
                 </td>
                 <td className="py-8">{protectionPool.APY}</td>
                 <td className="py-8">
-                  {protectionPool.totalCapital}&nbsp;
+                  {protectionPool.totalCapital}&nbsp;USDC
                 </td>
                 <td className="py-8">
-                  {protectionPool.totalProtection}&nbsp;
+                  {protectionPool.totalProtection}&nbsp;USDC
                 </td>
               </tr>
             ))}
