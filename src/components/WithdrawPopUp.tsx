@@ -40,7 +40,6 @@ const WithdrawalPopUp = (props) => {
     setSuccessMessage("");
     setError("");
     setValue("amount", "0");
-    // setWithdrawableAmount(0);
     setLoading(false);
   };
 
