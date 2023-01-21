@@ -51,7 +51,7 @@ export const UserContextProvider = ({ children }) => {
     if (!protectionPoolService || !protectionPoolAddress) {
       return;
     }
-    setDepositAmountLoading(true)
+    
     const sTokenUnderlyingBalance =
       await protectionPoolService.getSTokenUnderlyingBalance(
         protectionPoolAddress
@@ -63,7 +63,7 @@ export const UserContextProvider = ({ children }) => {
     setUser({
       ...userRef.current
     });
-    setDepositAmountLoading(false)
+  
     console.log(
       "User's sTokenUnderlyingBalance Updated ==>",
       formattedUnderlyingBalance
@@ -74,7 +74,7 @@ export const UserContextProvider = ({ children }) => {
     if (!protectionPoolService || !protectionPoolAddress) {
       return;
     }
-    setRequestAmountLoading(true)
+    
     const requestedWithdrawalBalance =
       await protectionPoolService.getRequestedWithdrawalAmount(
         protectionPoolAddress
@@ -86,7 +86,6 @@ export const UserContextProvider = ({ children }) => {
     setUser({
       ...userRef.current
     });
-    setRequestAmountLoading(false)
     console.log(
       "User's (%s) requestedWithdrawalAmount updated: %s",
       user.address,
@@ -115,7 +114,6 @@ export const UserContextProvider = ({ children }) => {
     lendingPoolAddress: string
   ) => {
     if (protectionPoolService || protectionPoolAddress || lendingPoolAddress) {
-      setLoading(true)
       const protectionInfos =
         await protectionPoolService.getProtectionPurchases(
           protectionPoolAddress
@@ -163,7 +161,6 @@ export const UserContextProvider = ({ children }) => {
         setUser({
           ...userRef.current
         });
-        setLoading(false)
         console.log(
           "User's Purchased Protection Details Updated ==>",
           newUserLendingPools
@@ -224,6 +221,8 @@ export const UserContextProvider = ({ children }) => {
           protectionAmount,
           premium
         ) => {
+          //trigger the loading when user bought protection
+          setLoading(true)
           console.log("ProtectionBought event triggered");
 
           // todo: this condition should be added in the mainnet
@@ -233,6 +232,7 @@ export const UserContextProvider = ({ children }) => {
             protectionPoolAddress,
             lendingPoolAddress
           );
+          setLoading(false)
         };
         protectionPoolInstance.on(
           "ProtectionBought",
@@ -246,11 +246,14 @@ export const UserContextProvider = ({ children }) => {
           event
         ) => {
           console.log("ProtectionSold event triggered: ", event);
-
+          
           if (userAddress === user.address) {
+             //trigger the loading when user made a deposit
+            setDepositAmountLoading(true)
             console.log("User made a deposit!");
-             updateSTokenUnderlyingAmount(protectionPoolAddress);
-             updateUserUsdcBalance();
+            await updateSTokenUnderlyingAmount(protectionPoolAddress);
+            updateUserUsdcBalance();
+            setDepositAmountLoading(false)
           }
         };
         protectionPoolInstance.on("ProtectionSold", updateDataOnProtectionSold);
@@ -266,10 +269,13 @@ export const UserContextProvider = ({ children }) => {
 
           if (receiver === user.address) {
             console.log("User made a withdrawal!");
-            // removed await as all the transactions are independent
-            // it was causing unneccesary delay in the succesive api call
+            //trigger the loading when user made a withdrawl
+            setDepositAmountLoading(true)
+            setRequestAmountLoading(true)
              updateSTokenUnderlyingAmount(protectionPoolAddress);
-             updateRequestedWithdrawalAmount(protectionPoolAddress);
+            await updateRequestedWithdrawalAmount(protectionPoolAddress);
+            setDepositAmountLoading(false)
+            setRequestAmountLoading(false)
              updateUserUsdcBalance();
           }
         };
