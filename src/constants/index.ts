@@ -88,5 +88,6 @@ export const protocolParameters = {
   openCycleDurationInDays: 7,
   cycleDurationInDays: 90,
   minProtectionDurationInDays: 30,
+  protectionPurchaseLimitsInDays: 120, // todo: this value needs to be this long as we advance time in the playground mode
   protectionExtensionGracePeriodInDays: 14
 };

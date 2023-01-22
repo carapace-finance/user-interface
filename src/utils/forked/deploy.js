@@ -117,7 +117,7 @@ export const GOLDFINCH_LENDING_POOLS = Object.keys(
   PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS
 );
 const _lendingProtocols = GOLDFINCH_LENDING_POOLS.map(() => 0); // 0 = Goldfinch
-const _purchaseLimitInDays = hexValue(90);
+const _purchaseLimitInDays = hexValue(protocolParameters.protectionPurchaseLimitsInDays);
 const _purchaseLimitsInDays = GOLDFINCH_LENDING_POOLS.map(
   () => _purchaseLimitInDays
 );
