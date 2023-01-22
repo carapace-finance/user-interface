@@ -145,7 +145,7 @@ const BuyProtectionPopUp = (props) => {
       <DialogTitle className="mt-6">Buy Protection</DialogTitle>
       <DialogContent className="mb-4">
         <div>
-          <div>
+          <div className="mb-4">
             <div>
               {renderFieldAndValue(
                 "Premium Price",
@@ -186,7 +186,7 @@ const BuyProtectionPopUp = (props) => {
               "Duration",
               protectionDurationInDays + " Days"
             )}
-            {renderFieldAndValue("Token Id", tokenId)}
+            {/* {renderFieldAndValue("Token Id", tokenId)} */}
           </div>
           <Divider className="mb-8" />
           <div className="mt-4">

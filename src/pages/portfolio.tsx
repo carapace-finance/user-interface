@@ -375,8 +375,8 @@ const Portfolio = () => {
                 key={protectionPool.address}
                 className="text-left text-ms font-medium"
               >
-                <td className="pr-4">{protectionPool.name}</td>
-                <td>
+                <td className="pr-4 pt-4">{protectionPool.name}</td>
+                <td className="pt-4">
                   <Image
                     src={protectionPool.protocols}
                     width={24}
@@ -384,9 +384,9 @@ const Portfolio = () => {
                     alt=""
                   />
                 </td>
-                <td>{protectionPool.APY}</td>
-                <td>{user.sTokenUnderlyingAmount}&nbsp;USDC</td>
-                <td>{user.requestedWithdrawalAmount}&nbsp;USDC</td>
+                <td className="pt-4">{protectionPool.APY}</td>
+                <td className="pt-4">{user.sTokenUnderlyingAmount}&nbsp;USDC</td>
+                <td className="pt-4">{user.requestedWithdrawalAmount}&nbsp;USDC</td>
                 {/* <td>
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}
@@ -398,7 +398,7 @@ const Portfolio = () => {
                 <td>
                   <button
                     onClick={() => setIsWithdrawOpen(true)}
-                    className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
+                    className="text-white bg-customBlue rounded-md px-12 py-4 mt-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Withdraw
                   </button>

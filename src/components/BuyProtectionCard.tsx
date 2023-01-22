@@ -276,7 +276,7 @@ export default function BuyProtectionCard(props) {
             </div>
           </h5> */}
           {/* <div className="flex w-72 flex-col gap-4"> */}
-            {/* <Input
+          {/* <Input
             label="Goldfinch Token ID"
             value={tokenId}
             type="number"
@@ -284,7 +284,7 @@ export default function BuyProtectionCard(props) {
               e.target.value ? setTokenId(parseInt(e.target.value)) : 0
             }
           /> */}
-            {/* <p className="text-left text-xl">{tokenId}</p> */}
+          {/* <p className="text-left text-xl">{tokenId}</p> */}
           {/* </div> */}
         </div>
         <input
@@ -294,7 +294,32 @@ export default function BuyProtectionCard(props) {
           disabled={!protectionPoolAddress} // todo: add the leverage ratio limit
         />
       </form>
-      <p>Buy protection within: {timeLeft}</p>
+      <div className="flex flex-row justify-start">
+        <p className="mr-4">Buy protection within: {timeLeft}</p>
+        <Tooltip
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0, y: 25 }
+          }}
+          content="Time left to buy protection for this lending pool"
+          placement="top"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="#6E7191"
+            className="w-4 h-4"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+            />
+          </svg>
+        </Tooltip>
+      </div>
       <BuyProtectionPopUp
         open={isOpen}
         onClose={() => setIsOpen(false)}
