@@ -42,7 +42,7 @@ export const UserContextProvider = ({ children }) => {
   const { lendingPools } = useContext(LendingPoolContext);
   const { protectionPools, isDefaultData } = useContext(ProtectionPoolContext);
   const [user, setUser] = useState<User>(defaultUser);
-  const [loading, setLoading] = useState(false);
+  const [buyProtectionLoading, setBuyProtectionLoading] = useState(false);
   const [depositAmountLoading, setDepositAmountLoading] = useState(false);
   const [requestAmountLoading, setRequestAmountLoading] = useState(false);
   const userRef = useRef<User>(user);
@@ -222,7 +222,7 @@ export const UserContextProvider = ({ children }) => {
           premium
         ) => {
           //trigger the loading when user bought protection
-          setLoading(true)
+          setBuyProtectionLoading(true)
           console.log("ProtectionBought event triggered");
 
           // todo: this condition should be added in the mainnet
@@ -232,7 +232,7 @@ export const UserContextProvider = ({ children }) => {
             protectionPoolAddress,
             lendingPoolAddress
           );
-          setLoading(false)
+          setBuyProtectionLoading(false)
         };
         protectionPoolInstance.on(
           "ProtectionBought",
@@ -332,7 +332,7 @@ export const UserContextProvider = ({ children }) => {
         user,
         setUser,
         updateUserUsdcBalance,
-        loading,
+        buyProtectionLoading,
         depositAmountLoading,
         requestAmountLoading,
       }}

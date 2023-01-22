@@ -42,7 +42,7 @@ export type UserContextType = {
   user: User;
   setUser: (user: User) => void;
   updateUserUsdcBalance: () => Promise<BigNumber>;
-  loading : boolean;
+  buyProtectionLoading : boolean;
   depositAmountLoading: boolean;
   requestAmountLoading: boolean
 };

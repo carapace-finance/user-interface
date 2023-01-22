@@ -27,7 +27,7 @@ const Portfolio = () => {
   const { contractAddresses } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
   const { protectionPools } = useContext(ProtectionPoolContext);
-  const { user, setUser, loading, depositAmountLoading, requestAmountLoading } = useContext(UserContext);
+  const { user, setUser, buyProtectionLoading, depositAmountLoading, requestAmountLoading } = useContext(UserContext);
 
   useEffect(() => {
     setProtectionPoolAddress(contractAddresses?.pool);
@@ -241,7 +241,7 @@ const Portfolio = () => {
                 </td> */}
               </tr>
             ))}
-            {loading && <tr
+            {buyProtectionLoading && <tr
                 className="text-left text-ms font-medium"
               >
                 <td className="py-4 pr-4">
