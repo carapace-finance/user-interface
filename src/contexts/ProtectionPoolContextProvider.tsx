@@ -70,7 +70,7 @@ export const ProtectionPoolContextProvider = ({ children }) => {
                       totalProtection:
                         numeral(convertUSDCToNumber(totalProtection)).format(
                           USDC_FORMAT
-                        ) + " USDC"
+                        )
                     };
                   }
                   return p;
@@ -96,7 +96,7 @@ export const ProtectionPoolContextProvider = ({ children }) => {
                       totalCapital:
                         numeral(convertUSDCToNumber(totalCapital)).format(
                           USDC_FORMAT
-                        ) + " USDC"
+                        )
                     };
                   }
                   return p;

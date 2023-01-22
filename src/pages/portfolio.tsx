@@ -19,6 +19,7 @@ import numeral from "numeral";
 import { getLendingPoolName } from "@utils/forked/playground";
 
 import assets from "src/assets";
+import { CircularProgress, Skeleton } from "@mui/material";
 
 const Portfolio = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
@@ -26,7 +27,7 @@ const Portfolio = () => {
   const { contractAddresses } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
   const { protectionPools } = useContext(ProtectionPoolContext);
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, buyProtectionLoading, depositAmountLoading, requestAmountLoading } = useContext(UserContext);
 
   useEffect(() => {
     setProtectionPoolAddress(contractAddresses?.pool);
@@ -240,6 +241,25 @@ const Portfolio = () => {
                 </td> */}
               </tr>
             ))}
+            {buyProtectionLoading && <tr
+                className="text-left text-ms font-medium"
+              >
+                <td className="py-4 pr-4">
+                  <Skeleton variant="text" width={210} height={30} />
+                </td>
+                <td className="py-4">
+                <Skeleton variant="circular" width={24} height={24} />
+                </td>
+                <td className="py-4">
+                  <Skeleton variant="text" width={100} height={30} />
+                </td>
+                <td className="py-4">
+                  <Skeleton variant="text" width={70} height={30} />
+                </td>
+                <td className="py-4">
+                  <Skeleton variant="text" width={110} height={30} />
+                </td>
+              </tr>}
           </tbody>
         </table>
       </div>
@@ -385,8 +405,8 @@ const Portfolio = () => {
                   />
                 </td>
                 <td className="pt-4">{protectionPool.APY}</td>
-                <td className="pt-4">{user.sTokenUnderlyingAmount}&nbsp;USDC</td>
-                <td className="pt-4">{user.requestedWithdrawalAmount}&nbsp;USDC</td>
+                <td className="pt-4">{user.sTokenUnderlyingAmount}&nbsp;USDC {depositAmountLoading && <span className="text-gray-400 ml-2"><CircularProgress color="inherit" size={16} /></span>}</td>
+                <td className="pt-4">{user.requestedWithdrawalAmount}&nbsp;USDC {requestAmountLoading && <span className="text-gray-400 ml-2"><CircularProgress color="inherit" size={16} /></span>}</td>
                 {/* <td>
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}
@@ -417,6 +437,7 @@ const Portfolio = () => {
         open={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
         protectionPoolAddress={protectionPoolAddress}
+        requestedWithdrawalAmount={user.requestedWithdrawalAmount}
       ></WithdrawPopUp>
     </div>
   );

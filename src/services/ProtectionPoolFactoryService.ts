@@ -69,19 +69,19 @@ export class ProtectionPoolFactoryService {
                 totalCapital:
                   numeral(convertUSDCToNumber(totalCapital)).format(
                     USDC_FORMAT
-                  ) + " USDC",
+                  ),
                 totalProtection:
                   numeral(convertUSDCToNumber(totalProtection)).format(
                     USDC_FORMAT
-                  ) + " USDC",
+                  ),
                 protectionPurchaseLimit:
-                  numeral(purchaseLimit).format(USDC_FORMAT) + " USDC",
+                  numeral(purchaseLimit).format(USDC_FORMAT),
                 leverageRatioFloor: leverageRatioFloor.toString(),
                 leverageRatioCeiling: leverageRatioCeiling.toString(),
                 depositLimit:
                   numeral(convertUSDCToNumber(depositLimit)).format(
                     USDC_FORMAT
-                  ) + " USDC"
+                  )
               }
             ];
           });
