@@ -151,7 +151,7 @@ const SellProtectionPopUp = (props) => {
             <div className="text-gray-500 text-sm flex items-center">
               Expected Network Fees:
               <div className="pl-2">
-                <Tooltip content="test test" placement="top">
+                <Tooltip content="Fees you pay to the Ethereum network" placement="top">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

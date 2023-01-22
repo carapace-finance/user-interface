@@ -192,7 +192,7 @@ const WithdrawalRequestPopUp = (props) => {
               <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
                 Expected Network Fees
                 <div className="pl-2">
-                  <Tooltip content="test test" placement="right">
+                  <Tooltip content="Fees you pay to the Ethereum network" placement="right">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
