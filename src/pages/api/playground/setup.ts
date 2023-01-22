@@ -10,7 +10,7 @@ import {
 } from "src/db/redis";
 import { startNewPlayground, StartPlaygroundResult } from "./start";
 
-const TOTAL_AVAILABLE_PLAYGROUNDS = 10;
+const TOTAL_PLAYGROUNDS = 20;
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { method } = req;
@@ -23,7 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         console.log("availablePlaygroundCount: ", availablePlaygroundCount);
 
         const playgroundsNeeded =
-          TOTAL_AVAILABLE_PLAYGROUNDS - availablePlaygroundCount;
+          TOTAL_PLAYGROUNDS - availablePlaygroundCount;
         console.log("we need to create a new playgrounds: ", playgroundsNeeded);
         if (playgroundsNeeded > 0) {
           for (let i = 0; i < playgroundsNeeded; i++) {
