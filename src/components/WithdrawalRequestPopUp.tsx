@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -8,13 +9,10 @@ import {
 import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import {
   convertNumberToUSDC,
   convertUSDCToNumber,
-  formatUSDC,
-  parseUSDC,
   USDC_FORMAT
 } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
@@ -29,7 +27,7 @@ const WithdrawalRequestPopUp = (props) => {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<WithdrawalRequestInput>({ defaultValues: { amount: "0" } });
 
   const { protectionPoolService } = useContext(ApplicationContext);
@@ -40,10 +38,10 @@ const WithdrawalRequestPopUp = (props) => {
   const [loading, setLoading] = useState(false);
 
   const reset = () => {
-    setValue("amount", "0");
-    setRequestableAmount(0);
     setSuccessMessage("");
     setError("");
+    setValue("amount", "0");
+    setRequestableAmount(0);
     setLoading(false);
   };
 
@@ -74,7 +72,9 @@ const WithdrawalRequestPopUp = (props) => {
     }
     console.log("The requestWithdrawal transaction failed");
     setError("Failed to request withdrawal...");
-    setLoading(false);
+    setTimeout(() => {
+      reset();
+    }, 2000);
   };
 
   const requestedWithdrawal = async () => {
@@ -97,7 +97,6 @@ const WithdrawalRequestPopUp = (props) => {
         setTimeout(() => {
           reset();
           onClose();
-          setLoading(false);
         }, 2000);
       } else {
         onError(receipt);
@@ -112,7 +111,7 @@ const WithdrawalRequestPopUp = (props) => {
       className="top-32 inset-x-36"
       disableScrollLock
       open={open}
-      onClose={onClose}
+      onClose={loading ? null : onClose}
       PaperProps={{
         style: {
           borderRadius: "10px"
@@ -120,7 +119,7 @@ const WithdrawalRequestPopUp = (props) => {
       }}
     >
       <div className="flex justify-end mr-4">
-        <IconButton onClick={onClose}>
+        <IconButton onClick={loading ? null : onClose}>
           <span className="text-black">×</span>
         </IconButton>
       </div>
@@ -131,7 +130,7 @@ const WithdrawalRequestPopUp = (props) => {
             Protection Pool
           </h4>
           <div className="flex justify-left mb-3 text-base">
-            {protectionPoolAddress}
+            Goldfinch Protection Pool #1
           </div>
           <div>
             <h4 className="text-left text-base font-medium mb-3">
@@ -147,6 +146,7 @@ const WithdrawalRequestPopUp = (props) => {
                     max: requestableAmount,
                     required: true
                   })}
+                  onWheel={(e: any) => e.target.blur()}
                 />
                 {errors.amount && (
                   <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
@@ -215,16 +215,26 @@ const WithdrawalRequestPopUp = (props) => {
               </div>
             </div>
           </div>
-          <input
-            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-none"
+          <button
+            className={`text-white bg-customBlue rounded-md px-12 py-4 mb-8 mt-8 transition duration-500 ease min-w-[300px] select-none focus:outline-none focus:shadow-outline cursor-pointer ${
+              loading ? "disabled:opacity-90" : "disabled:opacity-50"
+            }  disabled:cursor-not-allowed`}
             type="submit"
-            value="Confirm Withdrawal Request"
             disabled={
-              loading || !protectionPoolService || !protectionPoolAddress
+              loading ||
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !isValid
             }
-          />
-          <div className="flex"></div>
-          <LoadingButton loading={loading}></LoadingButton>
+          >
+            {loading ? (
+              <LoadingButton loading={loading}>
+                <CircularProgress color="secondary" size={16} />
+              </LoadingButton>
+            ) : (
+              "Confirm Withdrawal Request"
+            )}
+          </button>
           <div className="text-sm">
             By clicking &quot;Confirm Withdrawal Request&quot;, you agree to
             Carapace&apos;s&nbsp;

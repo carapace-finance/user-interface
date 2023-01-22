@@ -23,6 +23,7 @@
       "@style/*": ["src/style/*"],
       "@type/*": ["src/type/*"],
       "@contracts/*": ["src/contracts/*"],
+      "@constants/*": ["src/constants/*"],
       "@hooks/*": ["src/hooks/*"],
       "@services/*": ["src/services/*"]
     },

@@ -39,11 +39,13 @@ const Header = () => {
   let idleTimeoutInMilliSeconds = 1000 * 60 * 30;
   let idleTimerId;
 
-  const cleanup = async () => {
+  const cleanup = async (event) => {
+    if (event != undefined) {
+      event.preventDefault();
+    }
     console.log("Cleanup...");
     const playgroundId = playgroundRef.current?.forkId;
     if (playgroundId) {
-      // todo: we cannot stop the playground when a page is refreshed because playgroundId is undefined at that point.
       console.log("Stopping playground: ", playgroundId);
       await stopPlayground(playgroundId);
     }
@@ -77,7 +79,7 @@ const Header = () => {
       );
       if (inactiveTimeInMilliSeconds > idleTimeoutInMilliSeconds) {
         console.log("Stopping playground due to inactivity...");
-        cleanup();
+        cleanup(undefined);
       }
 
       pingStartAndStopApi();
@@ -212,7 +214,7 @@ const Header = () => {
       await stopPlayground(playground.forkId);
     };
   } else {
-    playgroundButtonTitle = "Start Playground";
+    playgroundButtonTitle = "Click To Start Playground!";
     playgroundButtonAction = async () => {
       setIsOpen(true);
       await startPlayground();
@@ -290,14 +292,15 @@ const Header = () => {
         ) : (
           ""
         )} */}
-        {playgroundButtonTitle === "Start Playground" ? (
+        {playgroundButtonTitle === "Click To Start Playground!" ? (
           <button
             // disabled={!account}
             className="text-white text-xl bg-customPink rounded-md px-8 py-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
             onClick={playgroundButtonAction}
           >
+            <span className="relative left-64 bottom-2 animate-ping block h-2 w-2 rounded-full ring-2 ring-customBlue bg-customBlue-400"></span>
             <Tooltip
-              content="Test our app features here!"
+              content="Start testing our app features!"
               animate={{
                 mount: { scale: 1, y: 0 },
                 unmount: { scale: 0, y: 25 }
@@ -305,7 +308,7 @@ const Header = () => {
               placement="bottom"
               offset={20}
             >
-              <span>{playgroundButtonTitle}</span>
+              <span className="relative bottom-1">{playgroundButtonTitle}</span>
             </Tooltip>
           </button>
         ) : (

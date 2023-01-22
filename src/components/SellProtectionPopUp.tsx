@@ -1,6 +1,7 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -13,8 +14,7 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { convertNumberToUSDC, parseUSDC, USDC_FORMAT } from "@utils/usdc";
-import { formatAddress } from "@utils/utils";
+import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
 import { LoadingButton } from "@mui/lab";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
@@ -44,7 +44,9 @@ const SellProtectionPopUp = (props) => {
     }
     console.log("The deposit transaction failed");
     setError("Failed to sell protection...");
-    setLoading(false);
+    setTimeout(() => {
+      reset();
+    }, 2000);
   };
 
   // Function passed into 'onClick' of 'Sell Protection' button
@@ -82,7 +84,7 @@ const SellProtectionPopUp = (props) => {
       className="inset-x-36"
       disableScrollLock
       open={open}
-      onClose={onClose}
+      onClose={loading ? null : onClose}
       PaperProps={{
         style: {
           borderRadius: "10px"
@@ -90,7 +92,7 @@ const SellProtectionPopUp = (props) => {
       }}
     >
       <div className="flex justify-end mr-4">
-        <IconButton onClick={onClose}>
+        <IconButton onClick={loading ? null : onClose}>
           <span className="text-black">×</span>
         </IconButton>
       </div>
@@ -174,7 +176,9 @@ const SellProtectionPopUp = (props) => {
         </div>
         <div>
           <button
-            className="text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            className={`text-white text-base bg-customBlue px-8 py-4 min-w-[230px] rounded-md cursor-pointer ${
+              loading ? "disabled:opacity-90" : "disabled:opacity-50"
+            } disabled:cursor-not-allowed`}
             onClick={sellProtection}
             disabled={
               loading ||
@@ -183,13 +187,19 @@ const SellProtectionPopUp = (props) => {
               !amount
             }
           >
-            Confirm Deposit
+            {loading ? (
+              <LoadingButton loading={loading}>
+                {" "}
+                <CircularProgress color="secondary" size={16} />
+              </LoadingButton>
+            ) : (
+              "Confirm Deposit"
+            )}
           </button>
           <div className="flex"></div>
-          <LoadingButton loading={loading}></LoadingButton>
         </div>
         <div>
-          <div className="text-sm">
+          <div className="text-sm mt-4">
             By clicking &quot;Confirm Deposit&quot;, you agree to
             Carapace&apos;s&nbsp;
             <span className="underline">Terms of Service&nbsp;</span>

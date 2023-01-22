@@ -14,6 +14,7 @@ import {
   GOLDFINCH_LENDING_POOLS,
   PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS
 } from "./deploy";
+import { protocolParameters } from "../../constants";
 
 export function getLendingPoolName(lendingPoolAddress: string): string {
   const lendingPoolDetails =
@@ -80,7 +81,7 @@ export async function preparePlayground(playground: Playground) {
       lendingPoolAddress: lendingPoolAddress,
       nftLpTokenId: 590,
       protectionAmount: parseUSDC("150000"),
-      protectionDurationInSeconds: getDaysInSeconds(30)
+      protectionDurationInSeconds: getDaysInSeconds(protocolParameters.minProtectionDurationInDays)
     },
     parseUSDC("3500")
   );
@@ -152,13 +153,13 @@ async function movePoolCycle(
   const protectionPoolInfo = await protectionPoolInstance.getPoolInfo();
 
   // move from open to locked state
-  await moveForwardTime(provider, getDaysInSeconds(11));
+  await moveForwardTime(provider, getDaysInSeconds(protocolParameters.openCycleDurationInDays + 1));
   await poolCycleManagerInstance.calculateAndSetPoolCycleState(
     protectionPoolInfo.poolId
   );
 
   // move to new cycle
-  await moveForwardTime(provider, getDaysInSeconds(20));
+  await moveForwardTime(provider, getDaysInSeconds(protocolParameters.cycleDurationInDays - protocolParameters.openCycleDurationInDays));
   await poolCycleManagerInstance.calculateAndSetPoolCycleState(
     protectionPoolInfo.poolId
   );
@@ -208,7 +209,10 @@ export async function approveAndDeposit(
   // await transferUsdc(provider, receiverAddress, depositAmt);
 
   // Approve & deposit
-  await usdcContract.approve(protectionPoolInstance.address, depositAmt);
+  await usdcContract.approve(protectionPoolInstance.address, depositAmt, {
+    gasPrice: "25900000000",
+    gasLimit: "200000"
+  });
   return await protectionPoolInstance
     .connect(receiver)
     .deposit(depositAmt, receiverAddress);
@@ -218,7 +222,7 @@ export async function transferApproveAndBuyProtection(
   provider,
   protectionPoolInstance,
   purchaseParams,
-  premiumAmt
+  maxPremiumAmt
 ) {
   // Update purchase params based on lending pool details
   const lendingPoolDetails =
@@ -245,20 +249,19 @@ export async function transferApproveAndBuyProtection(
   const buyerAddress = await buyer.getAddress();
 
   // transfer usdc to buyer, the lending position owner
-  await transferUsdc(provider, buyerAddress, premiumAmt);
+  await transferUsdc(provider, buyerAddress, maxPremiumAmt);
 
   // Approve premium USDC
   // todo: approve the exact premiumAmt after the buyProtection method with the premiumAmt argument is implemented
   await usdcContract
     .connect(buyer)
-    .approve(protectionPoolInstance.address, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
-    );
+    .approve(protectionPoolInstance.address, maxPremiumAmt);
 
   console.log("Purchasing a protection using params: ", purchaseParams);
 
   return await protectionPoolInstance
     .connect(buyer)
-    .buyProtection(purchaseParams, {
+    .buyProtection(purchaseParams, maxPremiumAmt, {
       gasPrice: "25900000000",
       gasLimit: "210000000"
     });

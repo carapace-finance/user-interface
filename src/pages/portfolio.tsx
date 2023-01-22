@@ -19,6 +19,7 @@ import numeral from "numeral";
 import { getLendingPoolName } from "@utils/forked/playground";
 
 import assets from "src/assets";
+import { CircularProgress, Skeleton } from "@mui/material";
 
 const Portfolio = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
@@ -26,7 +27,7 @@ const Portfolio = () => {
   const { contractAddresses } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
   const { protectionPools } = useContext(ProtectionPoolContext);
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, buyProtectionLoading, depositAmountLoading, requestAmountLoading } = useContext(UserContext);
 
   useEffect(() => {
     setProtectionPoolAddress(contractAddresses?.pool);
@@ -36,12 +37,11 @@ const Portfolio = () => {
     <div className="mx-32">
       <TitleAndDescriptions title="Portfolio" buttonExist={false} />
       <h3 className="text-left font-bold">Your Protection Purchases</h3>
-      <div className="h-5"></div>
-      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
+      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 mt-4">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-ms font-bold">
-              <th className="py-8">
+              <th>
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Name</p>
                   <Tooltip
@@ -69,64 +69,8 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">Protocol</th>
-              <th className="py-8">
-                <div className="flex flex-row justify-start mr-4">
-                  <p className="mr-4">Premium</p>
-                  <Tooltip
-                    animate={{
-                      mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 }
-                    }}
-                    content="The premium you have paid for this protection"
-                    placement="top"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="#6E7191"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
-                  </Tooltip>
-                </div>
-              </th>
-              <th className="py-8">
-                <div className="flex flex-row justify-start mr-4">
-                  <p className="mr-4">Protection Expires In</p>
-                  <Tooltip
-                    animate={{
-                      mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 }
-                    }}
-                    content="Time left until this protection expires"
-                    placement="top"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="#6E7191"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
-                  </Tooltip>
-                </div>
-              </th>
-              <th className="py-8">
+              <th>Protocol</th>
+              <th>
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Protection Amount</p>
                   <Tooltip
@@ -154,8 +98,65 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
+
+              <th>
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Protection Expires In</p>
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 }
+                    }}
+                    content="Time left until this protection expires"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
+              <th>
+                <div className="flex flex-row justify-start mr-4">
+                  <p className="mr-4">Premium</p>
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 }
+                    }}
+                    content="The premium you have paid for this protection"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="#6E7191"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </th>
               {/* //todo: show this button when there is a valid claim  */}
-              {/* <th className="py-4">
+              {/* <th>
                 <div className="flex flex-row items-center">
                   Claim
                   <Tooltip
@@ -191,7 +192,7 @@ const Portfolio = () => {
                 key={userLendingPool.lendingPoolAddress}
                 className="text-left text-ms font-medium"
               >
-                <td className="py-4">
+                <td className="py-4 pr-4">
                   {getLendingPoolName(userLendingPool.lendingPoolAddress)}
                 </td>
                 <td className="py-4">
@@ -204,7 +205,7 @@ const Portfolio = () => {
                 </td>
                 <td className="py-4">
                   {numeral(
-                    convertUSDCToNumber(userLendingPool.protectionPremium)
+                    convertUSDCToNumber(userLendingPool.protectionAmount)
                   )
                     .format(USDC_FORMAT)
                     .toString()}
@@ -223,7 +224,7 @@ const Portfolio = () => {
                 </td>
                 <td className="py-4">
                   {numeral(
-                    convertUSDCToNumber(userLendingPool.protectionAmount)
+                    convertUSDCToNumber(userLendingPool.protectionPremium)
                   )
                     .format(USDC_FORMAT)
                     .toString()}
@@ -240,19 +241,39 @@ const Portfolio = () => {
                 </td> */}
               </tr>
             ))}
+            {buyProtectionLoading && <tr
+                className="text-left text-ms font-medium"
+              >
+                <td className="py-4 pr-4">
+                  <Skeleton variant="text" width={210} height={30} />
+                </td>
+                <td className="py-4">
+                <Skeleton variant="circular" width={24} height={24} />
+                </td>
+                <td className="py-4">
+                  <Skeleton variant="text" width={100} height={30} />
+                </td>
+                <td className="py-4">
+                  <Skeleton variant="text" width={70} height={30} />
+                </td>
+                <td className="py-4">
+                  <Skeleton variant="text" width={110} height={30} />
+                </td>
+              </tr>}
           </tbody>
         </table>
       </div>
-      <div className="h-16"></div>
-      <h3 className="text-left font-bold mb-8">Your Deposits</h3>
+      <h3 className="text-left font-bold mb-4 mt-16">
+        Your Balance in Protection Pools
+      </h3>
       <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-ms font-bold">
-              <th className="py-4">Name</th>
-              <th className="py-4">Protocols</th>
-              <th className="py-8">Estimated APY</th>
-              <th className="py-4">
+              <th>Name</th>
+              <th>Protocols</th>
+              <th>Estimated APY</th>
+              <th>
                 <div className="flex flex-row pr-3 items-center">
                   Deposited Amount
                   <Tooltip
@@ -280,7 +301,7 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">
+              <th>
                 <div className="flex flex-row pr-3 items-center">
                   Requested Withdrawal
                   <Tooltip
@@ -308,9 +329,9 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-4">
-                {/* the div needs to be there otherwise there is a bug with styling */}
-                <div className="flex flex-row pr-3 items-center">
+              {/* <th> */}
+              {/* the div needs to be there otherwise there is a bug with styling */}
+              {/* <div className="flex flex-row pr-3 items-center">
                   Request Withdrawal
                   <Tooltip
                     animate={{
@@ -335,9 +356,9 @@ const Portfolio = () => {
                       />
                     </svg>
                   </Tooltip>
-                </div>
-              </th>
-              <th className="py-4">
+                </div> */}
+              {/* </th> */}
+              <th>
                 <div className="flex flex-row pr-3 items-center">
                   Withdraw
                   <Tooltip
@@ -374,8 +395,8 @@ const Portfolio = () => {
                 key={protectionPool.address}
                 className="text-left text-ms font-medium"
               >
-                <td>{protectionPool.name}</td>
-                <td className="py-4">
+                <td className="pr-4 pt-4">{protectionPool.name}</td>
+                <td className="pt-4">
                   <Image
                     src={protectionPool.protocols}
                     width={24}
@@ -383,21 +404,21 @@ const Portfolio = () => {
                     alt=""
                   />
                 </td>
-                <td className="py-4">{protectionPool.APY}</td>
-                <td className="py-4">{user.sTokenUnderlyingAmount}&nbsp;USDC</td>
-                <td className="py-4">{user.requestedWithdrawalAmount}&nbsp;USDC</td>
-                <td className="py-4">
+                <td className="pt-4">{protectionPool.APY}</td>
+                <td className="pt-4">{user.sTokenUnderlyingAmount}&nbsp;USDC {depositAmountLoading && <span className="text-gray-400 ml-2"><CircularProgress color="inherit" size={16} /></span>}</td>
+                <td className="pt-4">{user.requestedWithdrawalAmount}&nbsp;USDC {requestAmountLoading && <span className="text-gray-400 ml-2"><CircularProgress color="inherit" size={16} /></span>}</td>
+                {/* <td>
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}
                     className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
                   >
                     Request
                   </button>
-                </td>
-                <td className="py-4">
+                </td> */}
+                <td>
                   <button
                     onClick={() => setIsWithdrawOpen(true)}
-                    className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
+                    className="text-white bg-customBlue rounded-md px-12 py-4 mt-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Withdraw
                   </button>
@@ -416,6 +437,7 @@ const Portfolio = () => {
         open={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
         protectionPoolAddress={protectionPoolAddress}
+        requestedWithdrawalAmount={user.requestedWithdrawalAmount}
       ></WithdrawPopUp>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -13,8 +14,13 @@ import numeral from "numeral";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
-import { formatAddress, getDaysInSeconds } from "@utils/utils";
+import { UserContext } from "@contexts/UserContextProvider";
+import {
+  convertNumberToUSDC,
+  convertUSDCToNumber,
+  USDC_FORMAT
+} from "@utils/usdc";
+import { getDaysInSeconds } from "@utils/utils";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
 
@@ -27,6 +33,7 @@ const BuyProtectionPopUp = (props) => {
     tokenId,
     premiumAmount,
     calculatingPremiumPrice,
+    setPremiumPrice,
     lendingPoolAddress,
     protectionPoolAddress,
     name,
@@ -36,17 +43,26 @@ const BuyProtectionPopUp = (props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
+  const [usdcBalance, setUsdcBalance] = useState(0);
   const { protectionPoolService } = useContext(ApplicationContext);
+  const { updateUserUsdcBalance } = useContext(UserContext);
 
   const router = useRouter();
 
   const reset = () => {
     setSuccessMessage("");
     setError("");
+    setPremiumPrice(0);
     setLoading(false);
   };
 
   useEffect(reset, [open]);
+
+  useEffect(() => {
+    (async () => {
+      setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance()));
+    })();
+  }, [open]);
 
   const onError = (e) => {
     if (e) {
@@ -54,7 +70,17 @@ const BuyProtectionPopUp = (props) => {
     }
     console.log("The buy protection transaction failed");
     setError("Failed to buy protection...");
-    setLoading(false);
+    setTimeout(() => {
+      reset();
+    }, 2000);
+  };
+
+  const hasEnoughUsdcBalance = () => {
+    if (premiumAmount > usdcBalance) {
+      return false;
+    } else {
+      return true;
+    }
   };
 
   // Function passed into 'onClick' of 'Buy Protection' button
@@ -104,7 +130,7 @@ const BuyProtectionPopUp = (props) => {
       className="inset-x-36"
       disableScrollLock
       open={open}
-      onClose={onClose}
+      onClose={loading ? null : onClose}
       PaperProps={{
         style: {
           borderRadius: "10px"
@@ -112,20 +138,38 @@ const BuyProtectionPopUp = (props) => {
       }}
     >
       <div className="flex justify-end mr-4">
-        <IconButton onClick={onClose}>
+        <IconButton onClick={loading ? null : onClose}>
           <span className="text-black">×</span>
         </IconButton>
       </div>
       <DialogTitle className="mt-6">Buy Protection</DialogTitle>
       <DialogContent className="mb-4">
         <div>
-          <div>
-            <div className="flex">
+          <div className="mb-4">
+            <div>
               {renderFieldAndValue(
-                "Lending Pool",
-                name
+                "Premium Price",
+                calculatingPremiumPrice ? (
+                  <div>
+                    Calculating Premium Price...
+                    <LoadingButton
+                      loading={calculatingPremiumPrice}
+                    ></LoadingButton>
+                  </div>
+                ) : (
+                  numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
+                )
               )}
-              <div className="ml-2 mt-1">
+              {hasEnoughUsdcBalance() ? null : (
+                <h5 className="block text-left text-customPink text-base font-normal">
+                  You don&apos;t have enough USDC balance:&nbsp;
+                  {numeral(usdcBalance).format(USDC_FORMAT)}&nbsp;USDC
+                </h5>
+              )}
+            </div>
+            <div className="flex">
+              {renderFieldAndValue("Lending Pool", name)}
+              <div className="ml-2 mt-5">
                 <img
                   src={assets.goldfinch.src}
                   alt="carapace"
@@ -142,20 +186,7 @@ const BuyProtectionPopUp = (props) => {
               "Duration",
               protectionDurationInDays + " Days"
             )}
-            {renderFieldAndValue("Token Id", tokenId)}
-            {renderFieldAndValue(
-              "Premium Price",
-              calculatingPremiumPrice ? (
-                <div>
-                  Calculating Premium Price...
-                  <LoadingButton
-                    loading={calculatingPremiumPrice}
-                  ></LoadingButton>
-                </div>
-              ) : (
-                numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
-              )
-            )}
+            {/* {renderFieldAndValue("Token Id", tokenId)} */}
           </div>
           <Divider className="mb-8" />
           <div className="mt-4">
@@ -220,7 +251,9 @@ const BuyProtectionPopUp = (props) => {
             </Typography>
           </div>
           <button
-            className="text-white text-base bg-customBlue px-8 py-4 mt-8 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-none"
+            className={`text-white text-base bg-customBlue px-8 py-4 mt-8 rounded-md cursor-pointer min-w-[330px] ${
+              loading ? "disabled:opacity-90" : "disabled:opacity-50"
+            } disabled:cursor-not-allowed`}
             onClick={buyProtection}
             disabled={
               loading ||
@@ -230,14 +263,21 @@ const BuyProtectionPopUp = (props) => {
               calculatingPremiumPrice ||
               !protectionDurationInDays ||
               !tokenId ||
-              !lendingPoolAddress
+              !lendingPoolAddress ||
+              !hasEnoughUsdcBalance() ||
+              premiumAmount === 0
             }
           >
-            Confirm Protection Purchase
+            {loading ? (
+              <LoadingButton loading={loading}>
+                <CircularProgress color="secondary" size={16} />
+              </LoadingButton>
+            ) : (
+              "Confirm Protection Purchase"
+            )}
           </button>
           <div className="flex"></div>
-          <LoadingButton loading={loading}></LoadingButton>
-          <div className="text-sm">
+          <div className="text-sm mt-4">
             By clicking &quot;Confirm Protection Purchase&quot;, you agree to
             Carapace&apos;s&nbsp;
             <span className="underline">Terms of Service&nbsp;</span>
@@ -259,12 +299,12 @@ const renderFieldAndValue = (fieldLabel, fieldValue) => {
   return (
     <div>
       <Typography
-        className="flex justify-left text-customGrey text-base font-bold mb-5"
+        className="flex justify-left text-customGrey text-base font-bold"
         variant="subtitle2"
       >
-        <div className="text-base">{fieldLabel}</div>
+        <div className="text-base mt-4">{fieldLabel}</div>
       </Typography>
-      <div className="flex justify-left mb-4">{fieldValue}</div>
+      <div className="flex justify-left">{fieldValue}</div>
     </div>
   );
 };

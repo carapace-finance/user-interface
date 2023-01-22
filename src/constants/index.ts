@@ -48,25 +48,46 @@ export const footerLinks = [
         target: "_blank"
       }
     ]
-  },
-  {
-    title: "LEGAL",
-    links: [
-      {
-        name: "Coming soon",
-        link: "",
-        target: ""
-      }
-      // {
-      //   name: "Privacy Policy",
-      //   link: "",
-      //   target: ""
-      // },
-      // {
-      //   name: "Terms of use",
-      //   link: "",
-      //   target: ""
-      // },
-    ]
   }
+  // {
+  // title: "LEGAL",
+  // links: [
+  //   {
+  //     name: "Coming soon",
+  //     link: "",
+  //     target: ""
+  //   }
+  // {
+  //   name: "Privacy Policy",
+  //   link: "",
+  //   target: ""
+  // },
+  // {
+  //   name: "Terms of use",
+  //   link: "",
+  //   target: ""
+  // },
+  // ]
+  // }
 ];
+
+export interface protocolParameters {
+  leverageRatioFloor: string;
+  leverageRatioCeiling: string;
+  leverageRatioBuffer: string;
+  openCycleDurationInDays: number;
+  cycleDurationInDays: number;
+  minProtectionDurationInDays: number;
+  protectionExtensionGracePeriodInDays: number;
+}
+
+export const protocolParameters = {
+  leverageRatioFloor: "0.5",
+  leverageRatioCeiling: "1",
+  leverageRatioBuffer: "0.05",
+  openCycleDurationInDays: 7,
+  cycleDurationInDays: 90,
+  minProtectionDurationInDays: 30,
+  protectionPurchaseLimitsInDays: 270, // todo: this value needs to be this long as we advance time in the playground mode
+  protectionExtensionGracePeriodInDays: 14
+};

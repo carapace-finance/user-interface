@@ -74,7 +74,11 @@ export class ProtectionPoolService {
     } else {
       return await protectionPoolInstance.deposit(
         depositAmt,
-        await signer.getAddress()
+        await signer.getAddress(),
+        {
+          gasPrice: "25900000000",
+          gasLimit: "210000000"
+        }
       );
     }
   }
@@ -119,7 +123,10 @@ export class ProtectionPoolService {
         premiumAmt
       );
     } else {
-      return await protectionPoolInstance.buyProtection(purchaseParams);
+      return await protectionPoolInstance.buyProtection(purchaseParams, {
+        gasPrice: "25900000000",
+        gasLimit: "210000000"
+      });
     }
   }
 

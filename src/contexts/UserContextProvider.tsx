@@ -32,7 +32,7 @@ export const UserContextProvider = ({ children }) => {
       {
         lendingPoolAddress: "0xb26B42Dd5771689D0a7faEea32825ff9710b9c11",
         protectionPremium: BigNumber.from(0xbf4c5737),
-        expirationTimestamp: BigNumber.from(0x63ccd0ee), // todo: make this value dynamic
+        expirationTimestamp: BigNumber.from(0x63f48774), // todo: make this value dynamic
         protectionAmount: BigNumber.from(0x22ecb25c00)
       }
     ]
@@ -42,13 +42,16 @@ export const UserContextProvider = ({ children }) => {
   const { lendingPools } = useContext(LendingPoolContext);
   const { protectionPools, isDefaultData } = useContext(ProtectionPoolContext);
   const [user, setUser] = useState<User>(defaultUser);
+  const [buyProtectionLoading, setBuyProtectionLoading] = useState(false);
+  const [depositAmountLoading, setDepositAmountLoading] = useState(false);
+  const [requestAmountLoading, setRequestAmountLoading] = useState(false);
   const userRef = useRef<User>(user);
 
   const updateSTokenUnderlyingAmount = async (protectionPoolAddress) => {
     if (!protectionPoolService || !protectionPoolAddress) {
       return;
     }
-
+    
     const sTokenUnderlyingBalance =
       await protectionPoolService.getSTokenUnderlyingBalance(
         protectionPoolAddress
@@ -60,7 +63,7 @@ export const UserContextProvider = ({ children }) => {
     setUser({
       ...userRef.current
     });
-
+  
     console.log(
       "User's sTokenUnderlyingBalance Updated ==>",
       formattedUnderlyingBalance
@@ -71,7 +74,7 @@ export const UserContextProvider = ({ children }) => {
     if (!protectionPoolService || !protectionPoolAddress) {
       return;
     }
-
+    
     const requestedWithdrawalBalance =
       await protectionPoolService.getRequestedWithdrawalAmount(
         protectionPoolAddress
@@ -83,7 +86,6 @@ export const UserContextProvider = ({ children }) => {
     setUser({
       ...userRef.current
     });
-
     console.log(
       "User's (%s) requestedWithdrawalAmount updated: %s",
       user.address,
@@ -135,12 +137,12 @@ export const UserContextProvider = ({ children }) => {
             protectionInfo.purchaseParams.protectionDurationInSeconds
           );
 
-          // todo: the startTimestamp is wrong because we advances time
-          // todo: movePoolCycle moves 31 days and it's called twice, and thus 62 days need to be subtracted
+          // todo: the startTimestamp is wrong because we advances time in the playground
+          // todo: movePoolCycle moves 91 days and it's called twice, and thus 182 days need to be subtracted
           if (
             !protectionInfo.purchaseParams.protectionAmount.eq(0x22ecb25c00)
           ) {
-            expirationTimestamp = expirationTimestamp.sub(62 * 86400);
+            expirationTimestamp = expirationTimestamp.sub(182 * 86400);
           }
           const newUserLendingPool: UserLendingPool = {
             lendingPoolAddress:
@@ -201,9 +203,9 @@ export const UserContextProvider = ({ children }) => {
               );
             });
           }
-          await updateSTokenUnderlyingAmount(protectionPoolAddress);
-          await updateRequestedWithdrawalAmount(protectionPoolAddress);
-          await updateUserUsdcBalance();
+           updateSTokenUnderlyingAmount(protectionPoolAddress);
+           updateRequestedWithdrawalAmount(protectionPoolAddress);
+           updateUserUsdcBalance();
           setUser(userRef.current);
         })();
 
@@ -219,6 +221,8 @@ export const UserContextProvider = ({ children }) => {
           protectionAmount,
           premium
         ) => {
+          //trigger the loading when user bought protection
+          setBuyProtectionLoading(true)
           console.log("ProtectionBought event triggered");
 
           // todo: this condition should be added in the mainnet
@@ -228,6 +232,7 @@ export const UserContextProvider = ({ children }) => {
             protectionPoolAddress,
             lendingPoolAddress
           );
+          setBuyProtectionLoading(false)
         };
         protectionPoolInstance.on(
           "ProtectionBought",
@@ -241,11 +246,14 @@ export const UserContextProvider = ({ children }) => {
           event
         ) => {
           console.log("ProtectionSold event triggered: ", event);
-
+          
           if (userAddress === user.address) {
+             //trigger the loading when user made a deposit
+            setDepositAmountLoading(true)
             console.log("User made a deposit!");
             await updateSTokenUnderlyingAmount(protectionPoolAddress);
-            await updateUserUsdcBalance();
+            updateUserUsdcBalance();
+            setDepositAmountLoading(false)
           }
         };
         protectionPoolInstance.on("ProtectionSold", updateDataOnProtectionSold);
@@ -261,9 +269,14 @@ export const UserContextProvider = ({ children }) => {
 
           if (receiver === user.address) {
             console.log("User made a withdrawal!");
-            await updateSTokenUnderlyingAmount(protectionPoolAddress);
+            //trigger the loading when user made a withdrawl
+            setDepositAmountLoading(true)
+            setRequestAmountLoading(true)
+             updateSTokenUnderlyingAmount(protectionPoolAddress);
             await updateRequestedWithdrawalAmount(protectionPoolAddress);
-            await updateUserUsdcBalance();
+            setDepositAmountLoading(false)
+            setRequestAmountLoading(false)
+             updateUserUsdcBalance();
           }
         };
         protectionPoolInstance.on("WithdrawalMade", updateDataOnWithdrawalMade);
@@ -318,7 +331,10 @@ export const UserContextProvider = ({ children }) => {
       value={{
         user,
         setUser,
-        updateUserUsdcBalance
+        updateUserUsdcBalance,
+        buyProtectionLoading,
+        depositAmountLoading,
+        requestAmountLoading,
       }}
     >
       {children}

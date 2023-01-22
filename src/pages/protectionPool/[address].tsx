@@ -95,7 +95,8 @@ const ProtectionPool = () => {
               alt=""
               className="mr-6"
             />
-            <a
+            {/* todo: enable the link once we deploy our protection pool to the mainney */}
+            {/* <a
               target="_blank"
               rel="noreferrer"
               href={`https://etherscan.io/address/${protectionPoolAddress}`}
@@ -108,7 +109,7 @@ const ProtectionPool = () => {
                 alt=""
                 className="mr-6"
               />
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
@@ -136,15 +137,15 @@ const ProtectionPool = () => {
                   <th className="px-4 py-8 pl-8">Name</th>
                   <th className="px-4 py-8">Protocol</th>
                   <th className="px-4 py-8">APY</th>
-                  <th className="px-4 py-8">Payment Term</th>
-                  <th className="px-4 py-8">Opening Date</th>
+                  <th className="px-4 py-8">Payment Frequency</th>
+                  <th className="px-4 py-8">Payment Term End</th>
                 </tr>
               </thead>
               <tbody>
                 {underlyingLendingPools.map((lendingPool) => (
                   <tr
                     key={lendingPool.address}
-                    onClick={() => handleClick(lendingPool.address)}
+                    onClick={() => handleClick(lendingPool.address.toLowerCase())}
                     className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
                   >
                     <td className="px-4 py-8 pl-8">{lendingPool.name}</td>
@@ -157,8 +158,8 @@ const ProtectionPool = () => {
                       />
                     </td>
                     <td className="px-4 py-8">{lendingPool.lendingPoolAPY}</td>
-                    <td className="px-4 py-8">{"TERM"}</td>
-                    <td className="px-4 py-8">{"DATE"}</td>
+                    <td className="px-4 py-8">30 Days</td>
+                    <td className="px-4 py-8">Apr 4, 2024</td>
                   </tr>
                 ))}
               </tbody>

@@ -1,5 +1,6 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -9,14 +10,8 @@ import {
 import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { formatAddress } from "@utils/utils";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import {
-  formatUSDC,
-  convertNumberToUSDC,
-  convertUSDCToNumber,
-  USDC_FORMAT
-} from "@utils/usdc";
+import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import numeral from "numeral";
@@ -28,39 +23,29 @@ const WithdrawalPopUp = (props) => {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<WithdrawalInput>({ defaultValues: { amount: "0" } });
 
   const { protectionPoolService } = useContext(ApplicationContext);
   const { open, onClose, protectionPoolAddress } = props;
-  const [withdrawableAmount, setWithdrawableAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
 
-  const resetInputs = () => {
-    setValue("amount", "0");
-    setWithdrawableAmount(0);
+  const reset = () => {
     setSuccessMessage("");
     setError("");
+    setValue("amount", "0");
+    setLoading(false);
   };
 
-  // fetch withdrawable amount on each open
+  // reset values on each open
   useEffect(() => {
-    resetInputs();
-
-    if (protectionPoolService && protectionPoolAddress) {
-      console.log("Getting user's withdrawal request...");
-      protectionPoolService
-        .getRequestedWithdrawalAmount(protectionPoolAddress)
-        .then((balance) => {
-          setWithdrawableAmount(convertUSDCToNumber(balance));
-        });
-    }
+    reset();
   }, [open]);
 
   const setMaxAmount = async () => {
-    setValue("amount", withdrawableAmount.toString());
+    setValue("amount", props.requestedWithdrawalAmount);
   };
 
   const onSubmit = () => {
@@ -73,6 +58,9 @@ const WithdrawalPopUp = (props) => {
     }
     console.log("The withdrawal transaction failed");
     setError("Failed to withdraw...");
+    setTimeout(() => {
+      reset();
+    }, 2000);
   };
 
   const withdraw = async () => {
@@ -93,9 +81,8 @@ const WithdrawalPopUp = (props) => {
           )} USDC from the protection pool!`
         );
         setTimeout(() => {
-          resetInputs();
+          reset();
           onClose();
-          setLoading(false);
         }, 2000);
       } else {
         onError(receipt);
@@ -110,7 +97,7 @@ const WithdrawalPopUp = (props) => {
       className="top-32 inset-x-36"
       disableScrollLock
       open={open}
-      onClose={onClose}
+      onClose={loading ? null : onClose}
       PaperProps={{
         style: {
           borderRadius: "10px"
@@ -118,7 +105,7 @@ const WithdrawalPopUp = (props) => {
       }}
     >
       <div className="flex justify-end mr-4">
-        <IconButton onClick={onClose}>
+        <IconButton onClick={loading ? null : onClose}>
           <span className="text-black">×</span>
         </IconButton>
       </div>
@@ -129,7 +116,7 @@ const WithdrawalPopUp = (props) => {
             Protection Pool
           </h4>
           <div className="flex justify-left mb-3 text-base">
-            {protectionPoolAddress}
+            Goldfinch Protection Pool #1
           </div>
           <div>
             <h4 className="text-left text-base font-medium mb-3">
@@ -142,9 +129,10 @@ const WithdrawalPopUp = (props) => {
                   type="number"
                   {...register("amount", {
                     min: 1,
-                    max: withdrawableAmount,
+                    max: numeral(props.requestedWithdrawalAmount).value(),
                     required: true
                   })}
+                  onWheel={(e: any) => e.target.blur()}
                 />
                 {errors.amount && (
                   <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
@@ -176,8 +164,9 @@ const WithdrawalPopUp = (props) => {
               /> */}
               </div>
               <div className="text-right mr-5 mb-1">
-                Withdrawable Amount:&nbsp;
-                {numeral(withdrawableAmount).format(USDC_FORMAT) + " USDC"}
+                Requested Withdrawal Amount:&nbsp;
+                {numeral(props.requestedWithdrawalAmount).format(USDC_FORMAT) +
+                  " USDC"}
               </div>
             </div>
           </div>
@@ -213,16 +202,26 @@ const WithdrawalPopUp = (props) => {
               </div>
             </div>
           </div>
-          <input
-            className="text-white bg-customBlue rounded-md px-12 py-4 mb-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-none"
+          <button
+            className={`text-white bg-customBlue rounded-md px-12 py-4 mb-8 mt-8 transition duration-500 ease min-w-[230px] select-none focus:outline-none focus:shadow-outline cursor-pointer ${
+              loading ? "disabled:opacity-90" : "disabled:opacity-50"
+            } disabled:cursor-not-allowed`}
             type="submit"
-            value="Confirm Withdraw"
             disabled={
-              loading || !protectionPoolService || !protectionPoolAddress
+              loading ||
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !isValid
             }
-          />
-          <div className="flex"></div>
-          <LoadingButton loading={loading}></LoadingButton>
+          >
+            {loading ? (
+              <LoadingButton loading={loading}>
+                <CircularProgress color="secondary" size={16} />
+              </LoadingButton>
+            ) : (
+              "Confirm Withdraw"
+            )}
+          </button>
           <div className="text-sm">
             By clicking &quot;Confirm Withdraw&quot;, you agree to
             Carapace&apos;s&nbsp;

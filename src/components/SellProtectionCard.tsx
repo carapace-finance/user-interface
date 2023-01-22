@@ -85,11 +85,11 @@ export default function SellProtectionCard(props) {
             max: usdcBalance,
             required: true
           })}
+          onWheel={(e: any) => e.target.blur()}
         />
         {errors.depositAmount && (
           <h5 className="block text-left text-customPink text-base font-normal mb-4">
-            the deposit amount must be in between 0 and the deposit amount
-            available if you have enough balance
+            the deposit amount must be in between 0 and your USDC balance
           </h5>
         )}
         {/* <TextField
@@ -114,10 +114,10 @@ export default function SellProtectionCard(props) {
           Balance: {numeral(usdcBalance).format(USDC_FORMAT)}&nbsp;USDC
         </p>
         <input
-          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer"
+          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           value="Deposit"
-          // disabled={} // todo: add the leverage ratio limit
+          disabled={!protectionPoolAddress} // todo: add the leverage ratio limit
         />
       </form>
       <SellProtectionPopUp

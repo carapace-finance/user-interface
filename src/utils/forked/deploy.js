@@ -2,6 +2,7 @@ import { hexValue } from "@ethersproject/bytes";
 import { parseEther } from "ethers/lib/utils";
 import { ContractFactory, Contract } from "ethers";
 import { fillEther } from "./tenderly";
+import { protocolParameters } from "@constants/index";
 
 import riskFactorCalculatorAbi from "../../contracts/forked/abi/RiskFactorCalculator.json";
 import accruedPremiumCalculatorAbi from "../../contracts/forked/abi/AccruedPremiumCalculator.json";
@@ -116,7 +117,7 @@ export const GOLDFINCH_LENDING_POOLS = Object.keys(
   PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS
 );
 const _lendingProtocols = GOLDFINCH_LENDING_POOLS.map(() => 0); // 0 = Goldfinch
-const _purchaseLimitInDays = hexValue(90);
+const _purchaseLimitInDays = hexValue(protocolParameters.protectionPurchaseLimitsInDays);
 const _purchaseLimitsInDays = GOLDFINCH_LENDING_POOLS.map(
   () => _purchaseLimitInDays
 );
@@ -273,8 +274,18 @@ const deployContracts = async (forkProvider) => {
         }
       );
 
-    referenceLendingPoolsInstance =
-      await getReferenceLendingPoolsInstanceFromTx(forkProvider, tx1);
+    const referenceLendingPoolsList =
+      await referenceLendingPoolsFactoryInstance.getReferenceLendingPoolsList();
+    referenceLendingPoolsInstance = new Contract(
+      referenceLendingPoolsList[0],
+      referenceLendingPoolsAbi,
+      deployer
+    );
+
+    console.log(
+      "ReferenceLendingPools instance created at: ",
+      referenceLendingPoolsInstance.address
+    );
 
     // Deploy PoolHelper library contract
     const accruedPremiumCalculatorLibRef = {
@@ -338,21 +349,27 @@ const deployContracts = async (forkProvider) => {
     );
 
     const _poolCycleParams = {
-      openCycleDuration: getDaysInSeconds(10),
-      cycleDuration: getDaysInSeconds(30)
+      openCycleDuration: getDaysInSeconds(
+        protocolParameters.openCycleDurationInDays
+      ),
+      cycleDuration: getDaysInSeconds(protocolParameters.cycleDurationInDays)
     };
 
     const _poolParams = {
-      leverageRatioFloor: parseEther("0.5"),
-      leverageRatioCeiling: parseEther("1"),
-      leverageRatioBuffer: parseEther("0.05"),
+      leverageRatioFloor: parseEther(protocolParameters.leverageRatioFloor),
+      leverageRatioCeiling: parseEther(protocolParameters.leverageRatioCeiling),
+      leverageRatioBuffer: parseEther(protocolParameters.leverageRatioBuffer),
       minRequiredCapital: parseUSDC("100000"), // 100k
       curvature: parseEther("0.05"),
       minCarapaceRiskPremiumPercent: parseEther("0.02"),
       underlyingRiskPremiumPercent: parseEther("0.1"),
-      minProtectionDurationInSeconds: getDaysInSeconds(10),
+      minProtectionDurationInSeconds: getDaysInSeconds(
+        protocolParameters.minProtectionDurationInDays
+      ),
       poolCycleParams: _poolCycleParams,
-      protectionExtensionGracePeriodInSeconds: getDaysInSeconds(14) // 2 weeks
+      protectionExtensionGracePeriodInSeconds: getDaysInSeconds(
+        protocolParameters.protectionExtensionGracePeriodInDays
+      )
     };
 
     // Create a pool using PoolFactory instead of deploying new pool directly to mimic the prod behavior
@@ -368,7 +385,13 @@ const deployContracts = async (forkProvider) => {
       "ST1"
     );
 
-    protectionPoolInstance = await getProtectionPoolInstanceFromTx(tx);
+    protectionPoolInstance = new Contract(
+      await poolFactoryInstance.getPoolAddress(1),
+      poolAbi,
+      deployer
+    );
+
+    console.log("Pool instance created at: ", protectionPoolInstance.address);
 
     return {
       poolCycleManagerInstance,
@@ -380,51 +403,5 @@ const deployContracts = async (forkProvider) => {
     console.log(e);
   }
 };
-
-async function getReferenceLendingPoolsInstanceFromTx(forkProvider, tx) {
-  let receipt = await tx.wait();
-
-  try {
-    receipt = await tx.wait();
-    const referenceLendingPoolsCreatedEvent = receipt.events.find(
-      (eventInfo) => eventInfo.event === "ReferenceLendingPoolsCreated"
-    );
-
-    const newReferenceLendingPoolsInstance = new Contract(
-      referenceLendingPoolsCreatedEvent.args.referenceLendingPools,
-      referenceLendingPoolsAbi,
-      deployer
-    );
-    console.log(
-      "ReferenceLendingPools instance created at: ",
-      newReferenceLendingPoolsInstance.address
-    );
-
-    return newReferenceLendingPoolsInstance;
-  } catch (error) {
-    console.error(
-      "Failed to retrieve reference lending pool from creation tx: ",
-      error
-    );
-  }
-}
-
-async function getProtectionPoolInstanceFromTx(tx) {
-  const receipt = await tx.wait();
-
-  const poolCreatedEvent = receipt.events.find(
-    (eventInfo) => eventInfo.event === "PoolCreated"
-  );
-
-  const newPoolInstance = new Contract(
-    poolCreatedEvent.args.poolAddress,
-    poolAbi,
-    deployer
-  );
-
-  console.log("Pool instance created at: ", newPoolInstance.address);
-
-  return newPoolInstance;
-}
 
 export { deployContracts };
