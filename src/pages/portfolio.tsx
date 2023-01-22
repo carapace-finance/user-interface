@@ -417,7 +417,7 @@ const Portfolio = () => {
         open={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
         protectionPoolAddress={protectionPoolAddress}
-        withdrawableAmount={user.requestedWithdrawalAmount}
+        requestedWithdrawalAmount={user.requestedWithdrawalAmount}
       ></WithdrawPopUp>
     </div>
   );

@@ -11,11 +11,7 @@ import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import {
-  convertNumberToUSDC,
-  convertUSDCToNumber,
-  USDC_FORMAT
-} from "@utils/usdc";
+import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import numeral from "numeral";
@@ -49,7 +45,7 @@ const WithdrawalPopUp = (props) => {
   }, [open]);
 
   const setMaxAmount = async () => {
-    setValue("amount", props.withdrawableAmount);
+    setValue("amount", props.requestedWithdrawalAmount);
   };
 
   const onSubmit = () => {
@@ -133,14 +129,15 @@ const WithdrawalPopUp = (props) => {
                   type="number"
                   {...register("amount", {
                     min: 1,
-                    max: numeral(props.withdrawableAmount)._value,
+                    max: numeral(props.requestedWithdrawalAmount).value(),
                     required: true
                   })}
                   onWheel={(e: any) => e.target.blur()}
                 />
                 {errors.amount && (
                   <h5 className="block text-left text-customPink text-base leading-tight font-normal mb-4">
-                    the withdrawal amount must be in between 0 and {props.withdrawableAmount}
+                    the withdrawal amount must be in between 0 and your
+                    requested amount
                   </h5>
                 )}
                 {/* <TextField
@@ -168,7 +165,7 @@ const WithdrawalPopUp = (props) => {
               </div>
               <div className="text-right mr-5 mb-1">
                 Requested Withdrawal Amount:&nbsp;
-                {numeral(props.withdrawableAmount).format(USDC_FORMAT) +
+                {numeral(props.requestedWithdrawalAmount).format(USDC_FORMAT) +
                   " USDC"}
               </div>
             </div>
