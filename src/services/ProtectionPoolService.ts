@@ -241,11 +241,11 @@ export class ProtectionPoolService {
             premium: "4 - 7%",
             timeLeft: "59 Days 8 Hours 2 Mins",
             protectionPoolAddress: protectionPoolAddress,
-            protectionPurchase: protectionPurchase
+            protectionPurchase: protectionPurchase?.eq(BigNumber.from(150000))
               ? numeral(convertUSDCToNumber(protectionPurchase)).format(
                   USDC_FORMAT
                 ) + " USDC"
-              : "70,000.00 USDC" // todo: adding this number even when there is no protection for the demonstration purpose. this needs to be fixed later. 
+              : "150,000.00 USDC" // todo: this protectionPurchase is for demonstration only. this needs to be changed. 
           };
         })
       );
