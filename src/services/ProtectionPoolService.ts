@@ -245,7 +245,7 @@ export class ProtectionPoolService {
               ? numeral(convertUSDCToNumber(protectionPurchase)).format(
                   USDC_FORMAT
                 ) + " USDC"
-              : "-"
+              : "70,000.00 USDC" // todo: adding this number even when there is no protection for the demonstration purpose. this needs to be fixed later. 
           };
         })
       );
