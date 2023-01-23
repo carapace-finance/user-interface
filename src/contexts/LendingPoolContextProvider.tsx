@@ -45,7 +45,7 @@ export const LendingPoolContextProvider = ({ children }) => {
       lendingPoolAPY: "17%",
       premium: "6%",
       timeLeft: "7 Days 8 Hours 2 Mins",
-      protectionPoolAddress: "0x0...",
+      protectionPoolAddress: "0xPP...",
       protectionPurchase: "21,000 USDC"
     }
   ];

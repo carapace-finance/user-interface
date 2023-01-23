@@ -192,7 +192,7 @@ const ProtectionPool = () => {
                     data: underlyingLendingPools.map((lendingPool) =>
                       Number(lendingPool.protectionPurchase.replace(/\D/g, ""))
                     ),
-                    backgroundColor: ["#161C2E", "#6E7191", "#14142B"]
+                    backgroundColor: ["#B8B8B8", "#14142B", "#F8F0E3"]
                   }
                 ]
               }}
