@@ -31,7 +31,9 @@ function App({ Component, pageProps }) {
 
   useEffect(() => {
     // Initialize Fathom when the app loads
-    Fathom.load(process.env.NEXT_PUBLIC_FATHOM_SITE_ID);
+    Fathom.load(process.env.NEXT_PUBLIC_FATHOM_SITE_ID, {
+      url: "amazing-protected.carapace.finance"
+    });
 
     const updateMobile = () => {
       setMobile(window.innerWidth < 576 ? true : false);
