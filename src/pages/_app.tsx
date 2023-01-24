@@ -32,7 +32,7 @@ function App({ Component, pageProps }) {
   useEffect(() => {
     // Initialize Fathom when the app loads
     Fathom.load(process.env.NEXT_PUBLIC_FATHOM_SITE_ID, {
-      includedDomains: [process.env.NEXT_PUBLIC_DOMAIN]
+      includedDomains: ["www.carapace.finance", "carapace.finance"]
     });
 
     const updateMobile = () => {
