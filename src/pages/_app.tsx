@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Router from "next/router";
+import * as Fathom from "fathom-client";
 import { Web3ReactProvider } from "@web3-react/core";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@material-tailwind/react";
@@ -17,10 +19,26 @@ const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
 
 import Mobile from "@components/Mobile";
 
+// Record a pageview when route changes
+Router.events.on("routeChangeComplete", (as, routeProps) => {
+  if (!routeProps.shallow) {
+    Fathom.trackPageview();
+  }
+});
+
 function App({ Component, pageProps }) {
   const [mobile, setMobile] = useState(undefined);
 
   useEffect(() => {
+    // Initialize Fathom when the app loads
+    Fathom.load(process.env.FATHOM_SITE_ID, {
+      includedDomains: [
+        "dev.carapace.finance",
+        "test.carapace.finance",
+        "app.carapace.finance"
+      ]
+    });
+
     const updateMobile = () => {
       setMobile(window.innerWidth < 576 ? true : false);
     };
