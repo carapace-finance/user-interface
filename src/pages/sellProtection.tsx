@@ -24,7 +24,7 @@ const SellProtection = () => {
         descriptions="Earn yields by depositing capital to diversified protection pools"
         buttonExist={true}
         button="Learn about selling protection"
-        guideLink="https://docs.google.com/document/d/1-wp-gBIVkwrzN0u-eRY78u9rDGZsSCTFsj9xSfB8NJw"
+        guideLink="https://www.carapace.finance/docs/protocol-mechanics/protection_sellers"
       />
       <h3 className="text-left font-bold mb-8">All Protection Pools</h3>
       <div className="rounded-2xl shadow-lg shadow-gray-200">
