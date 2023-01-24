@@ -31,7 +31,7 @@ function App({ Component, pageProps }) {
 
   useEffect(() => {
     // Initialize Fathom when the app loads
-    Fathom.load(process.env.FATHOM_SITE_ID, {
+    Fathom.load(process.env.NEXT_PUBLIC_FATHOM_SITE_ID, {
       includedDomains: [
         "dev.carapace.finance",
         "test.carapace.finance",
