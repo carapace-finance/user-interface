@@ -34,8 +34,8 @@
   }
 
   #floating-ui-root{
-    z-index: 1400;
-    position: relative;
+    @apply z-[1400];
+    @apply relative;
   }
 
   nav {
