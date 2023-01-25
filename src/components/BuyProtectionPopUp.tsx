@@ -203,7 +203,7 @@ const BuyProtectionPopUp = (props) => {
               <div className="text-gray-500 text-sm flex items-center">
                 Expected Adjusted Yield:
                 <div className="pl-2">
-                  <Tooltip content="test test" placement="top">
+                  <Tooltip content="Lending Pool APY minus Premium" placement="top">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
