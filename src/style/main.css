@@ -33,6 +33,11 @@
     transition: all 0.25s linear 0s;
   }
 
+  #floating-ui-root{
+    @apply z-[1400];
+    @apply relative;
+  }
+
   nav {
     --ifm-navbar-height: 0;
     --ifm-navbar-padding-vertical: 0;
