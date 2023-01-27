@@ -194,7 +194,7 @@ const BuyProtectionPopUp = (props) => {
               className="flex justify-left text-customGrey text-base font-bold"
               variant="subtitle2"
             >
-              <p className="text-base">Estimated Stats</p>
+              <p className="text-base mb-2">Estimated Stats</p>
             </Typography>
             <Typography
               className="flex justify-between pb-3 mt-4"
