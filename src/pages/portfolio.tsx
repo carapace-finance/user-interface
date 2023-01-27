@@ -264,7 +264,7 @@ const Portfolio = () => {
         </table>
       </div>
       <h3 className="text-left font-bold mb-4 mt-16">
-        Your Balance in Protection Pools
+        Your Deposited Capital
       </h3>
       <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
         <table className="table-fixed w-full">
