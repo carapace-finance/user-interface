@@ -7,6 +7,7 @@ import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
 import numeral from "numeral";
 import { SellProtectionInput } from "@type/types";
+import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 
 export default function SellProtectionCard(props) {
   const { estimatedAPY } = props;
@@ -22,6 +23,7 @@ export default function SellProtectionCard(props) {
   const [usdcBalance, setUsdcBalance] = useState(0);
   const router = useRouter();
   const { updateUserUsdcBalance } = useContext(UserContext);
+  const { provider } = useContext(ApplicationContext);
   const protectionPoolAddress = router.query.address;
 
   const setMaxAmount = async () => {
@@ -30,7 +32,7 @@ export default function SellProtectionCard(props) {
 
   useEffect(() => {
     (async () => {
-      setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance()));
+      provider && setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance()));
     })();
   }, [isOpen]);
 
