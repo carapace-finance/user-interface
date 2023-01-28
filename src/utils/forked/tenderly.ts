@@ -35,7 +35,7 @@ export const createFork = async (tenderlyAccessKey: any) => {
   const TENDERLY_FORK_URL_FOR_CREATION = `https://api.tenderly.co/api/v1/account/${process.env.NEXT_PUBLIC_TENDERLY_USER}/project/${process.env.NEXT_PUBLIC_TENDERLY_PROJECT}/fork/`;
   let forkResponse = await fetch(TENDERLY_FORK_URL_FOR_CREATION, options);
   forkResponse = await forkResponse.json();
-  return forkResponse.root_transaction.fork_id;
+  return (forkResponse as any).root_transaction.fork_id;
 };
 
 export const deployToFork = async (tenderlyAccessKey: string) => {
@@ -61,9 +61,9 @@ export const deployToFork = async (tenderlyAccessKey: string) => {
 };
 
 export const sendTransaction = async (
-  provider: JsonRpcProvider,
+  provider: JsonRpcProvider | Signer,
   sender: string,
-  contract: { [x: string]: (arg0: any) => any; populateTransaction: { [x: string]: (arg0: any) => any; }; address: any; },
+  contract: { [x: string]: any; populateTransaction: any; address: any; },
   funcName: string,
   ...args: (string | BigNumber)[]
 ) => {
