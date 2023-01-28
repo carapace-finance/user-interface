@@ -1,10 +1,11 @@
 import { Signer } from "@ethersproject/abstract-signer";
-import { hexValue } from "@ethersproject/bytes";
+import { BytesLike, Hexable, hexValue } from "@ethersproject/bytes";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { parseEther, formatEther } from "@ethersproject/units";
+import { BigNumber } from "ethers";
 import { deployContracts } from "./deploy";
 
-export const fillEther = async (walletAddress, provider) => {
+export const fillEther = async (walletAddress: string, provider: JsonRpcProvider) => {
   const params = [
     [walletAddress],
     hexValue(parseEther("10")) // hex encoded wei amount
@@ -12,7 +13,7 @@ export const fillEther = async (walletAddress, provider) => {
   await provider.send("tenderly_addBalance", params);
 };
 
-export const createFork = async (tenderlyAccessKey) => {
+export const createFork = async (tenderlyAccessKey: any) => {
   const forkingPoint = { networkId: "1" };
   const options = {
     method: "POST",
@@ -37,7 +38,7 @@ export const createFork = async (tenderlyAccessKey) => {
   return forkResponse.root_transaction.fork_id;
 };
 
-export const deployToFork = async (tenderlyAccessKey) => {
+export const deployToFork = async (tenderlyAccessKey: string) => {
   let startTime = Date.now();
   const forkId = await createFork(tenderlyAccessKey);
   console.log("Created fork ==> ", forkId);
@@ -60,11 +61,11 @@ export const deployToFork = async (tenderlyAccessKey) => {
 };
 
 export const sendTransaction = async (
-  provider,
-  sender,
-  contract,
-  funcName,
-  ...args
+  provider: JsonRpcProvider,
+  sender: string,
+  contract: { [x: string]: (arg0: any) => any; populateTransaction: { [x: string]: (arg0: any) => any; }; address: any; },
+  funcName: string,
+  ...args: (string | BigNumber)[]
 ) => {
   if (provider instanceof JsonRpcProvider) {
     const unsignedTx = await contract.populateTransaction[funcName](...args);
@@ -105,7 +106,7 @@ export const sendTransaction = async (
   }
 };
 
-export const moveForwardTime = async (provider, seconds) => {
+export const moveForwardTime = async (provider: { send: (arg0: string, arg1: string[]) => any; }, seconds: number | bigint | BytesLike | Hexable) => {
   await provider.send("evm_increaseTime", [hexValue(seconds)]);
   // todo: this is problematic because we the block number doesn't change although we advance time
   // todo: startTimestamp in protection purchase is returning the wrong value because of this
@@ -115,7 +116,7 @@ export const moveForwardTime = async (provider, seconds) => {
   ]);
 };
 
-export const deleteFork = async (forkId, tenderlyAccessKey) => {
+export const deleteFork = async (forkId: string, tenderlyAccessKey: string) => {
   const TENDERLY_FORK_URL_TO_DELETE = `https://api.tenderly.co/api/v1/account/${process.env.NEXT_PUBLIC_TENDERLY_USER}/project/${process.env.NEXT_PUBLIC_TENDERLY_PROJECT}/fork/${forkId}`;
 
   const options = {

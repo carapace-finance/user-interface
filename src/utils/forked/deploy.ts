@@ -1,6 +1,6 @@
 import { hexValue } from "@ethersproject/bytes";
 import { parseEther } from "ethers/lib/utils";
-import { ContractFactory, Contract } from "ethers";
+import { ContractFactory, Contract, Signer } from "ethers";
 import { fillEther } from "./tenderly";
 import { protocolParameters } from "@constants/index";
 
@@ -18,7 +18,7 @@ import poolHelperAbi from "../../contracts/forked/abi/PoolHelper.json";
 import { riskFactorCalculatorBytecode } from "../../contracts/forked/bytecode/RiskFactorCalculator";
 import { referenceLendingPoolsBytecode } from "../../contracts/forked/bytecode/ReferenceLendingPools";
 import { referenceLendingPoolsFactoryBytecode } from "../../contracts/forked/bytecode/ReferenceLendingPoolsFactory";
-import { linkBytecode } from "./bytecode";
+import { Artifact, linkBytecode } from "./bytecode";
 
 import { USDC_ADDRESS, parseUSDC } from "../usdc";
 import { getDaysInSeconds } from "@utils/utils";
@@ -29,20 +29,22 @@ import premiumCalculatorArtifact from "../../contracts/forked/artifacts/PremiumC
 import poolFactoryArtifact from "../../contracts/forked/artifacts/PoolFactory.json";
 import poolHelperArtifact from "../../contracts/forked/artifacts/PoolHelper.json";
 import { isLendingPoolLate, payToLendingPoolAddress } from "./goldfinch";
+import { Provider } from "@ethersproject/providers";
+import { JsonRpcProvider } from "@ethersproject/providers";
 
-let deployer;
-let account1;
+let deployer: Provider | Signer;
+let account1: Signer;
 
-let protectionPoolInstance;
-let poolFactoryInstance;
-let premiumCalculatorInstance;
-let referenceLendingPoolsInstance;
-let poolCycleManagerInstance;
-let accruedPremiumCalculatorInstance;
-let riskFactorCalculatorInstance;
-let referenceLendingPoolsFactoryInstance;
-let referenceLendingPoolsImplementation;
-let defaultStateManagerInstance;
+let protectionPoolInstance: Contract;
+let poolFactoryInstance: Contract;
+let premiumCalculatorInstance: Contract;
+let referenceLendingPoolsInstance: Contract;
+let poolCycleManagerInstance: Contract;
+let accruedPremiumCalculatorInstance: Contract;
+let riskFactorCalculatorInstance: Contract;
+let referenceLendingPoolsFactoryInstance: Contract;
+let referenceLendingPoolsImplementation: Contract;
+let defaultStateManagerInstance: Contract;
 
 // Lending positions of pool can be found by looking at withdrawal txs in goldfinch app,
 // then open it in etherscan and look at logs data for TokenRedeemed event
@@ -122,8 +124,8 @@ const _purchaseLimitsInDays = GOLDFINCH_LENDING_POOLS.map(
   () => _purchaseLimitInDays
 );
 
-function getLinkedBytecode(contractArtifact, libRefs) {
-  const libs = libRefs.map((libRef) => {
+function getLinkedBytecode(contractArtifact: Artifact, libRefs: any[]) {
+  const libs = libRefs.map((libRef: { libraryName: any; address: any; }) => {
     return {
       sourceName: `contracts/libraries/${libRef.libraryName}.sol`,
       libraryName: libRef.libraryName,
@@ -133,7 +135,7 @@ function getLinkedBytecode(contractArtifact, libRefs) {
   return linkBytecode(contractArtifact, libs);
 }
 
-const deployContracts = async (forkProvider) => {
+const deployContracts = async (forkProvider: JsonRpcProvider) => {
   if (!process.env.NEXT_PUBLIC_FIRST_POOL_SALT)
     throw new Error("env var NEXT_PUBLIC_FIRST_POOL_SALT not set");
 
@@ -238,7 +240,7 @@ const deployContracts = async (forkProvider) => {
     // If lending pools are late for payment, pay them
     const promises = GOLDFINCH_LENDING_POOLS.map(async (lendingPoolAddress) => {
       return isLendingPoolLate(lendingPoolAddress, forkProvider).then(
-        async (late) => {
+        async (late: any) => {
           if (late) {
             console.log("Paying late lending pool: ", lendingPoolAddress);
             await payToLendingPoolAddress(
