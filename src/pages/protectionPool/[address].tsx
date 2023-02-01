@@ -196,6 +196,10 @@ const ProtectionPool = () => {
                   }
                 ]
               }}
+              options = {{
+                // This chart will only respond to mousemove and not on click.
+                events: ['mousemove']
+              }}
             />
           </div>
         </div>
