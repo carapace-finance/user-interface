@@ -98,6 +98,7 @@ export const UserContextProvider = ({ children }) => {
    * @returns
    */
   const updateUserUsdcBalance = async () => {
+    if(provider){
     let newUsdcBalance = await getUsdcBalance(provider, user.address);
     if (newUsdcBalance != user.USDCBalance) {
       userRef.current.USDCBalance = newUsdcBalance;
@@ -105,8 +106,8 @@ export const UserContextProvider = ({ children }) => {
         ...userRef.current
       });
     }
-
     return newUsdcBalance;
+  }
   };
 
   const updatePurchasedProtectionDetails = async (

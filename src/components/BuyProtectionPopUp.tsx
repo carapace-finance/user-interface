@@ -44,7 +44,7 @@ const BuyProtectionPopUp = (props) => {
   const [loading, setLoading] = useState(false);
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
   const [usdcBalance, setUsdcBalance] = useState(0);
-  const { protectionPoolService } = useContext(ApplicationContext);
+  const { protectionPoolService, provider } = useContext(ApplicationContext);
   const { updateUserUsdcBalance } = useContext(UserContext);
 
   const router = useRouter();
@@ -60,7 +60,7 @@ const BuyProtectionPopUp = (props) => {
 
   useEffect(() => {
     (async () => {
-      setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance()));
+      provider && setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance())) ;
     })();
   }, [open]);
 
