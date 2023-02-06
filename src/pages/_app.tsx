@@ -46,7 +46,9 @@ function App({ Component, pageProps }) {
     };
   }, []);
 
-  return typeof mobile !== "undefined" ? (
+  console.log(process.env.NEXT_PUBLIC_ACCESS)
+
+  return process.env.NEXT_PUBLIC_ACCESS ? (typeof mobile !== "undefined" ? (
     mobile ? (
       <Mobile />
     ) : (
@@ -69,7 +71,7 @@ function App({ Component, pageProps }) {
         </Web3ReactProvider>
       </ThemeProvider>
     )
-  ) : null;
+  ) : null) : <div>Site is under-construction</div>;
 }
 
 export default App;
