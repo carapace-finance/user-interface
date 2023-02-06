@@ -48,7 +48,7 @@ function App({ Component, pageProps }) {
 
   console.log(process.env.NEXT_PUBLIC_ACCESS)
 
-  return process.env.NEXT_PUBLIC_ACCESS ? (typeof mobile !== "undefined" ? (
+  return process.env.NEXT_PUBLIC_ACCESS === 'true' ? (typeof mobile !== "undefined" ? (
     mobile ? (
       <Mobile />
     ) : (
