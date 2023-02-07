@@ -18,6 +18,7 @@ const Header = dynamic(() => import("@components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
 
 import Mobile from "@components/Mobile";
+import UnderMaintainance from "@components/UnderMaintainance";
 
 // Record a pageview when route changes
 Router.events.on("routeChangeComplete", (as, routeProps) => {
@@ -46,12 +47,10 @@ function App({ Component, pageProps }) {
     };
   }, []);
 
-  console.log(process.env.NEXT_PUBLIC_ACCESS)
-
-  return process.env.NEXT_PUBLIC_ACCESS === 'true' ? (typeof mobile !== "undefined" ? (
+  return typeof mobile !== "undefined" ? (
     mobile ? (
       <Mobile />
-    ) : (
+    ) : (process.env.NEXT_PUBLIC_ACCESS === 'true' ? (
       <ThemeProvider>
         <CssBaseline />
         <Web3ReactProvider getLibrary={getWeb3Library}>
@@ -70,8 +69,8 @@ function App({ Component, pageProps }) {
           </ApplicationContextProvider>
         </Web3ReactProvider>
       </ThemeProvider>
-    )
-  ) : null) : <div>Site is under-construction</div>;
+    ) : <UnderMaintainance />)
+  ) : null;
 }
 
 export default App;
