@@ -23,3 +23,16 @@ export const scale18DecimalsAmtToUsdcDecimals = (amt: BigNumber) => {
 export const scaleUsdcAmtTo18Decimals = (usdcAmt: BigNumber) => {
   return usdcAmt.mul(BigNumber.from(10).pow(18 - USDC_NUM_OF_DECIMALS));
 };
+
+export const shortAddress = (
+  address: string | undefined,
+  pre: number = 5,
+  post: number = 4
+): string => {
+  return !!address
+    ? `${address.substring(0, pre)}...${address.substring(
+        address.length - post,
+        address.length
+      )}`
+    : "";
+};

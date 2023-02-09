@@ -2,12 +2,18 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
+import { useAccount, useDisconnect, useNetwork } from "wagmi";
 import { Menu } from "lucide-react";
 import assets from "../assets";
+import { shortAddress } from "@utils/utils";
 import ConnectWalletPopup from "@components/ConnectWalletPopUp";
+import ChainLogo from "@components/ChainLogo";
 import { HEADER_LINKS } from "@constants/index";
 
 const Header = () => {
+  const { address, isConnected } = useAccount();
+  const { chain } = useNetwork();
+  const { disconnect } = useDisconnect();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -25,13 +31,29 @@ const Header = () => {
           />
         </Link>
         <div className="flex md:order-2">
-          <button
-            type="button"
-            className="btn-outline rounded-md py-1 px-4 text-sm"
-            onClick={() => setModalOpen(true)}
-          >
-            Connect Wallet
-          </button>
+          {isConnected ? (
+            <>
+              <div className="flex items-center border border-customGrey py-1 pr-4 pl-2 rounded-md mr-2 text-sm h-9">
+                <ChainLogo chainId={chain.id} klass="mr-1" />
+                {chain.name}
+              </div>
+              <button
+                type="button"
+                className="btn-outline rounded-md py-1 px-4 h-9 text-sm"
+                onClick={() => disconnect()}
+              >
+                {shortAddress(address)}
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="btn-outline rounded-md py-1 px-4 text-sm"
+              onClick={() => setModalOpen(true)}
+            >
+              Connect Wallet
+            </button>
+          )}
           <ConnectWalletPopup
             open={modalOpen}
             onClose={() => setModalOpen(false)}

@@ -1,42 +1,19 @@
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useConnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import useIsMounted from "@hooks/useIsMounted";
+import WalletLogo from "@components/WalletLogo";
 import { Dialog, DialogContent } from "@mui/material";
 import Image from "next/image";
 import assets from "../assets";
-import ImgMetamask from "../assets/wallets/metamask-fox.svg";
-import ImgCoinbase from "../assets/wallets/coinbase-wallet.png";
-import ImgWalletconnext from "../assets/wallets/walletconnect-circle-white.svg";
 
 type Props = {
   open: boolean;
   onClose: () => void;
 };
 
-const WalletLogo = ({
-  id,
-  size = 24
-}: {
-  id: string;
-  size?: number;
-}): JSX.Element => {
-  const WalletIcon: any = {
-    metaMask: <Image src={ImgMetamask} height={size} width={size} alt={id} />,
-    coinbaseWallet: (
-      <Image src={ImgCoinbase} height={size} width={size} alt={id} />
-    ),
-    walletConnect: (
-      <Image src={ImgWalletconnext} height={size} width={size} alt={id} />
-    )
-  };
-
-  return <div className="flex items-center shrink-0">{WalletIcon[id]}</div>;
-};
-
 const ConnectWalletPopUp = ({ open, onClose }: Props) => {
-  const { address, isConnected } = useAccount();
   const isMounted = useIsMounted();
-  const { connect, connectors, isLoading, pendingConnector } = useConnect({
+  const { connect, connectors } = useConnect({
     connector: new InjectedConnector()
   });
   const connectWallet = (x: any): void => {
@@ -78,12 +55,12 @@ const ConnectWalletPopUp = ({ open, onClose }: Props) => {
                 className="btn-outline border-customPopupGrey flex w-full items-center justify-between rounded-full py-2 px-6 mb-3 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {x.name}
-                <div className="h-5">
-                  <WalletLogo id={x.id} />
-                </div>
                 {!x.ready && (
                   <span className="text-customGrey ml-2">(unsupported)</span>
                 )}
+                <div className="h-5">
+                  <WalletLogo id={x.id} />
+                </div>
               </button>
             ))}
           </div>
