@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import assets from "../assets";
+import ConnectWalletPopup from "@components/ConnectWalletPopUp";
 import { HEADER_LINKS } from "@constants/index";
 
 const Header = () => {
   const router = useRouter();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   return (
@@ -26,9 +28,14 @@ const Header = () => {
           <button
             type="button"
             className="btn-outline rounded-md py-1 px-4 text-sm"
+            onClick={() => setModalOpen(true)}
           >
             Connect Wallet
           </button>
+          <ConnectWalletPopup
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+          />
           <button
             type="button"
             className="inline-flex items-center p-2 text-sm text-customBlue rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-gray-200 ml-2"
