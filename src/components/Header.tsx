@@ -33,13 +33,13 @@ const Header = () => {
         <div className="flex md:order-2">
           {isConnected ? (
             <>
-              <div className="flex items-center border border-customGrey py-1 pr-4 pl-2 rounded-md mr-2 text-sm h-9">
+              <div className="flex items-center border border-customGrey py-1 pr-4 pl-2 rounded-md mr-2 text-sm h-8">
                 <ChainLogo chainId={chain.id} klass="mr-1" />
                 {chain.name}
               </div>
               <button
                 type="button"
-                className="btn-outline rounded-md py-1 px-4 h-9 text-sm"
+                className="btn-outline rounded-md py-1 px-4 h-8 text-sm"
                 onClick={() => disconnect()}
               >
                 {shortAddress(address)}
@@ -48,7 +48,7 @@ const Header = () => {
           ) : (
             <button
               type="button"
-              className="btn-outline rounded-md py-1 px-4 text-sm"
+              className="btn-outline rounded-md py-1 px-4 h-8 text-sm"
               onClick={() => setModalOpen(true)}
             >
               Connect Wallet
