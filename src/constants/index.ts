@@ -14,8 +14,8 @@ export const HEADER_LINKS = [
   {
     key: "portfolio",
     title: "Portfolio",
-    link: "/buy-portfolio",
-    activePaths: ["/buy-portfolio"]
+    link: "/portfolio",
+    activePaths: ["/portfolio"]
   }
 ];
 

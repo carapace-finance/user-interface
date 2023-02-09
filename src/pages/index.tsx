@@ -1,12 +1,8 @@
 import dynamic from "next/dynamic";
-const BuyProtection = dynamic(() => import("./buyProtection"), { ssr: false });
+const BuyProtection = dynamic(() => import("./buy-protection"), { ssr: false });
 
 const Home = () => {
-  return (
-    <div>
-      <BuyProtection />
-    </div>
-  );
+  return <BuyProtection />;
 };
 
 export default Home;
