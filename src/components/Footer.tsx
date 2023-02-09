@@ -1,17 +1,19 @@
 import React from "react";
 import assets from "../assets";
-import { footerLinks } from "../constants";
+import { FOOTER_LINKS } from "../constants";
 import Link from "next/link";
+import Image from "next/image";
 
 const Footer = () => {
   return (
-    <section className="pb-16" id="footer">
-      <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start mt-32">
+    <section className="pb-16 pt-32 footer" id="footer">
+      <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start container mx-auto">
         <div className="flex flex-col w-[338px] lg:w-[270px] mr-0 lg:mr-[152px] items-center lg:items-start">
-          <img
+          <Image
             src={assets.footerLogo.src}
             alt="carapace"
-            className="w-[120px]"
+            width="120"
+            height="82"
           />
           <p className="font-manrope font-normal text-[20px] sm:text-base text-center lg:text-left tracking-[0.01em] text-black opacity-40 mb-0 mt-8 text-">
             Accelerating the world&apos;s transition to decentralized finance by
@@ -20,16 +22,11 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-between w-[260px] md:w-[560px]">
-          {footerLinks.map((footerlink, index) => (
+          {FOOTER_LINKS.map((footerlink, index) => (
             <div
               key={footerlink.title}
-              className={`flex flex-col sm:first:my-0 first:mt-[30px] items-center lg:items-start`}
+              className="flex flex-col sm:first:my-0 first:mt-[30px] items-center lg:items-start pb-8"
             >
-              <hr
-                className={`w-[260px] lg:hidden ${
-                  index !== 0 ? "opacity-30" : "opacity-0"
-                }`}
-              />
               <h4 className="text-[20px] sm:text-[16px] text-black">
                 {footerlink.title}
               </h4>
