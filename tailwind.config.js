@@ -6,15 +6,15 @@ module.exports = withMT({
   theme: {
     extend: {
       colors: {
-        customPink: "#FF639F",
-        customDarkBlue: "#161C2E",
-        customBlue: "#293C8E",
-        customLightBlue: "#2B69F5",
-        customGrey: "#6E7191",
-        customDarkGrey: "#14142B",
-        customGraphGrey: "#B8B8B8",
-        customPristineWhite: "#F9F9FF",
-        customPopupGrey: "#87898E"
+        customPink: `var(--color-custom-pink)`,
+        customDarkBlue: `var(--color-custom-dark-blue)`,
+        customBlue: `var(--color-custom-blue)`,
+        customLightBlue: `var(--color-custom-light-blue)`,
+        customGrey: `var(--color-custom-grey)`,
+        customDarkGrey: `var(--color-custom-dark-grey)`,
+        customGraphGrey: `var(--color-custom-graph-grey)`,
+        customPristineWhite: `var(--color-custom-pristine-white)`,
+        customPopupGrey: `var(--color-custom-popup-grey)`
       },
       boxShadow: {
         boxShadow: "0px 0px 12px rgba(63, 125, 204, 0.12)"

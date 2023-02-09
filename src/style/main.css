@@ -15,6 +15,17 @@
   }
   /* You can override the default Infima variables here. */
   :root {
+    --color-lightgray: #f9f9f9;
+    --color-custom-pink: #ff639f;
+    --color-custom-dark-blue: #161c2e;
+    --color-custom-blue: #293c8e;
+    --color-custom-light-blue: #2b69f5;
+    --color-custom-grey: #6e7191;
+    --color-custom-dark-grey: #14142b;
+    --color-custom-graph-grey: #b8b8b8;
+    --color-custom-pristine-white: #f9f9ff;
+    --color-custom-popup-grey: #87898e;
+
     --ifm-color-primary: #2e8555;
     --ifm-color-primary-dark: #29784c;
     --ifm-color-primary-darker: #277148;
