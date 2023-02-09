@@ -30,7 +30,7 @@ const Header = () => {
             unoptimized
           />
         </Link>
-        <div className="flex md:order-2">
+        <div className="flex items-center md:order-2">
           {isConnected ? (
             <>
               <div className="flex items-center border border-customGrey py-1 pr-4 pl-2 rounded-md mr-2 text-sm h-8">
