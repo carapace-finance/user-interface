@@ -33,9 +33,9 @@ const Header = () => {
         <div className="flex items-center md:order-2">
           {isConnected ? (
             <>
-              <div className="flex items-center border border-customGrey py-1 pr-4 pl-2 rounded-md mr-2 text-sm h-8">
-                <ChainLogo chainId={chain.id} klass="mr-1" />
-                {chain.name}
+              <div className="flex items-center border border-customGrey py-1 px-2 rounded-md mr-2 text-sm h-8">
+                <ChainLogo chainId={chain.id} />
+                <span className="hidden md:flex mr-2">{chain.name}</span>
               </div>
               <button
                 type="button"
@@ -78,7 +78,11 @@ const Header = () => {
                 <Link
                   href={item.link}
                   className={`${
-                    item.activePaths.includes(router.pathname)
+                    item.activePaths.includes(
+                      router.pathname.split("/").length > 2
+                        ? `/${router.pathname.split("/")[1]}/`
+                        : router.pathname
+                    )
                       ? "text-customBlue font-medium"
                       : ""
                   } hover:text-customBlue block py-2 pl-3 pr-4 rounded md:bg-transparent md:p-0`}

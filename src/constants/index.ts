@@ -1,15 +1,15 @@
 export const HEADER_LINKS = [
   {
-    key: "protect",
-    title: "Protect",
-    link: "/buy-protection",
-    activePaths: ["/buy-protection", "/lending-pool", "/"]
-  },
-  {
     key: "earn",
     title: "Earn",
     link: "/sell-protection",
-    activePaths: ["/sell-protection", "/protection-pool"]
+    activePaths: ["/sell-protection", "/protection-pool/"]
+  },
+  {
+    key: "protect",
+    title: "Protect",
+    link: "/buy-protection",
+    activePaths: ["/buy-protection", "/lending-pool/", "/"]
   },
   {
     key: "portfolio",
