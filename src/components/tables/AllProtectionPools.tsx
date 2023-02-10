@@ -123,6 +123,8 @@ const AllProtectionPools = () => {
             <tr
               key={row.id}
               className="border-customPristineWhite border-b hover:bg-customPristineWhite cursor-pointer"
+              /*
+              // @ts-ignore */
               onClick={() => router.push(`/protection-pool/${row.address}`)}
             >
               {row.getVisibleCells().map((cell) => (
