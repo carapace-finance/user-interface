@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Router from "next/router";
 import * as Fathom from "fathom-client";
 import { Web3ReactProvider } from "@web3-react/core";
+import { WagmiConfig, configureChains, createClient, mainnet } from "wagmi";
+import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@material-tailwind/react";
 import getWeb3Library from "../utils/mainnet/providers";
@@ -17,8 +22,6 @@ import { UserContextProvider } from "@contexts/UserContextProvider";
 const Header = dynamic(() => import("@components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
 
-import Mobile from "@components/Mobile";
-
 // Record a pageview when route changes
 Router.events.on("routeChangeComplete", (as, routeProps) => {
   if (!routeProps.shallow) {
@@ -26,32 +29,47 @@ Router.events.on("routeChangeComplete", (as, routeProps) => {
   }
 });
 
-function App({ Component, pageProps }) {
-  const [mobile, setMobile] = useState(undefined);
+// wagmi config
+const { chains, provider } = configureChains(
+  [mainnet],
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string })]
+);
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors: [
+    new MetaMaskConnector({ chains }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        qrcode: true,
+        rpc: {
+          1: `https://arb-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`
+        }
+      }
+    }),
+    new CoinbaseWalletConnector({
+      chains,
+      options: {
+        appName: "carapace.finance"
+      }
+    })
+  ],
+  provider
+});
 
+function App({ Component, pageProps }) {
   useEffect(() => {
     // Initialize Fathom when the app loads
     Fathom.load(process.env.NEXT_PUBLIC_FATHOM_SITE_ID, {
       url: "https://amazing-protected.carapace.finance/script.js"
     });
-
-    const updateMobile = () => {
-      setMobile(window.innerWidth < 576 ? true : false);
-    };
-
-    updateMobile();
-    window.addEventListener("resize", updateMobile);
-    return () => {
-      window.removeEventListener("resize", updateMobile);
-    };
   }, []);
 
-  return typeof mobile !== "undefined" ? (
-    mobile ? (
-      <Mobile />
-    ) : (
-      <ThemeProvider>
-        <CssBaseline />
+  return (
+    <ThemeProvider>
+      <CssBaseline />
+      <WagmiConfig client={wagmiClient}>
+        {/* TODO: Relpce web3react to wagmi */}
         <Web3ReactProvider getLibrary={getWeb3Library}>
           <ApplicationContextProvider>
             <ProtectionPoolContextProvider>
@@ -67,9 +85,9 @@ function App({ Component, pageProps }) {
             </ProtectionPoolContextProvider>
           </ApplicationContextProvider>
         </Web3ReactProvider>
-      </ThemeProvider>
-    )
-  ) : null;
+      </WagmiConfig>
+    </ThemeProvider>
+  );
 }
 
 export default App;

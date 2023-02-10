@@ -1,4 +1,25 @@
-export const footerLinks = [
+export const HEADER_LINKS = [
+  {
+    key: "earn",
+    title: "Earn",
+    link: "/",
+    activePaths: ["/sell-protection", "/protection-pool/", "/"]
+  },
+  {
+    key: "protect",
+    title: "Protect",
+    link: "/buy-protection",
+    activePaths: ["/buy-protection", "/lending-pool/"]
+  },
+  {
+    key: "portfolio",
+    title: "Portfolio",
+    link: "/portfolio",
+    activePaths: ["/portfolio"]
+  }
+];
+
+export const FOOTER_LINKS = [
   {
     title: "SOCIAL",
     links: [
