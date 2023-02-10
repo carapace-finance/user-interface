@@ -37,16 +37,16 @@
   }
 
   body {
-    height: 100vh;
+    /* height: 100vh;
     width: 100vw;
-    /* margin: 0 auto;
-    text-align: center; */
-    /* transition: all 0.25s linear 0s; */
+    margin: 0 auto;
+    text-align: center;
+    transition: all 0.25s linear 0s; */
   }
 
   /* sticky footer https://codepen.io/lukebennett88/pen/gZGVLM */
-  body > div {
-    @apply flex flex-col h-full;
+  body #__next {
+    @apply flex flex-col min-h-screen;
   }
   main {
     @apply flex-1;

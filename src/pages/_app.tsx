@@ -38,12 +38,6 @@ const wagmiClient = createClient({
   autoConnect: true,
   connectors: [
     new MetaMaskConnector({ chains }),
-    new CoinbaseWalletConnector({
-      chains,
-      options: {
-        appName: "carapace.finance"
-      }
-    }),
     new WalletConnectConnector({
       chains,
       options: {
@@ -51,6 +45,12 @@ const wagmiClient = createClient({
         rpc: {
           1: `https://arb-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`
         }
+      }
+    }),
+    new CoinbaseWalletConnector({
+      chains,
+      options: {
+        appName: "carapace.finance"
       }
     })
   ],
@@ -69,6 +69,7 @@ function App({ Component, pageProps }) {
     <ThemeProvider>
       <CssBaseline />
       <WagmiConfig client={wagmiClient}>
+        {/* TODO: Relpce web3react to wagmi */}
         <Web3ReactProvider getLibrary={getWeb3Library}>
           <ApplicationContextProvider>
             <ProtectionPoolContextProvider>

@@ -20,13 +20,13 @@ const Header = () => {
 
   return (
     <nav className="header bg-white h-16 px-2 sm:px-4 fixed w-full z-30 top-0 left-0 shadow-md">
-      <div className="container flex flex-wrap items-center justify-between mx-auto">
+      <div className="container flex flex-wrap items-center justify-between mx-auto h-16">
         <Link className="shrink-0" href="/">
           <Image
             src={assets.headerLogo.src}
             alt="carapace"
-            height="36"
-            width="160"
+            height="28"
+            width="118"
             unoptimized
           />
         </Link>
@@ -87,7 +87,7 @@ const Header = () => {
                       : ""
                   } hover:text-customBlue block py-2 pl-3 pr-4 rounded md:bg-transparent md:p-0`}
                 >
-                  <h5>{item.title}</h5>
+                  <h4>{item.title}</h4>
                 </Link>
               </li>
             ))}
