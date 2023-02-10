@@ -52,7 +52,7 @@ const ConnectWalletPopUp = ({ open, onClose }: Props) => {
                 disabled={isMounted ? !x.ready : false}
                 key={x.id}
                 onClick={() => connectWallet(x)}
-                className="btn-outline border-customPopupGrey flex w-full items-center justify-between rounded-full py-2 px-6 mb-3 disabled:cursor-not-allowed disabled:opacity-70"
+                className="btn-outline border-customPopupGrey flex w-full items-center justify-between rounded-full py-3 px-6 mb-3 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {x.name}
                 {!x.ready && (

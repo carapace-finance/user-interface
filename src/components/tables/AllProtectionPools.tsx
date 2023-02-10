@@ -3,132 +3,138 @@ import Image from "next/image";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { useContext } from "react";
 import { useRouter } from "next/router";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable
+} from "@tanstack/react-table";
+import { Info } from "lucide-react";
+
+type ProtectionPool = {
+  name: string;
+  protocols: string;
+  APY: string;
+  totalCapital: string;
+  totalProtection: string;
+};
+
+const columnHelper = createColumnHelper<ProtectionPool>();
+
+const columns = [
+  columnHelper.accessor("name", {
+    header: () => <div className="text-left">Name</div>,
+    cell: (info) => <div style={{ minWidth: "245px" }}>{info.getValue()}</div>
+  }),
+  columnHelper.accessor("protocols", {
+    header: () => "Protocols",
+    cell: (info) => (
+      <Image
+        className="mx-auto"
+        src={info.getValue()}
+        width={24}
+        height={24}
+        alt=""
+      />
+    )
+  }),
+  columnHelper.accessor("APY", {
+    header: () => (
+      <div className="flex items-center cursor-pointer justify-end">
+        Estimated APY
+        <Tooltip
+          content="Estimated APY excluding token rewards"
+          placement="top"
+        >
+          <Info size={16} className="ml-2" />
+        </Tooltip>
+      </div>
+    ),
+    cell: (info) => <div className="text-right">{info.getValue()}</div>
+  }),
+  columnHelper.accessor("totalCapital", {
+    header: () => (
+      <div className="flex items-center cursor-pointer justify-end">
+        Total Pool Balance
+        <Tooltip
+          content="How much capital have been deposited to this pool"
+          placement="top"
+        >
+          <Info size={16} className="ml-2" />
+        </Tooltip>
+      </div>
+    ),
+    cell: (info) => <div className="text-right">{info.getValue()} USDC</div>
+  }),
+  columnHelper.accessor("totalProtection", {
+    header: () => (
+      <div className="flex items-center cursor-pointer justify-end">
+        Total Pool Protection
+        <Tooltip
+          content="How much protection have been bought by all the buyers"
+          placement="top"
+        >
+          <Info size={16} className="ml-2" />
+        </Tooltip>
+      </div>
+    ),
+    cell: (info) => <div className="text-right">{info.getValue()} USDC</div>
+  })
+];
 
 const AllProtectionPools = () => {
   const router = useRouter();
-
   const { protectionPools } = useContext(ProtectionPoolContext);
-  const handleClick = (href: string) => {
-    router.push(href);
-  };
+
+  const table = useReactTable({
+    data: protectionPools,
+    columns,
+    getCoreRowModel: getCoreRowModel()
+  });
 
   return (
-    <table className="table-fixed w-full">
-      <thead>
-        <tr className="text-left text-sm font-bold">
-          <th className="py-8 pl-8">Name</th>
-          <th className="py-8">Protocols</th>
-          <th className="py-8">
-            <div className="flex flex-row justify-start mr-4">
-              <p className="mr-4">Estimated APY</p>
-              <Tooltip
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 25 }
-                }}
-                content="Estimated APY excluding token rewards"
-                placement="top"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="#6E7191"
-                  className="w-5 h-5"
+    <div className="w-full overflow-auto">
+      <table className="w-full">
+        <thead className="font-medium text-sm text-customGrey">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  className="px-4 py-6 whitespace-nowrap"
+                  key={header.id}
+                  style={{
+                    width:
+                      header.getSize() !== 150 ? header.getSize() : undefined
+                  }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </div>
-          </th>
-          <th className="py-8">
-            <div className="flex flex-row justify-start mr-4">
-              <p className="mr-4">Total Pool Balance</p>
-              <Tooltip
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 25 }
-                }}
-                content="How much capital have been deposited to this pool"
-                placement="top"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="#6E7191"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </div>
-          </th>
-          <th className="py-8">
-            <div className="flex flex-row justify-start mr-4">
-              <p className="mr-4">Total Protection</p>
-              <Tooltip
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 25 }
-                }}
-                content="How much protection have been bought by all the buyers"
-                placement="top"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="#6E7191"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {protectionPools.map((protectionPool) => (
-          <tr
-            key={protectionPool.address}
-            onClick={() =>
-              handleClick(`/protection-pool/${protectionPool.address}`)
-            }
-            className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50"
-          >
-            <td className="py-8 pl-8">{protectionPool.name}</td>
-            <td className="py-8">
-              <Image
-                src={protectionPool.protocols}
-                width={24}
-                height={24}
-                alt=""
-              />
-            </td>
-            <td className="py-8">{protectionPool.APY}</td>
-            <td className="py-8">{protectionPool.totalCapital}&nbsp;USDC</td>
-            <td className="py-8">{protectionPool.totalProtection}&nbsp;USDC</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr
+              key={row.id}
+              className="border-customPristineWhite border-b hover:bg-customPristineWhite cursor-pointer"
+              onClick={() => router.push(`/protection-pool/${row.address}`)}
+            >
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="px-4 py-6">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

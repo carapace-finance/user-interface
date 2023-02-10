@@ -1,5 +1,4 @@
-import Image from "next/image";
-import assets from "src/assets";
+import { ArrowUpRight } from "lucide-react";
 
 const TitleAndDescriptions = (props) => {
   return (
@@ -22,13 +21,7 @@ const TitleAndDescriptions = (props) => {
           >
             <div className="flex items-center">
               <p className="font-normal text-lg leading-6">{props.button}</p>
-              <Image
-                className="ml-2"
-                src={assets.vector.src}
-                alt=""
-                height="12"
-                width="12"
-              />
+              <ArrowUpRight size={16} className="ml-1" />
             </div>
           </button>
         ) : null}

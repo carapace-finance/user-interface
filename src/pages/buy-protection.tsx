@@ -15,10 +15,8 @@ const BuyProtection = () => {
         button="Learn about buying protection"
         guideLink="https://www.carapace.finance/docs/protocol-mechanics/protection_buyers"
       />
-      <h3 className="text-left font-bold">All Lending Pools</h3>
-      <div className="h-5" />
+      <h3 className="text-left font-bold mb-7">All Lending Pools</h3>
       <div className="rounded-2xl shadow-lg shadow-gray-200">
-        <div className="h-4"></div>
         <AllLendingPools />
       </div>
     </main>

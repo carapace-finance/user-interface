@@ -1,23 +1,11 @@
-import { Tooltip } from "@material-tailwind/react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 const TitleAndDescriptions = dynamic(
   () => import("@components/TitleAndDescriptions"),
   { ssr: false }
 );
 import AllProtectionPools from "@components/tables/AllProtectionPools";
-import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
-import { useContext } from "react";
-import { useRouter } from "next/router";
 
 const SellProtection = () => {
-  const router = useRouter();
-
-  const { protectionPools } = useContext(ProtectionPoolContext);
-  const handleClick = (href: string) => {
-    router.push(href);
-  };
-
   return (
     <main className="container mx-auto px-4">
       <TitleAndDescriptions
