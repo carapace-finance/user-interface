@@ -35,7 +35,7 @@ const Header = () => {
             <>
               <div className="flex items-center border border-customGrey py-1 px-2 rounded-md mr-2 text-sm h-8">
                 <ChainLogo chainId={chain.id} />
-                <span className="hidden md:flex mr-2">{chain.name}</span>
+                <span className="hidden md:flex md:mx-1">{chain.name}</span>
               </div>
               <button
                 type="button"

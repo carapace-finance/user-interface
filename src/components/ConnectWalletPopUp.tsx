@@ -35,7 +35,7 @@ const ConnectWalletPopUp = ({ open, onClose }: Props) => {
       }}
     >
       <DialogContent>
-        <div className="px-8">
+        <div className="px-4 md:px-8">
           <Image
             src={assets.footerLogo.src}
             alt="carapace"
@@ -46,7 +46,7 @@ const ConnectWalletPopUp = ({ open, onClose }: Props) => {
           <h2 className="pt-6 pb-8 font-medium text-2xl text-center">
             Connect Wallet
           </h2>
-          <div className="pb-8 px-4">
+          <div className="pb-8 md:px-4">
             {connectors.map((x: any) => (
               <button
                 disabled={isMounted ? !x.ready : false}
