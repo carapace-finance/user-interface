@@ -9,7 +9,7 @@ import assets from "../assets";
 
 import Account from "@components/Account";
 import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
-import { Playground } from "@utils/forked/types";
+import { Playground } from "@utils/playground/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import ErrorPopup from "./ErrorPopup";
