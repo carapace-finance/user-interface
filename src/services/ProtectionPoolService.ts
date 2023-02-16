@@ -10,7 +10,7 @@ import {
   approveAndDeposit,
   transferApproveAndBuyProtection,
   getLendingPoolName
-} from "@utils/forked/playground";
+} from "@utils/playground/playground";
 import {
   LendingPool,
   ProtectionInfo,
