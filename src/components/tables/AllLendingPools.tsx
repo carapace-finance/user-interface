@@ -141,9 +141,10 @@ const AllLendingPools = () => {
             <tr
               key={row.id}
               className="border-customPristineWhite border-b hover:bg-customPristineWhite cursor-pointer"
-              /* TODO: fix
-              // @ts-ignore */
-              onClick={() => router.push(`/lending-pool/${row.address}`)}
+              onClick={() =>
+                // @ts-ignore */
+                router.push(`/lending-pool/${row.original.address}`)
+              }
             >
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id} className="px-4 py-6">
