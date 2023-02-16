@@ -15,7 +15,7 @@ import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
 import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import numeral from "numeral";
-import { getLendingPoolName } from "@utils/forked/playground";
+import { getLendingPoolName } from "@utils/playground/playground";
 
 import assets from "src/assets";
 import { CircularProgress, Skeleton } from "@mui/material";

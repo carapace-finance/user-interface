@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { deployToFork } from "@utils/forked/tenderly";
-import { preparePlayground } from "@utils/forked/playground";
-import { Playground } from "@utils/forked/types";
+import { deployToFork } from "@utils/playground/tenderly";
+import { preparePlayground } from "@utils/playground/playground";
+import { Playground } from "@utils/playground/types";
 import {
   addAvailablePlaygroundId,
   addUsedPlaygroundId,
