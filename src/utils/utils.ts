@@ -36,3 +36,15 @@ export const shortAddress = (
       )}`
     : "";
 };
+
+export const getDecimalMulString = (
+  val: string | BigNumber,
+  decimals: number
+): string =>
+  BigNumber.from(val).mul(BigNumber.from(10).pow(decimals)).toString();
+
+export const getDecimalDivString = (
+  val: string | BigNumber,
+  decimals: number
+): string =>
+  BigNumber.from(val).div(BigNumber.from(10).pow(decimals)).toString();

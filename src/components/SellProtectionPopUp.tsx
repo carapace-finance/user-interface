@@ -13,20 +13,22 @@ import numeral from "numeral";
 
 import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
-import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+// import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
 import { LoadingButton } from "@mui/lab";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
+import useDeposit from "@hooks/useDeposit";
 
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
-  const { protectionPoolService } = useContext(ApplicationContext);
+  // const { protectionPoolService } = useContext(ApplicationContext);
   const { open, onClose, amount, protectionPoolAddress, estimatedAPY } = props;
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
+  const { writeFn, waitFn } = useDeposit(amount, protectionPoolAddress);
 
   const router = useRouter();
 
@@ -53,30 +55,38 @@ const SellProtectionPopUp = (props) => {
   const sellProtection = async () => {
     setLoading(true);
     setError("");
-
     try {
-      const tx = await protectionPoolService.deposit(
-        protectionPoolAddress,
-        convertNumberToUSDC(parseFloat(amount))
+      writeFn.write();
+      setSuccessMessage(
+        `You successfully deposited ${amount} USDC in to the protection pool!`
       );
-      const receipt = await tx.wait();
-      if (receipt.status === 1) {
-        console.log("The deposit transaction was successful");
-        // Show success message for 2 seconds before closing popup
-        setSuccessMessage(
-          `You successfully deposited ${amount} USDC in to the protection pool!`
-        );
-        setTimeout(() => {
-          onClose();
-          router.push("/portfolio");
-          setLoading(false);
-        }, 2000);
-      } else {
-        onError(receipt);
-      }
     } catch (e) {
       onError(e);
     }
+
+    // try {
+    //   const tx = await protectionPoolService.deposit(
+    //     protectionPoolAddress,
+    //     convertNumberToUSDC(parseFloat(amount))
+    //   );
+    //   const receipt = await tx.wait();
+    //   if (receipt.status === 1) {
+    //     console.log("The deposit transaction was successful");
+    //     // Show success message for 2 seconds before closing popup
+    //     setSuccessMessage(
+    //       `You successfully deposited ${amount} USDC in to the protection pool!`
+    //     );
+    //     setTimeout(() => {
+    //       onClose();
+    //       router.push("/portfolio");
+    //       setLoading(false);
+    //     }, 2000);
+    //   } else {
+    //     onError(receipt);
+    //   }
+    // } catch (e) {
+    //   onError(e);
+    // }
   };
 
   return (
@@ -127,7 +137,10 @@ const SellProtectionPopUp = (props) => {
             <div className="text-gray-500 text-sm flex items-center">
               Expected APY:
               <div className="pl-2">
-                <Tooltip content="Estimated APY for protection sellers." placement="top">
+                <Tooltip
+                  content="Estimated APY for protection sellers."
+                  placement="top"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -151,7 +164,10 @@ const SellProtectionPopUp = (props) => {
             <div className="text-gray-500 text-sm flex items-center">
               Expected Network Fees:
               <div className="pl-2">
-                <Tooltip content="Fees you pay to the Ethereum network" placement="top">
+                <Tooltip
+                  content="Fees you pay to the Ethereum network"
+                  placement="top"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -180,12 +196,7 @@ const SellProtectionPopUp = (props) => {
               loading ? "disabled:opacity-90" : "disabled:opacity-50"
             } disabled:cursor-not-allowed`}
             onClick={sellProtection}
-            disabled={
-              loading ||
-              !protectionPoolService ||
-              !protectionPoolAddress ||
-              !amount
-            }
+            disabled={loading || !protectionPoolAddress || !amount}
           >
             {loading ? (
               <LoadingButton loading={loading}>
@@ -193,7 +204,7 @@ const SellProtectionPopUp = (props) => {
                 <CircularProgress color="secondary" size={16} />
               </LoadingButton>
             ) : (
-              "Confirm Deposit"
+              <p>Confirm Deposit</p>
             )}
           </button>
           <div className="flex"></div>

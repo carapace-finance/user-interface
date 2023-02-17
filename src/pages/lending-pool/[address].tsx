@@ -10,6 +10,7 @@ import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import TitleAndDescriptions from "@components/TitleAndDescriptions";
 import assets from "src/assets";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import { ArrowUpRight } from "lucide-react";
 
 const LendingPool = () => {
   const router = useRouter();
@@ -90,17 +91,18 @@ const LendingPool = () => {
             />
             <a
               target="_blank"
-              rel="noreferrer"
+              rel="noreferrer noopener"
               href={`https://etherscan.io/address/${lendingPoolAddress}`}
               className=""
             >
-              <Image
+              <ArrowUpRight size={16} className="ml-1" />
+              {/* <Image
                 src={assets.grayVector}
                 width={20}
                 height={20}
                 alt=""
                 className="mr-6"
-              />
+              /> */}
             </a>
           </div>
         </div>

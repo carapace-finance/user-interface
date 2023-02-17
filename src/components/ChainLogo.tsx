@@ -19,7 +19,9 @@ export const getChainName = (chainId: number): string =>
 const ChainIcon = ({ chainId, size }: { chainId: number; size: number }) => {
   const chain = ChainList.find((chain: any) => chain.chainId === chainId);
 
-  return <Image src={chain.img} alt={chain.name} width={size} height={size} />;
+  return chain ? (
+    <Image src={chain.img} alt={chain.name} width={size} height={size} />
+  ) : null;
 };
 
 export default function ChainLogo({

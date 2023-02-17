@@ -42,9 +42,9 @@ export type UserContextType = {
   user: User;
   setUser: (user: User) => void;
   updateUserUsdcBalance: () => Promise<BigNumber>;
-  buyProtectionLoading : boolean;
+  buyProtectionLoading: boolean;
   depositAmountLoading: boolean;
-  requestAmountLoading: boolean
+  requestAmountLoading: boolean;
 };
 
 export interface ProtectionPool {
@@ -151,3 +151,5 @@ export interface WithdrawalRequestInput {
 export interface WithdrawalInput {
   amount: string;
 }
+
+export type Address = `0x${string}`;

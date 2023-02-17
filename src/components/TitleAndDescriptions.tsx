@@ -1,12 +1,24 @@
 import { ArrowUpRight } from "lucide-react";
 
-const TitleAndDescriptions = (props) => {
+type Props = {
+  title: string | JSX.Element;
+  descriptions?: string;
+  buttonExist?: boolean;
+  guideLink?: string;
+  button?: string;
+};
+
+const TitleAndDescriptions = (props: Props) => {
   return (
     <div className="mb-16">
       <div>
-        <h1 className="text-left font-bold leading-12 text-4xl mb-6">
-          {props.title}
-        </h1>
+        {typeof props.title === "string" || props.title instanceof String ? (
+          <h1 className="text-left font-bold leading-12 text-4xl mb-6">
+            {props.title}
+          </h1>
+        ) : (
+          props.title
+        )}
         <p className="text-left font-normal text-xl leading-6">
           {props.descriptions}
         </p>
