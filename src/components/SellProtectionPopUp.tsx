@@ -27,10 +27,10 @@ const SellProtectionPopUp = (props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
-  // const { prepareFn, writeFn, waitFn } = useDeposit(
-  //   amount,
-  //   protectionPoolAddress
-  // );
+  const { prepareFn, writeFn, waitFn } = useDeposit(
+    amount,
+    protectionPoolAddress
+  );
 
   const router = useRouter();
 
@@ -58,7 +58,7 @@ const SellProtectionPopUp = (props) => {
     setLoading(true);
     setError("");
     try {
-      writeFn.write();
+      await writeFn.writeAsync();
       setSuccessMessage(
         `You successfully deposited ${amount} USDC in to the protection pool!`
       );
