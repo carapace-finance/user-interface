@@ -1,35 +1,39 @@
-"use client";
 import {
   useContractWrite,
   usePrepareContractWrite,
   useWaitForTransaction,
-  useAccount
+  useAccount,
+  useNetwork
 } from "wagmi";
+import useDebounce from "@hooks/useDebounce";
 import { BigNumber } from "@ethersproject/bignumber";
-import { getDecimalMulString } from "@utils/utils";
-import { Address } from "abitype";
+import { getDecimalMul } from "@utils/utils";
+import type { Address } from "abitype";
 import ProtectionPoolABI from "@contracts/mainnet/abi/ProtectionPool.json";
 
-export default function useDeposit(
-  amount: string,
-  protectionPoolAddress: Address
-) {
-  const _amount = getDecimalMulString(amount, 6);
+const useDeposit = (amount: string, protectionPoolAddress: Address) => {
+  const { chain } = useNetwork();
+  const _amount = getDecimalMul(amount, 6);
   const { address } = useAccount();
+  const args: [BigNumber, Address] = useDebounce([_amount, address]);
 
-  const { config } = usePrepareContractWrite({
+  const prepareFn = usePrepareContractWrite({
     address: protectionPoolAddress,
     abi: ProtectionPoolABI,
     functionName: "deposit",
-    args: [_amount, address],
+    args,
+    chainId: chain.id,
     enabled: !!protectionPoolAddress && BigNumber.from(amount).gt(0)
   });
 
-  const writeFn = useContractWrite(config);
+  const writeFn = useContractWrite(prepareFn.config);
 
   const waitFn = useWaitForTransaction({
+    chainId: chain.id,
     hash: writeFn?.data?.hash
   });
 
-  return { writeFn, waitFn };
-}
+  return { prepareFn, writeFn, waitFn };
+};
+
+export default useDeposit;

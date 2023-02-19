@@ -37,14 +37,22 @@ export const shortAddress = (
     : "";
 };
 
+export const getDecimalMul = (
+  val: string | BigNumber,
+  decimals: number
+): BigNumber => BigNumber.from(val).mul(BigNumber.from(10).pow(decimals));
+
 export const getDecimalMulString = (
   val: string | BigNumber,
   decimals: number
-): string =>
-  BigNumber.from(val).mul(BigNumber.from(10).pow(decimals)).toString();
+): string => getDecimalMul(val, decimals).toString();
+
+export const getDecimalDiv = (
+  val: string | BigNumber,
+  decimals: number
+): BigNumber => BigNumber.from(val).div(BigNumber.from(10).pow(decimals));
 
 export const getDecimalDivString = (
   val: string | BigNumber,
   decimals: number
-): string =>
-  BigNumber.from(val).div(BigNumber.from(10).pow(decimals)).toString();
+): string => getDecimalDivString(val, decimals).toString();
