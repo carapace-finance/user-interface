@@ -9,13 +9,15 @@ import { shortAddress } from "@utils/utils";
 import ConnectWalletPopup from "@components/ConnectWalletPopUp";
 import ChainLogo from "@components/ChainLogo";
 import { HEADER_LINKS } from "@constants/index";
+import { useAtom } from "jotai";
+import { connectModalAtom } from "../atoms";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
   const { chain } = useNetwork();
   const { disconnect } = useDisconnect();
   const router = useRouter();
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useAtom(connectModalAtom);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   return (
