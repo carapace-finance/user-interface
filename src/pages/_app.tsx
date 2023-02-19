@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import Router from "next/router";
 import * as Fathom from "fathom-client";
 import { Web3ReactProvider } from "@web3-react/core";
-import { WagmiConfig, configureChains, createClient, mainnet } from "wagmi";
+import { WagmiConfig, configureChains, createClient } from "wagmi";
+import { mainnet, localhost } from "wagmi/chains";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { alchemyProvider } from "wagmi/providers/alchemy";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@material-tailwind/react";
 import getWeb3Library from "../utils/mainnet/providers";
@@ -30,10 +32,19 @@ Router.events.on("routeChangeComplete", (as, routeProps) => {
 });
 
 // wagmi config
+// TODO: remove localhost config for production
 const { chains, provider } = configureChains(
-  [mainnet],
-  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string })]
+  [mainnet, localhost],
+  [
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string }),
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http: localhost.rpcUrls.default[0]
+      })
+    })
+  ]
 );
+
 const wagmiClient = createClient({
   autoConnect: true,
   connectors: [
