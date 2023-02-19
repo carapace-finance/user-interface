@@ -31,9 +31,8 @@ Router.events.on("routeChangeComplete", (as, routeProps) => {
   }
 });
 
-// wagmi config
-// TODO: remove localhost config for production
-const { chains, provider } = configureChains(
+// wagmi config for dev
+const { chains: devChains, provider: devProvider } = configureChains(
   [mainnet, localhost],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string }),
@@ -44,13 +43,20 @@ const { chains, provider } = configureChains(
     })
   ]
 );
+// wagmi config for prod
+const { chains, provider } = configureChains(
+  [mainnet],
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string })]
+);
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors: [
-    new MetaMaskConnector({ chains }),
+    new MetaMaskConnector({
+      chains: process.env.NODE_ENV === "development" ? devChains : chains
+    }),
     new WalletConnectConnector({
-      chains,
+      chains: process.env.NODE_ENV === "development" ? devChains : chains,
       options: {
         qrcode: true,
         rpc: {
@@ -59,13 +65,13 @@ const wagmiClient = createClient({
       }
     }),
     new CoinbaseWalletConnector({
-      chains,
+      chains: process.env.NODE_ENV === "development" ? devChains : chains,
       options: {
         appName: "carapace.finance"
       }
     })
   ],
-  provider
+  provider: process.env.NODE_ENV === "development" ? devProvider : provider
 });
 
 function App({ Component, pageProps }) {
