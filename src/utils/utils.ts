@@ -1,5 +1,7 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber, FixedNumber } from "@ethersproject/bignumber";
 import { USDC_NUM_OF_DECIMALS } from "./usdc";
+import { ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export const SECONDS_PER_DAY = 86400;
 
@@ -47,6 +49,9 @@ export const getDecimalMulString = (
   decimals: number
 ): string => getDecimalMul(val, decimals).toString();
 
+export const getDecimalMulFormatted = (val: BigNumber, decimals: number) =>
+  getDecimalMul(val, decimals).toBigInt().toLocaleString();
+
 export const getDecimalDiv = (
   val: string | BigNumber,
   decimals: number
@@ -56,3 +61,12 @@ export const getDecimalDivString = (
   val: string | BigNumber,
   decimals: number
 ): string => getDecimalDivString(val, decimals).toString();
+
+export const getDecimalDivFormatted = (
+  val: string | BigNumber,
+  decimals: number
+): string => getDecimalDiv(val, decimals).toBigInt().toLocaleString();
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}

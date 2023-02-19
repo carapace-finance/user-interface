@@ -22,14 +22,14 @@ const useDeposit = (amount: string, protectionPoolAddress: Address) => {
     abi: ProtectionPoolABI,
     functionName: "deposit",
     args,
-    chainId: chain.id,
-    enabled: !!protectionPoolAddress && BigNumber.from(amount).gt(0)
+    chainId: chain?.id,
+    enabled: !!chain && !!protectionPoolAddress && BigNumber.from(amount).gt(0)
   });
 
   const writeFn = useContractWrite(prepareFn.config);
 
   const waitFn = useWaitForTransaction({
-    chainId: chain.id,
+    chainId: chain?.id,
     hash: writeFn?.data?.hash
   });
 

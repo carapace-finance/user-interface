@@ -1,24 +1,19 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-// import { UserContext } from "@contexts/UserContextProvider";
 import { Tooltip } from "@material-tailwind/react";
 // import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
-import numeral from "numeral";
+// import numeral from "numeral";
 import { SellProtectionInput } from "@type/types";
-// import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { Info } from "lucide-react";
-import { useAccount } from "wagmi";
 import useUsdcBalance from "@hooks/useUsdcBalance";
-import useEthBalance from "@hooks/useEthBalance";
+import SubmitButton from "@components/SubmitButton";
+import { USDC_ADDRESS } from "@/utils/usdc";
 
 export default function SellProtectionCard(props) {
-  const { isConnected } = useAccount();
   const { estimatedAPY } = props;
-  const { data: usdcBalance, isLoading: isLoadingUsdc } = useUsdcBalance();
-  const ethBalance = useEthBalance();
   const {
     register,
     handleSubmit,
@@ -29,20 +24,12 @@ export default function SellProtectionCard(props) {
 
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  // const { updateUserUsdcBalance } = useContext(UserContext);
-  // const { provider } = useContext(ApplicationContext);
-  const protectionPoolAddress = router.query.address;
+  const protectionPoolAddress: any = router.query.address;
+  const { data: usdcBalance, isLoading: isLoadingUsdc } = useUsdcBalance();
 
   const setMaxAmount = async () => {
     setValue("depositAmount", usdcBalance.toString());
   };
-
-  // useEffect(() => {
-  //   (async () => {
-  //     provider &&
-  //       setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance()));
-  //   })();
-  // }, [isOpen]);
 
   const onSubmit = () => {
     setIsOpen(true);
@@ -76,7 +63,7 @@ export default function SellProtectionCard(props) {
           type="number"
           {...register("depositAmount", {
             min: 1,
-            max: usdcBalance?.value.toNumber(),
+            max: usdcBalance?.value?.toNumber() ?? 1,
             required: true
           })}
           onWheel={(e: any) => e.target.blur()}
@@ -105,15 +92,15 @@ export default function SellProtectionCard(props) {
           }}
         /> */}
         <div className="text-right">
-          Balance: {usdcBalance?.formatted}&nbsp;USDC
+          Balance: {isLoadingUsdc ? "..." : usdcBalance?.formatted}
+          &nbsp;USDC
         </div>
-        <button
-          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          type="submit"
-          disabled={!protectionPoolAddress} // todo: add the leverage ratio limit
-        >
-          Deposit
-        </button>
+        <SubmitButton
+          targetAddress={USDC_ADDRESS}
+          spenderAddress={protectionPoolAddress}
+          allowanceVal={getValues("depositAmount")}
+          needApprove
+        />
       </form>
       <SellProtectionPopUp
         open={isOpen}
@@ -121,7 +108,7 @@ export default function SellProtectionCard(props) {
         amount={getValues("depositAmount")}
         protectionPoolAddress={protectionPoolAddress}
         estimatedAPY={estimatedAPY}
-      ></SellProtectionPopUp>
+      />
     </div>
   );
 }

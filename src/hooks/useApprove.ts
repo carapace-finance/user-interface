@@ -22,7 +22,9 @@ const useApprove: any = (
     spender,
     BigNumber.from(maxAmount)
   ]);
-  const enabled: boolean = useDebounce(!!targetAddress && !!owner && !!spender);
+  const enabled: boolean = useDebounce(
+    !!chain && !!targetAddress && !!owner && !!spender
+  );
 
   const prepareFn = usePrepareContractWrite({
     address: targetAddress,
@@ -31,7 +33,7 @@ const useApprove: any = (
     overrides: { from: owner },
     args,
     enabled,
-    chainId: chain.id,
+    chainId: chain?.id,
     onError(error) {
       console.log("useApprove prepare error", error);
     }
@@ -48,7 +50,7 @@ const useApprove: any = (
   });
 
   const waitFn = useWaitForTransaction({
-    chainId: chain.id,
+    chainId: chain?.id,
     hash: writeFn.data?.hash
   });
 

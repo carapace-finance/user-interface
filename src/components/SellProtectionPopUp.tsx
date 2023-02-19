@@ -11,14 +11,13 @@ import {
 } from "@mui/material";
 import numeral from "numeral";
 
-import SuccessPopup from "./SuccessPopup";
-import ErrorPopup from "@components/ErrorPopup";
-// import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
+import SuccessPopup from "@/components/SuccessPopup";
+import ErrorPopup from "@/components/ErrorPopup";
+import { convertNumberToUSDC, USDC_FORMAT } from "@/utils/usdc";
 import { LoadingButton } from "@mui/lab";
 import { Tooltip } from "@material-tailwind/react";
-import assets from "src/assets";
-import useDeposit from "@hooks/useDeposit";
+import assets from "@/assets";
+import useDeposit from "@/hooks/useDeposit";
 
 // Presentational component for handling trades
 const SellProtectionPopUp = (props) => {
@@ -28,7 +27,10 @@ const SellProtectionPopUp = (props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
-  const { writeFn, waitFn } = useDeposit(amount, protectionPoolAddress);
+  // const { prepareFn, writeFn, waitFn } = useDeposit(
+  //   amount,
+  //   protectionPoolAddress
+  // );
 
   const router = useRouter();
 

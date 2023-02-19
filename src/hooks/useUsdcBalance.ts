@@ -1,17 +1,21 @@
-"use client";
-import { useBalance, useAccount } from "wagmi";
-import { Address } from "abitype";
+import { useBalance, useAccount, useNetwork } from "wagmi";
+import type { Address } from "abitype";
+import { USDC_ADDRESS } from "@/utils/usdc";
 
-export default function useUsdcBalance(owner?: Address) {
+const useUsdcBalance = (owner?: Address) => {
   const { address } = useAccount();
+  const { chain } = useNetwork();
 
-  const res = useBalance({
-    address: owner ?? address,
-    token: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    watch: true,
+  const balance = useBalance({
+    address: address,
+    token: USDC_ADDRESS,
+    chainId: chain?.id,
     scopeKey: "usdcBalance",
-    enabled: !!owner || !!address
+    enabled: !!address
   });
 
-  return res;
-}
+  console.log("balance::", balance);
+  return balance;
+};
+
+export default useUsdcBalance;

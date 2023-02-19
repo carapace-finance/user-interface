@@ -1,5 +1,5 @@
 import { useContractRead, erc20ABI, useNetwork } from "wagmi";
-import useDebounce from "@hooks/useDebounce";
+import useDebounce from "@/hooks/useDebounce";
 import type { Address } from "abitype";
 
 const useAllowance = (
@@ -10,7 +10,7 @@ const useAllowance = (
   const { chain } = useNetwork();
   const args: [Address, Address] = useDebounce([owner, spender], 300);
   const enabled: boolean = useDebounce(
-    !!targetAddress && !!owner && !!spender,
+    !!chain && !!targetAddress && !!owner && !!spender,
     300
   );
 
@@ -20,7 +20,8 @@ const useAllowance = (
     functionName: "allowance",
     args,
     enabled,
-    chainId: chain.id,
+    scopeKey: `useAllowance-${targetAddress}`,
+    chainId: chain?.id,
     onError(error: any) {
       console.log("allowance error", error);
     }
@@ -28,7 +29,6 @@ const useAllowance = (
 
   return {
     ...readFn,
-    data: readFn?.data,
     isLoaded: readFn.isFetched && !readFn.isFetching && readFn.isSuccess
   };
 };

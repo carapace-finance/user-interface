@@ -1,7 +1,6 @@
-"use client";
 import { useEffect, useState } from "react";
 import { useProvider, useAccount } from "wagmi";
-import { Address } from "abitype";
+import type { Address } from "abitype";
 import { ethers } from "ethers";
 
 export default function useEthBalance(owner?: Address) {
