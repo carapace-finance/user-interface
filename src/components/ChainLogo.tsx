@@ -1,7 +1,7 @@
 import Image from "next/image";
 import ImgEthereum from "../assets/chains/ethereum.svg";
 import ImgPolygon from "../assets/chains/polygon.svg";
-import { SmartphoneCharging } from "lucide-react";
+import { Link } from "lucide-react";
 
 type Props = {
   chainId: number;
@@ -23,7 +23,7 @@ const ChainIcon = ({ chainId, size }: { chainId: number; size: number }) => {
   return chain ? (
     <Image src={chain.img} alt={chain.name} width={size} height={size} />
   ) : (
-    <SmartphoneCharging size={18} className="text-customGrey" />
+    <Link size={14} className="text-customGrey" />
   );
 };
 

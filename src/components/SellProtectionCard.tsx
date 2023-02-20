@@ -1,16 +1,15 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Tooltip } from "@material-tailwind/react";
-// import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
-// import numeral from "numeral";
 import { SellProtectionInput } from "@type/types";
 import { Info } from "lucide-react";
 import useUsdcBalance from "@hooks/useUsdcBalance";
 import SubmitButton from "@components/SubmitButton";
 import { USDC_ADDRESS } from "@/utils/usdc";
+import { getDecimalDivFormatted } from "@/utils/utils";
 
 export default function SellProtectionCard(props) {
   const { estimatedAPY } = props;
@@ -92,10 +91,14 @@ export default function SellProtectionCard(props) {
           }}
         /> */}
         <div className="text-right">
-          Balance: {isLoadingUsdc ? "..." : usdcBalance?.formatted}
+          Balance:&nbsp;
+          {isLoadingUsdc
+            ? "..."
+            : getDecimalDivFormatted(usdcBalance?.value, 6)}
           &nbsp;USDC
         </div>
         <SubmitButton
+          buttonText="Deposit"
           targetAddress={USDC_ADDRESS}
           spenderAddress={protectionPoolAddress}
           allowanceVal={getValues("depositAmount")}

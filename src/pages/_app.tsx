@@ -9,20 +9,21 @@ import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { SnackbarProvider } from "notistack";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@material-tailwind/react";
-import getWeb3Library from "../utils/mainnet/providers";
-import "@style/main.css";
+import getWeb3Library from "@/utils/mainnet/providers";
+import "@/style/main.css";
 
 import dynamic from "next/dynamic";
-import { ApplicationContextProvider } from "@contexts/ApplicationContextProvider";
-import { BondContextProvider } from "@contexts/BondContextProvider";
-import { LendingPoolContextProvider } from "@contexts/LendingPoolContextProvider";
-import { ProtectionPoolContextProvider } from "@contexts/ProtectionPoolContextProvider";
-import { UserContextProvider } from "@contexts/UserContextProvider";
+import { ApplicationContextProvider } from "@/contexts/ApplicationContextProvider";
+import { BondContextProvider } from "@/contexts/BondContextProvider";
+import { LendingPoolContextProvider } from "@/contexts/LendingPoolContextProvider";
+import { ProtectionPoolContextProvider } from "@/contexts/ProtectionPoolContextProvider";
+import { UserContextProvider } from "@/contexts/UserContextProvider";
 
-const Header = dynamic(() => import("@components/Header"), { ssr: false });
-const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
+const Header = dynamic(() => import("@/components/Header"), { ssr: false });
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
 
 // Record a pageview when route changes
 Router.events.on("routeChangeComplete", (as, routeProps) => {
@@ -84,25 +85,35 @@ function App({ Component, pageProps }) {
 
   return (
     <ThemeProvider>
-      <CssBaseline />
-      <WagmiConfig client={wagmiClient}>
-        {/* TODO: Relpce web3react to wagmi */}
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center"
+        }}
+        maxSnack={3}
+        dense
+        autoHideDuration={6000}
+      >
+        <CssBaseline />
         <Web3ReactProvider getLibrary={getWeb3Library}>
-          <ApplicationContextProvider>
-            <ProtectionPoolContextProvider>
-              <LendingPoolContextProvider>
-                <BondContextProvider>
-                  <UserContextProvider>
-                    <Header />
-                    <Component {...pageProps} />
-                    <Footer />
-                  </UserContextProvider>
-                </BondContextProvider>
-              </LendingPoolContextProvider>
-            </ProtectionPoolContextProvider>
-          </ApplicationContextProvider>
+          <WagmiConfig client={wagmiClient}>
+            {/* TODO: Relpce web3react to wagmi */}
+            <ApplicationContextProvider>
+              <ProtectionPoolContextProvider>
+                <LendingPoolContextProvider>
+                  <BondContextProvider>
+                    <UserContextProvider>
+                      <Header />
+                      <Component {...pageProps} />
+                      <Footer />
+                    </UserContextProvider>
+                  </BondContextProvider>
+                </LendingPoolContextProvider>
+              </ProtectionPoolContextProvider>
+            </ApplicationContextProvider>
+          </WagmiConfig>
         </Web3ReactProvider>
-      </WagmiConfig>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }

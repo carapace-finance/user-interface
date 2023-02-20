@@ -1,23 +1,27 @@
 "use client";
-import React from "react";
-import useAllowance from "@hooks/useAllowance";
-import useApprove from "@hooks/useApprove";
+import { useState, useEffect } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useSetAtom } from "jotai";
-import { connectModalAtom } from "@/atoms";
-import { cn } from "@utils/utils";
 import { useAccount } from "wagmi";
 import type { Address } from "abitype";
+import { connectModalAtom } from "@/atoms";
+import useAllowance from "@/hooks/useAllowance";
+import Spinner from "@/components/Spinner";
+import useApprove from "@/hooks/useApprove";
+import { cn } from "@/utils/utils";
+import { useSnackbar } from "notistack";
 
 type Props = {
+  buttonText: string;
+  allowanceVal?: string;
+  needApprove?: boolean;
   targetAddress?: Address;
   spenderAddress?: Address;
-  needApprove?: boolean;
   className?: string;
-  allowanceVal?: string;
 };
 
 export default function ApproveSubmitButton({
+  buttonText,
   needApprove = false,
   targetAddress,
   spenderAddress,
@@ -27,15 +31,33 @@ export default function ApproveSubmitButton({
 }: Props) {
   const { isConnected, address } = useAccount();
   const setModalOpen = useSetAtom(connectModalAtom);
+  const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
 
   const ApproveButton = () => {
     const allowance = useAllowance(targetAddress, address, spenderAddress);
     const approve = useApprove(targetAddress, address, spenderAddress);
 
     const handleApprove = async () => {
-      console.log("handleApprove", approve);
-      await approve.writeFn?.writeAsync();
+      try {
+        setLoading(true);
+        await approve.writeFn?.writeAsync();
+      } catch (e) {
+        setLoading(false);
+        enqueueSnackbar(e.message, {
+          variant: "error"
+        });
+      }
     };
+
+    useEffect(() => {
+      if (approve.waitFn.isSuccess) {
+        setLoading(false);
+        enqueueSnackbar("Approved", {
+          variant: "success"
+        });
+      }
+    }, [approve.waitFn.isSuccess]);
 
     return (
       <>
@@ -51,7 +73,7 @@ export default function ApproveSubmitButton({
               type="submit"
               disabled={!targetAddress} // todo: add the leverage ratio limit
             >
-              Deposit
+              {buttonText}
             </button>
           ) : (
             <button
@@ -60,10 +82,10 @@ export default function ApproveSubmitButton({
                 className
               )}
               type="button"
-              disabled={!targetAddress}
+              disabled={loading || !targetAddress}
               onClick={() => handleApprove()}
             >
-              Approve
+              {loading ? <Spinner /> : <span>Approve</span>}
             </button>
           )
         ) : (
@@ -93,9 +115,9 @@ export default function ApproveSubmitButton({
             )}
             {...props}
             type="submit"
-            disabled={!targetAddress} // todo: add the leverage ratio limit
+            disabled={!targetAddress}
           >
-            Deposit
+            {buttonText}
           </button>
         ) : (
           <button

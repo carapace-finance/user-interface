@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import {
-  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -10,85 +10,65 @@ import {
   Typography
 } from "@mui/material";
 import numeral from "numeral";
-
-import SuccessPopup from "@/components/SuccessPopup";
-import ErrorPopup from "@/components/ErrorPopup";
+import { useSnackbar } from "notistack";
 import { convertNumberToUSDC, USDC_FORMAT } from "@/utils/usdc";
-import { LoadingButton } from "@mui/lab";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "@/assets";
 import useDeposit from "@/hooks/useDeposit";
+import Spinner from "@/components/Spinner";
+import type { Address } from "abitype";
+
+type Props = {
+  open: boolean;
+  onClose: () => void;
+  amount: string;
+  protectionPoolAddress: Address;
+  estimatedAPY: string;
+};
 
 // Presentational component for handling trades
-const SellProtectionPopUp = (props) => {
-  // const { protectionPoolService } = useContext(ApplicationContext);
-  const { open, onClose, amount, protectionPoolAddress, estimatedAPY } = props;
-  const [successMessage, setSuccessMessage] = useState("");
-  const [error, setError] = useState("");
+const SellProtectionPopUp = ({
+  open,
+  onClose,
+  amount,
+  protectionPoolAddress,
+  estimatedAPY
+}: Props) => {
   const [loading, setLoading] = useState(false);
-  const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78);
+  const [expectedNetworkFee, setExpectedNetworkFee] = useState(5.78); // TODO: implement this
   const { prepareFn, writeFn, waitFn } = useDeposit(
     amount,
     protectionPoolAddress
   );
-
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
 
-  const reset = () => {
-    setSuccessMessage("");
-    setError("");
-    setLoading(false);
-  };
-
-  useEffect(reset, [open]);
-
-  const onError = (e) => {
-    if (e) {
-      console.log("Error: ", e);
+  useEffect(() => {
+    // watch tx confirmation
+    if (waitFn.isSuccess) {
+      setLoading(false);
+      enqueueSnackbar(
+        `You successfully deposited ${amount} USDC in to the protection pool!`,
+        {
+          variant: "success"
+        }
+      );
     }
-    console.log("The deposit transaction failed");
-    setError("Failed to sell protection...");
-    setTimeout(() => {
-      reset();
-    }, 2000);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [waitFn.isSuccess]);
 
   // Function passed into 'onClick' of 'Sell Protection' button
   const sellProtection = async () => {
-    setLoading(true);
-    setError("");
     try {
+      setLoading(true);
       await writeFn.writeAsync();
-      setSuccessMessage(
-        `You successfully deposited ${amount} USDC in to the protection pool!`
-      );
     } catch (e) {
-      onError(e);
+      setLoading(false);
+      enqueueSnackbar(e.message, {
+        variant: "error"
+      });
+      console.log("Error: ", e.message);
     }
-
-    // try {
-    //   const tx = await protectionPoolService.deposit(
-    //     protectionPoolAddress,
-    //     convertNumberToUSDC(parseFloat(amount))
-    //   );
-    //   const receipt = await tx.wait();
-    //   if (receipt.status === 1) {
-    //     console.log("The deposit transaction was successful");
-    //     // Show success message for 2 seconds before closing popup
-    //     setSuccessMessage(
-    //       `You successfully deposited ${amount} USDC in to the protection pool!`
-    //     );
-    //     setTimeout(() => {
-    //       onClose();
-    //       router.push("/portfolio");
-    //       setLoading(false);
-    //     }, 2000);
-    //   } else {
-    //     onError(receipt);
-    //   }
-    // } catch (e) {
-    //   onError(e);
-    // }
   };
 
   return (
@@ -96,7 +76,7 @@ const SellProtectionPopUp = (props) => {
       className="inset-x-36"
       disableScrollLock
       open={open}
-      onClose={loading ? null : onClose}
+      onClose={onClose}
       PaperProps={{
         style: {
           borderRadius: "10px"
@@ -104,7 +84,7 @@ const SellProtectionPopUp = (props) => {
       }}
     >
       <div className="flex justify-end mr-4">
-        <IconButton onClick={loading ? null : onClose}>
+        <IconButton onClick={onClose}>
           <span className="text-black">×</span>
         </IconButton>
       </div>
@@ -114,7 +94,7 @@ const SellProtectionPopUp = (props) => {
           <div className="flex justify-start">
             {renderFieldAndValue("Name", "Goldfinch Protection Pool #1")}
             <div className="-ml-40 mt-1">
-              <img
+              <Image
                 src={assets.goldfinch.src}
                 alt="carapace"
                 height="16"
@@ -200,14 +180,7 @@ const SellProtectionPopUp = (props) => {
             onClick={sellProtection}
             disabled={loading || !protectionPoolAddress || !amount}
           >
-            {loading ? (
-              <LoadingButton loading={loading}>
-                {" "}
-                <CircularProgress color="secondary" size={16} />
-              </LoadingButton>
-            ) : (
-              <p>Confirm Deposit</p>
-            )}
+            {loading ? <Spinner /> : <p>Confirm Deposit</p>}
           </button>
           <div className="flex"></div>
         </div>
@@ -221,11 +194,6 @@ const SellProtectionPopUp = (props) => {
           </div>
         </div>
       </DialogContent>
-      <SuccessPopup
-        handleClose={() => setSuccessMessage("")}
-        message={successMessage}
-      />
-      <ErrorPopup error={error} handleCloseError={() => setError("")} />
     </Dialog>
   );
 };

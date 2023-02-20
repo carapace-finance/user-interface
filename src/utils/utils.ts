@@ -49,8 +49,15 @@ export const getDecimalMulString = (
   decimals: number
 ): string => getDecimalMul(val, decimals).toString();
 
-export const getDecimalMulFormatted = (val: BigNumber, decimals: number) =>
-  getDecimalMul(val, decimals).toBigInt().toLocaleString();
+export const getDecimalMulFormatted = (
+  val: BigNumber,
+  decimals: number,
+  digits: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 2
+) =>
+  getDecimalMul(val, decimals).toBigInt().toLocaleString(undefined, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  });
 
 export const getDecimalDiv = (
   val: string | BigNumber,
@@ -64,8 +71,13 @@ export const getDecimalDivString = (
 
 export const getDecimalDivFormatted = (
   val: string | BigNumber,
-  decimals: number
-): string => getDecimalDiv(val, decimals).toBigInt().toLocaleString();
+  decimals: number,
+  digits: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 2
+): string =>
+  getDecimalDiv(val, decimals).toBigInt().toLocaleString(undefined, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  });
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

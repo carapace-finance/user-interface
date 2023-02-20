@@ -10,11 +10,11 @@ const useUsdcBalance = (owner?: Address) => {
     address: address,
     token: USDC_ADDRESS,
     chainId: chain?.id,
+    watch: true,
     scopeKey: "usdcBalance",
     enabled: !!address
   });
 
-  console.log("balance::", balance);
   return balance;
 };
 
