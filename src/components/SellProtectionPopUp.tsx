@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import Image from "next/image";
 import {
   Dialog,
@@ -173,16 +174,25 @@ const SellProtectionPopUp = ({
           </Typography>
         </div>
         <div>
-          <button
-            className={`text-white text-base bg-customBlue px-8 py-4 min-w-[230px] rounded-md cursor-pointer ${
-              loading ? "disabled:opacity-90" : "disabled:opacity-50"
-            } disabled:cursor-not-allowed`}
-            onClick={sellProtection}
-            disabled={loading || !protectionPoolAddress || !amount}
-          >
-            {loading ? <Spinner /> : <p>Confirm Deposit</p>}
-          </button>
-          <div className="flex"></div>
+          {/* finish tx */}
+          {writeFn.isSuccess && waitFn.isSuccess ? (
+            <Link
+              className="text-white text-base bg-customBlue px-8 py-4 min-w-[230px] rounded-md cursor-pointer"
+              href="/dashboard"
+            >
+              Go to dashboard
+            </Link>
+          ) : (
+            <button
+              className={`text-white text-base bg-customBlue px-8 py-4 min-w-[230px] rounded-md cursor-pointer ${
+                loading ? "disabled:opacity-90" : "disabled:opacity-50"
+              } disabled:cursor-not-allowed`}
+              onClick={sellProtection}
+              disabled={loading || !protectionPoolAddress || !amount}
+            >
+              {loading ? <Spinner /> : <p>Confirm Deposit</p>}
+            </button>
+          )}
         </div>
         <div>
           <div className="text-sm mt-4">
