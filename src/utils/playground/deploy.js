@@ -4,30 +4,30 @@ import { ContractFactory, Contract } from "ethers";
 import { fillEther } from "./tenderly";
 import { protocolParameters } from "@constants/index";
 
-import riskFactorCalculatorAbi from "../../contracts/forked/abi/RiskFactorCalculator.json";
-import accruedPremiumCalculatorAbi from "../../contracts/forked/abi/AccruedPremiumCalculator.json";
-import premiumCalculatorAbi from "../../contracts/forked/abi/PremiumCalculator.json";
-import referenceLendingPoolsAbi from "../../contracts/forked/abi/ReferenceLendingPools.json";
-import referenceLendingPoolsFactoryAbi from "../../contracts/forked/abi/ReferenceLendingPoolsFactory.json";
-import poolFactoryAbi from "../../contracts/forked/abi/PoolFactory.json";
-import defaultStateManagerAbi from "../../contracts/forked/abi/DefaultStateManager.json";
-import poolAbi from "../../contracts/forked/abi/Pool.json";
-import poolCycleManagerAbi from "../../contracts/forked/abi/PoolCycleManager.json";
-import poolHelperAbi from "../../contracts/forked/abi/PoolHelper.json";
+import riskFactorCalculatorAbi from "../../contracts/playground/abi/RiskFactorCalculator.json";
+import accruedPremiumCalculatorAbi from "../../contracts/playground/abi/AccruedPremiumCalculator.json";
+import premiumCalculatorAbi from "../../contracts/playground/abi/PremiumCalculator.json";
+import referenceLendingPoolsAbi from "../../contracts/playground/abi/ReferenceLendingPools.json";
+import referenceLendingPoolsFactoryAbi from "../../contracts/playground/abi/ReferenceLendingPoolsFactory.json";
+import poolFactoryAbi from "../../contracts/playground/abi/PoolFactory.json";
+import defaultStateManagerAbi from "../../contracts/playground/abi/DefaultStateManager.json";
+import poolAbi from "../../contracts/playground/abi/Pool.json";
+import poolCycleManagerAbi from "../../contracts/playground/abi/PoolCycleManager.json";
+import poolHelperAbi from "../../contracts/playground/abi/PoolHelper.json";
 
-import { riskFactorCalculatorBytecode } from "../../contracts/forked/bytecode/RiskFactorCalculator";
-import { referenceLendingPoolsBytecode } from "../../contracts/forked/bytecode/ReferenceLendingPools";
-import { referenceLendingPoolsFactoryBytecode } from "../../contracts/forked/bytecode/ReferenceLendingPoolsFactory";
+import { riskFactorCalculatorBytecode } from "../../contracts/playground/bytecode/RiskFactorCalculator";
+import { referenceLendingPoolsBytecode } from "../../contracts/playground/bytecode/ReferenceLendingPools";
+import { referenceLendingPoolsFactoryBytecode } from "../../contracts/playground/bytecode/ReferenceLendingPoolsFactory";
 import { linkBytecode } from "./bytecode";
 
 import { USDC_ADDRESS, parseUSDC } from "../usdc";
 import { getDaysInSeconds } from "@utils/utils";
 
 //  Artifacts for contracts that have dependencies on libraries
-import accruedPremiumCalculatorArtifact from "../../contracts/forked/artifacts/AccruedPremiumCalculator.json";
-import premiumCalculatorArtifact from "../../contracts/forked/artifacts/PremiumCalculator.json";
-import poolFactoryArtifact from "../../contracts/forked/artifacts/PoolFactory.json";
-import poolHelperArtifact from "../../contracts/forked/artifacts/PoolHelper.json";
+import accruedPremiumCalculatorArtifact from "../../contracts/playground/artifacts/AccruedPremiumCalculator.json";
+import premiumCalculatorArtifact from "../../contracts/playground/artifacts/PremiumCalculator.json";
+import poolFactoryArtifact from "../../contracts/playground/artifacts/PoolFactory.json";
+import poolHelperArtifact from "../../contracts/playground/artifacts/PoolHelper.json";
 import { isLendingPoolLate, payToLendingPoolAddress } from "./goldfinch";
 
 let deployer;

@@ -1,5 +1,5 @@
 import { Card, CardActions, CardContent, Typography } from "@mui/material";
-import moment from "moment";
+import { readableDate } from "@utils/date";
 
 import { PoolCardProps } from "@type/props";
 
@@ -9,8 +9,8 @@ const CoverCard = (props: PoolCardProps) => {
   const expDateTimezone = new Date(+props.expiration)
     .toLocaleTimeString("en-us", { timeZoneName: "short" })
     .split(" ")[2];
-  const readableExpDate: string = `${moment(expDateString).format(
-    "MMMM d, YYYY h:mma"
+  const readableExpDate: string = `${readableDate(
+    expDateString
   )} ${expDateTimezone}`;
   return (
     <Card elevation={2}>

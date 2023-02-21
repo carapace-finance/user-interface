@@ -1,12 +1,12 @@
 import { Signer } from "@ethersproject/abstract-signer";
 import { Contract } from "@ethersproject/contracts";
-import poolFactoryAbi from "../contracts/forked/abi/PoolFactory.json";
-import poolAbi from "../contracts/forked/abi/Pool.json";
-import poolCycleManagerAbi from "../contracts/forked/abi/PoolCycleManager.json";
-import referenceLendingPoolsAbi from "../contracts/forked/abi/ReferenceLendingPools.json";
-import tranchedPoolAbi from "../contracts/forked/abi/ITranchedPool.json";
-import creditLineAbi from "../contracts/forked/abi/ICreditLine.json";
-import premiumCalculatorAbi from "../contracts/forked/abi/PremiumCalculator.json";
+import poolFactoryAbi from "./playground/abi/PoolFactory.json";
+import poolAbi from "./playground/abi/Pool.json";
+import poolCycleManagerAbi from "./playground/abi/PoolCycleManager.json";
+import referenceLendingPoolsAbi from "./playground/abi/ReferenceLendingPools.json";
+import tranchedPoolAbi from "./playground/abi/ITranchedPool.json";
+import creditLineAbi from "./playground/abi/ICreditLine.json";
+import premiumCalculatorAbi from "./playground/abi/PremiumCalculator.json";
 import { isAddress } from "ethers/lib/utils";
 
 export const getPoolFactoryContract = (address: string, signer: Signer) => {

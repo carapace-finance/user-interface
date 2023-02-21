@@ -1,34 +1,39 @@
-/* eslint-disable @next/next/no-img-element */
-import assets from "src/assets";
+import { ArrowUpRight } from "lucide-react";
 
-const TitleAndDescriptions = (props) => {
+type Props = {
+  title: string | JSX.Element;
+  descriptions?: string;
+  buttonExist?: boolean;
+  guideLink?: string;
+  button?: string;
+};
+
+const TitleAndDescriptions = (props: Props) => {
   return (
     <div className="mb-16">
       <div>
-        <h1 className="text-left font-bold leading-12 text-5xl mb-8">
-          {props.title}
-        </h1>
-        <p className="text-left font-normal text-2xl leading-6">
+        {typeof props.title === "string" || props.title instanceof String ? (
+          <h1 className="text-left font-bold leading-12 text-4xl mb-6">
+            {props.title}
+          </h1>
+        ) : (
+          props.title
+        )}
+        <p className="text-left font-normal text-xl leading-6">
           {props.descriptions}
         </p>
       </div>
-      <div className="text-right mt-8 flex justify-end">
+      <div className="text-right mt-6 flex justify-end">
         {props.buttonExist ? (
           <button
-            className="border rounded-md border-black px-4 py-4 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline"
+            className="btn-outline px-4 py-2 rounded-md"
             onClick={() => {
               window.open(props.guideLink, "_blank");
             }}
           >
             <div className="flex items-center">
               <p className="font-normal text-lg leading-6">{props.button}</p>
-              <img
-                className="ml-2"
-                src={assets.vector.src}
-                alt=""
-                height="12"
-                width="12"
-              />
+              <ArrowUpRight size={16} className="ml-1" />
             </div>
           </button>
         ) : null}

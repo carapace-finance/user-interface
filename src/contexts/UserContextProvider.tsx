@@ -51,7 +51,7 @@ export const UserContextProvider = ({ children }) => {
     if (!protectionPoolService || !protectionPoolAddress) {
       return;
     }
-    
+
     const sTokenUnderlyingBalance =
       await protectionPoolService.getSTokenUnderlyingBalance(
         protectionPoolAddress
@@ -63,7 +63,7 @@ export const UserContextProvider = ({ children }) => {
     setUser({
       ...userRef.current
     });
-  
+
     console.log(
       "User's sTokenUnderlyingBalance Updated ==>",
       formattedUnderlyingBalance
@@ -74,7 +74,7 @@ export const UserContextProvider = ({ children }) => {
     if (!protectionPoolService || !protectionPoolAddress) {
       return;
     }
-    
+
     const requestedWithdrawalBalance =
       await protectionPoolService.getRequestedWithdrawalAmount(
         protectionPoolAddress
@@ -98,16 +98,18 @@ export const UserContextProvider = ({ children }) => {
    * @returns
    */
   const updateUserUsdcBalance = async () => {
-    if(provider){
-    let newUsdcBalance = await getUsdcBalance(provider, user.address);
-    if (newUsdcBalance != user.USDCBalance) {
-      userRef.current.USDCBalance = newUsdcBalance;
-      setUser({
-        ...userRef.current
-      });
+    console.log("0000", provider);
+    if (provider) {
+      console.log("newUsdcBalance::");
+      let newUsdcBalance = await getUsdcBalance(provider, user.address);
+      if (newUsdcBalance != user.USDCBalance) {
+        userRef.current.USDCBalance = newUsdcBalance;
+        setUser({
+          ...userRef.current
+        });
+      }
+      return newUsdcBalance;
     }
-    return newUsdcBalance;
-  }
   };
 
   const updatePurchasedProtectionDetails = async (
@@ -204,9 +206,9 @@ export const UserContextProvider = ({ children }) => {
               );
             });
           }
-           updateSTokenUnderlyingAmount(protectionPoolAddress);
-           updateRequestedWithdrawalAmount(protectionPoolAddress);
-           updateUserUsdcBalance();
+          updateSTokenUnderlyingAmount(protectionPoolAddress);
+          updateRequestedWithdrawalAmount(protectionPoolAddress);
+          updateUserUsdcBalance();
           setUser(userRef.current);
         })();
 
@@ -223,7 +225,7 @@ export const UserContextProvider = ({ children }) => {
           premium
         ) => {
           //trigger the loading when user bought protection
-          setBuyProtectionLoading(true)
+          setBuyProtectionLoading(true);
           console.log("ProtectionBought event triggered");
 
           // todo: this condition should be added in the mainnet
@@ -233,7 +235,7 @@ export const UserContextProvider = ({ children }) => {
             protectionPoolAddress,
             lendingPoolAddress
           );
-          setBuyProtectionLoading(false)
+          setBuyProtectionLoading(false);
         };
         protectionPoolInstance.on(
           "ProtectionBought",
@@ -247,14 +249,14 @@ export const UserContextProvider = ({ children }) => {
           event
         ) => {
           console.log("ProtectionSold event triggered: ", event);
-          
+
           if (userAddress === user.address) {
-             //trigger the loading when user made a deposit
-            setDepositAmountLoading(true)
+            //trigger the loading when user made a deposit
+            setDepositAmountLoading(true);
             console.log("User made a deposit!");
             await updateSTokenUnderlyingAmount(protectionPoolAddress);
             updateUserUsdcBalance();
-            setDepositAmountLoading(false)
+            setDepositAmountLoading(false);
           }
         };
         protectionPoolInstance.on("ProtectionSold", updateDataOnProtectionSold);
@@ -271,13 +273,13 @@ export const UserContextProvider = ({ children }) => {
           if (receiver === user.address) {
             console.log("User made a withdrawal!");
             //trigger the loading when user made a withdrawl
-            setDepositAmountLoading(true)
-            setRequestAmountLoading(true)
-             updateSTokenUnderlyingAmount(protectionPoolAddress);
+            setDepositAmountLoading(true);
+            setRequestAmountLoading(true);
+            updateSTokenUnderlyingAmount(protectionPoolAddress);
             await updateRequestedWithdrawalAmount(protectionPoolAddress);
-            setDepositAmountLoading(false)
-            setRequestAmountLoading(false)
-             updateUserUsdcBalance();
+            setDepositAmountLoading(false);
+            setRequestAmountLoading(false);
+            updateUserUsdcBalance();
           }
         };
         protectionPoolInstance.on("WithdrawalMade", updateDataOnWithdrawalMade);
@@ -335,7 +337,7 @@ export const UserContextProvider = ({ children }) => {
         updateUserUsdcBalance,
         buyProtectionLoading,
         depositAmountLoading,
-        requestAmountLoading,
+        requestAmountLoading
       }}
     >
       {children}

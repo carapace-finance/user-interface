@@ -3,7 +3,7 @@ import {
   getCreditLineContract,
   getTranchedPoolContract
 } from "../../contracts/contractService";
-import { parseUSDC, transferUsdc } from "../../utils/usdc";
+import { parseUSDC, transferUsdc } from "../usdc";
 
 export const payToLendingPoolAddress: Function = async (
   tranchedPoolAddress: string,

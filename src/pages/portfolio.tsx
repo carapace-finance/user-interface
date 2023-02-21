@@ -1,7 +1,6 @@
 // github does not show third commit
 
 import { Tooltip } from "@material-tailwind/react";
-import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -16,10 +15,11 @@ import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
 import { convertUSDCToNumber, USDC_FORMAT } from "@utils/usdc";
 import numeral from "numeral";
-import { getLendingPoolName } from "@utils/forked/playground";
+import { getLendingPoolName } from "@utils/playground/playground";
 
 import assets from "src/assets";
 import { CircularProgress, Skeleton } from "@mui/material";
+import { unixtimeDiffFromNow } from "@utils/date";
 
 const Portfolio = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
@@ -27,7 +27,13 @@ const Portfolio = () => {
   const { contractAddresses } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
   const { protectionPools } = useContext(ProtectionPoolContext);
-  const { user, setUser, buyProtectionLoading, depositAmountLoading, requestAmountLoading } = useContext(UserContext);
+  const {
+    user,
+    setUser,
+    buyProtectionLoading,
+    depositAmountLoading,
+    requestAmountLoading
+  } = useContext(UserContext);
 
   useEffect(() => {
     setProtectionPoolAddress(contractAddresses?.pool);
@@ -212,15 +218,9 @@ const Portfolio = () => {
                   &nbsp;USDC
                 </td>
                 <td className="py-4">
-                  {moment
-                    .duration(
-                      userLendingPool.expirationTimestamp.toNumber() -
-                        moment().unix(),
-                      "seconds"
-                    )
-                    .asDays()
-                    .toFixed(0)}
-                  &nbsp;days
+                  {unixtimeDiffFromNow(
+                    userLendingPool.expirationTimestamp.toNumber()
+                  )}
                 </td>
                 <td className="py-4">
                   {numeral(
@@ -241,14 +241,13 @@ const Portfolio = () => {
                 </td> */}
               </tr>
             ))}
-            {buyProtectionLoading && <tr
-                className="text-left text-ms font-medium"
-              >
+            {buyProtectionLoading && (
+              <tr className="text-left text-ms font-medium">
                 <td className="py-4 pr-4">
                   <Skeleton variant="text" width={210} height={30} />
                 </td>
                 <td className="py-4">
-                <Skeleton variant="circular" width={24} height={24} />
+                  <Skeleton variant="circular" width={24} height={24} />
                 </td>
                 <td className="py-4">
                   <Skeleton variant="text" width={100} height={30} />
@@ -259,13 +258,12 @@ const Portfolio = () => {
                 <td className="py-4">
                   <Skeleton variant="text" width={110} height={30} />
                 </td>
-              </tr>}
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
-      <h3 className="text-left font-bold mb-4 mt-16">
-        Your Deposited Capital
-      </h3>
+      <h3 className="text-left font-bold mb-4 mt-16">Your Deposited Capital</h3>
       <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
         <table className="table-fixed w-full">
           <thead>
@@ -405,8 +403,22 @@ const Portfolio = () => {
                   />
                 </td>
                 <td className="pt-4">{protectionPool.APY}</td>
-                <td className="pt-4">{user.sTokenUnderlyingAmount}&nbsp;USDC {depositAmountLoading && <span className="text-gray-400 ml-2"><CircularProgress color="inherit" size={16} /></span>}</td>
-                <td className="pt-4">{user.requestedWithdrawalAmount}&nbsp;USDC {requestAmountLoading && <span className="text-gray-400 ml-2"><CircularProgress color="inherit" size={16} /></span>}</td>
+                <td className="pt-4">
+                  {user.sTokenUnderlyingAmount}&nbsp;USDC{" "}
+                  {depositAmountLoading && (
+                    <span className="text-gray-400 ml-2">
+                      <CircularProgress color="inherit" size={16} />
+                    </span>
+                  )}
+                </td>
+                <td className="pt-4">
+                  {user.requestedWithdrawalAmount}&nbsp;USDC{" "}
+                  {requestAmountLoading && (
+                    <span className="text-gray-400 ml-2">
+                      <CircularProgress color="inherit" size={16} />
+                    </span>
+                  )}
+                </td>
                 {/* <td>
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}
