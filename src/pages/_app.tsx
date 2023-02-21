@@ -18,7 +18,7 @@ const Header = dynamic(() => import("@components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@components/Footer"), { ssr: false });
 
 import Mobile from "@components/Mobile";
-import UnderMaintainance from "@components/UnderMaintainance";
+import UnderMaintenance from "@components/UnderMaintenance";
 
 // Record a pageview when route changes
 Router.events.on("routeChangeComplete", (as, routeProps) => {
@@ -69,7 +69,7 @@ function App({ Component, pageProps }) {
           </ApplicationContextProvider>
         </Web3ReactProvider>
       </ThemeProvider>
-    ) : <UnderMaintainance />)
+    ) : <UnderMaintenance />)
   ) : null;
 }
 

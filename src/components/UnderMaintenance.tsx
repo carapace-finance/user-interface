@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import logo from '../assets/transparent-logo.png'
 
-const UnderMaintainance = () => {
+const UnderMaintenance = () => {
   return (
     <div className='w-full h-screen p-[8rem] bg-[url("../assets/maintain-bg.png")] bg-center bg-cover flex flex-col items-center justify-between'>
         <div className='w-full text-left text-white'>
@@ -21,4 +21,4 @@ const UnderMaintainance = () => {
   )
 }
 
-export default UnderMaintainance
+export default UnderMaintenance
