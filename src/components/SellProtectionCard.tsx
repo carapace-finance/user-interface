@@ -1,14 +1,16 @@
 "use client";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Tooltip } from "@material-tailwind/react";
-import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import { BigNumber } from "@ethersproject/bignumber";
+import { Tooltip } from "@material-tailwind/react";
+import SellProtectionPopUp from "@/components/SellProtectionPopUp";
 import { SellProtectionInput } from "@type/types";
 import { Info } from "lucide-react";
 import { useAccount } from "wagmi";
-import useUsdcBalance from "@hooks/useUsdcBalance";
-import SubmitButton from "@components/SubmitButton";
+import useUsdcBalance from "@/hooks/useUsdcBalance";
+import SubmitButton from "@/components/SubmitButton";
+import useAllowance from "@/hooks/useAllowance";
 import { USDC_ADDRESS, USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
 import { getDecimalDivFormatted } from "@/utils/utils";
 
@@ -22,10 +24,11 @@ export default function SellProtectionCard(props) {
     formState: { errors }
   } = useForm<SellProtectionInput>({ defaultValues: { depositAmount: "0" } });
 
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const protectionPoolAddress: any = router.query.address;
+  const allowance = useAllowance(USDC_ADDRESS, address, protectionPoolAddress);
   const { data: usdcBalance, isLoading: isLoadingUsdc } = useUsdcBalance();
 
   const setMaxAmount = async () => {
@@ -57,7 +60,11 @@ export default function SellProtectionCard(props) {
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <h5 className="text-left text-customGrey text-xl  font-normal mt-4 mb-2 flex items-center">
-          Deposit Amount
+          {!isConnected ||
+          allowance?.data?.gt(BigNumber.from(getValues("depositAmount")))
+            ? "Deposit"
+            : "Approve"}
+          &nbsp;Amount
         </h5>
         <input
           className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
