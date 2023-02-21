@@ -6,6 +6,7 @@ import SellProtectionPopUp from "./SellProtectionPopUp";
 import { useRouter } from "next/router";
 import { SellProtectionInput } from "@type/types";
 import { Info } from "lucide-react";
+import { useAccount } from "wagmi";
 import useUsdcBalance from "@hooks/useUsdcBalance";
 import SubmitButton from "@components/SubmitButton";
 import { USDC_ADDRESS, USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
@@ -21,6 +22,7 @@ export default function SellProtectionCard(props) {
     formState: { errors }
   } = useForm<SellProtectionInput>({ defaultValues: { depositAmount: "0" } });
 
+  const { isConnected } = useAccount();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const protectionPoolAddress: any = router.query.address;
@@ -92,7 +94,9 @@ export default function SellProtectionCard(props) {
         /> */}
         <div className="text-right">
           Balance:&nbsp;
-          {isLoadingUsdc
+          {!isConnected
+            ? "-"
+            : isLoadingUsdc
             ? "..."
             : getDecimalDivFormatted(usdcBalance?.value, USDC_NUM_OF_DECIMALS)}
           &nbsp;USDC
