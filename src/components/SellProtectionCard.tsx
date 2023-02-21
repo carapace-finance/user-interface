@@ -8,7 +8,7 @@ import { SellProtectionInput } from "@type/types";
 import { Info } from "lucide-react";
 import useUsdcBalance from "@hooks/useUsdcBalance";
 import SubmitButton from "@components/SubmitButton";
-import { USDC_ADDRESS } from "@/utils/usdc";
+import { USDC_ADDRESS, USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
 import { getDecimalDivFormatted } from "@/utils/utils";
 
 export default function SellProtectionCard(props) {
@@ -94,7 +94,7 @@ export default function SellProtectionCard(props) {
           Balance:&nbsp;
           {isLoadingUsdc
             ? "..."
-            : getDecimalDivFormatted(usdcBalance?.value, 6)}
+            : getDecimalDivFormatted(usdcBalance?.value, USDC_NUM_OF_DECIMALS)}
           &nbsp;USDC
         </div>
         <SubmitButton
