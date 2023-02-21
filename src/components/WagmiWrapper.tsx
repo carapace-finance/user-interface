@@ -1,6 +1,6 @@
 import React from "react";
 import { WagmiConfig, configureChains, createClient } from "wagmi";
-import { mainnet, localhost } from "wagmi/chains";
+import { mainnet, hardhat } from "wagmi/chains";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
@@ -9,12 +9,12 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 // wagmi config for dev
 const { chains: devChains, provider: devProvider } = configureChains(
-  [mainnet, localhost],
+  [mainnet, hardhat],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string }),
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: localhost.rpcUrls.default[0]
+        http: hardhat.rpcUrls.default[0]
       })
     })
   ]
