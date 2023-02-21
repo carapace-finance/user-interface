@@ -7,7 +7,7 @@ import Link from "next/link";
 import { injected } from "../utils/mainnet/connectors";
 import assets from "../assets";
 
-import Account from "@components/Account";
+// import Account from "@components/Account";
 import PlaygroundModePopUp from "@components/PlaygroundModePopUp";
 import { Playground } from "@utils/playground/types";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";

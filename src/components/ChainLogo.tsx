@@ -1,6 +1,7 @@
 import Image from "next/image";
 import ImgEthereum from "../assets/chains/ethereum.svg";
 import ImgPolygon from "../assets/chains/polygon.svg";
+import { Link } from "lucide-react";
 
 type Props = {
   chainId: number;
@@ -19,7 +20,11 @@ export const getChainName = (chainId: number): string =>
 const ChainIcon = ({ chainId, size }: { chainId: number; size: number }) => {
   const chain = ChainList.find((chain: any) => chain.chainId === chainId);
 
-  return <Image src={chain.img} alt={chain.name} width={size} height={size} />;
+  return chain ? (
+    <Image src={chain.img} alt={chain.name} width={size} height={size} />
+  ) : (
+    <Link size={14} className="text-customGrey" />
+  );
 };
 
 export default function ChainLogo({

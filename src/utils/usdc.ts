@@ -3,8 +3,9 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { sendTransaction } from "./playground/tenderly";
 import { JsonRpcProvider } from "@ethersproject/providers";
+import type { Address } from "abitype";
 
-export const USDC_ADDRESS: string =
+export const USDC_ADDRESS: Address =
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 export const USDC_NUM_OF_DECIMALS: number = 6;
 export const CIRCLE_ACCOUNT_ADDRESS: string =

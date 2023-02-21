@@ -1,17 +1,24 @@
 import Image from "next/image";
+import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef } from "react";
-import BarChart from "@components/BarChart";
-import SellProtectionCard from "@components/SellProtectionCard";
+// import SellProtectionCard from "@components/SellProtectionCard";
+const SellProtectionCard = dynamic(
+  () => import("@components/SellProtectionCard"),
+  {
+    ssr: false
+  }
+);
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import TitleAndDescriptions from "@components/TitleAndDescriptions";
-import assets from "src/assets";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 ChartJS.register(ArcElement, Tooltip, Legend);
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import numeral from "numeral";
+import { ExternalLink } from "lucide-react";
 
 const ProtectionPool = () => {
   const router = useRouter();
@@ -19,14 +26,14 @@ const ProtectionPool = () => {
   const { protectionPools } = useContext(ProtectionPoolContext);
   const doughnutRadius = 100;
 
-  const { provider } = useContext(ApplicationContext);
-  const prevProvider = useRef(provider);
-  useEffect(() => {
-    if (prevProvider.current !== provider) {
-      router.push("/sellProtection");
-      prevProvider.current = provider;
-    }
-  }, [provider]);
+  // const { provider } = useContext(ApplicationContext);
+  // const prevProvider = useRef(provider);
+  // useEffect(() => {
+  //   if (prevProvider.current !== provider) {
+  //     router.push("/sellProtection");
+  //     prevProvider.current = provider;
+  //   }
+  // }, [provider]);
 
   const handleClick = (lendingPoolAddress: string) => {
     window.open(
@@ -78,49 +85,58 @@ const ProtectionPool = () => {
       }
     }
   ];
+
   return (
-    <div className="mx-32">
-      <div className="flex">
-        <TitleAndDescriptions
-          title={`Goldfinch Protection Pool #1`}
-          descriptions=""
-          buttonExist={false}
-        />
-        <div className="ml-3">
-          <div className="flex items-center">
-            <Image
-              src={protocols}
-              width={40}
-              height={40}
-              alt=""
-              className="mr-6"
-            />
-            {/* todo: enable the link once we deploy our protection pool to the mainney */}
-            {/* <a
-              target="_blank"
-              rel="noreferrer"
-              href={`https://etherscan.io/address/${protectionPoolAddress}`}
-              className=""
-            >
-              <Image
-                src={assets.grayVector}
-                width={18}
-                height={18}
-                alt=""
-                className="mr-6"
-              />
-            </a> */}
-          </div>
+    <main className="container mx-auto px-4">
+      <div className="w-full">
+        <div className="-mt-4 mb-4 text-sm text-customGrey">
+          <Link href="/">Earn</Link> &gt; Goldfinch Protection Pool #1
+        </div>
+        <div className="flex">
+          <TitleAndDescriptions
+            title={
+              <h1 className="inline-flex items-center flex-wrap text-left font-bold leading-12 text-4xl mb-6">
+                Goldfinch Protection Pool #1
+                <Image
+                  src={protocols}
+                  width={40}
+                  height={40}
+                  alt=""
+                  className="ml-6"
+                />
+                <a
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  href={`https://etherscan.io/address/${protectionPoolAddress}`}
+                  className="ml-3 text-customGrey"
+                >
+                  <ExternalLink size={20} />
+                </a>
+              </h1>
+            }
+            descriptions=""
+            buttonExist={false}
+          />
         </div>
       </div>
-      <div className="flex justify-between">
-        <div>
-          <div className="flex justify-between">
-            <div className="rounded-2xl shadow-lg shadow-gray-200 shadow-gray-200 p-8 w-fit">
+      <div className="flex flex-row-reverse flex-wrap md:flex-nowrap">
+        <div className="flex-1 md:basis-1/3">
+          <SellProtectionCard estimatedAPY={estimatedAPY}></SellProtectionCard>
+          {/* <p className="text-left mb-2">
+              The maximum amount you can deposit:
+              {numeral(maxAvailableDepositAmount).format(0.0) + " USDC"}
+            </p>
+            <div className="h-6 mb-2">
+              <BarChart filledPercentage={depositPercentage} />
+            </div> */}
+        </div>
+        <div className="flex-1 md:basis-2/3">
+          <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+            <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
               <h4 className="text-left mb-4">Total Protection Pool Balance</h4>
               <p className="text-left font-bold">{totalCapital}&nbsp;USDC</p>
             </div>
-            <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-fit ml-8">
+            <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
               <h4 className="text-left mb-4">
                 Total Protection Pool Balance Limit
               </h4>
@@ -145,7 +161,9 @@ const ProtectionPool = () => {
                 {underlyingLendingPools.map((lendingPool) => (
                   <tr
                     key={lendingPool.address}
-                    onClick={() => handleClick(lendingPool.address.toLowerCase())}
+                    onClick={() =>
+                      handleClick(lendingPool.address.toLowerCase())
+                    }
                     className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
                   >
                     <td className="px-4 py-8 pl-8">{lendingPool.name}</td>
@@ -196,23 +214,15 @@ const ProtectionPool = () => {
                   }
                 ]
               }}
-              options = {{
+              options={{
                 // This chart will only respond to mousemove and not on click.
-                events: ['mousemove']
+                events: ["mousemove"]
               }}
             />
           </div>
         </div>
-        <SellProtectionCard estimatedAPY={estimatedAPY}></SellProtectionCard>
       </div>
-      {/* <p className="text-left mb-2">
-              The maximum amount you can deposit:
-              {numeral(maxAvailableDepositAmount).format(0.0) + " USDC"}
-            </p>
-            <div className="h-6 mb-2">
-              <BarChart filledPercentage={depositPercentage} />
-            </div> */}
-    </div>
+    </main>
   );
 };
 

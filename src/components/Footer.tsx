@@ -1,6 +1,6 @@
 import React from "react";
-import assets from "../assets";
-import { FOOTER_LINKS } from "../constants";
+import assets from "@/assets";
+import { FOOTER_LINKS } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
 

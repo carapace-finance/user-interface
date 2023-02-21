@@ -43,12 +43,21 @@ npm run node
   npm run deploy:mainnet_forked
 ```
 
-6. Connect to the local mainnet fork through MetaMask.
+7. Configure MetaMask & connect to the local mainnet.
+
+```
+Network name: Local Hardhat
+New RPC URL: http://127.0.0.1:8545
+Chain ID: 31337
+Currency symbol: ETH
+```
 
 # Develop in the Playground
+
 1. Add some env variables in `.env.local` file.
 
 ```bash
+
 ```
 
 ## Set up/update contracts for the playground

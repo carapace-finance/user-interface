@@ -9,19 +9,21 @@ import { shortAddress } from "@utils/utils";
 import ConnectWalletPopup from "@components/ConnectWalletPopUp";
 import ChainLogo from "@components/ChainLogo";
 import { HEADER_LINKS } from "@constants/index";
+import { useAtom } from "jotai";
+import { connectModalAtom } from "../atoms";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
   const { chain } = useNetwork();
   const { disconnect } = useDisconnect();
   const router = useRouter();
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useAtom(connectModalAtom);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   return (
     <nav className="header bg-white h-16 px-2 sm:px-4 fixed w-full z-30 top-0 left-0 shadow-md">
       <div className="container flex flex-wrap items-center justify-between mx-auto h-16">
-        <Link className="shrink-0" href="/">
+        <Link className="flex items-center h-16 shrink-0" href="/">
           <Image
             src={assets.headerLogo.src}
             alt="carapace"
@@ -30,12 +32,12 @@ const Header = () => {
             unoptimized
           />
         </Link>
-        <div className="flex items-center md:order-2">
+        <div className="flex items-center h-16 md:order-2">
           {isConnected ? (
             <>
               <div className="flex items-center border border-customGrey py-1 px-2 rounded-md mr-2 text-sm h-8">
                 <ChainLogo chainId={chain.id} />
-                <span className="hidden md:flex mr-2">{chain.name}</span>
+                <span className="hidden md:flex md:mx-1">{chain.name}</span>
               </div>
               <button
                 type="button"
