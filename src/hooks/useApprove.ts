@@ -16,11 +16,11 @@ const useApprove: any = (
 ) => {
   const { chain } = useNetwork();
 
-  const maxAmount =
-    "115792089237316195423570985008687907853269984665640564039457584007913129639935"; // (2^256 - 1 )
   const args: [Address, BigNumber] = useDebounce([
     spender,
-    BigNumber.from(maxAmount)
+    BigNumber.from(
+      "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    )
   ]);
   const enabled: boolean = useDebounce(
     !!chain && !!targetAddress && !!owner && !!spender
