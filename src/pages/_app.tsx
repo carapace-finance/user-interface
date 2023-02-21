@@ -50,7 +50,7 @@ function App({ Component, pageProps }) {
   return typeof mobile !== "undefined" ? (
     mobile ? (
       <Mobile />
-    ) : (process.env.NEXT_PUBLIC_ACCESS === 'true' ? (
+    ) : (process.env.NEXT_PUBLIC_MAINTENANCE === false ? (
       <ThemeProvider>
         <CssBaseline />
         <Web3ReactProvider getLibrary={getWeb3Library}>
