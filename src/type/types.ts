@@ -3,7 +3,8 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { ProtectionPoolFactoryService } from "@services/ProtectionPoolFactoryService";
 import { ProtectionPoolService } from "@services/ProtectionPoolService";
 import { BigNumber } from "ethers";
-
+import type { TransactionReceipt } from "@ethersproject/providers";
+import type { Address } from "abitype";
 export interface ContractAddresses {
   isPlayground: boolean;
   poolFactory: string;
@@ -152,4 +153,12 @@ export interface WithdrawalInput {
   amount: string;
 }
 
-export type Address = `0x${string}`;
+export type Transaction = {
+  chainId: number; // 1 | 31_337;
+  address: Address;
+  type: string;
+  description: string;
+  hash: Address;
+  startTime?: number;
+  receipt?: TransactionReceipt;
+};
