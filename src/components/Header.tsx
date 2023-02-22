@@ -20,8 +20,6 @@ const Header = () => {
   const [modalOpen, setModalOpen] = useAtom(connectModalAtom);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
-  console.log("chain:::::", chain);
-
   return (
     <nav className="header bg-white h-16 px-2 sm:px-4 fixed w-full z-30 top-0 left-0 shadow-md">
       <div className="container flex flex-wrap items-center justify-between mx-auto h-16">
