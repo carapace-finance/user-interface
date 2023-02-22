@@ -1,7 +1,8 @@
 import Image from "next/image";
-import ImgEthereum from "../assets/chains/ethereum.svg";
-import ImgPolygon from "../assets/chains/polygon.svg";
-import { Link } from "lucide-react";
+import ImgEthereum from "@/assets/chains/ethereum.svg";
+import ImgPolygon from "@/assets/chains/polygon.svg";
+import ImgHardHat from "@/assets/chains/hard-hat.svg";
+import { AlertTriangle, Link } from "lucide-react";
 
 type Props = {
   chainId: number;
@@ -11,7 +12,12 @@ type Props = {
 
 const ChainList = [
   { chainId: 1, img: ImgEthereum, name: "Ethereum" },
-  { chainId: 137, img: ImgPolygon, name: "Polygon" }
+  { chainId: 137, img: ImgPolygon, name: "Polygon" },
+  {
+    chainId: 31_337,
+    img: ImgHardHat,
+    name: "Hardhat"
+  }
 ];
 
 export const getChainName = (chainId: number): string =>
@@ -23,7 +29,7 @@ const ChainIcon = ({ chainId, size }: { chainId: number; size: number }) => {
   return chain ? (
     <Image src={chain.img} alt={chain.name} width={size} height={size} />
   ) : (
-    <Link size={14} className="text-customGrey" />
+    <AlertTriangle size={14} className="text-customGrey" />
   );
 };
 

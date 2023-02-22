@@ -6,6 +6,7 @@ import { SnackbarProvider } from "notistack";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@material-tailwind/react";
 import WagmiWrapper from "@/components/WagmiWrapper";
+import LockScreen from "@/components/LockScreen";
 import getWeb3Library from "@/utils/mainnet/providers";
 import "@/style/main.css";
 
@@ -48,6 +49,7 @@ function App({ Component, pageProps }) {
         <CssBaseline />
         <Web3ReactProvider getLibrary={getWeb3Library}>
           <WagmiWrapper>
+            <LockScreen />
             {/* TODO: Relpce web3react to wagmi */}
             <ApplicationContextProvider>
               <ProtectionPoolContextProvider>
