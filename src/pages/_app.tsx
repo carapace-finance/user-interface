@@ -36,7 +36,7 @@ function App({ Component, pageProps }) {
     });
   }, []);
 
-  return (process.env.NEXT_PUBLIC_MAINTENANCE === false ? (
+  return process.env.NEXT_PUBLIC_MAINTENANCE ? <UnderMaintenance /> : (
     <ThemeProvider>
       <SnackbarProvider
         anchorOrigin={{
@@ -67,9 +67,7 @@ function App({ Component, pageProps }) {
           </WagmiWrapper>
         </Web3ReactProvider>
       </SnackbarProvider>
-    </ThemeProvider>
-   ) : <UnderMaintenance />)
-  );
+    </ThemeProvider>);
 }
 
 export default App;
