@@ -2,7 +2,7 @@ import Image from "next/image";
 import ImgEthereum from "@/assets/chains/ethereum.svg";
 import ImgPolygon from "@/assets/chains/polygon.svg";
 import ImgHardHat from "@/assets/chains/hard-hat.svg";
-import { AlertTriangle, Link } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 type Props = {
   chainId: number;
