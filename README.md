@@ -4,6 +4,7 @@
 
 ```bash
 NEXT_PUBLIC_FATHOM_SITE_ID=<next_public_fathom_site_id>
+NEXT_PUBLIC_MAINTENANCE="false"
 ```
 
 2. Open your terminal, set up the frontend:

@@ -16,6 +16,8 @@ import { LendingPoolContextProvider } from "@/contexts/LendingPoolContextProvide
 import { ProtectionPoolContextProvider } from "@/contexts/ProtectionPoolContextProvider";
 import { UserContextProvider } from "@/contexts/UserContextProvider";
 
+import UnderMaintenance from "@/components/UnderMaintenance";
+
 const Header = dynamic(() => import("@/components/Header"), { ssr: false });
 const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
 
@@ -34,7 +36,7 @@ function App({ Component, pageProps }) {
     });
   }, []);
 
-  return (
+  return process.env.NEXT_PUBLIC_MAINTENANCE === "true" ? <UnderMaintenance /> : (
     <ThemeProvider>
       <SnackbarProvider
         anchorOrigin={{
@@ -65,8 +67,7 @@ function App({ Component, pageProps }) {
           </WagmiWrapper>
         </Web3ReactProvider>
       </SnackbarProvider>
-    </ThemeProvider>
-  );
+    </ThemeProvider>);
 }
 
 export default App;
