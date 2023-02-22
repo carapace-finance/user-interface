@@ -49,13 +49,13 @@ function App({ Component, pageProps }) {
         <CssBaseline />
         <Web3ReactProvider getLibrary={getWeb3Library}>
           <WagmiWrapper>
-            <LockScreen />
             {/* TODO: Relpce web3react to wagmi */}
             <ApplicationContextProvider>
               <ProtectionPoolContextProvider>
                 <LendingPoolContextProvider>
                   <BondContextProvider>
                     <UserContextProvider>
+                      <LockScreen />
                       <Header />
                       <Component {...pageProps} />
                       <Footer />
