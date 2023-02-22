@@ -36,7 +36,7 @@ function App({ Component, pageProps }) {
     });
   }, []);
 
-  return process.env.NEXT_PUBLIC_MAINTENANCE ? <UnderMaintenance /> : (
+  return process.env.NEXT_PUBLIC_MAINTENANCE === "true" ? <UnderMaintenance /> : (
     <ThemeProvider>
       <SnackbarProvider
         anchorOrigin={{
