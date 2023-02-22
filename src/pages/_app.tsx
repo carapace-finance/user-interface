@@ -6,6 +6,7 @@ import { SnackbarProvider } from "notistack";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@material-tailwind/react";
 import WagmiWrapper from "@/components/WagmiWrapper";
+import LockScreen from "@/components/LockScreen";
 import getWeb3Library from "@/utils/mainnet/providers";
 import "@/style/main.css";
 
@@ -56,6 +57,7 @@ function App({ Component, pageProps }) {
                 <LendingPoolContextProvider>
                   <BondContextProvider>
                     <UserContextProvider>
+                      <LockScreen />
                       <Header />
                       <Component {...pageProps} />
                       <Footer />

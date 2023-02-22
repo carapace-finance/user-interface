@@ -4,13 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAccount, useDisconnect, useNetwork } from "wagmi";
 import { Menu } from "lucide-react";
-import assets from "../assets";
-import { shortAddress } from "@utils/utils";
-import ConnectWalletPopup from "@components/ConnectWalletPopUp";
-import ChainLogo from "@components/ChainLogo";
-import { HEADER_LINKS } from "@constants/index";
+import assets from "@/assets";
+import { shortAddress } from "@/utils/utils";
+import ConnectWalletPopup from "@/components/ConnectWalletPopUp";
+import ChainLogo from "@/components/ChainLogo";
+import { HEADER_LINKS } from "@/constants/index";
 import { useAtom } from "jotai";
-import { connectModalAtom } from "../atoms";
+import { connectModalAtom } from "@/atoms";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
@@ -19,6 +19,8 @@ const Header = () => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useAtom(connectModalAtom);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+  console.log("chain:::::", chain);
 
   return (
     <nav className="header bg-white h-16 px-2 sm:px-4 fixed w-full z-30 top-0 left-0 shadow-md">
@@ -37,7 +39,9 @@ const Header = () => {
             <>
               <div className="flex items-center border border-customGrey py-1 px-2 rounded-md mr-2 text-sm h-8">
                 <ChainLogo chainId={chain.id} />
-                <span className="hidden md:flex md:mx-1">{chain.name}</span>
+                <span className="hidden md:flex md:mx-1">
+                  {chain.unsupported ? "Unsupported" : chain.name}
+                </span>
               </div>
               <button
                 type="button"
