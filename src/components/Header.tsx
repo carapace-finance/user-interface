@@ -9,8 +9,9 @@ import { shortAddress } from "@/utils/utils";
 import ConnectWalletPopup from "@/components/ConnectWalletPopUp";
 import ChainLogo from "@/components/ChainLogo";
 import { HEADER_LINKS } from "@/constants/index";
-import { useAtom } from "jotai";
-import { connectModalAtom } from "@/atoms";
+import { useAtom, useAtomValue } from "jotai";
+import Spinner from "@/components/Spinner";
+import { connectModalAtom, userTransactionsAtom } from "@/atoms";
 
 const Header = () => {
   const { address, isConnected } = useAccount();
@@ -19,6 +20,7 @@ const Header = () => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useAtom(connectModalAtom);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const txs = useAtomValue(userTransactionsAtom);
 
   return (
     <nav className="header bg-white h-16 px-2 sm:px-4 fixed w-full z-30 top-0 left-0 shadow-md">
@@ -43,9 +45,14 @@ const Header = () => {
               </div>
               <button
                 type="button"
-                className="btn-outline rounded-md py-1 px-4 h-8 text-sm"
+                className="btn-outline rounded-md py-1 px-4 h-8 text-sm flex items-center"
                 onClick={() => disconnect()}
               >
+                {!!txs && txs.length > 0 && (
+                  <div className="mr-1 h-4 w-4">
+                    <Spinner />
+                  </div>
+                )}
                 {shortAddress(address)}
               </button>
             </>
