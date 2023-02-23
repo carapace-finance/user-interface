@@ -19,8 +19,8 @@ const useTransactionHandler = () => {
   const provider = useProvider<any>();
 
   const addTx = (payload: Transaction) => {
-    const arr = (txs as Transaction[]).push(payload);
-    setTxs(arr);
+    txs.push(payload);
+    setTxs(txs);
   };
 
   const recieveTx = (payload: any) => {
