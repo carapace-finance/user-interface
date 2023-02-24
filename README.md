@@ -32,19 +32,24 @@ Open `localhost:3000` in a web browser.
   npm run compile
 ```
 
-5. Run the local forked mainnet in the hardhat network
+5. Use your MetaMask Mnemonic words for the `MNEMONIC_WORDS` env variable.
+```
+export MNEMONIC_WORDS=<your_metamask_mnemonic_words>
+```
+
+6. Run the local forked mainnet in the hardhat network
 
 ```bash
 npm run node
 ```
 
-6. Deploy the contracts
-
+7. Deploy the contracts and set up the initial states
+We deploy our contracts to the local mainnet fork, and set up the contract states so that we can test all the transactions. Your MetaMask account in the local node should also have some USDC.  
 ```bash
-  npm run deploy:mainnet_forked
+  npm run deploy-and-setup:mainnet_forked
 ```
 
-7. Configure MetaMask & connect to the local mainnet.
+8. Configure MetaMask & connect to the local mainnet.
 
 ```
 Network name: Local Hardhat
