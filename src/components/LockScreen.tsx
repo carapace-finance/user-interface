@@ -9,7 +9,7 @@ const LockScreen = () => {
   const { chain } = useNetwork();
   useEffect(() => {
     if (!!chain) {
-      chain?.unsupported ? setShow("unsuported") : setShow(undefined);
+      chain?.unsupported ? setShow("unsupported") : setShow(undefined);
     } else {
       setShow(undefined);
     }
@@ -34,7 +34,7 @@ const LockScreen = () => {
   const UnsupportedNetwork = () => (
     <ModalContent
       title="Unsupported Network"
-      message="Please connect Mainnet."
+      message="Please connect to Mainnet."
     />
   );
 

@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { BigNumber } from "@ethersproject/bignumber";
 import { Tooltip } from "@material-tailwind/react";
 import SellProtectionPopUp from "@/components/SellProtectionPopUp";
 import { SellProtectionInput } from "@type/types";
@@ -13,6 +12,7 @@ import SubmitButton from "@/components/SubmitButton";
 import useAllowance from "@/hooks/useAllowance";
 import { USDC_ADDRESS, USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
 import { getDecimalDivFormatted } from "@/utils/utils";
+import { BigNumber } from "ethers";
 
 export default function SellProtectionCard(props) {
   const { estimatedAPY } = props;
@@ -28,7 +28,12 @@ export default function SellProtectionCard(props) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const protectionPoolAddress: any = router.query.address;
-  const allowance = useAllowance(USDC_ADDRESS, address, protectionPoolAddress);
+  const allowance = useAllowance(
+    USDC_ADDRESS,
+    address,
+    protectionPoolAddress,
+    "useAllowanceSellProtctionCard"
+  );
   const { data: usdcBalance, isLoading: isLoadingUsdc } = useUsdcBalance();
 
   const setMaxAmount = async () => {
@@ -59,7 +64,7 @@ export default function SellProtectionCard(props) {
         </h1>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h5 className="text-left text-customGrey text-xl  font-normal mt-4 mb-2 flex items-center">
+        <h5 className="text-left text-customGrey text-xl font-normal mt-4 mb-2 flex items-center">
           {!isConnected ||
           allowance?.data?.gt(BigNumber.from(getValues("depositAmount")))
             ? "Deposit"
