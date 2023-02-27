@@ -162,3 +162,5 @@ export type Transaction = {
   startTime?: number;
   receipt?: TransactionReceipt;
 };
+
+export type TransactionKeys = Omit<Transaction, "type" | "description">;

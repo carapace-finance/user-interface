@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
-import { BigNumber } from "@ethersproject/bignumber";
+import { useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { useAccount } from "wagmi";
 import type { Address } from "abitype";
@@ -10,6 +9,8 @@ import Spinner from "@/components/Spinner";
 import useApprove from "@/hooks/useApprove";
 import { cn } from "@/utils/utils";
 import { useSnackbar } from "notistack";
+import { getDecimalMul } from "@/utils/utils";
+import { USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
 
 type Props = {
   buttonText: string;
@@ -32,18 +33,22 @@ export default function ApproveSubmitButton({
   const { isConnected, address } = useAccount();
   const setModalOpen = useSetAtom(connectModalAtom);
   const { enqueueSnackbar } = useSnackbar();
-  const [loading, setLoading] = useState(false);
 
   const ApproveButton = () => {
-    const allowance = useAllowance(targetAddress, address, spenderAddress);
+    const allowance = useAllowance(
+      targetAddress,
+      address,
+      spenderAddress,
+      "useAllowanceSubmitButton"
+    );
     const approve = useApprove(targetAddress, address, spenderAddress);
+    const loading: boolean =
+      approve.writeFn.isLoading || approve.waitFn.isLoading;
 
-    const handleApprove = async () => {
+    const handleApprove = () => {
       try {
-        setLoading(true);
-        await approve.writeFn?.writeAsync();
+        approve.writeFn?.write();
       } catch (e) {
-        setLoading(false);
         enqueueSnackbar(e.message, {
           variant: "error"
         });
@@ -52,7 +57,6 @@ export default function ApproveSubmitButton({
 
     useEffect(() => {
       if (approve.waitFn.isSuccess) {
-        setLoading(false);
         enqueueSnackbar("Approved", {
           variant: "success"
         });
@@ -63,7 +67,9 @@ export default function ApproveSubmitButton({
       <>
         {isConnected ? (
           allowance.isLoaded &&
-          allowance?.data?.gt(BigNumber.from(allowanceVal)) ? (
+          allowance?.data?.gt(
+            getDecimalMul(allowanceVal ?? "0", USDC_NUM_OF_DECIMALS)
+          ) ? (
             <button
               className={cn(
                 "text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
@@ -82,10 +88,16 @@ export default function ApproveSubmitButton({
                 className
               )}
               type="button"
-              disabled={loading || !targetAddress}
+              disabled={!targetAddress || loading}
               onClick={() => handleApprove()}
             >
-              {loading ? <Spinner /> : <span>Approve</span>}
+              {loading ? (
+                <div className="w-5 h-5">
+                  <Spinner />
+                </div>
+              ) : (
+                <span>Approve</span>
+              )}
             </button>
           )
         ) : (

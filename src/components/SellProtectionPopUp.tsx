@@ -178,9 +178,9 @@ const SellProtectionPopUp = ({
           {writeFn.isSuccess && waitFn.isSuccess ? (
             <Link
               className="text-white text-base bg-customBlue px-8 py-4 min-w-[230px] rounded-md cursor-pointer"
-              href="/dashboard"
+              href="/portfolio"
             >
-              Go to dashboard
+              Go to portfolio
             </Link>
           ) : (
             <button
@@ -190,7 +190,13 @@ const SellProtectionPopUp = ({
               onClick={sellProtection}
               disabled={loading || !protectionPoolAddress || !amount}
             >
-              {loading ? <Spinner /> : <p>Confirm Deposit</p>}
+              {loading ? (
+                <div className="w-5 h-5">
+                  <Spinner />
+                </div>
+              ) : (
+                <p>Confirm Deposit</p>
+              )}
             </button>
           )}
         </div>

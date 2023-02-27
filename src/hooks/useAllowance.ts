@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useContractRead, erc20ABI, useNetwork } from "wagmi";
 import useDebounce from "@/hooks/useDebounce";
 import type { Address } from "abitype";
@@ -5,13 +6,13 @@ import type { Address } from "abitype";
 const useAllowance = (
   targetAddress: Address,
   owner: Address,
-  spender: Address
+  spender: Address,
+  scopeKey: string
 ) => {
   const { chain } = useNetwork();
-  const args: [Address, Address] = useDebounce([owner, spender], 300);
+  const args: [Address, Address] = useDebounce([owner, spender]);
   const enabled: boolean = useDebounce(
-    !!chain && !!targetAddress && !!owner && !!spender,
-    300
+    !!chain && !!targetAddress && !!owner && !!spender
   );
 
   const readFn = useContractRead({
@@ -20,7 +21,7 @@ const useAllowance = (
     functionName: "allowance",
     args,
     enabled,
-    scopeKey: `useAllowance-${targetAddress}`,
+    scopeKey,
     chainId: chain?.id,
     onError(error: any) {
       console.log("allowance error", error);

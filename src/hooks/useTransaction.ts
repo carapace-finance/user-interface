@@ -3,7 +3,7 @@ import { useBlockNumber, useProvider, useNetwork, useAccount } from "wagmi";
 import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
 import { userTransactionsAtom } from "@/atoms";
-import type { Transaction } from "@/type/types";
+import type { Transaction, TransactionKeys } from "@/type/types";
 
 const useTransactionHandler = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -18,10 +18,8 @@ const useTransactionHandler = () => {
   });
   const provider = useProvider<any>();
 
-  const addTx = (payload: Transaction) => {
-    txs.push(payload);
-    setTxs(txs);
-  };
+  const addTx = (payload: Transaction) =>
+    setTxs([...txs, { ...payload, startTime: Date.now() }]);
 
   const recieveTx = (payload: any) => {
     const item: any = (txs as Transaction[]).find(
@@ -31,15 +29,16 @@ const useTransactionHandler = () => {
         item.hash === payload.hash
     );
     if (item) {
-      enqueueSnackbar(item.description, {
-        variant:
-          Number(payload.transactionReceipt?.status) === 1 ? "success" : "error"
-      });
+      if (Number(payload.transactionReceipt?.status) !== 1) {
+        enqueueSnackbar(item.description, {
+          variant: "error"
+        });
+      }
       removeTx(payload);
     }
   };
 
-  const removeTx = (payload: Transaction) =>
+  const removeTx = (payload: TransactionKeys) =>
     setTxs(
       (txs as Transaction[]).filter(
         (item: Transaction) =>

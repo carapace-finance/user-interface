@@ -17,7 +17,7 @@ const useDeposit = (amount: string, protectionPoolAddress: Address) => {
   const _amount = getDecimalMul(amount, 6);
   const { address } = useAccount();
   const args: [BigNumber, Address] = useDebounce([_amount, address]);
-  const { addTx } = useTransaction();
+  const { addTx, recieveTx } = useTransaction();
 
   const prepareFn = usePrepareContractWrite({
     address: protectionPoolAddress,
@@ -36,16 +36,27 @@ const useDeposit = (amount: string, protectionPoolAddress: Address) => {
         address,
         type: "Transaction",
         description: "Deposit",
-        hash: data?.hash || ""
+        hash: data?.hash
       });
+    },
+    onError(error) {
+      console.log("useDeposit write error", error);
     }
   });
 
   const waitFn = useWaitForTransaction({
     chainId: chain?.id,
     hash: writeFn?.data?.hash,
+    onSuccess(data: any) {
+      console.log("recieve", data);
+      recieveTx({
+        chainId: chain?.id,
+        address,
+        hash: data?.hash
+      });
+    },
     onError(error) {
-      console.log("Error on useWaitForTransaction on useDeposit:", error);
+      console.log("useDeposit wait error", error);
     }
   });
 

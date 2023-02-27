@@ -1,3 +1,4 @@
+import "@/utils/wdyr";
 import React, { useEffect } from "react";
 import Router from "next/router";
 import * as Fathom from "fathom-client";
@@ -37,7 +38,9 @@ function App({ Component, pageProps }) {
     });
   }, []);
 
-  return process.env.NEXT_PUBLIC_MAINTENANCE === "true" ? <UnderMaintenance /> : (
+  return process.env.NEXT_PUBLIC_MAINTENANCE === "true" ? (
+    <UnderMaintenance />
+  ) : (
     <ThemeProvider>
       <SnackbarProvider
         anchorOrigin={{
@@ -69,7 +72,8 @@ function App({ Component, pageProps }) {
           </WagmiWrapper>
         </Web3ReactProvider>
       </SnackbarProvider>
-    </ThemeProvider>);
+    </ThemeProvider>
+  );
 }
 
 export default App;
