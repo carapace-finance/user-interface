@@ -11,10 +11,11 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { getDecimalMul } from "@/utils/utils";
 import type { Address } from "abitype";
 import ProtectionPoolABI from "@/contracts/mainnet/abi/ProtectionPool.json";
+import { USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
 
 const useDeposit = (amount: string, protectionPoolAddress: Address) => {
   const { chain } = useNetwork();
-  const _amount = getDecimalMul(amount, 6);
+  const _amount = getDecimalMul(amount, USDC_NUM_OF_DECIMALS);
   const { address } = useAccount();
   const args: [BigNumber, Address] = useDebounce([_amount, address]);
   const { addTx, recieveTx } = useTransaction();
@@ -48,7 +49,6 @@ const useDeposit = (amount: string, protectionPoolAddress: Address) => {
     chainId: chain?.id,
     hash: writeFn?.data?.hash,
     onSuccess(data: any) {
-      console.log("recieve", data);
       recieveTx({
         chainId: chain?.id,
         address,

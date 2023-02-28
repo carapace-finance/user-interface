@@ -17,7 +17,7 @@ const useRequestWithdrawal = (
   protectionPoolAddress: Address
 ) => {
   const { chain } = useNetwork();
-  const _amount = getDecimalMul(amount, 6);
+  const _amount = getDecimalMul(amount, 18);
   const { address } = useAccount();
   const args: [BigNumber] = useDebounce([_amount]);
   const { addTx, recieveTx } = useTransaction();

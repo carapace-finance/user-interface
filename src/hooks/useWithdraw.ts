@@ -14,7 +14,7 @@ import ProtectionPoolABI from "@/contracts/mainnet/abi/ProtectionPool.json";
 
 const useWithdraw = (amount: string, protectionPoolAddress: Address) => {
   const { chain } = useNetwork();
-  const _amount = getDecimalMul(amount, 6);
+  const _amount = getDecimalMul(amount, 18);
   const { address } = useAccount();
   const args: [BigNumber, Address] = useDebounce([_amount, address]);
   const { addTx, recieveTx } = useTransaction();
