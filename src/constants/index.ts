@@ -112,3 +112,6 @@ export const protocolParameters = {
   protectionPurchaseLimitsInDays: 270, // todo: this value needs to be this long as we advance time in the playground mode
   protectionExtensionGracePeriodInDays: 14
 };
+
+export const UNISWAP_V3_SUBGRAPH_URL =
+  "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
