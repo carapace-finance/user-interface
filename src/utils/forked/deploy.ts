@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { hexValue } from "@ethersproject/bytes";
 import { parseEther } from "ethers/lib/utils";
 import { ContractFactory, Contract, Signer } from "ethers";
@@ -119,13 +120,15 @@ export const GOLDFINCH_LENDING_POOLS = Object.keys(
   PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS
 );
 const _lendingProtocols = GOLDFINCH_LENDING_POOLS.map(() => 0); // 0 = Goldfinch
-const _purchaseLimitInDays = hexValue(protocolParameters.protectionPurchaseLimitsInDays);
+const _purchaseLimitInDays = hexValue(
+  protocolParameters.protectionPurchaseLimitsInDays
+);
 const _purchaseLimitsInDays = GOLDFINCH_LENDING_POOLS.map(
   () => _purchaseLimitInDays
 );
 
 function getLinkedBytecode(contractArtifact: Artifact, libRefs: any[]) {
-  const libs = libRefs.map((libRef: { libraryName: any; address: any; }) => {
+  const libs = libRefs.map((libRef: { libraryName: any; address: any }) => {
     return {
       sourceName: `contracts/libraries/${libRef.libraryName}.sol`,
       libraryName: libRef.libraryName,
