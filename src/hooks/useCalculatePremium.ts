@@ -9,6 +9,7 @@ import ReferenceLendingPoolsABI from "@/contracts/mainnet/abi/ReferenceLendingPo
 
 const useCalculatePremium = (
   protectionPoolAddress: Address,
+  lendingPoolAddress: Address,
   protctionAmount: string,
   protctionDuration: number
 ) => {
@@ -19,13 +20,8 @@ const useCalculatePremium = (
     abi: ProtectionPoolABI,
     chainId: chain?.id
   };
-  const referenceLendingPoolsContract = {
-    address: "0xE673b1191481AbB2867d754c37706D71DD36A353", // TODO: get from protectionPool
-    abi: ReferenceLendingPoolsABI,
-    chainId: chain?.id
-  };
 
-  const readsFn = useContractReads({
+  const protectionPoolReadsFn = useContractReads({
     contracts: [
       {
         ...protenctionPoolContract,
@@ -37,14 +33,30 @@ const useCalculatePremium = (
       },
       {
         ...protenctionPoolContract,
-        functionName: "totalSTokenUnderlying"
-      },
-      {
-        ...referenceLendingPoolsContract,
-        functionName: "calculateProtectionBuyerAPR",
-        args: ["0xE673b1191481AbB2867d754c37706D71DD36A353"]
+        functionName: "getPoolDetails"
       }
     ]
+  });
+
+  const referenceLendingPoolsFn = useContractRead({
+    address: (protectionPoolReadsFn?.data?.[0] as any)?.referenceLendingPools,
+    abi: ReferenceLendingPoolsABI,
+    functionName: "getLendingPools",
+    chainId: chain?.id,
+    enabled:
+      !!chain &&
+      !!(protectionPoolReadsFn?.data?.[0] as any)?.referenceLendingPools
+  });
+
+  const aprFn = useContractRead({
+    address: (protectionPoolReadsFn?.data?.[0] as any)?.referenceLendingPools,
+    abi: ReferenceLendingPoolsABI,
+    functionName: "calculateProtectionBuyerAPR",
+    chainId: chain?.id,
+    args: [lendingPoolAddress],
+    enabled:
+      !!chain &&
+      !!(protectionPoolReadsFn?.data?.[0] as any)?.referenceLendingPools
   });
 
   const amount = getDecimalMul(protctionAmount, 18);
@@ -52,11 +64,13 @@ const useCalculatePremium = (
     useDebounce([
       getDaysInSeconds(protctionDuration),
       amount,
-      readsFn?.data?.[3], //calculateProtectionBuyerAPR
-      readsFn?.data?.[1], //calculateLeverageRatio
-      readsFn?.data?.[2], //totalSTokenUnderlying
-      (readsFn?.data?.[0] as any)?.params
+      aprFn.data, //calculateProtectionBuyerAPR
+      protectionPoolReadsFn?.data?.[1], //calculateLeverageRatio
+      protectionPoolReadsFn?.data?.[2]?.[0], //totalSTokenUnderlying
+      (protectionPoolReadsFn?.data?.[0] as any)?.params
     ]);
+
+  console.log("args:", args);
 
   const readFn = useContractRead({
     address: "0x1A3279fC30bAB096BC0c8a21B1a3C896A7680903", // TODO: get this from config
@@ -68,9 +82,11 @@ const useCalculatePremium = (
       !!chain &&
       !!protectionPoolAddress &&
       BigNumber.from(amount).gt(0) &&
-      readsFn.isFetched &&
-      readsFn.isSuccess
+      protectionPoolReadsFn.isFetched &&
+      protectionPoolReadsFn.isSuccess
   });
+
+  console.log("***readFn***", readFn.data?.[0].toString());
 
   return { ...readFn };
 };

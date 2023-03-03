@@ -33,8 +33,8 @@ const useBuyProtection = (
   const { address } = useAccount();
   const args: [any, BigNumber] = useDebounce([
     {
-      protectionPool: protectionPoolAddress,
-      nftLpTokenId: 590,
+      lendingPoolAddress: "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
+      nftLpTokenId: 645,
       protectionAmount: amount,
       protectionDurationInSeconds: getDaysInSeconds(protectionDuration)
     },
