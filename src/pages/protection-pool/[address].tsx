@@ -120,7 +120,7 @@ const ProtectionPool = () => {
         </div>
       </div>
       <div className="flex flex-row-reverse flex-wrap md:flex-nowrap">
-        <div className="flex-1 md:basis-1/3">
+        <div className="flex-1 md:basis-1/3 px-4">
           <SellProtectionCard estimatedAPY={estimatedAPY}></SellProtectionCard>
           {/* <p className="text-left mb-2">
               The maximum amount you can deposit:
@@ -130,63 +130,47 @@ const ProtectionPool = () => {
               <BarChart filledPercentage={depositPercentage} />
             </div> */}
         </div>
-        <div className="flex-1 md:basis-2/3">
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+        <div className="flex-1 md:basis-2/3 px-4">
+          <h3 className="text-left font-bold mb-4 mt-8">Investiment Summary</h3>
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
             <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
-              <h4 className="text-left mb-4">Total Protection Pool Balance</h4>
-              <p className="text-left font-bold">{totalCapital}&nbsp;USDC</p>
+              <h4 className="text-left mb-4">Total Estimated APY</h4>
+              <p className="text-left font-bold">18 - 25 %</p>
+              {/* TODO: update value */}
+              <div className="grid grid-cols-2 gap-6 border-t border-gray-300 mt-4 pt-4">
+                <div>
+                  <p className="">Yields from Premium</p>
+                  <p className="">10 - 15%</p> {/* TODO: update value */}
+                </div>
+                <div>
+                  <p className="">CARA Token Rewards</p>
+                  <p className="">8 - 10%</p> {/* TODO: update value */}
+                </div>
+              </div>
             </div>
             <div className="rounded-2xl shadow-lg shadow-gray-200 p-8">
-              <h4 className="text-left mb-4">
-                Total Protection Pool Balance Limit
-              </h4>
-              <p className="text-left font-bold">{depositLimit}&nbsp;USDC</p>
+              <h4 className="text-left mb-4">Minumum Locking Period</h4>
+              <p className="text-left font-bold">95 Days</p>
+              {/* TODO: update value */}
+              <div className="grid grid-cols-2 gap-6 border-t border-gray-300 mt-4 pt-4">
+                <div>
+                  <p className="">Cycle Duration</p>
+                  <p className="">90 Days</p> {/* TODO: update value */}
+                </div>
+                <div>
+                  <p className="">The Current Cycle Ends In</p>
+                  <p className="">5 Days</p> {/* TODO: update value */}
+                </div>
+              </div>
             </div>
           </div>
-          <h3 className="text-left font-bold mb-4 mt-8">
-            Underlying Protected Lending Pools
-          </h3>
-          <div className="rounded-2xl shadow-lg shadow-gray-200">
-            <table className="table-auto">
-              <thead>
-                <tr className="text-left text-sm font-bold">
-                  <th className="px-4 py-8 pl-8">Name</th>
-                  <th className="px-4 py-8">Protocol</th>
-                  <th className="px-4 py-8">APY</th>
-                  <th className="px-4 py-8">Payment Frequency</th>
-                  <th className="px-4 py-8">Payment Term End</th>
-                </tr>
-              </thead>
-              <tbody>
-                {underlyingLendingPools.map((lendingPool) => (
-                  <tr
-                    key={lendingPool.address}
-                    onClick={() =>
-                      handleClick(lendingPool.address.toLowerCase())
-                    }
-                    className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
-                  >
-                    <td className="px-4 py-8 pl-8">{lendingPool.name}</td>
-                    <td className="px-4 py-8">
-                      <Image
-                        src={lendingPool.protocol}
-                        width={24}
-                        height={24}
-                        alt=""
-                      />
-                    </td>
-                    <td className="px-4 py-8">{lendingPool.lendingPoolAPY}</td>
-                    <td className="px-4 py-8">30 Days</td>
-                    <td className="px-4 py-8">Apr 4, 2024</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <h3 className="text-left font-bold mt-8 mb-4">
+          <h3 className="font-bold mb-4 mt-8">Protection Pool Summary</h3>
+          <h4 className="font-bold mb-4 text-customGrey">Total Value Locked</h4>
+          <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 mb-8"></div>
+          <h4 className="font-bold mb-4 text-customGrey">
             Protection Distribution Across Lending Pools
-          </h3>
-          <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-700">
+          </h4>
+          <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 w-full">
             <Doughnut
               className="mx-auto"
               data={{
@@ -220,6 +204,46 @@ const ProtectionPool = () => {
               }}
             />
           </div>
+        </div>
+      </div>
+      <div className="w-full">
+        <h3 className="text-left font-bold mb-4 mt-8">
+          Underlying Lending Pools
+        </h3>
+        <div className="rounded-2xl shadow-lg shadow-gray-200">
+          <table className="table-auto">
+            <thead>
+              <tr className="text-left text-sm font-bold">
+                <th className="px-4 py-8 pl-8">Name</th>
+                <th className="px-4 py-8">Protocol</th>
+                <th className="px-4 py-8">APY</th>
+                <th className="px-4 py-8">Payment Frequency</th>
+                <th className="px-4 py-8">Payment Term End</th>
+              </tr>
+            </thead>
+            <tbody>
+              {underlyingLendingPools.map((lendingPool) => (
+                <tr
+                  key={lendingPool.address}
+                  onClick={() => handleClick(lendingPool.address.toLowerCase())}
+                  className="text-left text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
+                >
+                  <td className="px-4 py-8 pl-8">{lendingPool.name}</td>
+                  <td className="px-4 py-8">
+                    <Image
+                      src={lendingPool.protocol}
+                      width={24}
+                      height={24}
+                      alt=""
+                    />
+                  </td>
+                  <td className="px-4 py-8">{lendingPool.lendingPoolAPY}</td>
+                  <td className="px-4 py-8">30 Days</td>
+                  <td className="px-4 py-8">Apr 4, 2024</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </main>
