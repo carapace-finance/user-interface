@@ -94,6 +94,7 @@ const AllLendingPools = () => {
   const { lendingPools } = useContext(LendingPoolContext);
   const table = useReactTable({
     data: lendingPools,
+    // @ts-ignore
     columns,
     getCoreRowModel: getCoreRowModel()
   });
