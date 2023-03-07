@@ -10,7 +10,6 @@ import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import TitleAndDescriptions from "@components/TitleAndDescriptions";
 import assets from "src/assets";
-import ProtectionPoolDetail from "@/components/tables/ProtectionPoolDetail";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { ExternalLink, Info } from "lucide-react";
 
