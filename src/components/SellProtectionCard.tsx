@@ -46,31 +46,14 @@ export default function SellProtectionCard(props) {
 
   return (
     <div className="py-10 px-8 bg-white rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200">
-      <h5 className="text-left text-customGrey text-xl mb-2 flex items-center">
-        Estimated APY
-        <div className="pl-2 cursor-pointer">
-          <Tooltip
-            className="cursor-pointer"
-            content="Estimated APY for protection sellers."
-            placement="top"
-          >
-            <Info size={18} />
-          </Tooltip>
-        </div>
-      </h5>
-      <div className="py-2 border-b border-gray-300">
-        <h1 className="text-customDarkGrey text-4xl mb-4 text-left">
-          {estimatedAPY}
-        </h1>
-      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h5 className="text-left text-customGrey text-xl font-normal mt-4 mb-2 flex items-center">
+        <label className="text-left text-customGrey font-normal flex items-center">
           {!isConnected ||
           allowance?.data?.gt(BigNumber.from(getValues("depositAmount")))
             ? "Deposit"
             : "Approve"}
           &nbsp;Amount
-        </h5>
+        </label>
         <input
           className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
           type="number"
@@ -104,7 +87,7 @@ export default function SellProtectionCard(props) {
             )
           }}
         /> */}
-        <div className="text-right">
+        <div className="text-right text-customGrey text-sm">
           Balance:&nbsp;
           {!isConnected
             ? "-"
@@ -113,13 +96,15 @@ export default function SellProtectionCard(props) {
             : getDecimalDivFormatted(usdcBalance?.value, USDC_NUM_OF_DECIMALS)}
           &nbsp;USDC
         </div>
-        <SubmitButton
-          buttonText="Deposit"
-          targetAddress={USDC_ADDRESS}
-          spenderAddress={protectionPoolAddress}
-          allowanceVal={getValues("depositAmount")}
-          needApprove
-        />
+        <div className="w-full flex justify-center">
+          <SubmitButton
+            buttonText="Deposit"
+            targetAddress={USDC_ADDRESS}
+            spenderAddress={protectionPoolAddress}
+            allowanceVal={getValues("depositAmount")}
+            needApprove
+          />
+        </div>
       </form>
       <SellProtectionPopUp
         open={isOpen}
