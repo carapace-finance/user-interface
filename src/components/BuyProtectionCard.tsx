@@ -9,6 +9,7 @@ import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { getDaysInSeconds } from "@utils/utils";
 import { BuyProtectionInputs } from "@type/types";
 import { isAddress } from "ethers/lib/utils";
+import { Info } from "lucide-react";
 
 export default function BuyProtectionCard(props) {
   const { adjustedYields, lendingPoolAPY, premium, timeLeft, name } = props;
@@ -77,108 +78,18 @@ export default function BuyProtectionCard(props) {
 
   return (
     <div className="block py-10 px-8 rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200 w-450 h-fit">
-      <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-2 flex items-center">
-        Estimated Premium
-        <div className="pl-2">
-          <Tooltip
-            animate={{
-              mount: { scale: 1, y: 0 },
-              unmount: { scale: 0, y: 25 }
-            }}
-            content="Estimated premium amount divided your lending amount"
-            placement="top"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-              />
-            </svg>
-          </Tooltip>
-        </div>
-      </h5>
-      <div className="py-2 border-b border-gray-300">
-        <h1 className="text-customDarkGrey text-4xl mb-4 text-left">
-          {premium}
-        </h1>
-      </div>
-      <div className="my-4">
-        <div className="flex mb-4">
-          <div>
-            <h5 className="text-left text-customGrey text-base flex mb-2">
-              Lending Pool APY
-              <Tooltip
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 25 }
-                }}
-                content="APY in an underlying lending protocol"
-                placement="top"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-4 h-4 ml-1"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </h5>
-            <p className="text-left text-xl">{lendingPoolAPY}</p>
-          </div>
-          <div className="ml-14">
-            <h5 className="text-customGrey text-left text-base mb-2">
-              Estimated Adjusted Yields
-              <Tooltip
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 25 }
-                }}
-                content="Lending Pool APY minus Premium"
-                placement="top"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-4 h-4 ml-1"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                  />
-                </svg>
-              </Tooltip>
-            </h5>
-            <p className="text-left text-xl">{adjustedYields}</p>
-          </div>
-        </div>
-      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <div>
-            <div className="mb-4">
-              <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">
+            <p className="inline text-customGrey">
+              Your Backer Token Id in Goldfinch
+              <Info size={15} className="inline ml-1" />
+            </p>
+            <p>173</p>
+            <div className="mb-4 mt-4">
+              <label className="text-left text-customGrey leading-tight font-normal mb-4">
                 Protection Amount
-              </h5>
+              </label>
               <div>
                 <input
                   className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
@@ -216,9 +127,9 @@ export default function BuyProtectionCard(props) {
             </div>
           </div>
           <div className="mb-4">
-            <h5 className="text-left text-customGrey text-xl leading-tight font-normal mb-4">
+            <label className="text-left text-customGrey leading-tight font-normal mb-4">
               Protection Duration (days)
-            </h5>
+            </label>
             <div>
               <input
                 className="block border-solid border-gray-300 border mb-2 py-2 px-4 w-full rounded text-gray-700"
@@ -297,10 +208,6 @@ export default function BuyProtectionCard(props) {
       <div className="flex flex-row justify-start">
         <p className="mr-4">Buy protection within: {timeLeft}</p>
         <Tooltip
-          animate={{
-            mount: { scale: 1, y: 0 },
-            unmount: { scale: 0, y: 25 }
-          }}
           content="Time left to buy protection for this lending pool"
           placement="top"
         >
@@ -333,7 +240,7 @@ export default function BuyProtectionCard(props) {
         protectionPoolAddress={protectionPoolAddress}
         name={name}
         adjustedYields={adjustedYields}
-      ></BuyProtectionPopUp>
+      />
     </div>
   );
 }

@@ -67,10 +67,9 @@ export const ProtectionPoolContextProvider = ({ children }) => {
                   if (p.address === protectionPool.address) {
                     return {
                       ...p,
-                      totalProtection:
-                        numeral(convertUSDCToNumber(totalProtection)).format(
-                          USDC_FORMAT
-                        )
+                      totalProtection: numeral(
+                        convertUSDCToNumber(totalProtection)
+                      ).format(USDC_FORMAT)
                     };
                   }
                   return p;
@@ -93,10 +92,9 @@ export const ProtectionPoolContextProvider = ({ children }) => {
                   if (p.address === protectionPool.address) {
                     return {
                       ...p,
-                      totalCapital:
-                        numeral(convertUSDCToNumber(totalCapital)).format(
-                          USDC_FORMAT
-                        )
+                      totalCapital: numeral(
+                        convertUSDCToNumber(totalCapital)
+                      ).format(USDC_FORMAT)
                     };
                   }
                   return p;

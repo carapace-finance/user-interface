@@ -64,7 +64,11 @@ export interface ProtectionPool {
 export interface LendingPool {
   address: string;
   name: string;
+  borrowerName: string;
   protocol: string;
+  protocolName: string;
+  geography: string;
+  currency: string;
   adjustedYields: string;
   lendingPoolAPY: string;
   premium: string;

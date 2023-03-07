@@ -15,8 +15,7 @@ type LendingPool = {
   name: string;
   protocol: string;
   premium: string;
-  lendingPoolAPY: string;
-  adjustedYields: string;
+  tokenRewards: string;
   timeLeft: string;
 };
 
@@ -40,13 +39,16 @@ const columns = [
   columnHelper.accessor("protocol", {
     header: () => "Protocol",
     cell: (info) => (
-      <Image
-        className="mx-auto"
-        src={info.getValue()}
-        width={24}
-        height={24}
-        alt=""
-      />
+      <span className="flex items-center">
+        <Image
+          className="mx-auto"
+          src={info.getValue()}
+          width={24}
+          height={24}
+          alt=""
+        />
+        <span className="ml-1">Goldfinch</span>
+      </span>
     )
   }),
   columnHelper.accessor("premium", {
@@ -63,30 +65,16 @@ const columns = [
     ),
     cell: (info) => <div className="text-right">{info.getValue()}</div>
   }),
-  columnHelper.accessor("lendingPoolAPY", {
+  columnHelper.accessor("tokenRewards", {
     header: () => (
       <div className="flex items-center cursor-pointer justify-end">
-        Lending Pool APY
-        <Tooltip
-          content="APY in an underlying lending protocol"
-          placement="top"
-        >
+        CARA Token Rewards
+        <Tooltip content="TBD" placement="top">
           <Info size={16} className="ml-2" />
         </Tooltip>
       </div>
     ),
-    cell: (info) => <div className="text-right">{info.getValue()}</div>
-  }),
-  columnHelper.accessor("adjustedYields", {
-    header: () => (
-      <div className="flex items-center cursor-pointer justify-end">
-        Estimated Adjusted Yields
-        <Tooltip content="Lending Pool APY minus Premium" placement="top">
-          <Info size={16} className="ml-2" />
-        </Tooltip>
-      </div>
-    ),
-    cell: (info) => <div className="text-right">{info.getValue()}</div>
+    cell: (info) => <div className="text-right">~ 3.5 %</div>
   }),
   columnHelper.accessor("timeLeft", {
     header: () => (
@@ -106,6 +94,7 @@ const AllLendingPools = () => {
   const { lendingPools } = useContext(LendingPoolContext);
   const table = useReactTable({
     data: lendingPools,
+    // @ts-ignore
     columns,
     getCoreRowModel: getCoreRowModel()
   });
@@ -133,6 +122,7 @@ const AllLendingPools = () => {
                       )}
                 </th>
               ))}
+              <th> {/* action */}</th>
             </tr>
           ))}
         </thead>
@@ -151,6 +141,12 @@ const AllLendingPools = () => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+              {/* action */}
+              <td className="px-4 py-6">
+                <button className="btn-outline rounded-md px-4 py-1 text-sm">
+                  Buy Protection
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
