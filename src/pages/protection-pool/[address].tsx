@@ -129,13 +129,6 @@ const ProtectionPool = () => {
       <div className="flex flex-row-reverse flex-wrap md:flex-nowrap">
         <div className="flex-1 md:basis-1/3 px-4">
           <SellProtectionCard />
-          {/* <p className="text-left mb-2">
-              The maximum amount you can deposit:
-              {numeral(maxAvailableDepositAmount).format(0.0) + " USDC"}
-            </p>
-            <div className="h-6 mb-2">
-              <BarChart filledPercentage={depositPercentage} />
-            </div> */}
         </div>
         <div className="flex-1 md:basis-2/3 px-4">
           <h3 className="text-left font-bold mb-4 mt-8">Investiment Summary</h3>
