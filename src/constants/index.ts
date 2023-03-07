@@ -43,21 +43,16 @@ export const FOOTER_LINKS = [
   {
     title: "PROTOCOL DESIGN",
     links: [
-      // {
-      //   name: "Coming soon",
-      //   link: "",
-      //   target: ""
-      // },
       {
         name: "Whitepaper",
         link: "https://www.carapace.finance/whitepaper",
         target: "_blank"
+      },
+      {
+        name: "Documentation",
+        link: "https://www.carapace.finance/docs/",
+        target: "_blank"
       }
-      // {
-      //   name: "User Doc",
-      //   link: "",
-      //   target: ""
-      // },
     ]
   },
   {
@@ -69,27 +64,22 @@ export const FOOTER_LINKS = [
         target: "_blank"
       }
     ]
+  },
+  {
+    title: "LEGAL",
+    links: [
+      {
+        name: "Privacy Policy",
+        link: "",
+        target: "_blank"
+      },
+      {
+        name: "Terms of Use",
+        link: "",
+        target: "_blank"
+      }
+    ]
   }
-  // {
-  // title: "LEGAL",
-  // links: [
-  //   {
-  //     name: "Coming soon",
-  //     link: "",
-  //     target: ""
-  //   }
-  // {
-  //   name: "Privacy Policy",
-  //   link: "",
-  //   target: ""
-  // },
-  // {
-  //   name: "Terms of use",
-  //   link: "",
-  //   target: ""
-  // },
-  // ]
-  // }
 ];
 
 export interface protocolParameters {

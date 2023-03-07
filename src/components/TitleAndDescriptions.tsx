@@ -19,7 +19,7 @@ const TitleAndDescriptions = (props: Props) => {
         ) : (
           props.title
         )}
-        <p className="text-left font-normal text-xl leading-6">
+        <p className="text-left font-normal text-xl leading-6 text-customGrey">
           {props.descriptions}
         </p>
       </div>

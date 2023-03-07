@@ -55,7 +55,7 @@ const columns = [
   columnHelper.accessor("totalCapital", {
     header: () => (
       <div className="flex items-center cursor-pointer justify-end">
-        Total Pool Balance
+        Total Value Locked
         <Tooltip
           content="How much capital have been deposited to this pool"
           placement="top"
@@ -69,7 +69,7 @@ const columns = [
   columnHelper.accessor("totalProtection", {
     header: () => (
       <div className="flex items-center cursor-pointer justify-end">
-        Total Pool Protection
+        Total Protection
         <Tooltip
           content="How much protection have been bought by all the buyers"
           placement="top"
@@ -115,6 +115,7 @@ const AllProtectionPools = () => {
                       )}
                 </th>
               ))}
+              <th> {/* action */}</th>
             </tr>
           ))}
         </thead>
@@ -133,6 +134,12 @@ const AllProtectionPools = () => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+              {/* action */}
+              <td className="px-4 py-6">
+                <button className="btn-outline rounded-md px-4 py-1 text-sm">
+                  Deposit
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
