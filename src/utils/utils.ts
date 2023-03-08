@@ -82,3 +82,8 @@ export const getDecimalDivFormatted = (
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function getCountryName(ISO: string) {
+  const getCountryNames = new Intl.DisplayNames(["en"], { type: "region" });
+  return getCountryNames.of(ISO);
+}
