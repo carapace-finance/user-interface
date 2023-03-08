@@ -63,7 +63,7 @@ const LockScreen = () => {
           Access from <br />
           <i>
             UNITED STATES, CUBA, IRAN, MYANMAR(BURMA), NORTH KOREA, SYRIA,
-            AFGHANISTAN, THE REGIONS OF CRIMEA, DONETSK OR LUHANSK
+            AFGHANISTAN, THE REGIONS OF CRIMEA, DONETSK, OR LUHANSK
           </i>
           <br />
           is restricted.
