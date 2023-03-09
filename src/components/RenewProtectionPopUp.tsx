@@ -10,8 +10,6 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import numeral from "numeral";
-import SuccessPopup from "./SuccessPopup";
-import ErrorPopup from "@components/ErrorPopup";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { UserContext } from "@contexts/UserContextProvider";
 import {
@@ -19,12 +17,10 @@ import {
   convertUSDCToNumber,
   USDC_FORMAT
 } from "@utils/usdc";
-import { Tooltip } from "@material-tailwind/react";
-import assets from "src/assets";
 import { X } from "lucide-react";
-import useBuyProtection from "@/hooks/useBuyProtection";
+import useRenewProtection from "@/hooks/useRenewProtection";
 
-const BuyProtectionPopUp = (props) => {
+const RenewProtectionPopUp = (props) => {
   const {
     open,
     onClose,
@@ -48,7 +44,7 @@ const BuyProtectionPopUp = (props) => {
   const { updateUserUsdcBalance } = useContext(UserContext);
 
   // TODO: update params
-  const { prepareFn, writeFn, waitFn } = useBuyProtection(
+  const { prepareFn, writeFn, waitFn } = useRenewProtection(
     "0x8531EB39FbaEaB9Df406762aAE2C6005A898a092",
     "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
     protectionAmount,
@@ -93,7 +89,7 @@ const BuyProtectionPopUp = (props) => {
   };
 
   // Function passed into 'onClick' of 'Buy Protection' button
-  const buyProtection = async () => {
+  const renewProtection = async () => {
     writeFn?.write();
     // setLoading(true);
     // setError("");
@@ -152,20 +148,12 @@ const BuyProtectionPopUp = (props) => {
         </IconButton>
       </div>
       <div className="mt-8" />
-      <DialogTitle className="text-center mt-8">Buy Protection</DialogTitle>
+      <DialogTitle className="text-center mt-8">Renew Protection</DialogTitle>
       <DialogContent className="mb-4 mx-4">
         <div>
           <div className="mb-4">
             <div className="flex">
               {renderFieldAndValue("Lending Pool", name)}
-              {/* <div className="ml-2 mt-5">
-                <img
-                  src={assets.goldfinch.src}
-                  alt="carapace"
-                  height="16"
-                  width="16"
-                />
-              </div> */}
             </div>
             {renderFieldAndValue(
               "Protection Amount",
@@ -203,7 +191,7 @@ const BuyProtectionPopUp = (props) => {
               className={`text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer min-w-[330px] ${
                 loading ? "disabled:opacity-90" : "disabled:opacity-50"
               } disabled:cursor-not-allowed`}
-              onClick={buyProtection}
+              onClick={renewProtection}
               disabled={
                 loading // ||
                 // !protectionPoolService ||
@@ -222,7 +210,7 @@ const BuyProtectionPopUp = (props) => {
                   <CircularProgress color="secondary" size={16} />
                 </LoadingButton>
               ) : (
-                "Confirm Protection Purchase"
+                "Confirm Protection Renewal"
               )}
             </button>
           </div>
@@ -235,11 +223,6 @@ const BuyProtectionPopUp = (props) => {
           </div>
         </div>
       </DialogContent>
-      <SuccessPopup
-        handleClose={() => setSuccessMessage("")}
-        message={successMessage}
-      />
-      <ErrorPopup error={error} handleCloseError={() => setError("")} />
     </Dialog>
   );
 };
@@ -258,4 +241,4 @@ const renderFieldAndValue = (fieldLabel, fieldValue) => {
   );
 };
 
-export default BuyProtectionPopUp;
+export default RenewProtectionPopUp;
