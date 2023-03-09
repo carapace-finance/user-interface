@@ -151,13 +151,33 @@ const BuyProtectionPopUp = (props) => {
           <span className="text-black">×</span>
         </IconButton>
       </div>
-      <DialogTitle className="mt-6">Buy Protection</DialogTitle>
-      <DialogContent className="mb-4">
+      <DialogTitle className="text-center">Buy Protection</DialogTitle>
+      <DialogContent className="mb-4 mx-4">
         <div>
           <div className="mb-4">
+            <div className="flex">
+              {renderFieldAndValue("Lending Pool", name)}
+              {/* <div className="ml-2 mt-5">
+                <img
+                  src={assets.goldfinch.src}
+                  alt="carapace"
+                  height="16"
+                  width="16"
+                />
+              </div> */}
+            </div>
+            {renderFieldAndValue(
+              "Protection Amount",
+              numeral(protectionAmount).format(USDC_FORMAT) + " USDC"
+            )}
+            {renderFieldAndValue(
+              "Duration",
+              protectionDurationInDays + " Days"
+            )}
+            {/* {renderFieldAndValue("Token Id", tokenId)} */}
             <div>
               {renderFieldAndValue(
-                "Premium Price",
+                "Max Premium Price",
                 calculatingPremiumPrice ? (
                   <div>
                     Calculating Premium Price...
@@ -176,123 +196,36 @@ const BuyProtectionPopUp = (props) => {
                 </h5>
               )}
             </div>
-            <div className="flex">
-              {renderFieldAndValue("Lending Pool", name)}
-              <div className="ml-2 mt-5">
-                <img
-                  src={assets.goldfinch.src}
-                  alt="carapace"
-                  height="16"
-                  width="16"
-                />
-              </div>
-            </div>
-            {renderFieldAndValue(
-              "Protection Amount",
-              numeral(protectionAmount).format(USDC_FORMAT) + " USDC"
-            )}
-            {renderFieldAndValue(
-              "Duration",
-              protectionDurationInDays + " Days"
-            )}
-            {/* {renderFieldAndValue("Token Id", tokenId)} */}
           </div>
-          <Divider className="mb-8" />
-          <div className="mt-4">
-            <Typography
-              className="flex justify-left text-customGrey text-base font-bold"
-              variant="subtitle2"
+          <div className="flex justify-center mt-6">
+            <button
+              className={`text-white text-base bg-customBlue px-8 py-4 rounded-md cursor-pointer min-w-[330px] ${
+                loading ? "disabled:opacity-90" : "disabled:opacity-50"
+              } disabled:cursor-not-allowed`}
+              onClick={buyProtection}
+              disabled={
+                loading // ||
+                // !protectionPoolService ||
+                // !protectionPoolAddress ||
+                // !protectionAmount ||
+                // calculatingPremiumPrice ||
+                // !protectionDurationInDays ||
+                // !tokenId ||
+                // !lendingPoolAddress ||
+                // !hasEnoughUsdcBalance() ||
+                // premiumAmount === 0
+              }
             >
-              <p className="text-base mb-2">Estimated Stats</p>
-            </Typography>
-            <Typography
-              className="flex justify-between pb-3 mt-4"
-              variant="caption"
-            >
-              <div className="text-gray-500 text-sm flex items-center">
-                Expected Adjusted Yield:
-                <div className="pl-2">
-                  <Tooltip
-                    content="Lending Pool APY minus Premium"
-                    placement="top"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-4 h-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
-                  </Tooltip>
-                </div>
-              </div>
-              <div className="text-sm">{adjustedYields}</div>
-            </Typography>
-            <Typography className="flex justify-between mb-4" variant="caption">
-              <div className="text-gray-500 text-sm flex items-center">
-                Expected Network Fees:
-                <div className="pl-2">
-                  <Tooltip
-                    content="Fees you pay to the Ethereum network"
-                    placement="top"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-4 h-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
-                  </Tooltip>
-                </div>
-              </div>
-              <div className="text-sm">
-                ${numeral(expectedNetworkFee).format("0.00")}
-              </div>
-            </Typography>
+              {loading ? (
+                <LoadingButton loading={loading}>
+                  <CircularProgress color="secondary" size={16} />
+                </LoadingButton>
+              ) : (
+                "Confirm Protection Purchase"
+              )}
+            </button>
           </div>
-          <button
-            className={`text-white text-base bg-customBlue px-8 py-4 mt-8 rounded-md cursor-pointer min-w-[330px] ${
-              loading ? "disabled:opacity-90" : "disabled:opacity-50"
-            } disabled:cursor-not-allowed`}
-            onClick={buyProtection}
-            disabled={
-              loading // ||
-              // !protectionPoolService ||
-              // !protectionPoolAddress ||
-              // !protectionAmount ||
-              // calculatingPremiumPrice ||
-              // !protectionDurationInDays ||
-              // !tokenId ||
-              // !lendingPoolAddress ||
-              // !hasEnoughUsdcBalance() ||
-              // premiumAmount === 0
-            }
-          >
-            {loading ? (
-              <LoadingButton loading={loading}>
-                <CircularProgress color="secondary" size={16} />
-              </LoadingButton>
-            ) : (
-              "Confirm Protection Purchase"
-            )}
-          </button>
-          <div className="flex"></div>
-          <div className="text-sm mt-4">
+          <div className="text-xs mt-6">
             By clicking &quot;Confirm Protection Purchase&quot;, you agree to
             Carapace&apos;s&nbsp;
             <span className="underline">Terms of Service&nbsp;</span>
