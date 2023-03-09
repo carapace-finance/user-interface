@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 const TitleAndDescriptions = dynamic(
-  () => import("@components/TitleAndDescriptions"),
+  () => import("@/components/TitleAndDescriptions"),
   { ssr: false }
 );
 import AllLendingPools from "@components/tables/AllLendingPools";
