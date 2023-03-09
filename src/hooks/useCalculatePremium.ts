@@ -60,15 +60,15 @@ const useCalculatePremium = (
   });
 
   const amount = getDecimalMul(protctionAmount, 18);
-  const args: [number, BigNumber, BigNumber, BigNumber, BigNumber, any] =
-    useDebounce([
-      getDaysInSeconds(protctionDuration),
-      amount,
-      aprFn.data, //calculateProtectionBuyerAPR
-      protectionPoolReadsFn?.data?.[1], //calculateLeverageRatio
-      protectionPoolReadsFn?.data?.[2]?.[0], //totalSTokenUnderlying
-      (protectionPoolReadsFn?.data?.[0] as any)?.params
-    ]);
+  // TODO: fix type
+  const args: [BigNumber, BigNumber, any, any, BigNumber, any] = useDebounce([
+    getDaysInSeconds(protctionDuration),
+    amount,
+    aprFn.data, //calculateProtectionBuyerAPR
+    protectionPoolReadsFn?.data?.[1], //calculateLeverageRatio
+    protectionPoolReadsFn?.data?.[2]?.[0], //totalSTokenUnderlying
+    (protectionPoolReadsFn?.data?.[0] as any)?.params
+  ]);
 
   // console.log("args:", args);
 
