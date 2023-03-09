@@ -20,6 +20,7 @@ import ErrorPopup from "@components/ErrorPopup";
 import { LoadingButton } from "@mui/lab";
 import numeral from "numeral";
 import { WithdrawalRequestInput } from "@type/types";
+import useRequestWithdrawal from "@/hooks/useRequestWithdrawal";
 
 const WithdrawalRequestPopUp = (props) => {
   const {
@@ -36,6 +37,11 @@ const WithdrawalRequestPopUp = (props) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  // TODO: update params
+  const { prepareFn, writeFn, waitFn } = useRequestWithdrawal(
+    "1",
+    "0x8531EB39FbaEaB9Df406762aAE2C6005A898a092"
+  );
 
   const reset = () => {
     setSuccessMessage("");
@@ -63,7 +69,8 @@ const WithdrawalRequestPopUp = (props) => {
   };
 
   const onSubmit = () => {
-    requestedWithdrawal();
+    writeFn?.writeAsync();
+    // requestedWithdrawal();
   }; // your form submit function which will invoke after successful validation
 
   const onError = (e) => {
@@ -143,7 +150,7 @@ const WithdrawalRequestPopUp = (props) => {
                   type="number"
                   {...register("amount", {
                     min: 1,
-                    max: requestableAmount,
+                    // max: requestableAmount,
                     required: true
                   })}
                   onWheel={(e: any) => e.target.blur()}
@@ -192,7 +199,10 @@ const WithdrawalRequestPopUp = (props) => {
               <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
                 Expected Network Fees
                 <div className="pl-2">
-                  <Tooltip content="Fees you pay to the Ethereum network" placement="right">
+                  <Tooltip
+                    content="Fees you pay to the Ethereum network"
+                    placement="right"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -220,12 +230,7 @@ const WithdrawalRequestPopUp = (props) => {
               loading ? "disabled:opacity-90" : "disabled:opacity-50"
             }  disabled:cursor-not-allowed`}
             type="submit"
-            disabled={
-              loading ||
-              !protectionPoolService ||
-              !protectionPoolAddress ||
-              !isValid
-            }
+            disabled={loading}
           >
             {loading ? (
               <LoadingButton loading={loading}>
