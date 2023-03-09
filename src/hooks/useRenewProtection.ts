@@ -14,7 +14,7 @@ import { USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
 import { getDecimalMul, getDaysInSeconds } from "@/utils/utils";
 import useCalculatePremium from "@/hooks/useCalculatePremium";
 
-const useBuyProtection = (
+const useRenewProtection = (
   protectionPoolAddress: Address,
   lendingPoolAddress: Address,
   protectionAmount: string,
@@ -48,7 +48,7 @@ const useBuyProtection = (
   const prepareFn = usePrepareContractWrite({
     address: protectionPoolAddress,
     abi: ProtectionPoolABI,
-    functionName: "buyProtection",
+    functionName: "renewProtection",
     args,
     chainId: chain?.id,
     enabled:
@@ -73,12 +73,12 @@ const useBuyProtection = (
         chainId: chain?.id,
         address,
         type: "Transaction",
-        description: "buyProtection",
+        description: "renewProtection",
         hash: data?.hash
       });
     },
     onError(error) {
-      console.log("useBuyProtection write error", error);
+      console.log("userenewProtection write error", error);
     }
   });
 
@@ -93,11 +93,11 @@ const useBuyProtection = (
       });
     },
     onError(error) {
-      console.log("useBuyProtection wait error", error);
+      console.log("useRenewProtection wait error", error);
     }
   });
 
   return { prepareFn, writeFn, waitFn };
 };
 
-export default useBuyProtection;
+export default useRenewProtection;

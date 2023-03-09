@@ -38,15 +38,15 @@ const useCalculatePremium = (
     ]
   });
 
-  const referenceLendingPoolsFn = useContractRead({
-    address: (protectionPoolReadsFn?.data?.[0] as any)?.referenceLendingPools,
-    abi: ReferenceLendingPoolsABI,
-    functionName: "getLendingPools",
-    chainId: chain?.id,
-    enabled:
-      !!chain &&
-      !!(protectionPoolReadsFn?.data?.[0] as any)?.referenceLendingPools
-  });
+  // const referenceLendingPoolsFn = useContractRead({
+  //   address: (protectionPoolReadsFn?.data?.[0] as any)?.referenceLendingPools,
+  //   abi: ReferenceLendingPoolsABI,
+  //   functionName: "getLendingPools",
+  //   chainId: chain?.id,
+  //   enabled:
+  //     !!chain &&
+  //     !!(protectionPoolReadsFn?.data?.[0] as any)?.referenceLendingPools
+  // });
 
   const aprFn = useContractRead({
     address: (protectionPoolReadsFn?.data?.[0] as any)?.referenceLendingPools,
@@ -70,7 +70,7 @@ const useCalculatePremium = (
       (protectionPoolReadsFn?.data?.[0] as any)?.params
     ]);
 
-  console.log("args:", args);
+  // console.log("args:", args);
 
   const readFn = useContractRead({
     address: "0x1A3279fC30bAB096BC0c8a21B1a3C896A7680903", // TODO: get this from config
@@ -85,8 +85,6 @@ const useCalculatePremium = (
       protectionPoolReadsFn.isFetched &&
       protectionPoolReadsFn.isSuccess
   });
-
-  console.log("***readFn***", readFn.data?.[0].toString());
 
   return { ...readFn };
 };
