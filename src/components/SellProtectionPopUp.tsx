@@ -18,6 +18,7 @@ import assets from "@/assets";
 import useDeposit from "@/hooks/useDeposit";
 import Spinner from "@/components/Spinner";
 import type { Address } from "abitype";
+import { X } from "lucide-react";
 
 type Props = {
   open: boolean;
@@ -84,11 +85,12 @@ const SellProtectionPopUp = ({
         }
       }}
     >
-      <div className="flex justify-end mr-4">
-        <IconButton onClick={onClose}>
-          <span className="text-black">×</span>
+      <div className="absolute top-3 right-3">
+        <IconButton onClick={loading ? null : onClose}>
+          <X className="text-black" size={18} />
         </IconButton>
       </div>
+      <div className="mt-8" />
       <DialogTitle className="text-center">Deposit</DialogTitle>
       <DialogContent className="mb-4 mx-4">
         <div>

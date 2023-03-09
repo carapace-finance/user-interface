@@ -22,6 +22,7 @@ import {
 } from "@utils/usdc";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
+import { X } from "lucide-react";
 import useBuyProtection from "@/hooks/useBuyProtection";
 
 const BuyProtectionPopUp = (props) => {
@@ -142,16 +143,17 @@ const BuyProtectionPopUp = (props) => {
       onClose={loading ? null : onClose}
       PaperProps={{
         style: {
-          borderRadius: "10px"
+          borderRadius: "1rem"
         }
       }}
     >
-      <div className="flex justify-end mr-4">
+      <div className="absolute top-3 right-3">
         <IconButton onClick={loading ? null : onClose}>
-          <span className="text-black">×</span>
+          <X className="text-black" size={18} />
         </IconButton>
       </div>
-      <DialogTitle className="text-center">Buy Protection</DialogTitle>
+      <div className="mt-8" />
+      <DialogTitle className="text-center mt-8">Buy Protection</DialogTitle>
       <DialogContent className="mb-4 mx-4">
         <div>
           <div className="mb-4">
