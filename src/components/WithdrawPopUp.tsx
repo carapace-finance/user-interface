@@ -16,6 +16,7 @@ import SuccessPopup from "./SuccessPopup";
 import ErrorPopup from "@components/ErrorPopup";
 import numeral from "numeral";
 import { WithdrawalInput } from "@type/types";
+import useWithdraw from "@/hooks/useWithdraw";
 
 const WithdrawalPopUp = (props) => {
   const {
@@ -31,6 +32,11 @@ const WithdrawalPopUp = (props) => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
+  // TOOD: update params
+  const { prepareFn, writeFn, waitFn } = useWithdraw(
+    "1",
+    "0x8531EB39FbaEaB9Df406762aAE2C6005A898a092"
+  );
 
   const reset = () => {
     setSuccessMessage("");
@@ -49,7 +55,8 @@ const WithdrawalPopUp = (props) => {
   };
 
   const onSubmit = () => {
-    withdraw();
+    writeFn.write();
+    // withdraw();
   }; // your form submit function which will invoke after successful validation
 
   const onError = (e) => {
@@ -179,7 +186,10 @@ const WithdrawalPopUp = (props) => {
               <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
                 Expected Network Fees
                 <div className="pl-2">
-                  <Tooltip content="Fees you pay to the Ethereum network" placement="top">
+                  <Tooltip
+                    content="Fees you pay to the Ethereum network"
+                    placement="top"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -207,12 +217,7 @@ const WithdrawalPopUp = (props) => {
               loading ? "disabled:opacity-90" : "disabled:opacity-50"
             } disabled:cursor-not-allowed`}
             type="submit"
-            disabled={
-              loading ||
-              !protectionPoolService ||
-              !protectionPoolAddress ||
-              !isValid
-            }
+            disabled={loading}
           >
             {loading ? (
               <LoadingButton loading={loading}>

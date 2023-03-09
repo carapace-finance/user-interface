@@ -20,9 +20,9 @@ import {
   convertUSDCToNumber,
   USDC_FORMAT
 } from "@utils/usdc";
-import { getDaysInSeconds } from "@utils/utils";
 import { Tooltip } from "@material-tailwind/react";
 import assets from "src/assets";
+import useBuyProtection from "@/hooks/useBuyProtection";
 
 const BuyProtectionPopUp = (props) => {
   const {
@@ -47,6 +47,14 @@ const BuyProtectionPopUp = (props) => {
   const { protectionPoolService, provider } = useContext(ApplicationContext);
   const { updateUserUsdcBalance } = useContext(UserContext);
 
+  // TODO: update params
+  const { prepareFn, writeFn, waitFn } = useBuyProtection(
+    "0x8531EB39FbaEaB9Df406762aAE2C6005A898a092",
+    "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
+    protectionAmount,
+    protectionDurationInDays
+  );
+
   const router = useRouter();
 
   const reset = () => {
@@ -60,7 +68,8 @@ const BuyProtectionPopUp = (props) => {
 
   useEffect(() => {
     (async () => {
-      provider && setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance())) ;
+      provider &&
+        setUsdcBalance(convertUSDCToNumber(await updateUserUsdcBalance()));
     })();
   }, [open]);
 
@@ -85,44 +94,44 @@ const BuyProtectionPopUp = (props) => {
 
   // Function passed into 'onClick' of 'Buy Protection' button
   const buyProtection = async () => {
-    setLoading(true);
-    setError("");
+    writeFn?.write();
+    // setLoading(true);
+    // setError("");
+    // try {
+    //   const protectionPurchaseParams = {
+    //     lendingPoolAddress: lendingPoolAddress,
+    //     nftLpTokenId: tokenId,
+    //     protectionAmount: convertNumberToUSDC(parseFloat(protectionAmount)),
+    //     protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
+    //   };
+    //   const tx = await protectionPoolService.buyProtection(
+    //     protectionPoolAddress,
+    //     protectionPurchaseParams,
+    //     convertNumberToUSDC(premiumAmount)
+    //   );
 
-    try {
-      const protectionPurchaseParams = {
-        lendingPoolAddress: lendingPoolAddress,
-        nftLpTokenId: tokenId,
-        protectionAmount: convertNumberToUSDC(parseFloat(protectionAmount)),
-        protectionDurationInSeconds: getDaysInSeconds(protectionDurationInDays)
-      };
-      const tx = await protectionPoolService.buyProtection(
-        protectionPoolAddress,
-        protectionPurchaseParams,
-        convertNumberToUSDC(premiumAmount)
-      );
-
-      const receipt = await tx.wait();
-      if (receipt.status === 1) {
-        protectionPoolService.updateProtectionPurchaseByLendingPool(
-          lendingPoolAddress,
-          protectionPurchaseParams.protectionAmount
-        );
-        console.log("The buy protection transaction was successful");
-        // Show success message for 2 seconds before closing popup
-        setSuccessMessage(
-          `You successfully bought protection for ${protectionDurationInDays} days!`
-        );
-        setTimeout(() => {
-          onClose();
-          router.push("/portfolio");
-          setLoading(false);
-        }, 2000);
-      } else {
-        onError(receipt);
-      }
-    } catch (e) {
-      onError(e);
-    }
+    //   const receipt = await tx.wait();
+    //   if (receipt.status === 1) {
+    //     protectionPoolService.updateProtectionPurchaseByLendingPool(
+    //       lendingPoolAddress,
+    //       protectionPurchaseParams.protectionAmount
+    //     );
+    //     console.log("The buy protection transaction was successful");
+    //     // Show success message for 2 seconds before closing popup
+    //     setSuccessMessage(
+    //       `You successfully bought protection for ${protectionDurationInDays} days!`
+    //     );
+    //     setTimeout(() => {
+    //       onClose();
+    //       router.push("/portfolio");
+    //       setLoading(false);
+    //     }, 2000);
+    //   } else {
+    //     onError(receipt);
+    //   }
+    // } catch (e) {
+    //   onError(e);
+    // }
   };
 
   return (
@@ -203,7 +212,10 @@ const BuyProtectionPopUp = (props) => {
               <div className="text-gray-500 text-sm flex items-center">
                 Expected Adjusted Yield:
                 <div className="pl-2">
-                  <Tooltip content="Lending Pool APY minus Premium" placement="top">
+                  <Tooltip
+                    content="Lending Pool APY minus Premium"
+                    placement="top"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -227,7 +239,10 @@ const BuyProtectionPopUp = (props) => {
               <div className="text-gray-500 text-sm flex items-center">
                 Expected Network Fees:
                 <div className="pl-2">
-                  <Tooltip content="Fees you pay to the Ethereum network" placement="top">
+                  <Tooltip
+                    content="Fees you pay to the Ethereum network"
+                    placement="top"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -256,16 +271,16 @@ const BuyProtectionPopUp = (props) => {
             } disabled:cursor-not-allowed`}
             onClick={buyProtection}
             disabled={
-              loading ||
-              !protectionPoolService ||
-              !protectionPoolAddress ||
-              !protectionAmount ||
-              calculatingPremiumPrice ||
-              !protectionDurationInDays ||
-              !tokenId ||
-              !lendingPoolAddress ||
-              !hasEnoughUsdcBalance() ||
-              premiumAmount === 0
+              loading // ||
+              // !protectionPoolService ||
+              // !protectionPoolAddress ||
+              // !protectionAmount ||
+              // calculatingPremiumPrice ||
+              // !protectionDurationInDays ||
+              // !tokenId ||
+              // !lendingPoolAddress ||
+              // !hasEnoughUsdcBalance() ||
+              // premiumAmount === 0
             }
           >
             {loading ? (

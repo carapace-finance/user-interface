@@ -11,11 +11,10 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { getDecimalMul } from "@/utils/utils";
 import type { Address } from "abitype";
 import ProtectionPoolABI from "@/contracts/mainnet/abi/ProtectionPool.json";
-import { USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
 
-const useDeposit = (amount: string, protectionPoolAddress: Address) => {
+const useWithdraw = (amount: string, protectionPoolAddress: Address) => {
   const { chain } = useNetwork();
-  const _amount = getDecimalMul(amount, USDC_NUM_OF_DECIMALS);
+  const _amount = getDecimalMul(amount, 18);
   const { address } = useAccount();
   const args: [BigNumber, Address] = useDebounce([_amount, address]);
   const { addTx, recieveTx } = useTransaction();
@@ -23,7 +22,7 @@ const useDeposit = (amount: string, protectionPoolAddress: Address) => {
   const prepareFn = usePrepareContractWrite({
     address: protectionPoolAddress,
     abi: ProtectionPoolABI,
-    functionName: "deposit",
+    functionName: "withdraw",
     args,
     chainId: chain?.id,
     enabled: !!chain && !!protectionPoolAddress && BigNumber.from(amount).gt(0)
@@ -36,12 +35,12 @@ const useDeposit = (amount: string, protectionPoolAddress: Address) => {
         chainId: chain?.id,
         address,
         type: "Transaction",
-        description: "Deposit",
+        description: "Withdraw",
         hash: data?.hash
       });
     },
     onError(error) {
-      console.log("useDeposit write error", error);
+      console.log("useWithdraw write error", error);
     }
   });
 
@@ -56,11 +55,11 @@ const useDeposit = (amount: string, protectionPoolAddress: Address) => {
       });
     },
     onError(error) {
-      console.log("useDeposit wait error", error);
+      console.log("useWithdraw wait error", error);
     }
   });
 
   return { prepareFn, writeFn, waitFn };
 };
 
-export default useDeposit;
+export default useWithdraw;
