@@ -3,10 +3,8 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  IconButton,
-  Divider
+  IconButton
 } from "@mui/material";
-import { Tooltip } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
@@ -21,6 +19,7 @@ import { LoadingButton } from "@mui/lab";
 import numeral from "numeral";
 import { WithdrawalRequestInput } from "@type/types";
 import useRequestWithdrawal from "@/hooks/useRequestWithdrawal";
+import { X } from "lucide-react";
 
 const WithdrawalRequestPopUp = (props) => {
   const {
@@ -125,12 +124,13 @@ const WithdrawalRequestPopUp = (props) => {
         }
       }}
     >
-      <div className="flex justify-end mr-4">
+      <div className="absolute top-3 right-3">
         <IconButton onClick={loading ? null : onClose}>
-          <span className="text-black">×</span>
+          <X className="text-black" size={18} />
         </IconButton>
       </div>
-      <DialogTitle className="mt-6">Withdrawal Request</DialogTitle>
+      <div className="mt-8" />
+      <DialogTitle className="text-center">Withdrawal Request</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <h4 className="text-left text-base font-medium mb-3">
@@ -190,43 +190,8 @@ const WithdrawalRequestPopUp = (props) => {
               {numeral(requestableAmount).format(USDC_FORMAT) + " USDC"}
             </div>
           </div>
-          <Divider />
-          <div className="pt-4">
-            <h4 className="flex justify-left mb-4 text-base font-medium">
-              Estimated Stats
-            </h4>
-            <div className="flex justify-between mb-2">
-              <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
-                Expected Network Fees
-                <div className="pl-2">
-                  <Tooltip
-                    content="Fees you pay to the Ethereum network"
-                    placement="right"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-4 h-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
-                  </Tooltip>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm">$10.00</p>
-              </div>
-            </div>
-          </div>
           <button
-            className={`text-white bg-customBlue rounded-md px-12 py-4 mb-8 mt-8 transition duration-500 ease min-w-[300px] select-none focus:outline-none focus:shadow-outline cursor-pointer ${
+            className={`text-white bg-customBlue rounded-md px-12 py-4 mb-8 mt-8 transition duration-500 ease min-w-[300px] select-none focus:outline-none focus:shadow-outline cursor-pointer mx-auto block ${
               loading ? "disabled:opacity-90" : "disabled:opacity-50"
             }  disabled:cursor-not-allowed`}
             type="submit"
@@ -240,7 +205,7 @@ const WithdrawalRequestPopUp = (props) => {
               "Confirm Withdrawal Request"
             )}
           </button>
-          <div className="text-sm">
+          <div className="text-xs text-center">
             By clicking &quot;Confirm Withdrawal Request&quot;, you agree to
             Carapace&apos;s&nbsp;
             <span className="underline">Terms of Service&nbsp;</span>
