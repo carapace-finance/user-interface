@@ -151,7 +151,10 @@ const RenewProtectionPopUp = (props) => {
         <div>
           <div className="mb-4">
             <div className="flex">
-              {renderFieldAndValue("Lending Pool", name)}
+              {renderFieldAndValue(
+                "Lending Pool",
+                "Lend East #1: Emerging Asia Fintech Pool"
+              )}
             </div>
             {renderFieldAndValue(
               "Protection Amount",
