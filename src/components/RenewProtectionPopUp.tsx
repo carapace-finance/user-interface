@@ -19,21 +19,22 @@ import {
 } from "@utils/usdc";
 import { X } from "lucide-react";
 import useRenewProtection from "@/hooks/useRenewProtection";
+import { BigNumber } from "ethers";
 
 const RenewProtectionPopUp = (props) => {
   const {
     open,
-    onClose,
-    protectionAmount,
-    protectionDurationInDays,
-    tokenId,
-    premiumAmount,
-    calculatingPremiumPrice,
-    setPremiumPrice,
-    lendingPoolAddress,
-    protectionPoolAddress,
-    name,
-    adjustedYields
+    onClose
+    // protectionAmount,
+    // protectionDurationInDays,
+    // tokenId,
+    // premiumAmount,
+    // calculatingPremiumPrice,
+    // setPremiumPrice,
+    // lendingPoolAddress,
+    // protectionPoolAddress,
+    // name,
+    // adjustedYields
   } = props;
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
@@ -47,16 +48,13 @@ const RenewProtectionPopUp = (props) => {
   const { prepareFn, writeFn, waitFn } = useRenewProtection(
     "0x8531EB39FbaEaB9Df406762aAE2C6005A898a092",
     "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
-    protectionAmount,
-    protectionDurationInDays
+    "1000",
+    "50"
   );
-
-  const router = useRouter();
 
   const reset = () => {
     setSuccessMessage("");
     setError("");
-    setPremiumPrice(0);
     setLoading(false);
   };
 
@@ -81,7 +79,7 @@ const RenewProtectionPopUp = (props) => {
   };
 
   const hasEnoughUsdcBalance = () => {
-    if (premiumAmount > usdcBalance) {
+    if (1000 > usdcBalance) {
       return false;
     } else {
       return true;
@@ -155,22 +153,16 @@ const RenewProtectionPopUp = (props) => {
             <div className="flex">
               {renderFieldAndValue("Lending Pool", name)}
             </div>
-            {renderFieldAndValue("Protection Amount", <input />)}
-            {renderFieldAndValue("Duration", <input />)}
+            {renderFieldAndValue(
+              "Protection Amount",
+              <input type="number" className="border rounded-md w-full p-2" />
+            )}
+            {renderFieldAndValue(
+              "Duration",
+              <input type="number" className="border rounded-md w-full p-2" />
+            )}
             <div>
-              {renderFieldAndValue(
-                "Max Premium Price",
-                calculatingPremiumPrice ? (
-                  <div>
-                    Calculating Premium Price...
-                    <LoadingButton
-                      loading={calculatingPremiumPrice}
-                    ></LoadingButton>
-                  </div>
-                ) : (
-                  numeral(premiumAmount).format(USDC_FORMAT) + " USDC"
-                )
-              )}
+              {renderFieldAndValue("Max Premium Price", "1234")}
               {hasEnoughUsdcBalance() ? null : (
                 <h5 className="block text-left text-customPink text-base font-normal">
                   You don&apos;t have enough USDC balance:&nbsp;

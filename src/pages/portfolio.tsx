@@ -10,12 +10,14 @@ const TitleAndDescriptions = dynamic(
 );
 import WithdrawalRequestPopUp from "@/components/WithdrawalRequestPopUp";
 import WithdrawPopUp from "@/components/WithdrawPopUp";
+import RenewProtectionPopUp from "@/components/RenewProtectionPopUp";
 import { ApplicationContext } from "@/contexts/ApplicationContextProvider";
 import { ProtectionPoolContext } from "@/contexts/ProtectionPoolContextProvider";
 import { UserContext } from "@/contexts/UserContextProvider";
 import { convertUSDCToNumber, USDC_FORMAT } from "@/utils/usdc";
 import numeral from "numeral";
 import { getLendingPoolName } from "@/utils/playground/playground";
+import { Info } from "lucide-react";
 
 import assets from "src/assets";
 import { CircularProgress, Skeleton } from "@mui/material";
@@ -24,6 +26,7 @@ import { unixtimeDiffFromNow } from "@/utils/date";
 const Portfolio = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [isRenewProtectionOpen, setIsRenewProtectionOpen] = useState(false);
   const { contractAddresses } = useContext(ApplicationContext);
   const [protectionPoolAddress, setProtectionPoolAddress] = useState("");
   const { protectionPools } = useContext(ProtectionPoolContext);
@@ -48,147 +51,58 @@ const Portfolio = () => {
             <tr className="text-left text-ms font-bold">
               <th>
                 <div className="flex flex-row justify-start mr-4">
-                  <p className="mr-4">Name</p>
-                  <Tooltip
-                    animate={{
-                      mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 }
-                    }}
-                    content="The name of the underlying lending pool for which you bought protection"
-                    placement="top"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="#6E7191"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
-                  </Tooltip>
+                  <p className="mr-4">Lending Pool</p>
                 </div>
               </th>
-              <th>Protocol</th>
               <th>
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Protection Amount</p>
-                  <Tooltip
-                    animate={{
-                      mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 }
-                    }}
-                    content="The amount of protection you can get"
-                    placement="top"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="#6E7191"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
-                  </Tooltip>
                 </div>
               </th>
-
               <th>
-                <div className="flex flex-row justify-start mr-4">
+                <div className="flex items-center justify-start mr-4">
                   <p className="mr-4">Protection Expires In</p>
                   <Tooltip
-                    animate={{
-                      mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 }
-                    }}
                     content="Time left until this protection expires"
                     placement="top"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="#6E7191"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
+                    <Info size={16} className="text-customGrey" />
                   </Tooltip>
                 </div>
               </th>
               <th>
-                <div className="flex flex-row justify-start mr-4">
+                <div className="flex items-center justify-start mr-4">
                   <p className="mr-4">Premium</p>
                   <Tooltip
-                    animate={{
-                      mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 }
-                    }}
-                    content="The premium you have paid for this protection"
+                    content="Time left until this protection expires"
                     placement="top"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="#6E7191"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                      />
-                    </svg>
+                    <Info size={16} className="text-customGrey" />
                   </Tooltip>
                 </div>
               </th>
-              {/* //todo: show this button when there is a valid claim  */}
-              {/* <th>
-              <div className="flex flex-row items-center">
-                Claim
-                <Tooltip
-                  animate={{
-                    mount: { scale: 1, y: 0 },
-                    unmount: { scale: 0, y: 25 }
-                  }}
-                  content="You can claim a payout when the underlying lending pool defaults."
-                  placement="top"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="#6E7191"
-                    className="w-5 h-5 ml-4"
+              <th>
+                <div className="flex items-center justify-start mr-4">
+                  <p className="mr-4">CARA Token Rewards</p>
+                  <Tooltip
+                    content="Time left until this protection expires"
+                    placement="top"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                    />
-                  </svg>
-                </Tooltip>
-              </div>
-            </th> */}
+                    <Info size={16} className="text-customGrey" />
+                  </Tooltip>
+                </div>
+              </th>
+              <th>
+                <div className="flex items-center justify-start mr-4">
+                  <p className="mr-4">Renew</p>
+                  <Tooltip
+                    content="Time left until this protection expires"
+                    placement="top"
+                  >
+                    <Info size={16} className="text-customGrey" />
+                  </Tooltip>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -199,14 +113,6 @@ const Portfolio = () => {
               >
                 <td className="py-4 pr-4">
                   {getLendingPoolName(userLendingPool.lendingPoolAddress)}
-                </td>
-                <td className="py-4">
-                  <Image
-                    src={assets.goldfinch.src}
-                    width={24}
-                    height={24}
-                    alt=""
-                  />
                 </td>
                 <td className="py-4">
                   {numeral(
@@ -221,23 +127,16 @@ const Portfolio = () => {
                     userLendingPool.expirationTimestamp.toNumber()
                   )}
                 </td>
+                <td className="py-4">7 %</td>
+                <td className="py-4">~ 3.5 %</td>
                 <td className="py-4">
-                  {numeral(
-                    convertUSDCToNumber(userLendingPool.protectionPremium)
-                  )
-                    .format(USDC_FORMAT)
-                    .toString()}
-                  &nbsp;USDC
+                  <button
+                    className="rounded-md bg-customBlue text-white px-4 py-1"
+                    onClick={() => setIsRenewProtectionOpen(true)}
+                  >
+                    Renew
+                  </button>
                 </td>
-                {/* //todo: show this button when there is a valid claim  */}
-                {/* <td className="py-4">
-                <button
-                  disabled
-                  className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
-                >
-                  claim
-                </button>
-              </td> */}
               </tr>
             ))}
             {buyProtectionLoading && (
@@ -305,10 +204,6 @@ const Portfolio = () => {
                 <div className="flex flex-row justify-start mr-4">
                   <p className="mr-4">Protection Amount</p>
                   <Tooltip
-                    animate={{
-                      mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 }
-                    }}
                     content="The amount of protection you can get"
                     placement="top"
                   >
@@ -424,7 +319,7 @@ const Portfolio = () => {
                 className="text-left text-ms font-medium"
               >
                 <td className="py-4 pr-4">
-                  {getLendingPoolName(userLendingPool.lendingPoolAddress)}
+                  {getLendingPoolName(userLendingPool.lendoingPoolAddress)}
                 </td>
                 <td className="py-4">
                   <Image
@@ -649,14 +544,14 @@ const Portfolio = () => {
                     </span>
                   )}
                 </td>
-                {/* <td>
+                <td>
                   <button
                     onClick={() => setIsWithdrawalRequestOpen(true)}
                     className="border border-customDarkGrey rounded-md text-customDarkGrey px-5 py-1 disabled:opacity-50"
                   >
                     Request
                   </button>
-                </td> */}
+                </td>
                 <td>
                   <button
                     onClick={() => setIsWithdrawOpen(true)}
@@ -689,6 +584,10 @@ const Portfolio = () => {
         onClose={() => setIsWithdrawOpen(false)}
         protectionPoolAddress={protectionPoolAddress}
         requestedWithdrawalAmount={user.requestedWithdrawalAmount}
+      />
+      <RenewProtectionPopUp
+        open={isRenewProtectionOpen}
+        onClose={() => setIsRenewProtectionOpen(false)}
       />
     </main>
   );
