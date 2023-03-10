@@ -19,7 +19,7 @@ import { protocolParameters } from "../../constants";
 export function getLendingPoolName(lendingPoolAddress: string): string {
   const lendingPoolDetails =
     PLAYGROUND_LENDING_POOL_DETAILS_BY_ADDRESS[
-      lendingPoolAddress.toLowerCase()
+      lendingPoolAddress?.toLowerCase()
     ];
 
   return (
@@ -81,7 +81,9 @@ export async function preparePlayground(playground: Playground) {
       lendingPoolAddress: lendingPoolAddress,
       nftLpTokenId: 590,
       protectionAmount: parseUSDC("150000"),
-      protectionDurationInSeconds: getDaysInSeconds(protocolParameters.minProtectionDurationInDays)
+      protectionDurationInSeconds: getDaysInSeconds(
+        protocolParameters.minProtectionDurationInDays
+      )
     },
     parseUSDC("3500")
   );
@@ -153,13 +155,22 @@ async function movePoolCycle(
   const protectionPoolInfo = await protectionPoolInstance.getPoolInfo();
 
   // move from open to locked state
-  await moveForwardTime(provider, getDaysInSeconds(protocolParameters.openCycleDurationInDays + 1));
+  await moveForwardTime(
+    provider,
+    getDaysInSeconds(protocolParameters.openCycleDurationInDays + 1)
+  );
   await poolCycleManagerInstance.calculateAndSetPoolCycleState(
     protectionPoolInfo.poolId
   );
 
   // move to new cycle
-  await moveForwardTime(provider, getDaysInSeconds(protocolParameters.cycleDurationInDays - protocolParameters.openCycleDurationInDays));
+  await moveForwardTime(
+    provider,
+    getDaysInSeconds(
+      protocolParameters.cycleDurationInDays -
+        protocolParameters.openCycleDurationInDays
+    )
+  );
   await poolCycleManagerInstance.calculateAndSetPoolCycleState(
     protectionPoolInfo.poolId
   );
