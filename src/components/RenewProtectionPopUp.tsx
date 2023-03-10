@@ -155,15 +155,8 @@ const RenewProtectionPopUp = (props) => {
             <div className="flex">
               {renderFieldAndValue("Lending Pool", name)}
             </div>
-            {renderFieldAndValue(
-              "Protection Amount",
-              numeral(protectionAmount).format(USDC_FORMAT) + " USDC"
-            )}
-            {renderFieldAndValue(
-              "Duration",
-              protectionDurationInDays + " Days"
-            )}
-            {/* {renderFieldAndValue("Token Id", tokenId)} */}
+            {renderFieldAndValue("Protection Amount", <input />)}
+            {renderFieldAndValue("Duration", <input />)}
             <div>
               {renderFieldAndValue(
                 "Max Premium Price",
