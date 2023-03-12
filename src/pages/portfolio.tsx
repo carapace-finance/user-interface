@@ -21,7 +21,10 @@ import { Info } from "lucide-react";
 
 import assets from "src/assets";
 import { CircularProgress, Skeleton } from "@mui/material";
-import { unixtimeDiffFromNow } from "@/utils/date";
+import { unixtimeDiffFromNow } from "@utils/date";
+import ProtectionPurchasesCard from "@/components/ProtectionPurchasesCard";
+import DepositedCapitalCard from "@/components/DepositedCapitalCard";
+import RequestedWithdrawalCard from "@/components/RequestedWithdrawalCard";
 
 const Portfolio = () => {
   const [isWithdrawalRequestOpen, setIsWithdrawalRequestOpen] = useState(false);
@@ -44,8 +47,13 @@ const Portfolio = () => {
 
   const ProtectionPurchaseSection = () => (
     <>
-      <h3 className="text-left font-bold">Your Protection Purchases</h3>
-      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 mt-4 mb-16">
+      <h3 className="text-left font-bold mt-8 md:mt-0">Your Protection Purchases</h3>
+      <div className="flex md:hidden mt-4">
+        {user.userLendingPools.map((userLendingPool) => (
+          <ProtectionPurchasesCard key={userLendingPool.lendingPoolAddress} protectionPurchasesData={userLendingPool} />
+        ))}
+      </div>
+      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 mt-4 mb-16 hidden md:flex">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-ms font-bold">
@@ -166,8 +174,13 @@ const Portfolio = () => {
 
   const WithdrawalSection = () => (
     <>
-      <h3 className="text-left font-bold mb-4">Your Requested Withdrawal</h3>
-      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 mb-16">
+      <h3 className="text-left font-bold mt-8 md:mt-0">Your Requested Withdrawal</h3>
+      <div className="flex md:hidden mt-4">
+        {user.userLendingPools.map((userLendingPool) => (
+          <RequestedWithdrawalCard key={userLendingPool.lendingPoolAddress} requestedWithdrawalData={userLendingPool} />
+        ))}
+      </div>
+      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 mt-4 mb-16 hidden md:flex">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-ms font-bold">
@@ -228,8 +241,13 @@ const Portfolio = () => {
 
   const DepositedSection = () => (
     <>
-      <h3 className="text-left font-bold mb-4">Your Deposited Capital</h3>
-      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 mb-16">
+      <h3 className="text-left font-bold mb-4 -mt-16">Your Deposited Capital</h3>
+      <div className="flex md:hidden">
+        {protectionPools.map((protectionPool) => (
+          <DepositedCapitalCard key={protectionPool.address} depositedCapitalData={protectionPool} userData={user} setIsWithdrawOpen={setIsWithdrawOpen}/>
+        ))}
+      </div>
+      <div className="rounded-2xl shadow-lg shadow-gray-200 p-8 mb-16 hidden md:flex">
         <table className="table-fixed w-full">
           <thead>
             <tr className="text-left text-ms font-bold">

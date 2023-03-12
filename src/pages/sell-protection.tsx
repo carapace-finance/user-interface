@@ -4,8 +4,14 @@ const TitleAndDescriptions = dynamic(
   { ssr: false }
 );
 import AllProtectionPools from "@components/tables/AllProtectionPools";
+import ProtectionPoolCard from "@/components/ProtectionPoolCard";
+import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
+import { useContext } from "react";
+
 
 const SellProtection = () => {
+  const { protectionPools } = useContext(ProtectionPoolContext);
+
   return (
     <main className="container mx-auto px-4">
       <TitleAndDescriptions
@@ -16,7 +22,12 @@ const SellProtection = () => {
         guideLink="https://www.carapace.finance/docs/protocol-mechanics/protection_sellers"
       />
       <h3 className="text-left font-bold mb-8">All Protection Pools</h3>
-      <div className="rounded-2xl shadow-lg shadow-gray-200">
+      <div className="flex md:hidden">
+        {protectionPools.map((protectionPool, index) => (
+          <ProtectionPoolCard key={index} protectionPoolData={protectionPool}/>
+        ))}
+      </div>
+      <div className="rounded-2xl shadow-lg shadow-gray-200 hidden md:flex">
         <AllProtectionPools />
       </div>
     </main>
