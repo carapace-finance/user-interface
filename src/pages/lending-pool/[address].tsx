@@ -4,13 +4,13 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import numeral from "numeral";
 import { useContext, useEffect, useRef } from "react";
-import BuyProtectionCard from "@components/BuyProtectionCard";
-import BarChart from "@components/BarChart";
-import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
-import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
-import TitleAndDescriptions from "@components/TitleAndDescriptions";
-import assets from "src/assets";
-import { ApplicationContext } from "@contexts/ApplicationContextProvider";
+import BuyProtectionCard from "@/components/BuyProtectionCard";
+import BarChart from "@/components/BarChart";
+import LendingPoolCard from "@/components/LendingPoolCard";
+import { LendingPoolContext } from "@/contexts/LendingPoolContextProvider";
+import { ProtectionPoolContext } from "@/contexts/ProtectionPoolContextProvider";
+import TitleAndDescriptions from "@/components/TitleAndDescriptions";
+import { ApplicationContext } from "@/contexts/ApplicationContextProvider";
 import { ExternalLink, Info } from "lucide-react";
 
 const LendingPool = () => {
@@ -115,31 +115,33 @@ const LendingPool = () => {
             timeLeft={timeLeft}
           />
         </div>
-        <div className="flex-1 basis-full md:basis-2/3 w-full">
-          <h3 className="text-left font-bold mb-2 md:mb-4 mt-10 md:mt-8 text-lg md:text-2xl">Investment Summary</h3>
+        <div className="flex-1 basis-full md:basis-2/3 md:mr-8 w-full">
+          <h3 className="text-left font-bold mb-2 md:mb-4 mt-10 md:mt-0 text-lg md:text-2xl">
+            Investment Summary
+          </h3>
           <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-            <div className="rounded-2xl shadow-lg shadow-gray-200 px-4 py-6 md:p-8">
+            <div className="rounded-2xl shadow-card px-4 py-6 md:p-8">
               <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
                 Estimated Premium <Info size={14} className="ml-1" />
               </h4>
               <p className="text-left text-xl md:text-2xl">7%</p>
               {/* TODO: update value */}
             </div>
-            <div className="rounded-2xl shadow-lg shadow-gray-200 px-4 py-6 md:p-8">
+            <div className="rounded-2xl shadow-card px-4 py-6 md:p-8">
               <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
                 CARA Token Rewards <Info size={14} className="ml-1" />
               </h4>
               <p className="text-left text-xl md:text-2xl">~3.5%</p>
               {/* TODO: update value */}
             </div>
-            <div className="rounded-2xl shadow-lg shadow-gray-200 px-4 py-6 md:p-8">
+            <div className="rounded-2xl shadow-card px-4 py-6 md:p-8">
               <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
                 Max Protection Amount <Info size={14} className="ml-1" />
               </h4>
               <p className="text-left text-xl md:text-2xl">2,000,000 USDC</p>
               {/* TODO: update value */}
             </div>
-            <div className="rounded-2xl shadow-lg shadow-gray-200 px-4 py-6 md:p-8">
+            <div className="rounded-2xl shadow-card px-4 py-6 md:p-8">
               <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
                 Protection Duration <Info size={14} className="ml-1" />
               </h4>
@@ -147,17 +149,34 @@ const LendingPool = () => {
               {/* TODO: update value */}
             </div>
           </div>
-          <h3 className="font-bold mb-2 md:mb-4 mt-16 md:mt-8 text-lg md:text-2xl">Lending Pool Summary</h3>
-          <div className="rounded-2xl shadow-lg shadow-gray-200  max-w-[calc(100vw-32px)] md:max-w-auto overflow-scroll md:overflow-auto">
+          <h3 className="font-bold mb-2 md:mb-4 mt-16 md:mt-8 text-lg md:text-2xl">
+            Lending Pool Summary
+          </h3>
+          <div className="flex flex-col md:hidden">
+            <LendingPoolCard protectionPoolData={lendingPools[0]} />
+          </div>
+          <div className="rounded-2xl shadow-card  max-w-[calc(100vw-32px)] md:max-w-auto overflow-scroll md:overflow-auto hidden md:flex">
             <table className="table-auto">
               <thead>
                 <tr className="text-left text-xs md:text-sm font-bold">
-                  <th className="px-4 py-4 md:py-8 pl-4 md:pl-8 min-w-[120px] md:min-w-auto">Name</th>
-                  <th className="px-4 py-4 md:py-8 min-w-[120px] md:min-w-auto">Protocol</th>
-                  <th className="px-4 py-4 md:py-8 min-w-[70px] md:min-w-auto">APY</th>
-                  <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">Payment Frequency</th>
-                  <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">Payment Term End</th>
-                  <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">Repayment Status</th>
+                  <th className="px-4 py-4 md:py-8 pl-4 md:pl-8 min-w-[120px] md:min-w-auto">
+                    Name
+                  </th>
+                  <th className="px-4 py-4 md:py-8 min-w-[120px] md:min-w-auto">
+                    Protocol
+                  </th>
+                  <th className="px-4 py-4 md:py-8 min-w-[70px] md:min-w-auto">
+                    APY
+                  </th>
+                  <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">
+                    Payment Frequency
+                  </th>
+                  <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">
+                    Payment Term End
+                  </th>
+                  <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">
+                    Repayment Status
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -184,16 +203,18 @@ const LendingPool = () => {
           <h3 className="text-left font-bold mb-2 md:mb-4 mt-10 md:mt-8 text-lg md:text-2xl">
             Underlying Protection Pool
           </h3>
-          <div className="rounded-2xl shadow-boxShadow px-4 py-6 md:p-8 w-full shadow-lg shadow-gray-200">
+          <div className="rounded-2xl shadow-boxShadow px-4 py-6 md:p-8 w-full shadow-card">
             <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
               Total Value Locked <Info size={14} className="ml-1" />
             </h4>
             <p className="text-xl md:text-2xl">4,500,000 USDC</p>
           </div>
-          <div className="rounded-2xl shadow-boxShadow px-4 py-6 md:p-8 w-full shadow-lg shadow-gray-200">
+          <div className="rounded-2xl shadow-boxShadow px-4 py-6 md:p-8 w-full shadow-card">
             <div className=" text-black text-2xl bold flex justify-between mb-2 md:mb-4">
               <div className="flex items-center">
-                <h4 className="text-left text-base md:text-xl">Leverage Ratio</h4>
+                <h4 className="text-left text-base md:text-xl">
+                  Leverage Ratio
+                </h4>
                 <div className="pl-2">
                   <Tooltip
                     content="Percentage of capital that is available to cover potential payouts"
@@ -227,7 +248,9 @@ const LendingPool = () => {
               <p className="pr-0 md:pr-20">
                 Total Protection Pool Balance: {totalCapital}&nbsp;USDC
               </p>
-              <p className="text-right">Total Purchased Protection: {totalProtection}&nbsp;USDC</p>
+              <p className="text-right">
+                Total Purchased Protection: {totalProtection}&nbsp;USDC
+              </p>
             </div>
           </div>
         </div>

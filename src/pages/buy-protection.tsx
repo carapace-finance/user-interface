@@ -3,7 +3,7 @@ const TitleAndDescriptions = dynamic(
   () => import("@/components/TitleAndDescriptions"),
   { ssr: false }
 );
-import AllLendingPools from "@components/tables/AllLendingPools";
+import AllLendingPools from "@/components/tables/AllLendingPools";
 import LendingPoolCard from "@/components/LendingPoolCard";
 import { useContext } from "react";
 import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
@@ -25,7 +25,7 @@ const BuyProtection = () => {
           <LendingPoolCard key={index} protectionPoolData={lendingPool} />
         ))}
       </div>
-      <div className="rounded-2xl shadow-lg shadow-gray-200 hidden md:flex">
+      <div className="rounded-2xl shadow-card hidden md:flex">
         <AllLendingPools />
       </div>
     </main>

@@ -130,10 +130,12 @@ const ProtectionPool = () => {
         <div className="flex-1 md:basis-1/3">
           <SellProtectionCard />
         </div>
-        <div className="flex-1 basis-full md:basis-2/3 w-full">
-          <h3 className="text-left font-bold mb-2 md:mb-4 mt-10 md:mt-8 text-lg md:text-2xl">Investment Summary</h3>
+        <div className="flex-1 basis-full md:basis-2/3 md:mr-8 w-full">
+          <h3 className="text-left font-bold mb-2 md:mb-4 mt-10 md:mt-0 text-lg md:text-2xl">
+            Investment Summary
+          </h3>
           <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-            <div className="rounded-2xl shadow-lg shadow-gray-200 p-4 md:p-8">
+            <div className="rounded-2xl shadow-card p-4 md:p-8">
               <h4 className="text-customGrey text-sm md:text-base mb-1 md:mb-2 flex items-center">
                 Total Estimated APY <Info size={14} className="ml-1" />
               </h4>
@@ -145,18 +147,20 @@ const ProtectionPool = () => {
                     Yields from Premium
                     <Info size={14} className="ml-1 inline" />
                   </h5>
-                  <p className="mt-1 md:mt-2">10 - 15%</p> {/* TODO: update value */}
+                  <p className="mt-1 md:mt-2">10 - 15%</p>{" "}
+                  {/* TODO: update value */}
                 </div>
                 <div>
                   <h5 className="text-customGrey text-xs md:text-sm mb-1 md:mb-2 inline">
                     CARA Token Rewards
                     <Info size={14} className="ml-1 inline" />
                   </h5>
-                  <p className="mt-1 md:mt-2">8 - 10%</p> {/* TODO: update value */}
+                  <p className="mt-1 md:mt-2">8 - 10%</p>{" "}
+                  {/* TODO: update value */}
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl shadow-lg shadow-gray-200 p-4 md:p-8">
+            <div className="rounded-2xl shadow-card p-4 md:p-8">
               <h4 className="text-customGrey text-sm md:text-base mb-1 md:mb-2 flex items-center">
                 Minumum Locking Period
                 <Info size={14} className="ml-1" />
@@ -169,21 +173,27 @@ const ProtectionPool = () => {
                     Cycle Duration
                     <Info size={14} className="ml-1 inline" />
                   </h5>
-                  <p className="mt-1 md:mt-2">90 Days</p> {/* TODO: update value */}
+                  <p className="mt-1 md:mt-2">90 Days</p>{" "}
+                  {/* TODO: update value */}
                 </div>
                 <div className="-ml-2 md:ml-0">
                   <h5 className="text-customGrey text-xs md:text-sm mb-1 md:mb-2 inline">
                     The Current Cycle Ends In
                     <Info size={14} className="ml-1 inline" />
                   </h5>
-                  <p className="mt-1 md:mt-2">5 Days</p> {/* TODO: update value */}
+                  <p className="mt-1 md:mt-2">5 Days</p>{" "}
+                  {/* TODO: update value */}
                 </div>
               </div>
             </div>
           </div>
-          <h3 className="font-bold mb-4 mt-16 md:mt-8 text-lg md:text-2xl">Protection Pool Summary</h3>
-          <h4 className="font-bold mb-2 text-customGrey text-base md:text-xl">Total Value Locked</h4>
-          <div className="mb-4 rounded-2xl px-4 py-6 md:p-6 shadow-lg shadow-gray-200">
+          <h3 className="font-bold mb-4 mt-16 md:mt-8 text-lg md:text-2xl">
+            Protection Pool Summary
+          </h3>
+          <h4 className="font-bold mb-2 text-customGrey text-base md:text-xl">
+            Total Value Locked
+          </h4>
+          <div className="mb-4 rounded-2xl px-4 py-6 md:p-6 shadow-card">
             <div className="flex justify-between mb-1">
               <p className="text-sm md:text-base">4,500,000 USDC</p>
               {/*  TODO: update value */}
@@ -194,7 +204,7 @@ const ProtectionPool = () => {
           <h4 className="font-bold mb-2 md:mb-4 mt-10 md:mt-0 text-customGrey text-base md:text-xl">
             Protection Distribution Across Lending Pools
           </h4>
-          <div className="rounded-2xl shadow-lg shadow-gray-200 p-4 md:p-8 w-full">
+          <div className="rounded-2xl shadow-card p-4 md:p-8 w-full">
             <Doughnut
               className="mx-auto"
               data={{
@@ -234,22 +244,40 @@ const ProtectionPool = () => {
         <h3 className="text-left font-bold mb-2 md:mb-4 mt-16 md:mt-8 text-lg md:text-2xl">
           Underlying Lending Pools
         </h3>
-        <div className="rounded-2xl shadow-lg shadow-gray-200  max-w-[calc(100vw-32px)] md:max-w-auto overflow-scroll md:overflow-auto">
+        <div className="rounded-2xl shadow-card  max-w-[calc(100vw-32px)] md:max-w-auto overflow-scroll md:overflow-auto">
           <table className="table-auto">
             <thead>
               <tr className="text-left text-xs md:text-sm font-bold">
-                <th className="px-4 py-4 md:py-8 pl-4 md:pl-8 min-w-[150px] md:min-w-auto">Lending Pool Name</th>
-                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">Borrower Name</th>
-                <th className="px-4 py-4 md:py-8 min-w-[120px] md:min-w-auto">Protocol</th>
-                <th className="px-4 py-4 md:py-8 min-w-[100px] md:min-w-auto">Geography</th>
-                <th className="px-4 py-4 md:py-8 min-w-[100px] md:min-w-auto">Currency</th>
-                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">Outstanding Loans</th>
+                <th className="px-4 py-4 md:py-8 pl-4 md:pl-8 min-w-[150px] md:min-w-auto">
+                  Lending Pool Name
+                </th>
+                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">
+                  Borrower Name
+                </th>
+                <th className="px-4 py-4 md:py-8 min-w-[120px] md:min-w-auto">
+                  Protocol
+                </th>
+                <th className="px-4 py-4 md:py-8 min-w-[100px] md:min-w-auto">
+                  Geography
+                </th>
+                <th className="px-4 py-4 md:py-8 min-w-[100px] md:min-w-auto">
+                  Currency
+                </th>
+                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">
+                  Outstanding Loans
+                </th>
                 <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">
                   Outstanding Capital from Junior Tranche
                 </th>
-                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">Full Repayment Due</th>
-                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">Payment Frequency</th>
-                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">Junior Tranche APY</th>
+                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">
+                  Full Repayment Due
+                </th>
+                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">
+                  Payment Frequency
+                </th>
+                <th className="px-4 py-4 md:py-8 min-w-[150px] md:min-w-auto">
+                  Junior Tranche APY
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -260,7 +288,9 @@ const ProtectionPool = () => {
                   className="text-left text-xs md:text-sm font-medium hover:cursor-pointer hover:bg-gray-50 pb-8"
                 >
                   <td className="px-4 py-4 md:py-8 pl-8">{lendingPool.name}</td>
-                  <td className="px-4 py-4 md:py-8 pl-8">{lendingPool.borrowerName}</td>
+                  <td className="px-4 py-4 md:py-8 pl-8">
+                    {lendingPool.borrowerName}
+                  </td>
                   <td className="px-4 py-4 md:py-8 min-h-[80px] md:min-h-auto flex items-center">
                     <Image
                       src={lendingPool.protocol}
@@ -276,7 +306,9 @@ const ProtectionPool = () => {
                   <td className="px-4 py-4 md:py-8">$3,990,347</td>
                   <td className="px-4 py-4 md:py-8">Apr 4, 2024</td>
                   <td className="px-4 py-4 md:py-8">30 Days</td>
-                  <td className="px-4 py-4 md:py-8">{lendingPool.lendingPoolAPY}</td>
+                  <td className="px-4 py-4 md:py-8">
+                    {lendingPool.lendingPoolAPY}
+                  </td>
                 </tr>
               ))}
             </tbody>

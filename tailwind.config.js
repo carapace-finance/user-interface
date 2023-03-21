@@ -17,13 +17,11 @@ module.exports = withMT({
         customPopupGrey: `var(--color-custom-popup-grey)`
       },
       boxShadow: {
-        boxShadow: "0px 0px 12px rgba(63, 125, 204, 0.12)"
+        card: "0px 0px 12px rgba(63, 125, 204, 0.12)",
+        table: "0px 0px 6px 6px rgba(63,125,204, 0.08)"
       },
       fontFamily: {
         manrope: ["Manrope", "sans-serif"]
-      },
-      boxShadow: {
-        table: "0px 0px 6px 6px rgba(63,125,204, 0.08)"
       },
       width: {
         700: "700px",

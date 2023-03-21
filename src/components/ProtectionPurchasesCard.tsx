@@ -12,7 +12,7 @@ import { unixtimeDiffFromNow } from "@/utils/date";
 export default function ProtectionPurchasesCard(props: any) {
   const router = useRouter();
   return (
-    <div className="rounded-2xl shadow-lg shadow-gray-200 p-3 w-full mb-5">
+    <div className="rounded-2xl shadow-card p-3 w-full mb-5">
       <div className="flex justify-between">
         <div>
           <p className="text-xs mb-1 text-[color:var(--color-custom-grey)]">

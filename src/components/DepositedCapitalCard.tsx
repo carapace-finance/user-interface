@@ -6,7 +6,7 @@ import React from "react";
 
 export default function DepositedCapitalCard(props: any) {
   return (
-    <div className="rounded-2xl shadow-lg shadow-gray-200 p-3 w-full mb-5">
+    <div className="rounded-2xl shadow-card p-3 w-full mb-5">
       <div className="flex justify-between">
         <div>
           <p className="text-xs mb-1 text-[color:var(--color-custom-grey)]">

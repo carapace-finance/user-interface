@@ -8,7 +8,6 @@ import ProtectionPoolCard from "@/components/ProtectionPoolCard";
 import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
 import { useContext } from "react";
 
-
 const SellProtection = () => {
   const { protectionPools } = useContext(ProtectionPoolContext);
 
@@ -24,10 +23,10 @@ const SellProtection = () => {
       <h3 className="text-left font-bold mb-8">All Protection Pools</h3>
       <div className="flex md:hidden">
         {protectionPools.map((protectionPool, index) => (
-          <ProtectionPoolCard key={index} protectionPoolData={protectionPool}/>
+          <ProtectionPoolCard key={index} protectionPoolData={protectionPool} />
         ))}
       </div>
-      <div className="rounded-2xl shadow-lg shadow-gray-200 hidden md:flex">
+      <div className="rounded-2xl shadow-card hidden md:flex">
         <AllProtectionPools />
       </div>
     </main>

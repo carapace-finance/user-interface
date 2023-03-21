@@ -8,7 +8,7 @@ export default function LendingPoolCard(props: any) {
   console.log(props);
   const router = useRouter();
   return (
-    <div className="rounded-2xl shadow-lg shadow-gray-200 p-3 w-full mb-5">
+    <div className="rounded-2xl shadow-card p-3 w-full mb-5">
       <div className="flex justify-between">
         <div>
           <p className="text-xs mb-1 text-[color:var(--color-custom-grey)]">
@@ -75,9 +75,7 @@ export default function LendingPoolCard(props: any) {
             className="btn-outline px-5 py-1 rounded-md"
             onClick={() =>
               // @ts-ignore
-              router.push(
-                `/lending-pool/${props.protectionPoolData.address}`
-              )
+              router.push(`/lending-pool/${props.protectionPoolData.address}`)
             }
           >
             <div className="flex items-center">

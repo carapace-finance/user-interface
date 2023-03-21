@@ -77,7 +77,7 @@ export default function BuyProtectionCard(props) {
   };
 
   return (
-    <div className="block py-6 md:py-10 px-4 md:px-8 rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200 w-full md:w-450 h-fit">
+    <div className="block py-6 md:py-10 px-4 md:px-8 rounded-2xl shadow-card shadow-gray-200 w-full lg:w-450 h-fit">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <div>
@@ -206,7 +206,9 @@ export default function BuyProtectionCard(props) {
         />
       </form>
       <div className="flex flex-row justify-start items-center">
-        <p className="mr-2 md:mr-4 text-sm md:text-base">Buy protection within: {timeLeft}</p>
+        <p className="mr-2 md:mr-4 text-sm md:text-base">
+          Buy protection within: {timeLeft}
+        </p>
         <Tooltip
           content="Time left to buy protection for this lending pool"
           placement="top"

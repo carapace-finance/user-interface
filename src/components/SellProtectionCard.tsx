@@ -47,7 +47,7 @@ export default function SellProtectionCard(props) {
   }; // your form submit function which will invoke after successful validation
 
   return (
-    <div className="py-4 md:py-10 px-4 md:px-8 bg-white rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200">
+    <div className="py-4 md:py-10 px-4 md:px-8 bg-white rounded-2xl shadow-card">
       <form onSubmit={handleSubmit(onSubmit)}>
         <label className="text-left text-customGrey font-normal flex items-center">
           {!isConnected ||
@@ -81,7 +81,7 @@ export default function SellProtectionCard(props) {
               </div>
             </div>
             <div className="flex items-center justify-between w-full mt-1">
-              <p className="text-xs text-gray-500">{' '}</p>
+              <p className="text-xs text-gray-500"> </p>
               <div className="flex items-center">
                 <p className="text-xs text-gray-500 mr-2">
                   Balance:{" "}
