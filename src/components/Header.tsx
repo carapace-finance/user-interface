@@ -28,7 +28,11 @@ const Header = () => {
 
   return (
     <nav className="header bg-white h-26 md:h-16 md:px-2 sm:px-4 fixed w-full z-30 top-0 left-0 md:shadow-md">
-      <div className="container flex flex-wrap items-center justify-between mx-auto h-16 px-3 md:px-0">
+      <div
+        className={`container flex flex-wrap items-center justify-between mx-auto h-16 px-3 md:px-0 ${
+          isInternalPage ? "border-b" : ""
+        }`}
+      >
         <Link className="flex items-center h-16 shrink-0" href="/">
           <Image
             src={assets.headerLogo.src}
@@ -105,7 +109,7 @@ const Header = () => {
       <div
         className={`flex border-b md:hidden px-3 ${
           isInternalPage ? "hidden" : ""
-        } `}
+        }`}
       >
         {HEADER_LINKS.map((item: any) => (
           <Link
