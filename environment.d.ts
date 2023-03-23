@@ -8,5 +8,7 @@ declare namespace NodeJS {
     UPSTASH_REDIS_REST_TOKEN: string;
     NEXT_PUBLIC_FATHOM_SITE_ID: string;
     NEXT_PUBLIC_MAINTENANCE: string;
+    NEXT_PUBLIC_RESTRICTED_COUNTRIES: string;
+    NEXT_PUBLIC_USDC_ADDRESS: string;
   }
 }
