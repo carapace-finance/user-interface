@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import { useAccount, useDisconnect, useNetwork } from "wagmi";
-import { Menu } from "lucide-react";
 import assets from "@/assets";
 import { shortAddress } from "@/utils/utils";
 import ConnectWalletPopup from "@/components/ConnectWalletPopUp";
@@ -19,7 +18,6 @@ const Header = () => {
   const { disconnect } = useDisconnect();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useAtom(connectModalAtom);
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const txs = useAtomValue(userTransactionsAtom);
   const isInternalPage = useMemo(
     () => !["/", "/buy-protection", "/portfolio"].includes(router.pathname),
@@ -78,13 +76,8 @@ const Header = () => {
             onClose={() => setModalOpen(false)}
           />
         </div>
-        <div
-          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
-            menuOpen ? "visible" : "hidden"
-          }`}
-          id="navbar-sticky"
-        >
-          <ul className="fixed right-0 left-0 top-16 text-center md:relative md:top-auto md:right-auto md:left-auto flex flex-col p-4 rounded-lg bg-customPristineWhite md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white shadow-lg md:shadow-none">
+        <div className="items-center justify-between order-1 hidden md:flex">
+          <ul className="relative flex p-4 flex-row space-x-8">
             {HEADER_LINKS.map((item: any) => (
               <li key={item.key}>
                 <Link
@@ -95,11 +88,11 @@ const Header = () => {
                         ? `/${router.pathname.split("/")[1]}/`
                         : router.pathname
                     )
-                      ? "text-customBlue font-medium"
+                      ? "text-customBlue"
                       : ""
-                  } hover:text-customBlue block py-2 pl-3 pr-4 rounded md:bg-transparent md:p-0`}
+                  } hover:text-customBlue block py-2 pl-3 pr-4 bg-transparent md:p-0`}
                 >
-                  <h4>{item.title}</h4>
+                  <h4 className="text-lg">{item.title}</h4>
                 </Link>
               </li>
             ))}

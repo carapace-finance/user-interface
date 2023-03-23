@@ -1,7 +1,7 @@
 import { Tooltip } from "@material-tailwind/react";
 import Image from "next/image";
-import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
-import { useContext } from "react";
+// import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
+// import { useContext } from "react";
 import { useRouter } from "next/router";
 import {
   createColumnHelper,
@@ -24,7 +24,12 @@ const columnHelper = createColumnHelper<ProtectionPool>();
 const columns = [
   columnHelper.accessor("name", {
     header: () => <div className="text-left">Name</div>,
-    cell: (info) => <div style={{ minWidth: "245px" }}>{info.getValue()}</div>
+    cell: (info) => (
+      <div style={{ minWidth: "245px" }}>
+        Goldfinch Protection Pool #1
+        {/* {info.getValue()} */}
+      </div>
+    )
   }),
   columnHelper.accessor("protocols", {
     header: () => "Protocols",
@@ -34,7 +39,7 @@ const columns = [
         src={info.getValue()}
         width={24}
         height={24}
-        alt=""
+        alt="Goldfinch"
       />
     )
   }),
@@ -82,12 +87,12 @@ const columns = [
   })
 ];
 
-const AllProtectionPools = () => {
+const AllProtectionPools = ({ pools }: { pools: any[] }) => {
   const router = useRouter();
-  const { protectionPools } = useContext(ProtectionPoolContext);
+  // const { protectionPools } = useContext(ProtectionPoolContext);
 
   const table = useReactTable({
-    data: protectionPools,
+    data: pools,
     columns,
     getCoreRowModel: getCoreRowModel()
   });
@@ -126,7 +131,7 @@ const AllProtectionPools = () => {
               className="border-customPristineWhite border-b hover:bg-customPristineWhite cursor-pointer"
               onClick={() =>
                 // @ts-ignore
-                router.push(`/protection-pool/${row.original.address}`)
+                router.push(`/protection-pool/${row.original.id}`)
               }
             >
               {row.getVisibleCells().map((cell) => (

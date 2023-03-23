@@ -13,7 +13,7 @@ const TitleAndDescriptions = (props: Props) => {
     <div className="mb-16">
       <div>
         {typeof props.title === "string" || props.title instanceof String ? (
-          <h1 className="text-left font-bold leading-12 text-4xl mb-6 hidden md:flex">
+          <h1 className="text-left font-medium leading-12 text-4xl mb-6 hidden md:flex">
             {props.title}
           </h1>
         ) : (
@@ -32,7 +32,9 @@ const TitleAndDescriptions = (props: Props) => {
             }}
           >
             <div className="flex items-center">
-              <p className="font-normal text-sm md:text-lg leading-6">{props.button}</p>
+              <p className="font-normal text-sm md:text-lg leading-6">
+                {props.button}
+              </p>
               <ArrowUpRight size={16} className="ml-1" />
             </div>
           </button>

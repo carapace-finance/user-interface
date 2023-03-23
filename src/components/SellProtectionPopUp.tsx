@@ -78,12 +78,12 @@ const SellProtectionPopUp = ({
 
   return isMobile ? (
     <Drawer
-      anchor={'bottom'}
+      anchor={"bottom"}
       open={open}
       onClose={loading ? null : onClose}
       PaperProps={{
         sx: {
-          borderRadius: { xs: "16px 16px 0px 0px",},
+          borderRadius: { xs: "16px 16px 0px 0px" }
         }
       }}
     >
@@ -96,7 +96,10 @@ const SellProtectionPopUp = ({
       <DialogContent className="mb-4">
         <div className="mb-10">
           <div className="flex justify-start text-sm">
-            {renderFieldAndValue("Protection Pool", "Goldfinch Protection Pool #1")}
+            {renderFieldAndValue(
+              "Protection Pool",
+              "Goldfinch Protection Pool #1"
+            )}
             <div className="-ml-16 mt-1">
               <Image
                 src={assets.goldfinch.src}
@@ -110,10 +113,7 @@ const SellProtectionPopUp = ({
             "Deposit Amount",
             numeral(amount).format(USDC_FORMAT) + " USDC"
           )}
-          {renderFieldAndValue(
-            "Minimum Locking Period",
-            "95 Days"
-          )}
+          {renderFieldAndValue("Minimum Locking Period", "95 Days")}
         </div>
         <div>
           {/* finish tx */}
@@ -146,7 +146,8 @@ const SellProtectionPopUp = ({
           </div>
         </div>
       </DialogContent>
-    </Drawer>) :(
+    </Drawer>
+  ) : (
     <Dialog
       className="inset-x-36"
       disableScrollLock
@@ -227,7 +228,9 @@ const renderFieldAndValue = (fieldLabel, fieldValue) => {
       >
         <div>{fieldLabel}</div>
       </Typography>
-      <div className="flex justify-left mb-4 text-sm md:text-base">{fieldValue}</div>
+      <div className="flex justify-left mb-4 text-sm md:text-base">
+        {fieldValue}
+      </div>
     </div>
   );
 };

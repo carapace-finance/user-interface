@@ -105,3 +105,8 @@ export const protocolParameters = {
 
 export const UNISWAP_V3_SUBGRAPH_URL =
   "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
+
+export const CARAPACE_SUBGRAPH_URL =
+  process.env.NODE_ENV === "production"
+    ? ""
+    : "http://localhost:8000/subgraphs/name/carapace";

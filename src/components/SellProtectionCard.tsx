@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { Tooltip } from "@material-tailwind/react";
 import SellProtectionPopUp from "@/components/SellProtectionPopUp";
 import { SellProtectionInput } from "@type/types";
 import { Info } from "lucide-react";
@@ -17,7 +16,7 @@ import Image from "next/image";
 import dollarSign from "../assets/dollarSign.png";
 
 export default function SellProtectionCard(props) {
-  const { estimatedAPY } = props;
+  const { estimatedAPY, protectionPoolAddress } = props;
   const {
     register,
     handleSubmit,
@@ -29,7 +28,6 @@ export default function SellProtectionCard(props) {
   const { address, isConnected } = useAccount();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const protectionPoolAddress: any = router.query.address;
   const allowance = useAllowance(
     USDC_ADDRESS,
     address,

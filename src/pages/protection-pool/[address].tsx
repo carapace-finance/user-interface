@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import BarChart from "@/components/BarChart";
+import useQueryProtectionPool from "@/hooks/useQueryProtectionPool";
 
 // import SellProtectionCard from "@components/SellProtectionCard";
 const SellProtectionCard = dynamic(
@@ -24,13 +25,16 @@ import {
 import { Doughnut } from "react-chartjs-2";
 ChartJS.register(ArcElement, ChartTooltip, Legend);
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import numeral from "numeral";
 import { Info, ExternalLink } from "lucide-react";
 
 const ProtectionPool = () => {
   const router = useRouter();
   const { lendingPools } = useContext(LendingPoolContext);
   const { protectionPools } = useContext(ProtectionPoolContext);
+  const protectionPoolAddress = router.query.address as string;
+  const { data, fetching, error } = useQueryProtectionPool(
+    protectionPoolAddress
+  );
   const doughnutRadius = 100;
 
   // const { provider } = useContext(ApplicationContext);
@@ -49,7 +53,7 @@ const ProtectionPool = () => {
     );
   };
 
-  let protectionPoolAddress;
+  // let protectionPoolAddress = protectionPool.id;
   let protocols;
   let totalCapital;
   let totalProtection;
@@ -59,7 +63,7 @@ const ProtectionPool = () => {
   let estimatedAPY;
   protectionPools.map((protectionPool) => {
     if (protectionPool.address === router.query.address) {
-      protectionPoolAddress = protectionPool.address;
+      // protectionPoolAddress = protectionPool.address;
       protocols = protectionPool.protocols;
       totalCapital = protectionPool.totalCapital;
       totalProtection = protectionPool.totalProtection;
@@ -128,7 +132,7 @@ const ProtectionPool = () => {
       </div>
       <div className="flex md:flex-row-reverse flex-wrap md:flex-nowrap -mt-16 md:mt-0">
         <div className="flex-1 md:basis-1/3">
-          <SellProtectionCard />
+          <SellProtectionCard protectionPoolAddress={protectionPoolAddress} />
         </div>
         <div className="flex-1 basis-full md:basis-2/3 md:mr-8 w-full">
           <h3 className="text-left font-bold mb-2 md:mb-4 mt-10 md:mt-0 text-lg md:text-2xl">
