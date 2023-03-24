@@ -10,12 +10,14 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 import { Info } from "lucide-react";
+import { getDecimalDivFormatted } from "@/utils/utils";
+import { USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
 
 type ProtectionPool = {
   name: string;
   protocols: string;
   APY: string;
-  totalCapital: string;
+  totalSTokenUnderlying: string;
   totalProtection: string;
 };
 
@@ -27,20 +29,24 @@ const columns = [
     cell: (info) => (
       <div style={{ minWidth: "245px" }}>
         Goldfinch Protection Pool #1
-        {/* {info.getValue()} */}
+        {/* TODO: functionalization {info.getValue()} */}
       </div>
     )
   }),
   columnHelper.accessor("protocols", {
     header: () => "Protocols",
     cell: (info) => (
-      <Image
-        className="mx-auto"
-        src={info.getValue()}
-        width={24}
-        height={24}
-        alt="Goldfinch"
-      />
+      <span className="flex items-center">
+        <Image
+          className="mx-auto"
+          src={require("@/assets/goldfinch.png")}
+          width={24}
+          height={24}
+          alt="Goldfinch"
+        />
+        GoldFinch
+      </span>
+      // TODO: functionalization
     )
   }),
   columnHelper.accessor("APY", {
@@ -57,7 +63,7 @@ const columns = [
     ),
     cell: (info) => <div className="text-right">{info.getValue()}</div>
   }),
-  columnHelper.accessor("totalCapital", {
+  columnHelper.accessor("totalSTokenUnderlying", {
     header: () => (
       <div className="flex items-center cursor-pointer justify-end">
         Total Value Locked
@@ -69,7 +75,11 @@ const columns = [
         </Tooltip>
       </div>
     ),
-    cell: (info) => <div className="text-right">{info.getValue()} USDC</div>
+    cell: (info) => (
+      <div className="text-right">
+        {getDecimalDivFormatted(info.getValue(), USDC_NUM_OF_DECIMALS, 0)} USDC
+      </div>
+    )
   }),
   columnHelper.accessor("totalProtection", {
     header: () => (
@@ -83,7 +93,11 @@ const columns = [
         </Tooltip>
       </div>
     ),
-    cell: (info) => <div className="text-right">{info.getValue()} USDC</div>
+    cell: (info) => (
+      <div className="text-right">
+        {getDecimalDivFormatted(info.getValue(), USDC_NUM_OF_DECIMALS, 0)} USDC
+      </div>
+    )
   })
 ];
 

@@ -10,7 +10,7 @@ const BarChart: FC<Props> = (props) => {
   return (
     <div
       className={
-        "bg-customGraphGrey overflow-clip box-border h-[16px] md:h-[24px] rounded-xl text-xs border border-gray-200 "
+        "bg-customGraphGrey overflow-clip box-border h-[16px] md:h-[24px] rounded-xl text-xs border border-customGraphGrey "
       }
     >
       <div

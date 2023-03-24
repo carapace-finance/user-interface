@@ -87,3 +87,18 @@ export function getCountryName(ISO: string) {
   const getCountryNames = new Intl.DisplayNames(["en"], { type: "region" });
   return getCountryNames.of(ISO);
 }
+
+export function getPercentValue(
+  numerator: number | string,
+  denominator: number | string,
+  digits: 0 | 1 | 2 = 2
+): string {
+  const val: BigInt =
+    BigInt(denominator) === BigInt(0)
+      ? BigInt(0)
+      : BigInt(numerator) / BigInt(denominator);
+  return val.toLocaleString(undefined, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  });
+}

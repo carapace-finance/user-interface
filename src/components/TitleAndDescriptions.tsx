@@ -10,7 +10,7 @@ type Props = {
 
 const TitleAndDescriptions = (props: Props) => {
   return (
-    <div className="mb-16">
+    <div className="mb-8">
       <div>
         {typeof props.title === "string" || props.title instanceof String ? (
           <h1 className="text-left font-medium leading-12 text-4xl mb-6 hidden md:flex">
