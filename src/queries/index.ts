@@ -44,3 +44,32 @@ export const GET_PROTECTION_POOL = gql`
     }
   }
 `;
+
+// Lending Pool
+const LENDING_POOL_FRAGMENT = gql`
+  fragment LendingPoolFragment on LendingPool {
+    id
+    protocol
+    totalProtection
+    addedTimestamp
+    protectionPurchaseLimitTimestamp
+  }
+`;
+
+export const GET_LENDING_POOLS = gql`
+  ${LENDING_POOL_FRAGMENT}
+  query {
+    lendingPools {
+      ...LendingPoolFragment
+    }
+  }
+`;
+
+export const GET_LENDING_POOL = gql`
+  ${LENDING_POOL_FRAGMENT}
+  query ($id: ID!) {
+    lendingPool(id: $id) {
+      ...LendingPoolFragment
+    }
+  }
+`;
