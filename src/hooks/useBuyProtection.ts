@@ -52,19 +52,11 @@ const useBuyProtection = (
     args,
     chainId: chain?.id,
     enabled:
-      !!chain &&
+      !!chain?.id &&
       !!protectionPoolAddress &&
       BigNumber.from(amount).gt(0) &&
       BigNumber.from(premium).gt(0)
   });
-
-  console.log(
-    protectionPoolAddress,
-    prepareFn.isError,
-    prepareFn.error,
-    "args:::",
-    args
-  );
 
   const writeFn = useContractWrite({
     ...prepareFn.config,

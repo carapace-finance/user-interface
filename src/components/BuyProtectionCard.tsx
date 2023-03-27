@@ -3,11 +3,12 @@ import { useForm } from "react-hook-form";
 import { Tooltip } from "@material-tailwind/react";
 import BuyProtectionPopUp from "./BuyProtectionPopUp";
 import { useRouter } from "next/router";
-import { protocolParameters } from "@constants/index";
+import { protocolParameters } from "@/constants/index";
 import { convertNumberToUSDC, convertUSDCToNumber } from "@utils/usdc";
-import { ApplicationContext } from "@contexts/ApplicationContextProvider";
-import { getDaysInSeconds } from "@utils/utils";
-import { BuyProtectionInputs } from "@type/types";
+import { ApplicationContext } from "@/contexts/ApplicationContextProvider";
+import useQueryProtectionPools from "@/hooks/useQueryProtectionPools";
+import { getDaysInSeconds } from "@/utils/utils";
+import { BuyProtectionInputs } from "@/type/types";
 import { isAddress } from "ethers/lib/utils";
 import { Info } from "lucide-react";
 
@@ -30,6 +31,11 @@ export default function BuyProtectionCard(props) {
     useContext(ApplicationContext);
 
   const router = useRouter();
+  const {
+    data: protectionPoolsData,
+    fetching: protectionPoolsFetching,
+    error
+  } = useQueryProtectionPools();
   const protectionPoolAddress = router.query.protectionPoolAddress as string;
   const lendingPoolAddress = router.query.address as string;
 
@@ -86,6 +92,7 @@ export default function BuyProtectionCard(props) {
               <Info size={15} className="inline ml-1" />
             </p>
             <p>173</p>
+            {/* TODO: update value */}
             <div className="mb-4 mt-4">
               <label className="text-left text-customGrey text-sm md:text-base leading-tight font-normal mb-4">
                 Protection Amount
@@ -202,7 +209,7 @@ export default function BuyProtectionCard(props) {
           className="text-white bg-customBlue rounded-md w-full md:w-fit px-14 py-3 md:py-4 mt-4 md:mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           value="Buy Protection"
-          disabled={!protectionPoolAddress} // todo: add the leverage ratio limit
+          disabled={false} // todo: add the leverage ratio limit
         />
       </form>
       <div className="flex flex-row justify-start items-center">
@@ -239,7 +246,7 @@ export default function BuyProtectionCard(props) {
         calculatingPremiumPrice={calculatingPremiumPrice}
         setPremiumPrice={setPremiumPrice}
         lendingPoolAddress={lendingPoolAddress}
-        protectionPoolAddress={protectionPoolAddress}
+        protectionPoolAddress={protectionPoolsData?.[0]?.id}
         name={name}
         adjustedYields={adjustedYields}
       />

@@ -19,7 +19,7 @@ export default function LendingPoolPage({
 }: Props) {
   return (
     <>
-      <div className="flex flex-row-reverse flex-wrap md:flex-nowrap -mt-16 md:mt-0">
+      <div className="flex flex-row-reverse flex-wrap md:flex-nowrap -mt-8 md:mt-0">
         <div className="flex-1 md:basis-1/3">
           <BuyProtectionCard
             name={lendingPoolData?.name ?? ""}

@@ -19,7 +19,7 @@ export default function useQueryLendingPool(id: string) {
   });
 
   return {
-    data: data,
+    data: data?.lendingPool,
     fetching,
     error
   };

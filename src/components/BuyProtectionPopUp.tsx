@@ -205,7 +205,7 @@ const BuyProtectionPopUp = (props) => {
               } disabled:cursor-not-allowed`}
               onClick={buyProtection}
               disabled={
-                loading // ||
+                loading || prepareFn.isError
                 // !protectionPoolService ||
                 // !protectionPoolAddress ||
                 // !protectionAmount ||
