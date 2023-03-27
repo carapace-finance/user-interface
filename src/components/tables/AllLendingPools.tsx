@@ -76,17 +76,17 @@ const columns = [
     cell: (info) => <div className="text-right">~ 3.5 %</div>
     // TODO: update value
   }),
-  columnHelper.accessor("timeLeft", {
-    header: () => (
-      <div className="flex items-center cursor-pointer justify-start">
-        Estimated Adjusted Yields
-        <Tooltip content="Lending Pool APY minus Premium" placement="top">
-          <Info size={16} className="ml-2" />
-        </Tooltip>
-      </div>
-    ),
-    cell: (info) => <p>TBD</p>
-  })
+  // columnHelper.accessor("timeLeft", {
+  //   header: () => (
+  //     <div className="flex items-center cursor-pointer justify-start">
+  //       Estimated Adjusted Yields
+  //       <Tooltip content="Lending Pool APY minus Premium" placement="top">
+  //         <Info size={16} className="ml-2" />
+  //       </Tooltip>
+  //     </div>
+  //   ),
+  //   cell: (info) => <p>TBD</p>
+  // })
 ];
 
 type Props = {
