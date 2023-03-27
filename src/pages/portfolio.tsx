@@ -142,14 +142,14 @@ const Portfolio = () => {
                 </td>
                 <td className="py-4">7 %</td>
                 <td className="py-4">~ 3.5 %</td>
-                <td className="py-4">
+                {/* <td className="py-4">
                   <button
                     className="rounded-md bg-customBlue text-white px-6 py-2"
                     onClick={() => setIsRenewProtectionOpen(true)}
                   >
                     Renew
                   </button>
-                </td>
+                </td> */}
               </tr>
             ))}
             {buyProtectionLoading && (
@@ -211,9 +211,9 @@ const Portfolio = () => {
                   <div className="mr-4">Request Withdrawal</div>
                 </div>
               </th>
-              <th>
+              {/* <th>
                 <div className="flex flex-row pr-3 items-center">Withdraw</div>
-              </th>
+              </th> */}
             </tr>
           </thead>
           <tbody>
@@ -233,14 +233,14 @@ const Portfolio = () => {
                     </span>
                   )}
                 </td>
-                <td>
+                {/* <td>
                   <button
                     className="rounded-md bg-customBlue text-white px-6 py-2"
                     onClick={() => setIsWithdrawOpen(true)}
                   >
                     Withdraw
                   </button>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
