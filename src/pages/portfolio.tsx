@@ -94,7 +94,7 @@ const Portfolio = () => {
                   </Tooltip>
                 </div>
               </th>
-              <th>
+              {/* <th>
                 <div className="flex items-center justify-start mr-4">
                   <p className="mr-4">CARA Token Rewards</p>
                   <Tooltip
@@ -104,7 +104,7 @@ const Portfolio = () => {
                     <Info size={16} className="text-customGrey" />
                   </Tooltip>
                 </div>
-              </th>
+              </th> */}
               <th>
                 <div className="flex items-center justify-start mr-4">
                   <p className="mr-4">Renew</p>

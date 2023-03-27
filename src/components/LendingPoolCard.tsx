@@ -29,7 +29,7 @@ export default function LendingPoolCard(props: any) {
         </div>
       </div>
       <div className="flex justify-between mt-3 mb-4">
-        <div>
+        {/* <div>
           <div className="flex items-center cursor-pointer justify-end text-xs mb-1 text-[color:var(--color-custom-grey)]">
             CARA Token Rewards
             <Tooltip
@@ -41,7 +41,7 @@ export default function LendingPoolCard(props: any) {
             </Tooltip>
           </div>
           <p className="text-sm">{props.protectionPoolData.adjustedYields}</p>
-        </div>
+        </div> */}
         <div>
           <div className="flex items-center cursor-pointer justify-start text-xs mb-1 text-[color:var(--color-custom-grey)]">
             Buy Protection Within

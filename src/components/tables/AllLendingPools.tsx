@@ -64,18 +64,18 @@ const columns = [
     cell: (info) => <div className="text-right">8 -10 %</div>
     // TODO: update value
   }),
-  columnHelper.accessor("tokenRewards", {
-    header: () => (
-      <div className="flex items-center cursor-pointer justify-end">
-        CARA Token Rewards
-        <Tooltip content="TBD" placement="top">
-          <Info size={16} className="ml-2" />
-        </Tooltip>
-      </div>
-    ),
-    cell: (info) => <div className="text-right">~ 3.5 %</div>
-    // TODO: update value
-  }),
+  // columnHelper.accessor("tokenRewards", {
+  //   header: () => (
+  //     <div className="flex items-center cursor-pointer justify-end">
+  //       CARA Token Rewards
+  //       <Tooltip content="TBD" placement="top">
+  //         <Info size={16} className="ml-2" />
+  //       </Tooltip>
+  //     </div>
+  //   ),
+  //   cell: (info) => <div className="text-right">~ 3.5 %</div>
+  //   // TODO: update value
+  // }),
   // columnHelper.accessor("timeLeft", {
   //   header: () => (
   //     <div className="flex items-center cursor-pointer justify-start">
