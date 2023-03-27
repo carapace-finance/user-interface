@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import BarChart from "@/components/BarChart";
-import { secondsToDays, getCurrentCycleEnds } from "@/utils/date";
+import { secondsToDays, getCurrentCycleEnd } from "@/utils/date";
 import Skeleton from "@/components/Skeleton";
 import useQueryLendingPools from "@/hooks/useQueryLendingPools";
 import { getDecimalDivFormatted, getPercentValue } from "@/utils/utils";
@@ -129,7 +129,7 @@ export default function ProtectionPoolPage({
                     {protectionPoolFetching ? (
                       <Skeleton />
                     ) : (
-                      getCurrentCycleEnds(
+                      getCurrentCycleEnd(
                         protectionPoolData?.currentCycleStartTime ?? 0,
                         protectionPoolData?.cycleDuration ?? 0
                       )
