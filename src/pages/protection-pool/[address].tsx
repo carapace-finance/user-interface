@@ -2,17 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { ExternalLink } from "lucide-react";
 import useQueryProtectionPool from "@/hooks/useQueryProtectionPool";
-
+import TitleAndDescriptions from "@/components/TitleAndDescriptions";
 const ProtectionPoolPage = dynamic(
   () => import("@components/ProtectionPoolPage"),
   {
     ssr: false
   }
 );
-
-import TitleAndDescriptions from "@/components/TitleAndDescriptions";
-import { ExternalLink } from "lucide-react";
 
 const ProtectionPool = () => {
   const router = useRouter();

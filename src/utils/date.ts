@@ -15,10 +15,12 @@ export const readableDate = (date: string) =>
 export const secondsToDays = (seconds: number): number =>
   seconds / SECONDS_PER_DAY;
 
-export const getCurrentCycleEnds = (
-  start: string,
-  duration: string
-): string => {
+export const getCurrentCycleEnd = (start: string, duration: string): string => {
+  const endTime: number = Number(start) + Number(duration);
+  return unixtimeDiffFromNow(endTime);
+};
+
+export const getNextCycleEnd = (start: string, duration: string): string => {
   const endTime: number = Number(start) + Number(duration);
   return unixtimeDiffFromNow(endTime);
 };

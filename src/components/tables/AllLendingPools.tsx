@@ -1,7 +1,5 @@
 import { Tooltip } from "@material-tailwind/react";
 import Image from "next/image";
-import { useContext } from "react";
-import { LendingPoolContext } from "@contexts/LendingPoolContextProvider";
 import { useRouter } from "next/router";
 import {
   createColumnHelper,
@@ -34,7 +32,7 @@ const columns = [
         </Tooltip>
       </div>
     ),
-    cell: (info) => <div style={{ minWidth: "245px" }}>{info.getValue()}</div>
+    cell: (info) => <div style={{ minWidth: "245px" }}>Dummy Name</div>
   }),
   columnHelper.accessor("protocol", {
     header: () => "Protocol",
@@ -42,12 +40,12 @@ const columns = [
       <span className="flex items-center">
         <Image
           className="mx-auto"
-          src={info.getValue()}
+          src={require("@/assets/goldfinch.png")}
           width={24}
           height={24}
-          alt=""
+          alt={info.getValue()}
         />
-        <span className="ml-1">Goldfinch</span>
+        <span className="ml-1">{info.getValue()}</span>
       </span>
     )
   }),
@@ -63,7 +61,8 @@ const columns = [
         </Tooltip>
       </div>
     ),
-    cell: (info) => <div className="text-right">{info.getValue()}</div>
+    cell: (info) => <div className="text-right">8 -10 %</div>
+    // TODO: update value
   }),
   columnHelper.accessor("tokenRewards", {
     header: () => (
@@ -75,6 +74,7 @@ const columns = [
       </div>
     ),
     cell: (info) => <div className="text-right">~ 3.5 %</div>
+    // TODO: update value
   }),
   columnHelper.accessor("timeLeft", {
     header: () => (
@@ -85,15 +85,19 @@ const columns = [
         </Tooltip>
       </div>
     ),
-    cell: (info) => info.getValue()
+    cell: (info) => <p>TBD</p>
   })
 ];
 
-const AllLendingPools = () => {
+type Props = {
+  pools: any[];
+};
+
+const AllLendingPools = ({ pools }: Props) => {
   const router = useRouter();
-  const { lendingPools } = useContext(LendingPoolContext);
+  // const { lendingPools } = useContext(LendingPoolContext);
   const table = useReactTable({
-    data: lendingPools,
+    data: pools,
     // @ts-ignore
     columns,
     getCoreRowModel: getCoreRowModel()
@@ -133,7 +137,7 @@ const AllLendingPools = () => {
               className="border-customPristineWhite border-b hover:bg-customPristineWhite cursor-pointer"
               onClick={() =>
                 // @ts-ignore */
-                router.push(`/lending-pool/${row.original.address}`)
+                router.push(`/lending-pool/${row.original.id}`)
               }
             >
               {row.getVisibleCells().map((cell) => (

@@ -4,6 +4,8 @@ import { GET_LENDING_POOL } from "@/queries";
 import { CARAPACE_SUBGRAPH_URL } from "@/constants";
 
 export default function useQueryLendingPool(id: string) {
+  console.log("id***", id);
+
   const [{ data, fetching, error }] = useQuery({
     query: GET_LENDING_POOL,
     variables: { id },
@@ -17,7 +19,7 @@ export default function useQueryLendingPool(id: string) {
   });
 
   return {
-    data: data?.lendingPool,
+    data: data,
     fetching,
     error
   };

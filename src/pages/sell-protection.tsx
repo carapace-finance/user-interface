@@ -13,7 +13,6 @@ import Skeleton from "@/components/Skeleton";
 const SellProtection = () => {
   const { protectionPools } = useContext(ProtectionPoolContext);
   const { data, fetching, error } = useQueryProtectionPools();
-  console.log("data: ", data, "error: ", error);
 
   return (
     <main className="container mx-auto px-4">
