@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useContractRead, erc20ABI, useNetwork } from "wagmi";
 import useDebounce from "@/hooks/useDebounce";
 import type { Address } from "abitype";

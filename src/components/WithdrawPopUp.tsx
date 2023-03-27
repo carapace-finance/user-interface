@@ -4,9 +4,12 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  IconButton
+  IconButton,
+  Divider,
+  Drawer,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
+import { Tooltip } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
 import { ApplicationContext } from "@contexts/ApplicationContextProvider";
 import { convertNumberToUSDC, USDC_FORMAT } from "@utils/usdc";
@@ -16,6 +19,9 @@ import numeral from "numeral";
 import { WithdrawalInput } from "@type/types";
 import useWithdraw from "@/hooks/useWithdraw";
 import { X } from "lucide-react";
+import Image from "next/image";
+import dollarSign from "../assets/dollarSign.png";
+import useIsMobile from "@/hooks/useIsMobile";
 
 const WithdrawalPopUp = (props) => {
   const {
@@ -27,6 +33,7 @@ const WithdrawalPopUp = (props) => {
   } = useForm<WithdrawalInput>({ defaultValues: { amount: "0" } });
 
   const { protectionPoolService } = useContext(ApplicationContext);
+  const isMobile = useIsMobile();
   const { open, onClose, protectionPoolAddress } = props;
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -98,15 +105,123 @@ const WithdrawalPopUp = (props) => {
     }
   };
 
-  return (
+  return isMobile ? (
+    <Drawer
+      anchor={'bottom'}
+      open={open}
+      onClose={loading ? null : onClose}
+    >
+      <div className="flex justify-end mr-4">
+        <IconButton onClick={loading ? null : onClose}>
+          <span className="text-black">×</span>
+        </IconButton>
+      </div>
+      <DialogTitle className="py-0 px-4 -mt-4">
+        Withdraw
+      </DialogTitle>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent className="px-4">
+          <h4 className="text-left text-sm font-medium mb-1">
+            Protection Pool
+          </h4>
+          <div className="flex justify-left mb-4 text-sm">
+            Goldfinch Protection Pool #1
+          </div>
+          <div>
+            <h4 className="text-left text-sm font-medium mb-3">
+              Withdraw Amount
+            </h4>
+            <div className="mb-8">
+              <div className="flex flex-col  px-4 py-3 rounded-2xl bg-gray-100 ">
+                <div className="flex items-center justify-between w-full">
+                  <input
+                    className="block outline-none text-xl w-full text-black rounded bg-gray-100 out"
+                    type="number"
+                    {...register("amount", {
+                      min: 1,
+                      max: numeral(props.requestedWithdrawalAmount).value(),
+                      required: true
+                    })}
+                    onWheel={(e: any) => e.target.blur()}
+                  />
+                  <div className="flex items-center">
+                    <Image
+                      src={dollarSign}
+                      alt=""
+                      width={16}
+                      height={16}
+                      className="mr-1"
+                    />
+                    USDC
+                  </div>
+                </div>
+                <div className="flex items-center justify-between w-full mt-1">
+                  <p className="text-xs text-gray-500">$150002.9</p>
+                  <div className="flex items-center">
+                    <p className="text-xs text-gray-500 mr-2">
+                      Requestable Amount:{" "}
+                      {numeral(props.requestedWithdrawalAmount).format(
+                        USDC_FORMAT
+                      )}
+                    </p>
+                    <p className="text-sm text-customBlue">Max</p>
+                  </div>
+                </div>
+              </div>
+              {errors.amount && (
+                <h5 className="block text-left text-customPink text-xs md:text-base leading-tight font-normal mb-4 mt-3">
+                  the withdrawal amount must be in between 0 and your requested
+                  amount
+                </h5>
+              )}
+            </div>
+          </div>
+          <button
+            className={`text-sm md:text-base text-white bg-customBlue rounded-md w-full px-12 py-3 mb-4 mt-2 transition duration-500 ease min-w-[230px] select-none focus:outline-none focus:shadow-outline cursor-pointer ${
+              loading ? "disabled:opacity-90" : "disabled:opacity-50"
+            } disabled:cursor-not-allowed`}
+            type="submit"
+            disabled={
+              loading ||
+              !protectionPoolService ||
+              !protectionPoolAddress ||
+              !isValid
+            }
+          >
+            {loading ? (
+              <LoadingButton loading={loading}>
+                <CircularProgress color="secondary" size={16} />
+              </LoadingButton>
+            ) : (
+              "Confirm Withdraw"
+            )}
+          </button>
+          <div className="text-xs text-center">
+            By clicking &quot;Confirm Withdraw&quot;, you agree to
+            Carapace&apos;s&nbsp;
+            <span className="underline">Terms of Service&nbsp;</span>
+            and acknowledge that you have read and understand the&nbsp;
+            <span className="underline">Carapace protocol disclaimer.</span>
+          </div>
+        </DialogContent>
+      </form>
+      <SuccessPopup
+        handleClose={() => setSuccessMessage("")}
+        message={successMessage}
+      />
+      <ErrorPopup error={error} handleCloseError={() => setError("")} />
+    </Drawer>
+  ):(
     <Dialog
-      className="top-32 inset-x-36"
+      className="top-64 md:top-32 md:inset-x-36"
       disableScrollLock
       open={open}
       onClose={loading ? null : onClose}
       PaperProps={{
-        style: {
-          borderRadius: "10px"
+        sx: {
+          borderRadius: { xs: "10px 10px 0px 0px", md: "10px" },
+          maxHeight: { xs: "100%", md: "calc(100% - 64px)" },
+          margin: { xs: "0px", md: "32px" }
         }
       }}
     >
@@ -115,11 +230,12 @@ const WithdrawalPopUp = (props) => {
           <X className="text-black" size={18} />
         </IconButton>
       </div>
-      <div className="mt-8" />
-      <DialogTitle className="mt-6 text-center">Withdraw</DialogTitle>
+      <DialogTitle className="py-0 px-4 mt-6 md:py-3">
+        Withdraw
+      </DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogContent>
-          <h4 className="text-left text-base font-medium mb-3">
+        <DialogContent className="px-4">
+          <h4 className="text-left text-base font-medium mb-1 md:mb-3">
             Protection Pool
           </h4>
           <div className="flex justify-left mb-3 text-base">
@@ -170,15 +286,50 @@ const WithdrawalPopUp = (props) => {
                 }}
               /> */}
               </div>
-              <div className="text-right mr-5 mb-1">
+              <div className="text-right mr-5 mb-1 text-base">
                 Requested Withdrawal Amount:&nbsp;
                 {numeral(props.requestedWithdrawalAmount).format(USDC_FORMAT) +
                   " USDC"}
               </div>
             </div>
           </div>
+          <Divider/>
+          <div className="pt-4">
+            <h4 className="flex justify-left mb-4 text-base font-medium">
+              Estimated Stats
+            </h4>
+            <div className="flex justify-between mb-2">
+              <div className="flex justify-left mb-4 text-gray-500 text-sm items-center">
+                Expected Network Fees
+                <div className="pl-2">
+                  <Tooltip
+                    content="Fees you pay to the Ethereum network"
+                    placement="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm">$10.00</p>
+              </div>
+            </div>
+          </div>
           <button
-            className={`text-white bg-customBlue rounded-md px-12 py-4 mb-8 mt-8 transition duration-500 ease min-w-[230px] select-none focus:outline-none focus:shadow-outline cursor-pointer block mx-auto ${
+            className={`text-base text-white bg-customBlue rounded-md w-fit px-12 py-4 mb-8 mt-8 transition duration-500 ease min-w-[230px] select-none focus:outline-none focus:shadow-outline cursor-pointer ${
               loading ? "disabled:opacity-90" : "disabled:opacity-50"
             } disabled:cursor-not-allowed`}
             type="submit"
@@ -192,7 +343,7 @@ const WithdrawalPopUp = (props) => {
               "Confirm Withdraw"
             )}
           </button>
-          <div className="text-xs text-center">
+          <div className="text-sm text-center">
             By clicking &quot;Confirm Withdraw&quot;, you agree to
             Carapace&apos;s&nbsp;
             <span className="underline">Terms of Service&nbsp;</span>

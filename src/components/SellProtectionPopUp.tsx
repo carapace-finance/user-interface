@@ -6,6 +6,8 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
+  Drawer,
   IconButton,
   Typography
 } from "@mui/material";
@@ -18,6 +20,7 @@ import useDeposit from "@/hooks/useDeposit";
 import Spinner from "@/components/Spinner";
 import type { Address } from "abitype";
 import { X } from "lucide-react";
+import useIsMobile from "@/hooks/useIsMobile";
 
 type Props = {
   open: boolean;
@@ -43,6 +46,7 @@ const SellProtectionPopUp = ({
   );
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     // watch tx confirmation
@@ -72,7 +76,78 @@ const SellProtectionPopUp = ({
     }
   };
 
-  return (
+  return isMobile ? (
+    <Drawer
+      anchor={"bottom"}
+      open={open}
+      onClose={loading ? null : onClose}
+      PaperProps={{
+        sx: {
+          borderRadius: { xs: "16px 16px 0px 0px" }
+        }
+      }}
+    >
+      <div className="flex justify-end mr-4">
+        <IconButton onClick={onClose}>
+          <span className="text-black">×</span>
+        </IconButton>
+      </div>
+      <DialogTitle className="-mt-8">Deposit</DialogTitle>
+      <DialogContent className="mb-4">
+        <div className="mb-10">
+          <div className="flex justify-start text-sm">
+            {renderFieldAndValue(
+              "Protection Pool",
+              "Goldfinch Protection Pool #1"
+            )}
+            <div className="-ml-16 mt-1">
+              <Image
+                src={assets.goldfinch.src}
+                alt="carapace"
+                height="16"
+                width="16"
+              />
+            </div>
+          </div>
+          {renderFieldAndValue(
+            "Deposit Amount",
+            numeral(amount).format(USDC_FORMAT) + " USDC"
+          )}
+          {renderFieldAndValue("Minimum Locking Period", "95 Days")}
+        </div>
+        <div>
+          {/* finish tx */}
+          {writeFn.isSuccess && waitFn.isSuccess ? (
+            <Link
+              className="text-white text-base bg-customBlue px-8 py-4 min-w-[230px] rounded-md cursor-pointer"
+              href="/dashboard"
+            >
+              Go to dashboard
+            </Link>
+          ) : (
+            <button
+              className={`text-white text-sm bg-customBlue w-full px-8 py-3 min-w-[230px] rounded-md cursor-pointer ${
+                loading ? "disabled:opacity-90" : "disabled:opacity-50"
+              } disabled:cursor-not-allowed`}
+              onClick={sellProtection}
+              disabled={loading || !protectionPoolAddress || !amount}
+            >
+              {loading ? <Spinner /> : <p>Confirm Deposit</p>}
+            </button>
+          )}
+        </div>
+        <div>
+          <div className="text-xs mt-4 text-center">
+            By clicking &quot;Confirm Deposit&quot;, you agree to
+            Carapace&apos;s&nbsp;
+            <span className="underline">Terms of Service&nbsp;</span>
+            and acknowledge that you have read and understand the&nbsp;
+            <span className="underline">Carapace protocol disclaimer.</span>
+          </div>
+        </div>
+      </DialogContent>
+    </Drawer>
+  ) : (
     <Dialog
       className="inset-x-36"
       disableScrollLock
@@ -148,12 +223,14 @@ const renderFieldAndValue = (fieldLabel, fieldValue) => {
   return (
     <div>
       <Typography
-        className="flex justify-left text-gray-900 text-base font-medium mb-5"
+        className="flex justify-left text-gray-900 text-sm md:text-base font-medium mb-2 md:mb-5"
         variant="subtitle2"
       >
         <div>{fieldLabel}</div>
       </Typography>
-      <div className="flex justify-left mb-4">{fieldValue}</div>
+      <div className="flex justify-left mb-4 text-sm md:text-base">
+        {fieldValue}
+      </div>
     </div>
   );
 };

@@ -72,7 +72,7 @@ export default function ApproveSubmitButton({
           ) ? (
             <button
               className={cn(
-                "text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+                "text-white bg-customBlue rounded-md w-full md:w-fit px-14 py-4 py-2 md:py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
                 className
               )}
               {...props}
@@ -84,7 +84,7 @@ export default function ApproveSubmitButton({
           ) : (
             <button
               className={cn(
-                "text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+                "text-white bg-customBlue rounded-md w-full md:w-fit px-14 py-4 py-2 md:py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
                 className
               )}
               type="button"
@@ -103,7 +103,7 @@ export default function ApproveSubmitButton({
         ) : (
           <button
             className={cn(
-              "text-white bg-customBlue rounded-md px-14 py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+              "text-white bg-customBlue rounded-md w-full md:w-fit px-14 py-2 md:py-4 mt-8 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
               className
             )}
             type="button"

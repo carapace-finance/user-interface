@@ -1,7 +1,7 @@
 import { Tooltip } from "@material-tailwind/react";
 import Image from "next/image";
-import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
-import { useContext } from "react";
+// import { ProtectionPoolContext } from "@contexts/ProtectionPoolContextProvider";
+// import { useContext } from "react";
 import { useRouter } from "next/router";
 import {
   createColumnHelper,
@@ -10,12 +10,14 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 import { Info } from "lucide-react";
+import { getDecimalDivFormatted } from "@/utils/utils";
+import { USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
 
 type ProtectionPool = {
   name: string;
   protocols: string;
   APY: string;
-  totalCapital: string;
+  totalSTokenUnderlying: string;
   totalProtection: string;
 };
 
@@ -24,18 +26,27 @@ const columnHelper = createColumnHelper<ProtectionPool>();
 const columns = [
   columnHelper.accessor("name", {
     header: () => <div className="text-left">Name</div>,
-    cell: (info) => <div style={{ minWidth: "245px" }}>{info.getValue()}</div>
+    cell: (info) => (
+      <div style={{ minWidth: "245px" }}>
+        Goldfinch Protection Pool #1
+        {/* TODO: functionalization {info.getValue()} */}
+      </div>
+    )
   }),
   columnHelper.accessor("protocols", {
     header: () => "Protocols",
     cell: (info) => (
-      <Image
-        className="mx-auto"
-        src={info.getValue()}
-        width={24}
-        height={24}
-        alt=""
-      />
+      <span className="flex items-center">
+        <Image
+          className="mx-auto"
+          src={require("@/assets/goldfinch.png")}
+          width={24}
+          height={24}
+          alt="Goldfinch"
+        />
+        GoldFinch
+      </span>
+      // TODO: functionalization
     )
   }),
   columnHelper.accessor("APY", {
@@ -52,7 +63,7 @@ const columns = [
     ),
     cell: (info) => <div className="text-right">{info.getValue()}</div>
   }),
-  columnHelper.accessor("totalCapital", {
+  columnHelper.accessor("totalSTokenUnderlying", {
     header: () => (
       <div className="flex items-center cursor-pointer justify-end">
         Total Value Locked
@@ -64,7 +75,11 @@ const columns = [
         </Tooltip>
       </div>
     ),
-    cell: (info) => <div className="text-right">{info.getValue()} USDC</div>
+    cell: (info) => (
+      <div className="text-right">
+        {getDecimalDivFormatted(info.getValue(), USDC_NUM_OF_DECIMALS, 0)} USDC
+      </div>
+    )
   }),
   columnHelper.accessor("totalProtection", {
     header: () => (
@@ -78,16 +93,20 @@ const columns = [
         </Tooltip>
       </div>
     ),
-    cell: (info) => <div className="text-right">{info.getValue()} USDC</div>
+    cell: (info) => (
+      <div className="text-right">
+        {getDecimalDivFormatted(info.getValue(), USDC_NUM_OF_DECIMALS, 0)} USDC
+      </div>
+    )
   })
 ];
 
-const AllProtectionPools = () => {
+const AllProtectionPools = ({ pools }: { pools: any[] }) => {
   const router = useRouter();
-  const { protectionPools } = useContext(ProtectionPoolContext);
+  // const { protectionPools } = useContext(ProtectionPoolContext);
 
   const table = useReactTable({
-    data: protectionPools,
+    data: pools,
     columns,
     getCoreRowModel: getCoreRowModel()
   });
@@ -126,7 +145,7 @@ const AllProtectionPools = () => {
               className="border-customPristineWhite border-b hover:bg-customPristineWhite cursor-pointer"
               onClick={() =>
                 // @ts-ignore
-                router.push(`/protection-pool/${row.original.address}`)
+                router.push(`/protection-pool/${row.original.id}`)
               }
             >
               {row.getVisibleCells().map((cell) => (

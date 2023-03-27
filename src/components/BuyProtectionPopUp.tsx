@@ -49,8 +49,8 @@ const BuyProtectionPopUp = (props) => {
 
   // TODO: update params
   const { prepareFn, writeFn, waitFn } = useBuyProtection(
-    "0x8531EB39FbaEaB9Df406762aAE2C6005A898a092",
-    "0xb26b42dd5771689d0a7faeea32825ff9710b9c11",
+    protectionPoolAddress,
+    lendingPoolAddress,
     protectionAmount,
     protectionDurationInDays
   );

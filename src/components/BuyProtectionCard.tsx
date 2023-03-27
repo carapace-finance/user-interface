@@ -77,17 +77,17 @@ export default function BuyProtectionCard(props) {
   };
 
   return (
-    <div className="block py-10 px-8 rounded-2xl shadow-boxShadow shadow-lg shadow-gray-200 w-450 h-fit">
+    <div className="block py-6 md:py-10 px-4 md:px-8 rounded-2xl shadow-card shadow-gray-200 w-full lg:w-450 h-fit">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <div>
-            <p className="inline text-customGrey">
+            <p className="inline text-customGrey text-sm md:text-base">
               Your Backer Token Id in Goldfinch
               <Info size={15} className="inline ml-1" />
             </p>
             <p>173</p>
             <div className="mb-4 mt-4">
-              <label className="text-left text-customGrey leading-tight font-normal mb-4">
+              <label className="text-left text-customGrey text-sm md:text-base leading-tight font-normal mb-4">
                 Protection Amount
               </label>
               <div>
@@ -102,7 +102,7 @@ export default function BuyProtectionCard(props) {
                   onWheel={(e: any) => e.target.blur()}
                 />
                 {errors.protectionAmount && (
-                  <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">
+                  <h5 className="block text-left text-customPink text-xs md:text-xl leading-tight font-normal mb-4">
                     the protection amount must be in between 0 and the available
                     protection purchase amount
                   </h5>
@@ -127,7 +127,7 @@ export default function BuyProtectionCard(props) {
             </div>
           </div>
           <div className="mb-4">
-            <label className="text-left text-customGrey leading-tight font-normal mb-4">
+            <label className="text-left text-customGrey leading-tight text-sm md:text-base font-normal mb-4">
               Protection Duration (days)
             </label>
             <div>
@@ -142,7 +142,7 @@ export default function BuyProtectionCard(props) {
                 onWheel={(e: any) => e.target.blur()}
               />
               {errors.protectionDurationInDays && (
-                <h5 className="block text-left text-customPink text-xl leading-tight font-normal mb-4">
+                <h5 className="block text-left text-customPink text-xs md:text-xl leading-tight font-normal mb-4">
                   the protection duration must be between 30 to 90 days
                 </h5>
               )}
@@ -199,14 +199,16 @@ export default function BuyProtectionCard(props) {
           {/* </div> */}
         </div>
         <input
-          className="text-white bg-customBlue rounded-md px-14 py-4 mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-white bg-customBlue rounded-md w-full md:w-fit px-14 py-3 md:py-4 mt-4 md:mt-8 mb-4 transition duration-500 ease select-none focus:outline-none focus:shadow-outline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           value="Buy Protection"
           disabled={!protectionPoolAddress} // todo: add the leverage ratio limit
         />
       </form>
-      <div className="flex flex-row justify-start">
-        <p className="mr-4">Buy protection within: {timeLeft}</p>
+      <div className="flex flex-row justify-start items-center">
+        <p className="mr-2 md:mr-4 text-sm md:text-base">
+          Buy protection within: {timeLeft}
+        </p>
         <Tooltip
           content="Time left to buy protection for this lending pool"
           placement="top"

@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import { useAccount, useDisconnect, useNetwork } from "wagmi";
-import { Menu } from "lucide-react";
 import assets from "@/assets";
 import { shortAddress } from "@/utils/utils";
 import ConnectWalletPopup from "@/components/ConnectWalletPopUp";
@@ -19,12 +18,19 @@ const Header = () => {
   const { disconnect } = useDisconnect();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useAtom(connectModalAtom);
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const txs = useAtomValue(userTransactionsAtom);
+  const isInternalPage = useMemo(
+    () => !["/", "/buy-protection", "/portfolio"].includes(router.pathname),
+    [router.pathname]
+  );
 
   return (
-    <nav className="header bg-white h-16 px-2 sm:px-4 fixed w-full z-30 top-0 left-0 shadow-md">
-      <div className="container flex flex-wrap items-center justify-between mx-auto h-16">
+    <nav className="header bg-white h-26 md:h-16 md:px-2 sm:px-4 fixed w-full z-30 top-0 left-0 md:border-b">
+      <div
+        className={`container flex flex-wrap items-center justify-between mx-auto h-16 px-3 md:px-0 ${
+          isInternalPage ? "border-b" : ""
+        }`}
+      >
         <Link className="flex items-center h-16 shrink-0" href="/">
           <Image
             src={assets.headerLogo.src}
@@ -69,21 +75,9 @@ const Header = () => {
             open={modalOpen}
             onClose={() => setModalOpen(false)}
           />
-          <button
-            type="button"
-            className="inline-flex items-center p-2 text-sm text-customBlue rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-gray-200 ml-2"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            <Menu />
-          </button>
         </div>
-        <div
-          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
-            menuOpen ? "visible" : "hidden"
-          }`}
-          id="navbar-sticky"
-        >
-          <ul className="fixed right-0 left-0 top-16 text-center md:relative md:top-auto md:right-auto md:left-auto flex flex-col p-4 rounded-lg bg-customPristineWhite md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white shadow-lg md:shadow-none">
+        <div className="items-center justify-between order-1 hidden md:flex">
+          <ul className="relative flex p-4 flex-row space-x-8">
             {HEADER_LINKS.map((item: any) => (
               <li key={item.key}>
                 <Link
@@ -94,16 +88,39 @@ const Header = () => {
                         ? `/${router.pathname.split("/")[1]}/`
                         : router.pathname
                     )
-                      ? "text-customBlue font-medium"
+                      ? "text-customBlue"
                       : ""
-                  } hover:text-customBlue block py-2 pl-3 pr-4 rounded md:bg-transparent md:p-0`}
+                  } hover:text-customBlue block py-2 pl-3 pr-4 bg-transparent md:p-0`}
                 >
-                  <h4>{item.title}</h4>
+                  <h4 className="text-lg">{item.title}</h4>
                 </Link>
               </li>
             ))}
           </ul>
         </div>
+      </div>
+      <div
+        className={`flex border-b md:hidden px-3 ${
+          isInternalPage ? "hidden" : ""
+        }`}
+      >
+        {HEADER_LINKS.map((item: any) => (
+          <Link
+            key={item.key}
+            href={item.link}
+            className={`${
+              item.activePaths.includes(
+                router.pathname.split("/").length > 2
+                  ? `/${router.pathname.split("/")[1]}/`
+                  : router.pathname
+              )
+                ? "text-customBlue font-medium border-b-2 border-[color:var(--color-custom-blue)]"
+                : "text-[color:var(--color-custom-grey)]"
+            } hover:text-customBlue block py-2 pl-3 pr-4 md:bg-transparent md:p-0`}
+          >
+            <h5>{item.title}</h5>
+          </Link>
+        ))}
       </div>
     </nav>
   );
