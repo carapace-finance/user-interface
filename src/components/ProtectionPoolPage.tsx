@@ -125,7 +125,6 @@ export default function ProtectionPoolPage({
                     <Info size={14} className="ml-1 inline" />
                   </h5>
                   <p className="mt-1 md:mt-2">
-                    {/* TODO: update this max ** days format, not month */}
                     {protectionPoolFetching ? (
                       <Skeleton />
                     ) : (

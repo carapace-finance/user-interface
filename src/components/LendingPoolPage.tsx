@@ -41,11 +41,11 @@ export default function LendingPoolPage({
               <p className="text-left text-xl md:text-2xl">7%</p>
               {/* TODO: update value */}
             </div>
-              {/* <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
+            {/* <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
                 CARA Token Rewards <Info size={14} className="ml-1" />
               </h4>
               <p className="text-left text-xl md:text-2xl">~3.5%</p> */}
-              {/* TODO: update value */}
+            {/* TODO: update value */}
             <div className="rounded-2xl shadow-card px-4 py-6 md:p-8">
               <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
                 Max Protection Amount <Info size={14} className="ml-1" />
