@@ -80,11 +80,11 @@ export default function ProtectionPoolPage({
                   {/* TODO: update value */}
                 </div>
                 <div>
-                  <h5 className="text-customGrey text-xs md:text-sm mb-1 md:mb-2 inline">
+                  {/* <h5 className="text-customGrey text-xs md:text-sm mb-1 md:mb-2 inline">
                     CARA Token Rewards
                     <Info size={14} className="ml-1 inline" />
                   </h5>
-                  <p className="mt-1 md:mt-2">8 - 10%</p>{" "}
+                  <p className="mt-1 md:mt-2">8 - 10%</p>{" "} */}
                   {/* TODO: update value */}
                 </div>
               </div>
