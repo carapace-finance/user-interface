@@ -105,7 +105,7 @@ export default function ProtectionPoolPage({
                 Days
               </p>
               <div className="grid grid-cols-2 gap-0 md:gap-6 border-t border-gray-300 mt-3 md:mt-4 pt-3 md:pt-4">
-                <div>
+                <div className="flex flex-col justify-around">
                   <h5 className="text-customGrey text-xs md:text-sm mb-1 md:mb-2 inline">
                     Cycle Duration
                     <Info size={14} className="ml-1 inline" />
