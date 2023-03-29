@@ -3,10 +3,12 @@ import Image from "next/image";
 import BuyProtectionCard from "@/components/BuyProtectionCard";
 import BarChart from "@/components/BarChart";
 import LendingPoolCard from "@/components/LendingPoolCard";
+import useQueryProtectionPools from "@/hooks/useQueryProtectionPools";
 import Skeleton from "@/components/Skeleton";
 import { Info } from "lucide-react";
 import { getDecimalDivFormatted, getPercentValue } from "@/utils/utils";
 import { USDC_NUM_OF_DECIMALS } from "@/utils/usdc";
+import { secondsToDays } from "@/utils/date";
 
 type Props = {
   lendingPoolData: any;
@@ -17,6 +19,18 @@ export default function LendingPoolPage({
   lendingPoolData,
   lendingPoolFetching
 }: Props) {
+  const {
+    data: protectionPoolsData,
+    fetching: protectionPoolsFetching,
+    error
+  } = useQueryProtectionPools();
+
+  const leverageRatio = getDecimalDivFormatted(
+    protectionPoolsData?.[0]?.leverageRatio ?? 0,
+    16,
+    2
+  );
+
   return (
     <>
       <div className="flex flex-row-reverse flex-wrap md:flex-nowrap -mt-8 md:mt-0">
@@ -57,8 +71,24 @@ export default function LendingPoolPage({
               <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
                 Protection Duration <Info size={14} className="ml-1" />
               </h4>
-              <p className="text-left text-xl md:text-2xl">90 ~ 182 Days</p>
-              {/* TODO: update value */}
+              <p className="text-left text-xl md:text-2xl">
+                {secondsToDays(
+                  Number(
+                    protectionPoolsData?.[0]?.minProtectionDurationInSeconds
+                  ) ?? 0
+                )}
+                &nbsp;~&nbsp;
+                {secondsToDays(
+                  (Number(
+                    protectionPoolsData?.[0]?.minProtectionDurationInSeconds
+                  ) ?? 0) +
+                    (Number(
+                      protectionPoolsData?.[0]
+                        ?.protectionRenewalGracePeriodInSeconds
+                    ) ?? 0)
+                )}
+                &nbsp;Days
+              </p>
             </div>
           </div>
           <h3 className="font-bold mb-2 md:mb-4 mt-16 md:mt-8 text-lg md:text-2xl">
@@ -124,7 +154,14 @@ export default function LendingPoolPage({
             <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
               Total Value Locked <Info size={14} className="ml-1" />
             </h4>
-            <p className="text-xl md:text-2xl">4,500,000 USDC</p>
+            <p className="text-xl md:text-2xl">
+              {getDecimalDivFormatted(
+                protectionPoolsData?.[0]?.totalProtection ?? "0",
+                USDC_NUM_OF_DECIMALS,
+                0
+              )}
+              &nbsp;USDC
+            </p>
           </div>
           <div className="rounded-2xl shadow-boxShadow px-4 py-6 md:p-8 w-full shadow-card">
             <div className=" text-black text-2xl bold flex justify-between mb-2 md:mb-4">
@@ -154,20 +191,20 @@ export default function LendingPoolPage({
                   </Tooltip>
                 </div>
               </div>
-              <p className="text-left text-xl md:text-2xl">{61.23} %</p>
+              <p className="text-left text-xl md:text-2xl">{leverageRatio} %</p>
             </div>
             <div className="h-6 mb-4">
-              <BarChart filledPercentage={61.23} />
+              <BarChart filledPercentage={Number(leverageRatio)} />
             </div>
             <div className="flex justify-between  text-xs md:text-sm">
               <p className="pr-0 md:pr-20">
-                Total Protection Pool Balance:{" "}
-                {lendingPoolFetching ? (
+                Total Protection Pool Balance:&nbsp;
+                {protectionPoolsFetching ? (
                   <Skeleton />
                 ) : (
                   <span>
                     {getDecimalDivFormatted(
-                      lendingPoolData?.totalProtection ?? "0",
+                      protectionPoolsData?.[0]?.totalSTokenUnderlying ?? "0",
                       USDC_NUM_OF_DECIMALS,
                       0
                     )}
@@ -176,7 +213,16 @@ export default function LendingPoolPage({
                 )}
               </p>
               <p className="text-right">
-                Total Purchased Protection: 1,000&nbsp;USDC
+                Total Purchased Protection:&nbsp;
+                {protectionPoolsFetching ? (
+                  <Skeleton />
+                ) : (
+                  getDecimalDivFormatted(
+                    protectionPoolsData?.[0]?.totalProtection,
+                    USDC_NUM_OF_DECIMALS
+                  )
+                )}
+                &nbsp;USDC
               </p>
             </div>
           </div>
