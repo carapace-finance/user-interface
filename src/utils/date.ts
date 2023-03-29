@@ -19,12 +19,15 @@ export const secondsToDays = (seconds: number): number =>
 
 export const getCurrentCycleEnd = (start: string, duration: string): string => {
   const endTime: number = Number(start) + Number(duration);
-  return dayjs().add(1, "d").isSameOrAfter(dayjs.unix(endTime))
-    ? unixtimeDiffFromNow(endTime)
-    : `${dayjs.unix(endTime).diff(dayjs(), "day")} Days`;
+  return getRelativeDays(endTime);
 };
 
 export const getNextCycleEnd = (start: string, duration: string): string => {
   const endTime: number = Number(start) + Number(duration);
   return unixtimeDiffFromNow(endTime);
 };
+
+export const getRelativeDays = (time: number): string =>
+  dayjs().add(1, "d").isSameOrAfter(dayjs.unix(time))
+    ? unixtimeDiffFromNow(time)
+    : `${dayjs.unix(time).diff(dayjs(), "day")} Days`;

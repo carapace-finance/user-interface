@@ -8,6 +8,7 @@ import { convertNumberToUSDC, convertUSDCToNumber } from "@utils/usdc";
 import { ApplicationContext } from "@/contexts/ApplicationContextProvider";
 import useQueryProtectionPools from "@/hooks/useQueryProtectionPools";
 import { getDaysInSeconds } from "@/utils/utils";
+import { getRelativeDays } from "@/utils/date";
 import { BuyProtectionInputs } from "@/type/types";
 import { isAddress } from "ethers/lib/utils";
 import { Info } from "lucide-react";
@@ -214,7 +215,7 @@ export default function BuyProtectionCard(props) {
       </form>
       <div className="flex flex-row justify-start items-center">
         <p className="mr-2 md:mr-4 text-sm md:text-base">
-          Buy protection within: {timeLeft}
+          Buy protection within: {getRelativeDays(timeLeft)}
         </p>
         <Tooltip
           content="Time left to buy protection for this lending pool"

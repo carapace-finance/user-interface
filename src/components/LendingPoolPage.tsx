@@ -40,11 +40,13 @@ export default function LendingPoolPage({
             adjustedYields={1}
             lendingPoolAPY={10}
             premium={8}
-            timeLeft={1200}
+            timeLeft={Number(
+              lendingPoolData?.protectionPurchaseLimitTimestamp ?? 0
+            )}
           />
         </div>
         <div className="flex-1 basis-full md:basis-2/3 md:mr-8 w-full">
-          <h3 className="text-left font-bold mb-2 md:mb-4 mt-10 md:mt-0 text-lg md:text-2xl">
+          <h3 className="text-left font-medium mb-2 md:mb-4 mt-10 md:mt-0 text-lg md:text-2xl">
             Investment Summary
           </h3>
           <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
@@ -91,7 +93,7 @@ export default function LendingPoolPage({
               </p>
             </div>
           </div>
-          <h3 className="font-bold mb-2 md:mb-4 mt-16 md:mt-8 text-lg md:text-2xl">
+          <h3 className="font-medium mb-2 md:mb-4 mt-16 md:mt-8 text-lg md:text-2xl">
             Lending Pool Summary
           </h3>
           <div className="flex flex-col md:hidden">
@@ -105,7 +107,7 @@ export default function LendingPoolPage({
           <div className="rounded-2xl shadow-card  max-w-[calc(100vw-32px)] md:max-w-auto overflow-scroll md:overflow-auto hidden md:flex">
             <table className="table-auto">
               <thead>
-                <tr className="text-left text-xs md:text-sm font-bold">
+                <tr className="text-left text-xs md:text-sm font-medium">
                   <th className="px-4 py-4 md:py-8 pl-4 md:pl-8 min-w-[120px] md:min-w-auto">
                     Name
                   </th>
@@ -147,10 +149,10 @@ export default function LendingPoolPage({
               </tbody>
             </table>
           </div>
-          <h3 className="text-left font-bold mb-2 md:mb-4 mt-10 md:mt-8 text-lg md:text-2xl">
+          <h3 className="text-left font-medium mb-2 md:mb-4 mt-10 md:mt-8 text-lg md:text-2xl">
             Underlying Protection Pool
           </h3>
-          <div className="rounded-2xl shadow-boxShadow px-4 py-6 md:p-8 w-full shadow-card">
+          <div className="rounded-2xl shadow-card px-4 py-6 md:p-8 w-full mb-6">
             <h4 className="text-customGrey text-sm md:text-base mb-2 flex items-center">
               Total Value Locked <Info size={14} className="ml-1" />
             </h4>
@@ -163,7 +165,7 @@ export default function LendingPoolPage({
               &nbsp;USDC
             </p>
           </div>
-          <div className="rounded-2xl shadow-boxShadow px-4 py-6 md:p-8 w-full shadow-card">
+          <div className="rounded-2xl px-4 py-6 md:p-8 w-full shadow-card">
             <div className=" text-black text-2xl bold flex justify-between mb-2 md:mb-4">
               <div className="flex items-center">
                 <h4 className="text-left text-base md:text-xl">
