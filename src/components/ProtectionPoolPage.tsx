@@ -46,12 +46,11 @@ export default function ProtectionPoolPage({
     );
   };
 
-  const tvlRatio: string = protectionPoolFetching
-    ? "0.00"
-    : getPercentValue(
-        protectionPoolData?.totalSTokenUnderlying,
-        protectionPoolData?.totalProtection
-      );
+  const leverageRatio = getDecimalDivFormatted(
+    protectionPoolData?.leverageRatio ?? 0,
+    16,
+    2
+  );
 
   return (
     <>
@@ -105,7 +104,7 @@ export default function ProtectionPoolPage({
                 Days
               </p>
               <div className="grid grid-cols-2 gap-0 md:gap-6 border-t border-gray-300 mt-3 md:mt-4 pt-3 md:pt-4">
-                <div>
+                <div className="flex flex-col justify-around">
                   <h5 className="text-customGrey text-xs md:text-sm mb-1 md:mb-2 inline">
                     Cycle Duration
                     <Info size={14} className="ml-1 inline" />
@@ -125,7 +124,6 @@ export default function ProtectionPoolPage({
                     <Info size={14} className="ml-1 inline" />
                   </h5>
                   <p className="mt-1 md:mt-2">
-                    {/* TODO: update this max ** days format, not month */}
                     {protectionPoolFetching ? (
                       <Skeleton />
                     ) : (
@@ -156,12 +154,12 @@ export default function ProtectionPoolPage({
                       protectionPoolData.totalSTokenUnderlying,
                       USDC_NUM_OF_DECIMALS,
                       0
-                    )}{" "}
-                    USDC
+                    )}
+                    &nbsp;USDC
                   </p>
-                  <p className="text-sm md:text-base">{tvlRatio} %</p>
+                  <p className="text-sm md:text-base">{leverageRatio} %</p>
                 </div>
-                <BarChart filledPercentage={Number(tvlRatio)} />
+                <BarChart filledPercentage={Number(leverageRatio)} />
               </>
             )}{" "}
           </div>
@@ -249,8 +247,7 @@ export default function ProtectionPoolPage({
                 </tr>
               </thead>
               <tbody>
-                {/* TODO: update */}
-                {/* {lendingPoolsData.map((lendingPool) => (
+                {lendingPoolsData.map((lendingPool) => (
                   <tr
                     key={lendingPool.address}
                     onClick={() =>
@@ -265,12 +262,12 @@ export default function ProtectionPoolPage({
                       {lendingPool.borrowerName}
                     </td>
                     <td className="px-4 py-4 md:py-8 min-h-[80px] md:min-h-auto flex items-center">
-                      <Image
+                      {/* <Image
                         src={lendingPool.protocol}
                         width={24}
                         height={24}
                         alt=""
-                      />
+                      /> */}
                       <p className="ml-1">{lendingPool.protocolName}</p>
                     </td>
                     <td className="px-4 py-4 md:py-8">
@@ -287,7 +284,7 @@ export default function ProtectionPoolPage({
                       {lendingPool.lendingPoolAPY}
                     </td>
                   </tr>
-                ))} */}
+                ))}
               </tbody>
             </table>
           </div>
